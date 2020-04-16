@@ -1,0 +1,11 @@
+Package: Rmotrpac
+Type: Package
+Title: R functions for the MoTrPAC community
+Version: 0.1.0
+Author: MoTrPAC Bioinformatics Center (BIC)
+Maintainer: David Jimenez-Morales <davidjm@stanford.edu>
+Description: Useful functions for the QC/QA analysis of MoTrPAC data submissions
+License: MIT + file LICENSE
+URL: https://github.com/MoTrPAC/Rmotrpac
+Encoding: UTF-8
+LazyData: true
