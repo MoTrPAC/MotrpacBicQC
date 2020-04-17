@@ -1,3 +1,6 @@
+#' @import knitr
+#' @import utils
+
 # Remove empty columns in data frame
 
 # ------------------------------------------------------------------------------
@@ -5,6 +8,8 @@
 #'
 #' @description open files and check that they are right
 #' @param input_results_folder (char) input path folder
+#' @param filepattern (char) regular expression to find a file in the file system
+#' provided
 #' @param verbose (logical) `TRUE` (default) shows messages
 #' @return (list) list with data frame and flag about the status
 #' @export
@@ -59,7 +64,8 @@ open_file <- function(input_results_folder,
 #' @param verbose (logical) `TRUE` (default) shows messages
 #' @return (df) df without empty columns
 #' @export
-remove_empty_columns <- function(df){
+remove_empty_columns <- function(df,
+                                 verbose = TRUE){
   df[df == ""] <- NA
   before <- dim(df)[2]
   emptycols <- sapply(df, function (x) all(is.na(x)))

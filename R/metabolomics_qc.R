@@ -1,5 +1,10 @@
 #' @import purrr
+#' @import stringr
 #' @importFrom dplyr select_if
+
+utils::globalVariables(
+  c(".id",
+    "bic_animal_tissue_code"))
 
 # PRIMARY QC METABOLOMICS DATASETS
 #

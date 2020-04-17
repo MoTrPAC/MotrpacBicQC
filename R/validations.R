@@ -27,7 +27,7 @@ validate_cas <- function(cas){
 #' @title extract PROCESSED_YYYYMMDD folder from input folder path
 #'
 #' @description extract PROCESSED_YYYYMMDD folder from input folder path
-#' @param cas (char) cas code
+#' @param input_results_folder (char) input_results_folder path
 #' @return (vector) PROCESSED_YYYYMMDD folder name
 #' @export
 validate_processFolder <- function(input_results_folder){
@@ -46,7 +46,6 @@ validate_processFolder <- function(input_results_folder){
 #'
 #' @description extract ASSAY from input folder path
 #' @param input_results_folder (char) input_results_folder path
-#' @param verbose (logical) `TRUE` (default) shows messages
 #' @return (vector) ASSAY code
 #' @export
 validate_assay <- function(input_results_folder){
