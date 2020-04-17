@@ -1,0 +1,42 @@
+bic_tissue_code	bic_tissue_name
+T30	Blood RNA
+T31	EDTA Plasma
+T32	Packed Cells
+T33	Hippocampus
+T34	Cortex
+T35	Hypothalamus
+T36	Gastrocnemius
+T37	Vastus Lateralis
+T38	Tibia
+T39	Heart
+T40	Kidney
+T41	Adrenals
+T42	Colon
+T43	Spleen
+T44	Testes
+T45	Ovaries
+T46	Brown Adipose
+T47	White Adipose
+T48	Aorta
+T49	Lung
+T50	Small Intestine
+T51	Liver
+T52	Hippocampus Powder
+T53	Cortex Powder
+T54	Hypothalamus Powder
+T55	Gastrocnemius Powder
+T56	Vastus Lateralis Powder
+T57	Tibia Powder
+T58	Heart Powder
+T59	Kidney Powder
+T60	Adrenal Powder
+T61	Colon Powder
+T62	Spleen Powder
+T63	Testes Powder
+T64	Ovaries Powder
+T65	Aorta Powder
+T66	Lung Powder
+T67	Small Intestine Powder
+T68	Liver Powder
+T69	Brown Adipose Powder
+T70	White Adipose Powder
