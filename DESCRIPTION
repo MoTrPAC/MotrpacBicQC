@@ -1,11 +1,34 @@
-Package: Rmotrpac
+Package: MotrpacBicQC
 Type: Package
-Title: R functions for the MoTrPAC community
+Title: QC/QA functions for the MoTrPAC community
 Version: 0.1.0
-Author: MoTrPAC Bioinformatics Center (BIC)
+Author: David JM, David Amar (MoTrPAC Bioinformatics Center)
 Maintainer: David Jimenez-Morales <davidjm@stanford.edu>
-Description: Useful functions for the QC/QA analysis of MoTrPAC data submissions
+Description: R Package for the analysis of MoTrPAC datasets. 
+    The Molecular Transducers of Physical Activity Consortium (MoTrPAC) is 
+    a national research consortium designed to discover and perform 
+    preliminary characterization of the range of molecular transducers 
+    (the "molecular map") that underlie the effects of physical activity 
+    in humans. 
+    This package provides a set of functions for Primary and Secondary 
+    QC/QA analysis of datasets generated and submitted by the consortium 
+    Chemical Analysis Sites (CAS).
 License: MIT + file LICENSE
-URL: https://github.com/MoTrPAC/Rmotrpac
+URL: https://github.com/MoTrPAC/MotrpacBicQC
 Encoding: UTF-8
 LazyData: true
+BugReports: https://github.com/MoTrPAC/MotrpacBicQC/issues
+Depends: R (>= 3.6.0)
+Imports:
+    data.table (>= 1.12.8),
+    dplyr (>= 0.8.4),
+    jsonlite (>= 1.6.1),
+    knitr (>= 1.28),
+    purrr (>= 0.3.3),
+    readxl (>= 1.3.1),
+    stringr (>= 1.4.0),
+    utils (>= 3.6.1)
+NeedsCompilation: no
+VignetteBuilder: knitr
+RoxygenNote: 7.0.2
+Roxygen: list(markdown = TRUE)
