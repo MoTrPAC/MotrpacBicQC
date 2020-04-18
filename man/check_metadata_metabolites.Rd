@@ -21,3 +21,8 @@ check_metadata_metabolites(df, nameun, return_n_issues = FALSE, verbose = TRUE)
 \description{
 check whether metadata_metabolites is following guidelines
 }
+\examples{
+{
+check_metadata_metabolites(df = metadata_metabolites_named, nameun = "named")
+}
+}

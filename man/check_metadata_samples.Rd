@@ -21,3 +21,8 @@ check_metadata_samples(df, cas, return_n_issues = FALSE, verbose = TRUE)
 \description{
 check whether metadata_sample is following guidelines
 }
+\examples{
+{
+check_metadata_samples(df = metadata_sample_named, cas = "umichigan")
+}
+}

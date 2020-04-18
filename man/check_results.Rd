@@ -23,3 +23,8 @@ check_results(r_m, m_s, m_m, return_n_issues = FALSE, verbose = TRUE)
 \description{
 check whether results file is following guidelines
 }
+\examples{
+{
+check_results(r_m = results_named, m_s = metadata_sample_named, m_m = metadata_metabolites_named)
+}
+}

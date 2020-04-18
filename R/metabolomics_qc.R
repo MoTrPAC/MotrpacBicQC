@@ -18,6 +18,9 @@ utils::globalVariables(
 #' @param return_n_issues (logical) if `TRUE` returns the number of issues.
 #' @param verbose (logical) `TRUE` (default) shows messages
 #' @return (int) number of issues identified
+#' @examples {
+#' check_metadata_metabolites(df = metadata_metabolites_named, nameun = "named")
+#' }
 #' @export
 check_metadata_metabolites <- function(df,
                                        nameun,
@@ -167,6 +170,9 @@ check_metadata_metabolites <- function(df,
 #' @param return_n_issues (logical) if `TRUE` returns the number of issues.
 #' @param verbose (logical) `TRUE` (default) shows messages
 #' @return (int) number of issues identified
+#' @examples {
+#' check_metadata_samples(df = metadata_sample_named, cas = "umichigan")
+#' }
 #' @export
 check_metadata_samples <- function(df,
                                    cas,
@@ -278,6 +284,9 @@ check_metadata_samples <- function(df,
 #' @param return_n_issues (logical) if `TRUE` returns the number of issues
 #' @param verbose (logical) `TRUE` (default) shows messages
 #' @return (int) number of issues identified
+#' @examples {
+#' check_results(r_m = results_named, m_s = metadata_sample_named, m_m = metadata_metabolites_named)
+#' }
 #' @export
 check_results <- function(r_m,
                           m_s,
