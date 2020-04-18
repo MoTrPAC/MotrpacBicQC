@@ -305,7 +305,7 @@ check_results <- function(r_m,
     flag_out <- FALSE
     ic <- ic + 1
   }else{
-    if(verbose) message("   + (+) [results_metabolite] file unique values OK")
+    if(verbose) message("   + (+) All samples from [results_metabolite] are available in [metadata_sample]")
   }
 
   # Check that metabolites names matches
