@@ -11,6 +11,7 @@ check_viallabel_dmaqc(
   cas,
   phase,
   failed_samples,
+  return_n_issues = FALSE,
   verbose = TRUE
 )
 }
@@ -26,6 +27,8 @@ check_viallabel_dmaqc(
 \item{phase}{(char) phase code}
 
 \item{failed_samples}{(char) metadata_metabolites df}
+
+\item{return_n_issues}{(logical) if \code{TRUE} returns the number of issues}
 
 \item{verbose}{(logical) \code{TRUE} (default) shows messages}
 }

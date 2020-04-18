@@ -10,6 +10,7 @@ validate_metabolomics(
   tissue_code,
   phase,
   dmaqc_shipping_info,
+  return_n_issues = FALSE,
   verbose = TRUE
 )
 }
@@ -23,6 +24,8 @@ validate_metabolomics(
 \item{phase}{(char) phase code}
 
 \item{dmaqc_shipping_info}{(char) phase code}
+
+\item{return_n_issues}{(logical) if \code{TRUE} returns the number of issues}
 
 \item{verbose}{(logical) \code{TRUE} (default) shows messages}
 }

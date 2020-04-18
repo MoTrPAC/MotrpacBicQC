@@ -15,11 +15,13 @@ utils::globalVariables(
 #' @description check whether metadata_metabolites is following guidelines
 #' @param df (data.frame) metadata_metabolites
 #' @param nameun (char) specify whether `named` or `unnamed` files
+#' @param return_n_issues (logical) if `TRUE` returns the number of issues.
 #' @param verbose (logical) `TRUE` (default) shows messages
 #' @return (int) number of issues identified
 #' @export
 check_metadata_metabolites <- function(df,
                                        nameun,
+                                       return_n_issues = FALSE,
                                        verbose = TRUE){
 
   # issue_count
@@ -150,7 +152,9 @@ check_metadata_metabolites <- function(df,
       if(verbose) message("   + ( ) {neutral_mass} column missed (but not-required for UNNAMED)")
     }
   }
-  return(ic)
+
+  if(return_n_issues) return(ic)
+
 } #end check_metadata_metabolites
 
 
@@ -160,11 +164,13 @@ check_metadata_metabolites <- function(df,
 #' @description check whether metadata_sample is following guidelines
 #' @param df (data.frame) metadata_metabolites
 #' @param cas (char) CAS site code
+#' @param return_n_issues (logical) if `TRUE` returns the number of issues.
 #' @param verbose (logical) `TRUE` (default) shows messages
 #' @return (int) number of issues identified
 #' @export
 check_metadata_samples <- function(df,
                                    cas,
+                                   return_n_issues = FALSE,
                                    verbose = TRUE){
 
   # issue_count
@@ -255,7 +261,8 @@ check_metadata_samples <- function(df,
     if(verbose) message("      - (-) {raw_file} column missed: FAIL")
     ic <- ic + 1
   }
-  return(ic)
+
+  if(return_n_issues) return(ic)
 } #end check_metadata_samples
 
 
@@ -268,12 +275,14 @@ check_metadata_samples <- function(df,
 #' @param r_m (data.frame) results df
 #' @param m_s (char) metadata_sample df
 #' @param m_m (char) metadata_metabolites df
+#' @param return_n_issues (logical) if `TRUE` returns the number of issues
 #' @param verbose (logical) `TRUE` (default) shows messages
 #' @return (int) number of issues identified
 #' @export
 check_results <- function(r_m,
                           m_s,
                           m_m,
+                          return_n_issues = FALSE,
                           verbose = TRUE){
 
   # issue_count
@@ -326,7 +335,8 @@ check_results <- function(r_m,
   }else{
     ic <- ic + 1
   }
-  return(ic)
+
+  if(return_n_issues) return(ic)
 } # check_results
 
 # ------------------------------------------------------------------------------
@@ -335,11 +345,13 @@ check_results <- function(r_m,
 #' @description check rawfiles between manifest and metabolite_sample matches
 #' @param input_results_folder (char) input path folder
 #' @param m_s_n_raw (list) list of raw files available in the metadata sample file
+#' @param return_n_issues (logical) if `TRUE` returns the number of issues
 #' @param verbose (logical) `TRUE` (default) shows messages
 #' @return (int) number of issues identified
 #' @export
 check_manifest_rawdata <- function(input_results_folder,
                                    m_s_n_raw,
+                                   return_n_issues = FALSE,
                                    verbose = TRUE){
 
   # issue_count
@@ -406,7 +418,7 @@ check_manifest_rawdata <- function(input_results_folder,
       }
     }
   }
-  return(ic)
+  if(return_n_issues) return(ic)
 }
 
 # ------------------------------------------------------------------------------
@@ -471,6 +483,7 @@ check_failedsamples <- function(input_results_folder,
 #' @param cas (char) CAS code
 #' @param phase (char) phase code
 #' @param failed_samples (char) metadata_metabolites df
+#' @param return_n_issues (logical) if `TRUE` returns the number of issues
 #' @param verbose (logical) `TRUE` (default) shows messages
 #' @return (int) number of issues identified
 #' @export
@@ -480,6 +493,7 @@ check_viallabel_dmaqc <- function(vl_submitted,
                                   cas,
                                   phase,
                                   failed_samples,
+                                  return_n_issues = FALSE,
                                   verbose = TRUE){
 
   # issue_count
@@ -509,7 +523,7 @@ check_viallabel_dmaqc <- function(vl_submitted,
     }
 
   }
-  return(ic)
+  if(return_n_issues) return(ic)
 }
 
 # ------------------------------------------------------------------------------
@@ -521,6 +535,7 @@ check_viallabel_dmaqc <- function(vl_submitted,
 #' @param cas (char) CAS code
 #' @param phase (char) phase code
 #' @param dmaqc_shipping_info (char) phase code
+#' @param return_n_issues (logical) if `TRUE` returns the number of issues
 #' @param verbose (logical) `TRUE` (default) shows messages
 #' @return (data.frame) Summary of issues
 #' @export
@@ -529,6 +544,7 @@ validate_metabolomics <- function(input_results_folder,
                                   tissue_code,
                                   phase,
                                   dmaqc_shipping_info,
+                                  return_n_issues = FALSE,
                                   verbose = TRUE){
 
   # issue_count
@@ -571,7 +587,7 @@ validate_metabolomics <- function(input_results_folder,
   f_mmn <- lista$flag
   if(f_mmn){
     m_m_n <- lista$df
-    ic_m_m_n <- check_metadata_metabolites(m_m_n, "named")
+    ic_m_m_n <- check_metadata_metabolites(m_m_n, "named", return_n_issues = TRUE)
   }else{
     if(verbose) message("      - (-) {metadata_metabolites_named} not available")
     ic <- ic + 1
@@ -583,7 +599,7 @@ validate_metabolomics <- function(input_results_folder,
     f_mmu <- lista$flag
     if(f_mmu) {
       m_m_u <- lista$df
-      ic_m_m_u <- check_metadata_metabolites(m_m_u, "unnamed")
+      ic_m_m_u <- check_metadata_metabolites(m_m_u, "unnamed", return_n_issues = TRUE)
     }else{
       if(verbose) message("      - (-) {metadata_metabolites_unnamed} not available")
       ic <- ic + 1
@@ -598,7 +614,7 @@ validate_metabolomics <- function(input_results_folder,
   f_msn <- lista$flag
   if(f_msn){
     m_s_n <- lista$df
-    ic_m_s_n <- check_metadata_samples(df = m_s_n, cas = cas)
+    ic_m_s_n <- check_metadata_samples(df = m_s_n, cas = cas, return_n_issues = TRUE)
     # Extract the number of samples
     if(!is.null(m_s_n)){
       #Double check that the columns are there
@@ -615,7 +631,7 @@ validate_metabolomics <- function(input_results_folder,
     f_msu <- lista$flag
     if(f_msu){
       m_s_u <- lista$df
-      ic_m_s_u <- check_metadata_samples(m_s_u, cas)
+      ic_m_s_u <- check_metadata_samples(m_s_u, cas, return_n_issues = TRUE)
     }
 
     # NAMED AND UNNAMED MUST MATCH TESTS
@@ -643,7 +659,10 @@ validate_metabolomics <- function(input_results_folder,
   if(f_rmn){
     r_m_n <- lista$df
     if(f_msn & f_mmn){
-      ic_r_m_n <- check_results(r_m = r_m_n, m_s = m_s_n, m_m = m_m_n)
+      ic_r_m_n <- check_results(r_m = r_m_n,
+                                m_s = m_s_n,
+                                m_m = m_m_n,
+                                return_n_issues = TRUE)
     }
   }else{
     if(verbose) message("      - (-) RESULTS-NAMED file not available")
@@ -657,7 +676,10 @@ validate_metabolomics <- function(input_results_folder,
     if(f_rmu){
       r_m_u <- lista$df
       if(f_msu & f_mmu){
-        ic_r_m_u <- check_results(r_m_u, m_s_u, m_m_u)
+        ic_r_m_u <- check_results(r_m_u,
+                                  m_s_u,
+                                  m_m_u,
+                                  return_n_issues = TRUE)
       }
     }else{
       if(verbose) message("      - (-) UNNAMED-RESULTS file not available ")
@@ -686,7 +708,9 @@ validate_metabolomics <- function(input_results_folder,
 
   if(f_msn){
     if(verbose) message("\n\n## QC raw_file information\n")
-    ic_mrd <- check_manifest_rawdata(input_results_folder = input_results_folder, m_s_n_raw = unique(m_s_n$raw_file))
+    ic_mrd <- check_manifest_rawdata(input_results_folder = input_results_folder,
+                                     m_s_n_raw = unique(m_s_n$raw_file),
+                                     return_n_issues = TRUE)
   }else{
     if(verbose) message("\n\n## Validate {raw_files} match between [RAW/Manifest.txt] and [metadata_samples]\n")
     if(verbose) message("      (-) FAIL (medatada_samples file not available)")
@@ -704,7 +728,8 @@ validate_metabolomics <- function(input_results_folder,
                                    cas = cas,
                                    phase = phase,
                                    failed_samples = failed_samples,
-                                   dmaqc_shipping_info = dmaqc_shipping_info)
+                                   dmaqc_shipping_info = dmaqc_shipping_info,
+                                   return_n_issues = TRUE)
   }
 
   batchversion <- stringr::str_extract(string = input_results_folder, pattern = "BATCH.*_[0-9]+/PROCESSED_[0-9]+")
@@ -735,8 +760,10 @@ validate_metabolomics <- function(input_results_folder,
                         results_u = ic_r_m_u,
                         qc_date = qc_date)
 
-  return(reports)
+  if(return_n_issues) return(reports)
 }
+
+
 
 
 

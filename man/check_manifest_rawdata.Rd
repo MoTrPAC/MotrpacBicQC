@@ -4,12 +4,19 @@
 \alias{check_manifest_rawdata}
 \title{check rawfiles between manifest and metabolite_sample matches}
 \usage{
-check_manifest_rawdata(input_results_folder, m_s_n_raw, verbose = TRUE)
+check_manifest_rawdata(
+  input_results_folder,
+  m_s_n_raw,
+  return_n_issues = FALSE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{input_results_folder}{(char) input path folder}
 
 \item{m_s_n_raw}{(list) list of raw files available in the metadata sample file}
+
+\item{return_n_issues}{(logical) if \code{TRUE} returns the number of issues}
 
 \item{verbose}{(logical) \code{TRUE} (default) shows messages}
 }

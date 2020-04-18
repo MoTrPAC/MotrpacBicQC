@@ -4,7 +4,7 @@
 \alias{check_results}
 \title{check results}
 \usage{
-check_results(r_m, m_s, m_m, verbose = TRUE)
+check_results(r_m, m_s, m_m, return_n_issues = FALSE, verbose = TRUE)
 }
 \arguments{
 \item{r_m}{(data.frame) results df}
@@ -12,6 +12,8 @@ check_results(r_m, m_s, m_m, verbose = TRUE)
 \item{m_s}{(char) metadata_sample df}
 
 \item{m_m}{(char) metadata_metabolites df}
+
+\item{return_n_issues}{(logical) if \code{TRUE} returns the number of issues}
 
 \item{verbose}{(logical) \code{TRUE} (default) shows messages}
 }
