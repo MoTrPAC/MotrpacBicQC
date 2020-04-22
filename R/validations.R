@@ -1,7 +1,6 @@
 # VALIDATIONS
-#
-#
-# ------------------------------------------------------------------------------
+
+
 #' @title validate cas code
 #'
 #' @description validate CAS code
@@ -23,7 +22,7 @@ validate_cas <- function(cas){
   }
 }
 
-# ------------------------------------------------------------------------------
+
 #' @title extract PROCESSED_YYYYMMDD folder from input folder path
 #'
 #' @description extract PROCESSED_YYYYMMDD folder from input folder path
@@ -41,7 +40,8 @@ validate_processFolder <- function(input_results_folder){
   }
 }
 
-# ------------------------------------------------------------------------------
+
+
 #' @title extract ASSAY from input folder path
 #'
 #' @description extract ASSAY from input folder path
@@ -59,7 +59,8 @@ validate_assay <- function(input_results_folder){
   }
 }
 
-# ------------------------------------------------------------------------------
+
+
 #' @title extract PHASE from input folder path
 #'
 #' @description extract ASSAY from input folder path
@@ -76,7 +77,8 @@ validate_phase <- function(input_results_folder){
   }
 }
 
-# ------------------------------------------------------------------------------
+
+
 #' @title extract and validate TISSUE CODE from input folder path
 #'
 #' @description extract and validate TISSUE CODE from input folder path
@@ -99,3 +101,6 @@ validate_tissue <- function(input_results_folder){
     return(tissue_code)
   }
 }
+
+
+

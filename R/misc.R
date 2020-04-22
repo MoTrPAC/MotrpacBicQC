@@ -1,9 +1,14 @@
+# Add package by alphabetical order
+#' @importFrom data.table rbindlist as.data.table
+#' @importFrom dplyr select_if
+#' @importFrom jsonlite fromJSON
 #' @import knitr
+#' @import purrr
+#' @import stringr
 #' @import utils
+#______________________________________________________________________________
 
-# Remove empty columns in data frame
 
-# ------------------------------------------------------------------------------
 #' @title open files
 #'
 #' @description open files and check that they are right
@@ -56,7 +61,7 @@ open_file <- function(input_results_folder,
   return(list_back)
 }
 
-# ------------------------------------------------------------------------------
+
 #' @title remove empty columns
 #'
 #' @description remove empty columns
@@ -78,7 +83,8 @@ remove_empty_columns <- function(df,
   }
   return(df)
 }
-# ------------------------------------------------------------------------------
+
+
 #' @title remove empty rows in data frame
 #'
 #' @description remove empty rows in data frame

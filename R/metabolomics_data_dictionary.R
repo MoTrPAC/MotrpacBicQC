@@ -1,7 +1,7 @@
-#' @importFrom jsonlite fromJSON
-#' @importFrom data.table rbindlist as.data.table
 
-# ------------------------------------------------------------------------------
+# All about the RefMet data dictionary
+
+
 #' @title Get and validate Metabolomics Data Dictionary from Metabolomics Workbench
 #'
 #' @description Get and validate Metabolomics Data Dictionary from
