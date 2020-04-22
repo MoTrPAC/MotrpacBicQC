@@ -1,15 +1,13 @@
-#' @import purrr
-#' @import stringr
-#' @importFrom dplyr select_if
+
 
 utils::globalVariables(
   c(".id",
     "bic_animal_tissue_code"))
 
-# PRIMARY QC METABOLOMICS DATASETS
-#
-#
-# ------------------------------------------------------------------------------
+
+# METABOLOMICS DATASETS: PRIMARY QC
+#______________________________________________________________________________
+
 #' @title check metadata metabolites
 #'
 #' @description check whether metadata_metabolites is following guidelines
@@ -159,6 +157,7 @@ check_metadata_metabolites <- function(df,
   if(return_n_issues) return(ic)
 
 } #end check_metadata_metabolites
+
 
 
 # ------------------------------------------------------------------------------
