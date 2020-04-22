@@ -1,0 +1,8 @@
+*.Rproj.user
+*.Rhistory
+*.Ruserdata
+*.Rproj
+
+# Mac OS X
+*.DS_Store
+.Rproj.user
