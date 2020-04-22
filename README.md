@@ -3,6 +3,11 @@ MotrpacBicQC
 
 *An R package for the MoTrPAC community*
 
+---
+
+[![CircleCI](https://circleci.com/gh/MoTrPAC/MotrpacBicQC.svg?style=svg&circle-token=f33574f27b84d17c137bc7630ae79fdb9e6fa301)](https://circleci.com/gh/MoTrPAC/MotrpacBicQC)
+
+  
 ## Overview
 
 This package provides a set of functions for Primary and Secondary 
