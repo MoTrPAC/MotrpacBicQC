@@ -25,7 +25,6 @@ Imports:
     jsonlite,
     knitr,
     purrr,
-    readxl,
     stringr,
     utils
 NeedsCompilation: no
