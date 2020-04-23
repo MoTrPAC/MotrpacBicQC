@@ -4,12 +4,17 @@
 \alias{check_metadata_metabolites}
 \title{check metadata metabolites}
 \usage{
-check_metadata_metabolites(df, nameun, return_n_issues = FALSE, verbose = TRUE)
+check_metadata_metabolites(
+  df,
+  name_id,
+  return_n_issues = FALSE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{df}{(data.frame) metadata_metabolites}
 
-\item{nameun}{(char) specify whether \code{named} or \code{unnamed} files}
+\item{name_id}{(char) specify whether \code{named} or \code{unnamed} files}
 
 \item{return_n_issues}{(logical) if \code{TRUE} returns the number of issues.}
 
@@ -23,6 +28,6 @@ check whether metadata_metabolites is following guidelines
 }
 \examples{
 {
-check_metadata_metabolites(df = metadata_metabolites_named, nameun = "named")
+check_metadata_metabolites(df = metadata_metabolites_named, name_id = "named")
 }
 }
