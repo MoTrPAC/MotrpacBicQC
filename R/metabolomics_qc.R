@@ -6,34 +6,34 @@ utils::globalVariables(
 
 
 # METABOLOMICS DATASETS: PRIMARY QC
-#______________________________________________________________________________
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #' @title check metadata metabolites
 #'
 #' @description check whether metadata_metabolites is following guidelines
 #' @param df (data.frame) metadata_metabolites
-#' @param nameun (char) specify whether `named` or `unnamed` files
+#' @param name_id (char) specify whether `named` or `unnamed` files
 #' @param return_n_issues (logical) if `TRUE` returns the number of issues.
 #' @param verbose (logical) `TRUE` (default) shows messages
 #' @return (int) number of issues identified
 #' @examples {
-#' check_metadata_metabolites(df = metadata_metabolites_named, nameun = "named")
+#' check_metadata_metabolites(df = metadata_metabolites_named, name_id = "named")
 #' }
 #' @export
 check_metadata_metabolites <- function(df,
-                                       nameun,
+                                       name_id,
                                        return_n_issues = FALSE,
                                        verbose = TRUE){
 
   # issue_count
   ic <- 0
 
-  if(nameun == "named"){
+  if(name_id == "named"){
     emeta_metabo_coln_named <- c("metabolite_name", "refmet_name", "rt", "mz", "neutral_mass", "formula")
-  }else if(nameun == "unnamed"){
+  }else if(name_id == "unnamed"){
     emeta_metabo_coln_named <- c("metabolite_name", "rt", "mz", "neutral_mass")
   }else{
-    stop("{nameun} option not valid. Options: named/unnamed")
+    stop("{name_id} option not valid. Options: named/unnamed")
   }
 
   colnames(df) <- tolower(colnames(df))
@@ -64,7 +64,7 @@ check_metadata_metabolites <- function(df,
   mdd <- get_and_validate_mdd()
 
   # refmet_name only expected on named metabolites
-  if(nameun == "named"){
+  if(name_id == "named"){
     if("refmet_name" %in% colnames(df)){
       if(length(unique(df$refmet_name)) != dim(df)[1]){
         duplis_details <- df$refmet_name[duplicated(df$refmet_name)]
@@ -118,7 +118,7 @@ check_metadata_metabolites <- function(df,
     ic <- ic + 1
   }
 
-  if(nameun == "named"){
+  if(name_id == "named"){
     if("neutral_mass" %in% colnames(df)){
       if(!all(is.numeric(df$neutral_mass))){
         if(verbose) message("      - (-) {neutral_mass}: non numeric values found: FAIL")
@@ -160,7 +160,7 @@ check_metadata_metabolites <- function(df,
 
 
 
-# ------------------------------------------------------------------------------
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' @title check metadata samples
 #'
 #' @description check whether metadata_sample is following guidelines
@@ -273,7 +273,7 @@ check_metadata_samples <- function(df,
 
 # RESULTS
 
-# ------------------------------------------------------------------------------
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' @title check results
 #'
 #' @description check whether results file is following guidelines
@@ -347,7 +347,7 @@ check_results <- function(r_m,
   if(return_n_issues) return(ic)
 } # check_results
 
-# ------------------------------------------------------------------------------
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' @title check rawfiles between manifest and metabolite_sample matches
 #'
 #' @description check rawfiles between manifest and metabolite_sample matches
@@ -429,7 +429,7 @@ check_manifest_rawdata <- function(input_results_folder,
   if(return_n_issues) return(ic)
 }
 
-# ------------------------------------------------------------------------------
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' @title check failed samples file for reported missing vial label ids
 #'
 #' @description check failed samples file for reported missing vial label ids
@@ -481,7 +481,7 @@ check_failedsamples <- function(input_results_folder,
   }
 }
 
-# ------------------------------------------------------------------------------
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' @title validate vial label from DMAQC
 #'
 #' @description validate vial label from DMAQC
@@ -534,26 +534,34 @@ check_viallabel_dmaqc <- function(vl_submitted,
   if(return_n_issues) return(ic)
 }
 
-# ------------------------------------------------------------------------------
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' @title Validate a Metabolomics submission
 #'
 #' @description Validate a Metabolomics submission
 #' @param input_results_folder (char) path to the PROCESSED folder to check
-#' @param tissue_code (char) tissue code
 #' @param cas (char) CAS code
-#' @param phase (char) phase code
 #' @param dmaqc_shipping_info (char) phase code
 #' @param return_n_issues (logical) if `TRUE` returns the number of issues
+#' @param full_report (logical) if `FALSE` (default) it returns only the
+#' total number of issues. If `TRUE` returns the details of the number of issues (by
+#' group of files, e.g., results, metadata_metabolites, etc)
 #' @param verbose (logical) `TRUE` (default) shows messages
 #' @return (data.frame) Summary of issues
 #' @export
 validate_metabolomics <- function(input_results_folder,
                                   cas,
-                                  tissue_code,
-                                  phase,
-                                  dmaqc_shipping_info,
+                                  dmaqc_shipping_info = NULL,
                                   return_n_issues = FALSE,
+                                  full_report = FALSE,
                                   verbose = TRUE){
+
+  processfolder <- validate_processFolder(input_results_folder)
+
+  assay <- validate_assay(input_results_folder)
+
+  phase <- validate_phase(input_results_folder)
+
+  tissue_code <- validate_tissue(input_results_folder)
 
   # issue_count
   ic <- 0
@@ -564,7 +572,11 @@ validate_metabolomics <- function(input_results_folder,
   ic_r_m_n <- NA
   ic_r_m_u <- NA
   ic_mrd <- NA
-  ic_vl <- NA
+  if(is.null(dmaqc_shipping_info)){
+    ic_vl <- "missed"
+  } else{
+    ic_vl <- NA
+  }
   vial_label <- NA
   qc_samples <- NA
 
@@ -728,47 +740,59 @@ validate_metabolomics <- function(input_results_folder,
   if(verbose) message("\n\n## DMAQC validation\n")
   failed_samples <- check_failedsamples(input_results_folder = input_results_folder)
 
-  # Validate vial labels
-  if(f_msn){
-    vl_results <- m_s_n$sample_id[which(m_s_n$sample_type == "Sample")]
-    ic_vl <- check_viallabel_dmaqc(vl_submitted = vl_results,
-                                   tissue_code = tissue_code,
-                                   cas = cas,
-                                   phase = phase,
-                                   failed_samples = failed_samples,
-                                   dmaqc_shipping_info = dmaqc_shipping_info,
-                                   return_n_issues = TRUE)
+  # Validate vial labels from DMAQC
+  if(is.na(ic_vl)){
+    if(f_msn){
+      vl_results <- m_s_n$sample_id[which(m_s_n$sample_type == "Sample")]
+      ic_vl <- check_viallabel_dmaqc(vl_submitted = vl_results,
+                                     tissue_code = tissue_code,
+                                     cas = cas,
+                                     phase = phase,
+                                     failed_samples = failed_samples,
+                                     dmaqc_shipping_info = dmaqc_shipping_info,
+                                     return_n_issues = TRUE)
+    }
+  }
+
+  if(ic > 4){
+    message("\nERROR: Too many files missed. Please, provide the full path to PROCESSED_YYYYMMDD folder
+         input_results_folder = /full/path/to/PROCESSED_YYYYMMDD\n")
+    stop("Revise <input_results_folder> argument")
   }
 
   batchversion <- stringr::str_extract(string = input_results_folder, pattern = "BATCH.*_[0-9]+/PROCESSED_[0-9]+")
-  assay <- stringr::str_extract(string = input_results_folder,
-                                pattern = "IONPNEG|RPNEG|RPPOS|HILICPOS|LRPPOS|LRPNEG|OXYLIPNEG")
 
   qc_date <- Sys.time()
   qc_date <- gsub("-", "", qc_date)
   qc_date <- gsub(" ", "_", qc_date)
   qc_date <- gsub(":", "", qc_date)
+  t_name <- bic_animal_tissue_code$bic_tissue_name[which(bic_animal_tissue_code$bic_tissue_code == tissue_code)]
 
-  reports <- data.frame(cas = cas,
-                        phase= phase,
-                        tissue = tissue_code,
-                        t_name = bic_animal_tissue_code$bic_tissue_name[which(bic_animal_tissue_code$bic_tissue_code == tissue_code)],
-                        assay = assay,
-                        version = batchversion,
-                        vial_label = vial_label,
-                        qc_samples = qc_samples,
-                        dmaqc_valid = ic_vl,
-                        critical_issues = ic,
-                        raw_manifest = ic_mrd,
-                        m_metab_n = ic_m_m_n,
-                        m_metab_u = ic_m_m_u,
-                        m_sample_n = ic_m_s_n,
-                        m_sample_u = ic_m_s_u,
-                        results_n = ic_r_m_n,
-                        results_u = ic_r_m_u,
-                        qc_date = qc_date)
-
-  if(return_n_issues) return(reports)
+  if(return_n_issues){
+    issues <- ic + ic_mrd + ic_m_m_n + ic_m_m_u + ic_m_s_n + ic_m_s_u + ic_r_m_n + ic_r_m_u
+    if(verbose) message("\nTOTAL NUMBER OF ISSUES: ", issues,"\n")
+    if(full_report){
+      reports <- data.frame(cas = cas,
+                            phase= phase,
+                            tissue = tissue_code,
+                            t_name = t_name,
+                            assay = assay,
+                            version = batchversion,
+                            vial_label = vial_label,
+                            qc_samples = qc_samples,
+                            dmaqc_valid = ic_vl,
+                            critical_issues = ic,
+                            raw_manifest = ic_mrd,
+                            m_metab_n = ic_m_m_n,
+                            m_metab_u = ic_m_m_u,
+                            m_sample_n = ic_m_s_n,
+                            m_sample_u = ic_m_s_u,
+                            results_n = ic_r_m_n,
+                            results_u = ic_r_m_u,
+                            qc_date = qc_date)
+      return(reports)
+    }
+  }
 }
 
 

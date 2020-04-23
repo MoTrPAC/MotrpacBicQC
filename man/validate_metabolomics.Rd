@@ -7,10 +7,9 @@
 validate_metabolomics(
   input_results_folder,
   cas,
-  tissue_code,
-  phase,
-  dmaqc_shipping_info,
+  dmaqc_shipping_info = NULL,
   return_n_issues = FALSE,
+  full_report = FALSE,
   verbose = TRUE
 )
 }
@@ -19,13 +18,13 @@ validate_metabolomics(
 
 \item{cas}{(char) CAS code}
 
-\item{tissue_code}{(char) tissue code}
-
-\item{phase}{(char) phase code}
-
 \item{dmaqc_shipping_info}{(char) phase code}
 
 \item{return_n_issues}{(logical) if \code{TRUE} returns the number of issues}
+
+\item{full_report}{(logical) if \code{FALSE} (default) it returns only the
+total number of issues. If \code{TRUE} returns the details of the number of issues (by
+group of files, e.g., results, metadata_metabolites, etc)}
 
 \item{verbose}{(logical) \code{TRUE} (default) shows messages}
 }
