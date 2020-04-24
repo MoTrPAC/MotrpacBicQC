@@ -1,11 +1,10 @@
-MotrpacBicQC
-===
+# MotrpacBicQC
 
 *An R package for the MoTrPAC community*
 
 ---
 
-[![CircleCI](https://circleci.com/gh/MoTrPAC/MotrpacBicQC.svg?style=svg&circle-token=f33574f27b84d17c137bc7630ae79fdb9e6fa301)](https://circleci.com/gh/MoTrPAC/MotrpacBicQC)
+[![CircleCI](https://circleci.com/gh/MoTrPAC/MotrpacBicQC.svg?style=svg)](https://circleci.com/gh/MoTrPAC/MotrpacBicQC)
 
   
 ## Overview
@@ -18,7 +17,13 @@ Currently includes Metabolomics datasets only.
 
 ## Installation
 
-Only available from github
+### R and RStudio
+
+Download and install R and RStudio (if you don't have it already)
+
+### This package
+
+Open RStudio and
 
 - Install `devtools` library
 
@@ -26,49 +31,101 @@ Only available from github
 install.packages("devtools")
 ```
 
-- Install from github
+- Install this package from github
 
 ```
 library(devtools)
-install_github("MoTrPAC/MotrpacBicQC")
+devtools::install_github("MoTrPAC/MotrpacBicQC")
 ```
 
 ## Usage
 
-Load the library
+First, load the library
 
 ```
 library(MotrpacBicQC)
 ```
 
-And test some of the functions with the available test datasets. For example:
+And run any of the following tests to check that the package 
+is correctly installed it works. For example:
 
 ```
-check_metadata_metabolites(df = metadata_metabolites_named, nameun = "named")
+# Just copy and paste in the RStudio terminal
+
+check_metadata_metabolites(df = metadata_metabolites_named, name_id = "named")
 check_metadata_samples(df = metadata_sample_named, cas = "umichigan")
 check_results(r_m = results_named, m_s = metadata_sample_named, m_m = metadata_metabolites_named)
 ```
 
+### How to test your datasets
 
-## Notes for developers
+Two approaches available:
 
-Recommended steps using Rstudio (requires to set up `roxygen2` & RStudio)
+#### Check full `PROCESSED_YYYYMMDD` folder
 
-- Build documentation (`command + shift + D`)
-- Run the tests (`command + shift + T`)
-- Check everything (`command + shift + E`), which also run tests
-
-To load the package (`command + shift + D`)
-
-The R CMD check report should look like this:
+Run test on the full submission. For that, run the following command:
 
 ```
-── R CMD check results ───────────────────────────────── MotrpacBicQC 0.1.0 ────
-Duration: 41.6s
-
-0 errors ✓ | 0 warnings ✓ | 0 notes ✓
-
-R CMD check succeeded
+validate_metabolomics(input_results_folder = "/full/path/to/PROCESSED_YYYYMMDD", 
+                      cas = "your_site_code")
 ```
+
+**cas** is one of the followings:
+
+- "broad_met" = Broad Metabolomics
+- "emory"     = Emory
+- "mayo"      = Mayo Clinic
+- "umichigan" = Umichigan
+- "gtech"     = Georgia Tech
+- "duke"      = Duke
+
+#### Check individual files
+
+- Check metadata metabolites:
+
+```
+# Open the metadata_metabolites file(s)
+
+metadata_metabolites_named <- read.delim(file = "/path/to/your/file", stringsAsFactors = FALSE)
+metadata_metabolites_unnamed <- read.delim(file = "/path/to/your/file", stringsAsFactors = FALSE)
+
+check_metadata_metabolites(df = metadata_metabolites_named, name_id = "named")
+check_metadata_metabolites(df = metadata_metabolites_unnamed, name_id = "unnamed")
+
+```
+
+- Check metadata samples:
+
+```
+# Open your files
+metadata_sample_named <- read.delim(file = "/path/to/your/file", stringsAsFactors = FALSE)
+metadata_sample_unnamed <- read.delim(file = "/path/to/your/file", stringsAsFactors = FALSE)
+
+check_metadata_samples(df = metadata_sample_named, cas = "your_side_id")
+check_metadata_samples(df = metadata_sample_unnamed, cas = "your_side_id")
+```
+
+- Check results, which needs both both metadata metabolites and samples
+
+```
+# Open your files
+metadata_metabolites_named <- read.delim(file = "/path/to/your/file", stringsAsFactors = FALSE)
+metadata_sample_named <- read.delim(file = "/path/to/your/file", stringsAsFactors = FALSE)
+results_named <- read.delim(file = "/path/to/your/file", stringsAsFactors = FALSE)
+
+check_results(r_m = results_named, 
+              m_s = metadata_sample_named, 
+              m_m = metadata_metabolites_named)
+```
+
+## Help
+
+Need help? Please, [submit an issue here](https://github.com/MoTrPAC/MotrpacBicQC/issues) 
+providing as many details as possible.
+
+## Credit
+
+[MoTrPAC Bioinformatics Center](https://motrpac-data.org/)
+
 
 
