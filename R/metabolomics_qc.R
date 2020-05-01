@@ -1,8 +1,8 @@
 
 
 utils::globalVariables(
-  c(".id",
-    "bic_animal_tissue_code"))
+  c("bic_animal_tissue_code",
+    "phenotypes_pass1a06_short"))
 
 
 # METABOLOMICS DATASETS: PRIMARY QC
@@ -184,7 +184,7 @@ check_metadata_samples <- function(df,
   # Columns to check
   emeta_sample_coln <- c("sample_id", "sample_type", "sample_order", "raw_file")
 
-  colnames(df) <- tolower(colnames(df))
+  # colnames(df) <- tolower(colnames(df))
 
   if( all(emeta_sample_coln %in% colnames(df)) ){
     if(verbose) message("   + (+) All required columns present")
@@ -534,6 +534,7 @@ check_viallabel_dmaqc <- function(vl_submitted,
   if(return_n_issues) return(ic)
 }
 
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' @title Validate a Metabolomics submission
 #'
@@ -634,7 +635,7 @@ validate_metabolomics <- function(input_results_folder,
   f_msn <- lista$flag
   if(f_msn){
     m_s_n <- lista$df
-    ic_m_s_n <- check_metadata_samples(df = m_s_n, cas = cas, return_n_issues = TRUE)
+    check_metadata_samples(df = m_s_n, cas = cas, return_n_issues = TRUE)
     # Extract the number of samples
     if(!is.null(m_s_n)){
       #Double check that the columns are there
@@ -676,6 +677,7 @@ validate_metabolomics <- function(input_results_folder,
   # }
 
   f_rmn <- lista$flag
+  r_m_n <- NULL
   if(f_rmn){
     r_m_n <- lista$df
     if(f_msn & f_mmn){
@@ -707,7 +709,6 @@ validate_metabolomics <- function(input_results_folder,
     }
 
     if(f_rmn & f_rmu){
-      if(verbose) message("- Checking columns match between named and unnamed results\n")
       if(setequal(colnames(r_m_n), colnames(r_m_u))){
         if(verbose) message("   + (+) All samples found on both NAMED and UNNAMED files: OK")
       }else{
@@ -793,6 +794,434 @@ validate_metabolomics <- function(input_results_folder,
       return(reports)
     }
   }
+}
+
+#' @title Combines all files from a Metabolomics batch
+#'
+#' @description Combines all the files from an untargeted assay submission
+#' including metadata_sample, metadata_metabolites, results for both "NAMED" and "UNNAMED"
+#' folders
+#' @param input_results_folder (char) Path to the PROCESSED_YYYYMMDD folder
+#' @param cas (char) Chemical Analytical Site code (e.g "umichigan")
+#' @param verbose (logical) `TRUE` (default) shows messages
+#' @return (int) number of issues identified
+#' @examples \dontrun{
+#' all_datasets <- combine_metabolomics_batch(
+#'                         input_results_folder = "/full/path/to/PROCESSED_YYYYMMDD/"
+#'                         cas = "umichigan")
+#' }
+#' @export
+combine_metabolomics_batch <- function(input_results_folder,
+                                       cas,
+                                       verbose = TRUE){
+
+  m_m_n = m_m_u = m_s_n = r_m_n = r_m_u = NULL
+
+  # Validations----
+  cas <- tolower(cas)
+  validate_cas(cas)
+  processfolder <- validate_processFolder(input_results_folder)
+  assay <- validate_assay(input_results_folder)
+  phase <- validate_phase(input_results_folder)
+  tissue_code <- validate_tissue(input_results_folder)
+
+  # Output name----
+  output_name <- paste0(cas, ".", tissue_code, ".", tolower(phase), ".",tolower(assay), ".", tolower(processfolder))
+
+  # COUNTS AND FLAGS
+  ic <- 0
+
+  vial_label <- NA
+  qc_samples <- NA
+
+  # Load Metabolomics
+  if(verbose) message("# LOAD METABOLOMICS BATCH")
+  if(verbose) message("+ Site: ", cas)
+  if(verbose) message("+ Folder: `",paste0(input_results_folder),"`")
+
+  # Is a targeted site? Unname compounds not checked
+  untargeted <- TRUE
+
+  if(cas %in% c("mayo", "emory", "duke")){
+    untargeted <- FALSE
+  }
+
+  # metadata_metabolites------
+  lista <- open_file(input_results_folder = input_results_folder,
+                     filepattern = "metadata_metabolites_named.*.txt|Metadata_named_metabolites.txt",
+                     verbose = verbose)
+  f_mmn <- lista$flag
+  if(f_mmn){
+    m_m_n <- lista$df
+    check_metadata_metabolites(m_m_n, "named",
+                               return_n_issues = FALSE,
+                               verbose = verbose)
+  }else{
+    if(verbose) message("      - (-) {metadata_metabolites_named} not available")
+    ic <- ic + 1
+  }
+
+  if(untargeted){
+    if(verbose) message("\n*UNNAMED metadata metabolites*\n")
+    lista <- open_file(input_results_folder,
+                       "metadata_metabolites_unnamed.*.txt|Metadata_unnamed_metabolites.txt",
+                       verbose = verbose)
+    f_mmu <- lista$flag
+    if(f_mmu) {
+      m_m_u <- lista$df
+      check_metadata_metabolites(m_m_u, "unnamed",
+                                 return_n_issues = FALSE,
+                                 verbose = verbose)
+    }else{
+      if(verbose) message("      - (-) {metadata_metabolites_unnamed} not available")
+      ic <- ic + 1
+    }
+  }
+
+  # metadata_sample-----
+  if(verbose) message("\n\n## Metadata_sample files\n")
+  if(verbose) message("\n*NAMED metadata_sample*\n")
+
+  lista <- open_file(input_results_folder,
+                     "metadata_sample_named.*.txt|Metadata_named_samples.txt",
+                     verbose = verbose)
+  f_msn <- lista$flag
+  if(f_msn){
+    m_s_n <- lista$df
+    check_metadata_samples(df = m_s_n,
+                           cas = cas,
+                           return_n_issues = FALSE,
+                           verbose = verbose)
+    # Extract the number of samples
+    if(!is.null(m_s_n)){
+      #Double check that the columns are there
+      if( all(c("sample_id", "sample_type") %in% colnames(m_s_n)) ){
+        vial_label <- length(m_s_n$sample_id[which(m_s_n$sample_type == "Sample")])
+        qc_samples <- length(m_s_n$sample_id[which(m_s_n$sample_type != "Sample")])
+        if(verbose) message("\t+ Number of Samples: ",vial_label, " QCs: ", qc_samples)
+      }
+    }
+  }
+
+  if(untargeted){
+    if(verbose) message("\n*UNNAMED metadata_sample*\n")
+    lista <- open_file(input_results_folder,
+                       "metadata_sample_unnamed.*.txt|Metadata_unnamed_samples.txt",
+                       verbose = verbose)
+    f_msu <- lista$flag
+    if(f_msu){
+      m_s_u <- lista$df
+      check_metadata_samples(m_s_u, cas,
+                             return_n_issues = FALSE,
+                             verbose = verbose)
+    }
+
+    # NAMED AND UNNAMED MUST MATCH TESTS
+    if(f_msn & f_msu){
+      if(isTRUE(all.equal(m_s_n, m_s_u))){
+        if(verbose) message("   + (+) Metadata samples: named and unnamed are identical: OK")
+      }else{
+        stop("      - (-) Metadata samples: named and unnamed files differ")
+        # ic <- ic + 1
+      }
+    }
+  }
+
+
+  # results --------------------------------------------------------------------
+  if(verbose) message("\n\n## Results\n")
+  if(verbose) message("\n*NAMED results_metabolites*\n")
+
+  lista <- open_file(input_results_folder,
+                     "results_metabolites_named.*.txt|Results_named_metabolites.txt",
+                     verbose = verbose)
+
+  f_rmn <- lista$flag
+  if(f_rmn){
+    r_m_n <- lista$df
+    if(f_msn & f_mmn){
+      check_results(r_m = r_m_n,
+                    m_s = m_s_n,
+                    m_m = m_m_n,
+                    return_n_issues = FALSE,
+                    verbose = verbose)
+    }
+  }else{
+    if(verbose) message("      - (-) RESULTS-NAMED file not available")
+    ic <- ic + 1
+  }
+
+  if(untargeted){
+    if(verbose) message("\n*UNNAMED results_metabolites*\n")
+    lista <- open_file(input_results_folder,
+                       "results_metabolites_unnamed.*.txt|Results_unnamed_metabolites.txt",
+                       verbose = verbose)
+    f_rmu <- lista$flag
+    if(f_rmu){
+      r_m_u <- lista$df
+      if(f_msu & f_mmu){
+        check_results(r_m_u,
+                      m_s_u,
+                      m_m_u,
+                      return_n_issues = FALSE,
+                      verbose = verbose)
+      }
+    }else{
+      if(verbose) message("      - (-) UNNAMED-RESULTS file not available ")
+      ic <- ic + 1
+    }
+
+    if(f_rmn & f_rmu){
+      if(verbose) message("- Checking columns match between named and unnamed results")
+      if(setequal(colnames(r_m_n), colnames(r_m_u))){
+        if(verbose) message("   + (+) All samples found on both NAMED and UNNAMED files: OK")
+      }else{
+        if(verbose) message("      - (-) Samples DO NOT MATCH on both NAMED and UNNAMED files")
+        ic <- ic + 1
+        extra_in_rnamed <- setdiff(colnames(r_m_n), colnames(r_m_u))
+        if(length(extra_in_rnamed) > 0){
+          if(verbose) message("      - (-) Column(s) only found in [results NAMED] file: ", paste(extra_in_rnamed, collapse = "\n\t\t - "))
+        }
+
+        extra_in_unamed <- setdiff(colnames(r_m_u), colnames(r_m_n))
+        if(length(extra_in_unamed) > 0){
+          if(verbose) message("      - (-) Column(s) only found in [results UNNAMED] file: ", paste(extra_in_unamed, collapse = "\n\t\t - "))
+        }
+      }
+    }
+  }
+
+  if(ic > 0) stop("\nPROBLEMS merging datasets")
+
+  if(verbose) message("\n## MERGE")
+  if(verbose) message("\nAll metabolomics datasets + basic phenotypic information")
+  if(verbose) message("(it might take some time)")
+
+  all_merged <- merge_all_metabolomics(m_m_n = m_m_n,
+                                       m_m_u = m_m_u,
+                                       m_s_n = m_s_n,
+                                       r_n = r_m_n,
+                                       r_u = r_m_u,
+                                       phase = phase)
+
+  return(all_merged)
+
+}
+
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' @title Merge metabolomics metadata named and unnamed
+#'
+#' @description Merge metabolomics metadata
+#' @param m_m_n (df) metabolomics metadata named
+#' @param m_m_u (char) metabolomics metadata unnamed
+#' @return (data.frame) merged metadata metabolites
+#' @examples{
+#' m_m <- merge_metabolomics_metadata(m_m_n = metadata_metabolites_named,
+#'                                    m_m_u = metadata_metabolites_unnamed)
+#' }
+#' @export
+merge_metabolomics_metadata <- function(m_m_n, m_m_u){
+
+  colnames(m_m_n) <- tolower(colnames(m_m_n))
+
+  m_m_n$id <- "named"
+  m_m_u$id <- "unnamed"
+
+  colnames(m_m_u) <- tolower(colnames(m_m_u))
+  m_m_u$refmet_name <- NA
+  m_m_u$formula <- NA
+  m_m_u$formula <- NA
+  m_m_u$neutral_mass <- NA
+
+  right_columns <- c("metabolite_name", "refmet_name", "mz", "rt", "formula", "neutral_mass", "id")
+  m_m_n <- m_m_n[right_columns]
+  m_m_u <- m_m_u[right_columns]
+  m_m <- rbind(m_m_n, m_m_u)
+
+  m_m$metabolite <- ifelse(m_m$id == "named", m_m$refmet_name, m_m$metabolite_name)
+
+  return(m_m)
+}
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' @title Merge phenotypic and metabolics results
+#'
+#' @description Merge phenotypic data (phenotypes_pass1a06_short) and
+#' metabolomics merged results and metadata
+#' @param df_long (data.frame) Long format of a metabolomics merged results
+#' @return (data.frame) Merged file, including the following columns:
+#' \describe{
+#'   \item{sample_id}{Sample Id, including vial_label and site specific QC ids}
+#'   \item{sample_type}{Metabolomics sample types. Check metabolomics data transfer guidelines}
+#'   \item{sample_order}{Order of injection on Mass Spec}
+#'   \item{metabolite_name}{Given name by every lab}
+#'   \item{refmet_name}{Map of the metabolite name to the Metabolomics RefMet database}
+#'   \item{mz}{mass over charge}
+#'   \item{rt}{retention time}
+#'   \item{formula}{chemical formula}
+#'   \item{neutral_mass}{neutral mass}
+#'   \item{id}{type of metabolite identification: "named", "unnamed"}
+#'   \item{metabolite}{Merge "refmet" for "named" metabolites and "metabolite_name" for "unnamed" metabolites}
+#'   \item{quantification}{Untargeted: Peak area, Targeted: absolute concentration (check "experimentalDetails" for unit)}
+#'   \item{tissue_code}{MoTrPAC tissue code}
+#'   \item{tissue_name}{Tissue name}
+#'   \item{group_time_point}{Intervention group (Exercise / Control) +  time point}
+#'   \item{sex}{Animal Sex}
+#'   \item{site_code}{Chemical Analysis Site (CAS) short abbreviation}
+#'   \item{group}{Intervention group: Exercise / Control}
+#'   \item{condition}{Sex + group + time-point}
+#'   \item{bioreplicate}{Sex + group + time-point + sample_order}
+#' }
+#' @export
+merge_phenotype_metabolomics <- function(df_long){
+
+  df_merged <- merge(df_long, phenotypes_pass1a06_short, by.x = "sample_id", by.y = "vial_label", all.x = TRUE)
+  cas <- unique(df_merged$site_code[!is.na(df_merged$site_code)])
+  if(length(cas) != 1){
+    stop("Problem with `cas_site` code from phenotypic data. Please, report this error to the BIC")
+  }
+
+  # Add labels, groups for plotting------
+  df_merged$site_code <- cas
+  df_merged$sex <- ifelse(is.na(df_merged$sex), "QC", df_merged$sex)
+  df_merged$group <- ifelse(is.na(df_merged$sex), "QC", df_merged$group_time_point)
+  df_merged$group <- ifelse(is.na(df_merged$group), "QC", df_merged$group)
+  df_merged$group <- gsub("(Control)(.*)","\\1", df_merged$group)
+  df_merged$group <- gsub("(Exercise)(.*)","\\1", df_merged$group)
+  df_merged$group_time_point <- ifelse(is.na(df_merged$group_time_point), "QC", df_merged$group_time_point)
+  df_merged$condition <- paste0(df_merged$sex, "_", df_merged$group_time_point)
+
+  # Individual Controls
+  df_merged$condition <- gsub("Female_Control - 00.0 hr", "F_Con_000h", df_merged$condition)
+  df_merged$condition <- gsub("Female_Control - 07 hr", "F_Con_07h", df_merged$condition)
+  # Combine controls
+  # df_merged$condition <- gsub("Female_Control - 00.0 hr", "F_Con", df_merged$condition)
+  # df_merged$condition <- gsub("Female_Control - 07 hr", "F_Con", df_merged$condition)
+
+  df_merged$condition <- gsub("Female_Exercise - 00.0 hr", "F_Exe_000h", df_merged$condition)
+  df_merged$condition <- gsub("Female_Exercise - 00.5 hr", "F_Exe_005h", df_merged$condition)
+  df_merged$condition <- gsub("Female_Exercise - 01 hr", "F_Exe_01h", df_merged$condition)
+  df_merged$condition <- gsub("Female_Exercise - 04 hr", "F_Exe_04h", df_merged$condition)
+  df_merged$condition <- gsub("Female_Exercise - 07 hr", "F_Exe_07h", df_merged$condition)
+  df_merged$condition <- gsub("Female_Exercise - 24 hr", "F_Exe_24h", df_merged$condition)
+  df_merged$condition <- gsub("Female_Exercise - 48 hr", "F_Exe_48h", df_merged$condition)
+  # Individual Controls
+  df_merged$condition <- gsub("Male_Control - 00.0 hr", "M_Con_000h", df_merged$condition)
+  df_merged$condition <- gsub("Male_Control - 07 hr", "M_Con_07h", df_merged$condition)
+  # combined controls
+  # df_merged$condition <- gsub("Male_Control - 00.0 hr", "M_Con", df_merged$condition)
+  # df_merged$condition <- gsub("Male_Control - 07 hr", "M_Con", df_merged$condition)
+
+  df_merged$condition <- gsub("Male_Exercise - 00.0 hr", "M_Exe_000h", df_merged$condition)
+  df_merged$condition <- gsub("Male_Exercise - 00.5 hr", "M_Exe_005h", df_merged$condition)
+  df_merged$condition <- gsub("Male_Exercise - 01 hr", "M_Exe_01h", df_merged$condition)
+  df_merged$condition <- gsub("Male_Exercise - 04 hr", "M_Exe_04h", df_merged$condition)
+  df_merged$condition <- gsub("Male_Exercise - 07 hr", "M_Exe_07h", df_merged$condition)
+  df_merged$condition <- gsub("Male_Exercise - 24 hr", "M_Exe_24h", df_merged$condition)
+  df_merged$condition <- gsub("Male_Exercise - 48 hr", "M_Exe_48h", df_merged$condition)
+  df_merged$condition <- gsub("Male_Exercise - 48 hr", "M_Exe_48h", df_merged$condition)
+
+  df_merged$condition <- gsub("QC_QC-Reference", "QC_Reference", df_merged$condition)
+  df_merged$condition <- gsub("QC_QC-DriftCorrection", "QC_DriftCorrection", df_merged$condition)
+  df_merged$condition <- gsub("QC_QC-Pooled", "QC_Pooled", df_merged$condition)
+
+  df_merged$bioreplicate <- paste0(df_merged$condition, "-", df_merged$sample_order)
+
+  df_merged <- df_merged[,c("site_code",
+                            "sample_id", "sample_type", "sample_order",
+                            "tissue_code", "tissue_name",
+                            "group_time_point", "sex",
+                            "group", "condition", "bioreplicate",
+                            "metabolite_name", "refmet_name", "mz", "rt", "formula", "neutral_mass",
+                            "id", "quantification")]
+
+  return(df_merged)
+}
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' @title Merge all metabolomics files
+#'
+#' @description Merge all metabolomics datasets, including "results" and
+#' "metadata" files, for both targeted and untargeted datasets
+#' @param m_m_n (metabolomics metadata named)
+#' @param m_m_u (metabolomics metadata unnamed)
+#' @param m_s_n (metabolomics sample named)
+#' @param r_n (results named)
+#' @param r_u (results unnamed)
+#' @param phase (MoTrPAC Animal phase. Eg. PASS1A-06)
+#' @return (data.frame) Merged data frame long format
+#' @examples
+#' plasma.untargeted.merged <- merge_all_metabolomics(
+#'        m_m_n = metadata_metabolites_named,
+#'        m_m_u = metadata_metabolites_unnamed,
+#'        m_s_n = metadata_sample_named,
+#'        r_n = results_named,
+#'        r_u = results_unnamed,
+#'        phase = "PASS1A-06")
+#' @export
+merge_all_metabolomics <- function(m_m_n,
+                                   m_m_u = NULL,
+                                   m_s_n,
+                                   r_n,
+                                   r_u = NULL,
+                                   phase){
+
+  # # Debug
+  # m_m_n = metadata_metabolites_named
+  # m_m_u = metadata_metabolites_unnamed
+  # m_s_n = metadata_sample_named
+  # r_n = results_named
+  # r_u = results_unnamed
+
+  raw_file = NULL
+
+  # metabolites_metadata----
+  if(is.null(m_m_u)){
+    right_columns <- c("metabolite_name", "refmet_name", "mz", "rt", "formula", "neutral_mass", "id")
+    m_m_n$id <- "named"
+    m_m <- m_m_n[right_columns]
+  }else{
+    m_m <- merge_metabolomics_metadata(m_m_n, m_m_u)
+  }
+
+  # merge results metabolites
+  if(is.null(r_u)){
+    r_m <- r_n
+  }else{
+    r_m <- rbind(r_n, r_u[names(r_n)])
+  }
+
+  r_long <- tidyr::pivot_longer(r_m,
+                                cols = -c("metabolite_name"),
+                                names_to = "sample_id",
+                                values_to = "quantification",
+                                values_drop_na = FALSE)
+
+  # Merge with metadata metabolites-----
+  before <- dim(r_long)[1]
+  r_long <- merge(m_m, r_long, by = "metabolite_name")
+  after <- dim(r_long)[1]
+  if(before != after) stop("PROBLEMS WITH DIMENSIONS after merging!")
+
+  # Merge with sample metadata-----
+  # Remove raw file
+  m_s_n <- subset(m_s_n, select = -raw_file)
+
+  before <- dim(r_long)[1]
+  r_long <- merge(m_s_n, r_long, by = "sample_id")
+  after <- dim(r_long)[1]
+  if(before != after) stop("PROBLEMS WITH DIMENSIONS after merging!")
+
+  if(phase == "PASS1A-06"){
+    r_long_pheno <- merge_phenotype_metabolomics(df_long = r_long)
+  }else{
+    r_long_pheno <- r_long
+    message("\n(-) Phenotypic data not available yet in this package for ", phase)
+  }
+
+  return(r_long_pheno)
 }
 
 

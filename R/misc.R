@@ -1,6 +1,7 @@
 # Add package by alphabetical order
 #' @importFrom data.table rbindlist as.data.table
 #' @importFrom dplyr select_if
+#' @importFrom tidyr pivot_longer
 #' @importFrom jsonlite fromJSON
 #' @import knitr
 #' @import purrr
