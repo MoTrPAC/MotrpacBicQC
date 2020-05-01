@@ -111,4 +111,9 @@ results_unnamed
 \description{
 Results test dataset for UNNAMED metabolites
 }
+\examples{
+\dontrun{
+ results_unnamed
+}
+}
 \keyword{datasets}
