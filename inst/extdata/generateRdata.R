@@ -1,11 +1,13 @@
 # R script to generate R data objects used by the library
 
 library(dplyr)
-
+library(devtools)
 # FILES IN PACKAGE--------------------------------------------------------------
 # BIC tissue codes----
 bic_animal_tissue_code <- read.delim("inst/extdata/bic_animal_tissue_code.txt", stringsAsFactors = FALSE)
-save(bic_animal_tissue_code, file = "data/bic_animal_tissue_code.RData")
+
+# save(bic_animal_tissue_code, file = "data/bic_animal_tissue_code.RData")
+use_data(bic_animal_tissue_code)
 
 # FILES NOT IN PACKAGE--------------------------------------------------------------
 setwd("~/motrpac-portal-transfer-michigan/PASS1A-06/T31/IONPNEG/BATCH1_ 20190909/")
@@ -36,10 +38,24 @@ metadata_metabolites_named <- metadata_metabolites_named[c("metabolite_name", "r
 metadata_metabolites_unnamed <- metadata_metabolites_unnamed[c("metabolite_name", "mz", "rt", "neutral_mass")]
 
 # SAVE RData sets-----
-save(results_named, file = "~/github/MoTrPAC/MotrpacBicQC/data/results_named.RData")
-save(results_unnamed, file = "~/github/MoTrPAC/MotrpacBicQC/data/results_unnamed.RData")
-save(metadata_metabolites_named, file = "~/github/MoTrPAC/MotrpacBicQC/data/metadata_metabolites_named.RData")
-save(metadata_metabolites_unnamed, file = "~/github/MoTrPAC/MotrpacBicQC/data/metadata_metabolites_unnamed.RData")
-save(metadata_sample_named, file = "~/github/MoTrPAC/MotrpacBicQC/data/metadata_sample_named.RData")
-save(metadata_sample_unnamed, file = "~/github/MoTrPAC/MotrpacBicQC/data/metadata_sample_unnamed.RData")
+# save(results_named, file = "~/github/MoTrPAC/MotrpacBicQC/data/results_named.RData")
+# save(results_unnamed, file = "~/github/MoTrPAC/MotrpacBicQC/data/results_unnamed.RData")
+# save(metadata_metabolites_named, file = "~/github/MoTrPAC/MotrpacBicQC/data/metadata_metabolites_named.RData")
+# save(metadata_metabolites_unnamed, file = "~/github/MoTrPAC/MotrpacBicQC/data/metadata_metabolites_unnamed.RData")
+# save(metadata_sample_named, file = "~/github/MoTrPAC/MotrpacBicQC/data/metadata_sample_named.RData")
+# save(metadata_sample_unnamed, file = "~/github/MoTrPAC/MotrpacBicQC/data/metadata_sample_unnamed.RData")
 
+use_data(results_named)
+use_data(results_unnamed)
+use_data(metadata_metabolites_named)
+use_data(metadata_metabolites_unnamed)
+use_data(metadata_sample_named)
+use_data(metadata_sample_unnamed)
+
+# Phenotypic data-----
+
+# load("~/DriveStanford/motrpac/dmaqc/phenotypes.Rdata")
+# phenotypes_pass1a06_short <- phenotypes[c("tissue_ecode", "vial_label", "tissue_name", "group_time_point", "sex", "site_code")]
+# colnames(phenotypes_pass1a06_short)[grep("tissue_ecode", colnames(phenotypes_pass1a06_short))] <- "tissue_code"
+# save(phenotypes_pass1a06_short, file = "~/github/MoTrPAC/MotrpacBicQC/data/phenotypes_pass1a06_short.RData")
+use_data(phenotypes_pass1a06_short)
