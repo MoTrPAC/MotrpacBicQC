@@ -10,6 +10,9 @@
 #' @return (vector) PHASE code
 #' @export
 get_and_validate_mdd <- function(remove_duplications = FALSE){
+
+  .id = NULL
+
   # REST metabolomics workbench data dictionary
   refmetjson <- jsonlite::fromJSON("https://www.metabolomicsworkbench.org/rest/refmet/motrpac/")
 
