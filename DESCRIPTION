@@ -26,7 +26,7 @@ Imports:
     knitr,
     purrr,
     stringr,
-    tidyr,
+    tidyr (>= 1.0.2),
     utils
 NeedsCompilation: no
 VignetteBuilder: knitr
