@@ -7,21 +7,21 @@
 [![CircleCI](https://circleci.com/gh/MoTrPAC/MotrpacBicQC.svg?style=svg)](https://circleci.com/gh/MoTrPAC/MotrpacBicQC)
 
   
-## Overview
+# Overview
 
 This package provides a set of functions for Primary and Secondary 
-QC/QA analysis of datasets generated and submitted by the 
+QC/QA analysis of datasets generated and submitted by the MoTrPAC
 Chemical Analysis Sites (CAS).
 
-Currently includes Metabolomics datasets only.
+Currently supports Metabolomics datasets only.
 
-## Installation
+# Installation
 
-### R and RStudio
+## R and RStudio
 
 Download and install R and RStudio (if you don't have it already)
 
-### This package
+## This package
 
 Open RStudio and
 
@@ -38,7 +38,7 @@ library(devtools)
 devtools::install_github("MoTrPAC/MotrpacBicQC")
 ```
 
-## Usage
+# Usage
 
 First, load the library
 
@@ -57,11 +57,17 @@ check_metadata_samples(df = metadata_sample_named, cas = "umichigan")
 check_results(r_m = results_named, m_s = metadata_sample_named, m_m = metadata_metabolites_named)
 ```
 
-### How to test your datasets
+To find out more details, open the package's vignette:
+
+```
+browseVignettes("MotrpacBicQC")
+```
+
+## How to test your datasets
 
 Two approaches available:
 
-#### Check full `PROCESSED_YYYYMMDD` folder
+### Check full `PROCESSED_YYYYMMDD` folder
 
 Run test on the full submission. For that, run the following command:
 
@@ -79,7 +85,7 @@ validate_metabolomics(input_results_folder = "/full/path/to/PROCESSED_YYYYMMDD",
 - "gtech"     = Georgia Tech
 - "duke"      = Duke
 
-#### Check individual files
+### Check individual files
 
 - Check metadata metabolites:
 
@@ -118,12 +124,18 @@ check_results(r_m = results_named,
               m_m = metadata_metabolites_named)
 ```
 
-## Help
+To find out more details, open the package's vignette:
+
+```
+browseVignettes("MotrpacBicQC")
+```
+
+# Help
 
 Need help? Please, [submit an issue here](https://github.com/MoTrPAC/MotrpacBicQC/issues) 
 providing as many details as possible.
 
-## Credit
+# Credit
 
 [MoTrPAC Bioinformatics Center](https://motrpac-data.org/)
 
