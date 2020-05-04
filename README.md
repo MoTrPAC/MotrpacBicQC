@@ -35,7 +35,7 @@ install.packages("devtools")
 
 ```
 library(devtools)
-devtools::install_github("MoTrPAC/MotrpacBicQC")
+devtools::install_github("MoTrPAC/MotrpacBicQC", build_vignettes = TRUE)
 ```
 
 # Usage

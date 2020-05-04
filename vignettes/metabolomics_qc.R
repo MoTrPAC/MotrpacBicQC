@@ -9,7 +9,7 @@ knitr::opts_chunk$set(
 
 ## ----eval = FALSE-------------------------------------------------------------
 #  library(devtools)
-#  devtools::install_github("MoTrPAC/MotrpacBicQC")
+#  devtools::install_github("MoTrPAC/MotrpacBicQC", build_vignettes = TRUE)
 
 ## ----setup--------------------------------------------------------------------
 library(MotrpacBicQC)
