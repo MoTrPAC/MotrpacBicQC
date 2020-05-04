@@ -33,4 +33,6 @@ VignetteBuilder: knitr
 RoxygenNote: 7.0.2
 Roxygen: list(markdown = TRUE)
 Suggests: 
-    testthat
+    testthat,
+    rmarkdown,
+    prettydoc

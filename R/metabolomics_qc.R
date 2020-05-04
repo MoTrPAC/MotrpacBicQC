@@ -805,9 +805,10 @@ validate_metabolomics <- function(input_results_folder,
 #' @param cas (char) Chemical Analytical Site code (e.g "umichigan")
 #' @param verbose (logical) `TRUE` (default) shows messages
 #' @return (int) number of issues identified
-#' @examples \dontrun{
+#' @examples
+#' \dontrun{
 #' all_datasets <- combine_metabolomics_batch(
-#'                         input_results_folder = "/full/path/to/PROCESSED_YYYYMMDD/"
+#'                         input_results_folder = "/full/path/to/PROCESSED_YYYYMMDD/",
 #'                         cas = "umichigan")
 #' }
 #' @export
