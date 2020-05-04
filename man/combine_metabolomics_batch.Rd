@@ -24,7 +24,7 @@ folders
 \examples{
 \dontrun{
 all_datasets <- combine_metabolomics_batch(
-                        input_results_folder = "/full/path/to/PROCESSED_YYYYMMDD/"
+                        input_results_folder = "/full/path/to/PROCESSED_YYYYMMDD/",
                         cas = "umichigan")
 }
 }
