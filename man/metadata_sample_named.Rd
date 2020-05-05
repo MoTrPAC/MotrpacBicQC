@@ -17,4 +17,9 @@ metadata_sample_named
 \description{
 Metadata Sample test dataset for NAMED metabolites
 }
+\examples{
+\dontrun{
+ metadata_sample_named
+}
+}
 \keyword{datasets}

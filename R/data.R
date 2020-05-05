@@ -111,6 +111,10 @@
 #'   \item{CSMR80015-1}{sample id. Unit: Peak Area}
 #'   \item{CSMR80015-2}{sample id. Unit: Peak Area}
 #' }
+#' @examples
+#' \dontrun{
+#'  results_named
+#' }
 "results_named"
 
 #' Results test dataset for UNNAMED metabolites
@@ -216,6 +220,10 @@
 #'   \item{CSMR80015-1}{Sample id. Unit: Peak Area}
 #'   \item{CSMR80015-2}{Sample id. Unit: Peak Area}
 #' }
+#' @examples
+#' \dontrun{
+#'  results_unnamed
+#' }
 "results_unnamed"
 
 #' Metadata Metabolites test dataset for NAMED metabolites
@@ -229,6 +237,10 @@
 #'   \item{formula}{chemical formula}
 #'   \item{neutral_mass}{neutral mass}
 #' }
+#' @examples
+#' \dontrun{
+#'  metadata_metabolites_named
+#' }
 "metadata_metabolites_named"
 
 #' Metadata Metabolites test dataset for UNNAMED metabolites
@@ -239,6 +251,10 @@
 #'   \item{mz}{mass over charge}
 #'   \item{rt}{retention time}
 #'   \item{neutral_mass}{neutral mass}
+#' }
+#' @examples
+#' \dontrun{
+#'  metadata_metabolites_unnamed
 #' }
 "metadata_metabolites_unnamed"
 
@@ -252,6 +268,10 @@
 #'   \item{sample_order}{retention time}
 #'   \item{raw_file}{neutral mass}
 #' }
+#' @examples
+#' \dontrun{
+#'  metadata_sample_named
+#' }
 "metadata_sample_named"
 
 #' Metadata Sample test dataset for UNNAMED metabolites
@@ -263,7 +283,28 @@
 #'   \item{sample_order}{retention time}
 #'   \item{raw_file}{neutral mass}
 #' }
+#' @examples
+#' \dontrun{
+#'  metadata_sample_unnamed
+#' }
 "metadata_sample_unnamed"
+
+#' Motrpac Phenotypes PASS1A 6 Months
+#'
+#' @format A data frame with 8616 rows and 6 columns:
+#' \describe{
+#'   \item{tissue_code}{MoTrPAC Tissue code}
+#'   \item{vial_label}{Vial label id (only available for MoTrPAC Samples)}
+#'   \item{tissue_name}{Tissue name}
+#'   \item{group_time_point}{Group time point}
+#'   \item{sex}{Animal sex}
+#'   \item{site_code}{cas}
+#' }
+#' @examples
+#' \dontrun{
+#'  phenotypes_pass1a06_short
+#' }
+"phenotypes_pass1a06_short"
 
 
 

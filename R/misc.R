@@ -5,6 +5,7 @@
 #' @import knitr
 #' @import purrr
 #' @import stringr
+#' @import tidyr
 #' @import utils
 #______________________________________________________________________________
 

@@ -17,4 +17,9 @@ metadata_sample_unnamed
 \description{
 Metadata Sample test dataset for UNNAMED metabolites
 }
+\examples{
+\dontrun{
+ metadata_sample_unnamed
+}
+}
 \keyword{datasets}
