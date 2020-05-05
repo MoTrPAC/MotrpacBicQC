@@ -1,8 +1,8 @@
 Package: MotrpacBicQC
 Type: Package
 Title: QC/QA functions for the MoTrPAC community
-Version: 0.1.0
-Author: David JM, David Amar (MoTrPAC Bioinformatics Center)
+Version: 0.2.0
+Author: MoTrPAC Bioinformatics Center
 Maintainer: David Jimenez-Morales <davidjm@stanford.edu>
 Description: R Package for the analysis of MoTrPAC datasets. 
     The Molecular Transducers of Physical Activity Consortium (MoTrPAC) is 
@@ -26,10 +26,13 @@ Imports:
     knitr,
     purrr,
     stringr,
+    tidyr,
     utils
 NeedsCompilation: no
 VignetteBuilder: knitr
 RoxygenNote: 7.0.2
 Roxygen: list(markdown = TRUE)
 Suggests: 
-    testthat
+    testthat,
+    rmarkdown,
+    prettydoc
