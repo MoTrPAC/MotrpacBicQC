@@ -556,7 +556,7 @@ validate_metabolomics <- function(input_results_folder,
                                   full_report = FALSE,
                                   verbose = TRUE){
 
-  cas <- validate_cas(cas = cas)
+  validate_cas(cas = cas)
 
   processfolder <- validate_processFolder(input_results_folder)
 
