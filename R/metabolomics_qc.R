@@ -823,9 +823,14 @@ combine_metabolomics_batch <- function(input_results_folder,
   # Validations----
   cas <- tolower(cas)
   validate_cas(cas)
+  phase <- validate_phase(input_results_folder)
+
+  if(grepl("^PASS1A-06$", phase)){
+    stop("<combine_metabolomics_batch> only supports PASS1A batches")
+  }
+
   processfolder <- validate_processFolder(input_results_folder)
   assay <- validate_assay(input_results_folder)
-  phase <- validate_phase(input_results_folder)
   tissue_code <- validate_tissue(input_results_folder)
 
   # Output name----
