@@ -637,7 +637,7 @@ validate_metabolomics <- function(input_results_folder,
   f_msn <- lista$flag
   if(f_msn){
     m_s_n <- lista$df
-    check_metadata_samples(df = m_s_n, cas = cas, return_n_issues = TRUE)
+    ic_m_s_n <- check_metadata_samples(df = m_s_n, cas = cas, return_n_issues = TRUE)
     # Extract the number of samples
     if(!is.null(m_s_n)){
       #Double check that the columns are there
@@ -772,7 +772,7 @@ validate_metabolomics <- function(input_results_folder,
   t_name <- bic_animal_tissue_code$bic_tissue_name[which(bic_animal_tissue_code$bic_tissue_code == tissue_code)]
 
   if(return_n_issues){
-    issues <- ic + ic_mrd + ic_m_m_n + ic_m_m_u + ic_m_s_n + ic_m_s_u + ic_r_m_n + ic_r_m_u
+    issues <- sum(ic, ic_mrd, ic_m_m_n, ic_m_m_u, ic_m_s_n, ic_m_s_u, ic_r_m_n, ic_r_m_u, na.rm = TRUE)
     if(verbose) message("\nTOTAL NUMBER OF ISSUES: ", issues,"\n")
     if(full_report){
       reports <- data.frame(cas = cas,
