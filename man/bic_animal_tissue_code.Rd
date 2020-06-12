@@ -4,11 +4,22 @@
 \name{bic_animal_tissue_code}
 \alias{bic_animal_tissue_code}
 \title{BIC Tissue Code and Name}
-\format{data frame}
+\format{A data frame with tissue codes
+\describe{
+\item{bic_tissue_code}{\code{T} + integer, as encoded in vial_label by DMAQC}
+\item{bic_tissue_name}{Tissue name (as provided by DMAQC)}
+\item{motrpac_tissue_code}{Both code and tissue name}
+\item{folder_name_release}{Code + tissue name as used in releases}
+}}
 \usage{
 bic_animal_tissue_code
 }
 \description{
 BIC Tissue Code and Name
+}
+\examples{
+\dontrun{
+ bic_animal_tissue_code
+}
 }
 \keyword{datasets}

@@ -1,0 +1,31 @@
+omics	submission_code	assay_code	assay	site
+transcriptomics		rna-seq	rna-seq	stanford
+transcriptomics		rna-seq	rna-seq	mssm
+epigenomics		rrbs	rrbs	mssm
+proteomics	PROT_PR	prot_pr	global_proteomics	broad
+proteomics	PROT_PR	prot_pr	global_proteomics	pnnl
+proteomics	PROT_PH	prot_ph	phosphoproteomics	broad
+proteomics	PROT_PH	prot_ph	phosphoproteomics	pnnl
+proteomics	PROT_AC	prot_ac	acetyl_proteomics	broad
+Metabolomics Targeted	3HIB	metab_t_3hib	Targeted 3-Hydroxyisobutyric Acid (3-HIB)	Duke
+Metabolomics Targeted	AA	metab_t_aa	Targeted Amino Acids	Duke
+Metabolomics Targeted	AC_DUKE	metab_t_ac_duke	Targeted Acylcarnitines	Duke
+Metabolomics Targeted	ACOA	metab_t_acoa	Targeted Acyl CoA	Duke
+Metabolomics Targeted	BAIBA	metab_t_baiba	Targeted beta-aminoisobutyric acid (BAIBA)	Duke
+Metabolomics Targeted	CER_DUKE	metab_t_cer_duke	Targeted Ceramide	Duke
+Metabolomics Targeted	CON	metab_t_con	Targeted Conventional 	Duke
+Metabolomics Targeted	KA	metab_t_ka	Targeted Keto acids (KA)	Duke
+Metabolomics Targeted	NUC	metab_t_nuc	Targeted Nucleotides	Duke
+Metabolomics Targeted	OA	metab_t_oa	Targeted organic acids (OA)	Duke
+Metabolomics Targeted	SPHM	metab_t_sphm	Targeted Sphingomyelin	Duke
+Metabolomics Targeted	OXYLIPNEG	metab_t_oxylipneg	Targeted oxylipins (Emory)	Emory
+Metabolomics Targeted	AC_MAYO	metab_t_ac_mayo	Targeted Acylcarnitines (Mayo)	Mayo
+Metabolomics Targeted	AMINES	metab_t_amines	Targeted Amines (Mayo)	Mayo
+Metabolomics Targeted	CER_MAYO	metab_t_cer_mayo	Targeted Ceramides (Mayo)	Mayo
+Metabolomics Targeted	TCA	metab_t_tca	Targeted TCA (Mayo)	Mayo
+Metabolomics Untargeted	HILICPOS	metab_u_hilicpos	Untargeted HILIC-positive (Broad)	Broad
+Metabolomics Untargeted	LRPNEG	metab_u_lrpneg	Untargeted lipidomics, reversed-phase negative	GTech
+Metabolomics Untargeted	LRPPOS	metab_u_lrppos	Untargeted lipidomics, reversed-phase positive	GTech
+Metabolomics Untargeted	RPPOS	metab_u_rppos	Untargeted Reversed-phase positive	UMichigan
+Metabolomics Untargeted	RPNEG	metab_u_rpneg	Untargeted Reversed-phase negative	UMichigan
+Metabolomics Untargeted	IONPNEG	metab_u_ionpneg	Untargeted Ion-Pair negative	Umichigan

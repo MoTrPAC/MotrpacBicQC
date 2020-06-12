@@ -3,9 +3,36 @@
 #______________________________________________________________________________
 
 
+#' Motrpac assay codes
+#'
+#' @format A data frame with assay codes
+#' \describe{
+#'   \item{omics}{Main OMIC group}
+#'   \item{submission_code}{Assay submission code}
+#'   \item{assay_code}{Assay release code}
+#'   \item{assay}{Assay long name}
+#'   \item{site}{MoTrPAC chemical analysis site}
+#' }
+#' @examples
+#' \dontrun{
+#'  assay_codes
+#' }
+"assay_codes"
+
+
 #' BIC Tissue Code and Name
 #'
-#' @format data frame
+#' @format A data frame with tissue codes
+#' \describe{
+#'   \item{bic_tissue_code}{`T` + integer, as encoded in vial_label by DMAQC}
+#'   \item{bic_tissue_name}{Tissue name (as provided by DMAQC)}
+#'   \item{motrpac_tissue_code}{Both code and tissue name}
+#'   \item{folder_name_release}{Code + tissue name as used in releases}
+#' }
+#' @examples
+#' \dontrun{
+#'  bic_animal_tissue_code
+#' }
 "bic_animal_tissue_code"
 
 #' Results test dataset for NAMED metabolites
