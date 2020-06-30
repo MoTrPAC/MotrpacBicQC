@@ -5,7 +5,7 @@ library(devtools)
 
 # FILES IN PACKAGE--------------------------------------------------------------
 # BIC tissue codes----
-bic_animal_tissue_code <- read.delim("inst/extdata/bic_animal_tissue_code.txt", stringsAsFactors = FALSE)
+bic_animal_tissue_code <- read.delim("inst/extdata/bic_animal_tissue_code.tsv", stringsAsFactors = FALSE)
 
 # save(bic_animal_tissue_code, file = "data/bic_animal_tissue_code.RData")
 use_data(bic_animal_tissue_code, overwrite = TRUE)

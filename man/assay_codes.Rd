@@ -6,11 +6,11 @@
 \title{Motrpac assay codes}
 \format{A data frame with assay codes
 \describe{
-\item{omics}{Main OMIC group}
+\item{omics_code}{Main OMIC group}
 \item{submission_code}{Assay submission code}
 \item{assay_code}{Assay release code}
-\item{assay}{Assay long name}
-\item{site}{MoTrPAC chemical analysis site}
+\item{assay_name}{Assay long name}
+\item{cas_code}{MoTrPAC chemical analysis site}
 }}
 \usage{
 assay_codes

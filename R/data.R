@@ -7,11 +7,11 @@
 #'
 #' @format A data frame with assay codes
 #' \describe{
-#'   \item{omics}{Main OMIC group}
+#'   \item{omics_code}{Main OMIC group}
 #'   \item{submission_code}{Assay submission code}
 #'   \item{assay_code}{Assay release code}
-#'   \item{assay}{Assay long name}
-#'   \item{site}{MoTrPAC chemical analysis site}
+#'   \item{assay_name}{Assay long name}
+#'   \item{cas_code}{MoTrPAC chemical analysis site}
 #' }
 #' @examples
 #' \dontrun{
@@ -27,7 +27,7 @@
 #'   \item{bic_tissue_code}{`T` + integer, as encoded in vial_label by DMAQC}
 #'   \item{bic_tissue_name}{Tissue name (as provided by DMAQC)}
 #'   \item{motrpac_tissue_code}{Both code and tissue name}
-#'   \item{folder_name_release}{Code + tissue name as used in releases}
+#'   \item{tissue_name_release}{Code + tissue name as used in releases}
 #' }
 #' @examples
 #' \dontrun{

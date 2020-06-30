@@ -9,7 +9,7 @@
 \item{bic_tissue_code}{\code{T} + integer, as encoded in vial_label by DMAQC}
 \item{bic_tissue_name}{Tissue name (as provided by DMAQC)}
 \item{motrpac_tissue_code}{Both code and tissue name}
-\item{folder_name_release}{Code + tissue name as used in releases}
+\item{tissue_name_release}{Code + tissue name as used in releases}
 }}
 \usage{
 bic_animal_tissue_code
