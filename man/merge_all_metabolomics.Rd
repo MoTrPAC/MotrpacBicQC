@@ -4,7 +4,7 @@
 \alias{merge_all_metabolomics}
 \title{Merge all metabolomics files}
 \usage{
-merge_all_metabolomics(m_m_n, m_m_u = NULL, m_s_n, r_n, r_u = NULL, phase)
+merge_all_metabolomics(m_m_n, m_m_u = NULL, m_s_n, r_m_n, r_m_u = NULL, phase)
 }
 \arguments{
 \item{m_m_n}{(metabolomics metadata named)}
@@ -13,9 +13,9 @@ merge_all_metabolomics(m_m_n, m_m_u = NULL, m_s_n, r_n, r_u = NULL, phase)
 
 \item{m_s_n}{(metabolomics sample named)}
 
-\item{r_n}{(results named)}
+\item{r_m_n}{(results named)}
 
-\item{r_u}{(results unnamed)}
+\item{r_m_u}{(results unnamed)}
 
 \item{phase}{(MoTrPAC Animal phase. Eg. PASS1A-06)}
 }
@@ -31,7 +31,7 @@ plasma.untargeted.merged <- merge_all_metabolomics(
        m_m_n = metadata_metabolites_named,
        m_m_u = metadata_metabolites_unnamed,
        m_s_n = metadata_sample_named,
-       r_n = results_named,
-       r_u = results_unnamed,
+       r_m_n = results_named,
+       r_m_u = results_unnamed,
        phase = "PASS1A-06")
 }

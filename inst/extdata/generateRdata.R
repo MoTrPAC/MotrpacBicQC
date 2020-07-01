@@ -2,12 +2,29 @@
 
 library(dplyr)
 library(devtools)
+
 # FILES IN PACKAGE--------------------------------------------------------------
 # BIC tissue codes----
-bic_animal_tissue_code <- read.delim("inst/extdata/bic_animal_tissue_code.txt", stringsAsFactors = FALSE)
+bic_animal_tissue_code <- read.delim("inst/extdata/bic_animal_tissue_code.tsv", stringsAsFactors = FALSE)
 
 # save(bic_animal_tissue_code, file = "data/bic_animal_tissue_code.RData")
-use_data(bic_animal_tissue_code)
+use_data(bic_animal_tissue_code, overwrite = TRUE)
+
+# ASSAY codes-----
+assay_codes <- read.delim("inst/extdata/assay_codes.tsv", stringsAsFactors = FALSE)
+use_data(assay_codes, overwrite = TRUE)
+
+
+
+# Phenotypic data-----
+
+# load("~/DriveStanford/motrpac/dmaqc/phenotypes.Rdata")
+# phenotypes_pass1a06_short <- phenotypes[c("tissue_ecode", "vial_label", "tissue_name", "group_time_point", "sex", "site_code")]
+# colnames(phenotypes_pass1a06_short)[grep("tissue_ecode", colnames(phenotypes_pass1a06_short))] <- "tissue_code"
+# save(phenotypes_pass1a06_short, file = "~/github/MoTrPAC/MotrpacBicQC/data/phenotypes_pass1a06_short.RData")
+use_data(phenotypes_pass1a06_short)
+
+
 
 # FILES NOT IN PACKAGE--------------------------------------------------------------
 setwd("~/motrpac-portal-transfer-michigan/PASS1A-06/T31/IONPNEG/BATCH1_ 20190909/")
@@ -52,10 +69,4 @@ use_data(metadata_metabolites_unnamed)
 use_data(metadata_sample_named)
 use_data(metadata_sample_unnamed)
 
-# Phenotypic data-----
 
-# load("~/DriveStanford/motrpac/dmaqc/phenotypes.Rdata")
-# phenotypes_pass1a06_short <- phenotypes[c("tissue_ecode", "vial_label", "tissue_name", "group_time_point", "sex", "site_code")]
-# colnames(phenotypes_pass1a06_short)[grep("tissue_ecode", colnames(phenotypes_pass1a06_short))] <- "tissue_code"
-# save(phenotypes_pass1a06_short, file = "~/github/MoTrPAC/MotrpacBicQC/data/phenotypes_pass1a06_short.RData")
-use_data(phenotypes_pass1a06_short)

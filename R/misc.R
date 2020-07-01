@@ -43,8 +43,8 @@ open_file <- function(input_results_folder,
   }else{
     flag <- TRUE
     ofile <- read.delim(file_metametabolites[1], stringsAsFactors = FALSE, check.names = FALSE)
-    ofile <- remove_empty_columns(ofile)
-    ofile <- remove_empty_rows(ofile)
+    ofile <- remove_empty_columns(ofile, verbose = verbose)
+    ofile <- remove_empty_rows(ofile, verbose = verbose)
     if(verbose) message("   + (+) File successfully opened")
   }
 
