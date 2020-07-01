@@ -1,7 +1,8 @@
 
 
 utils::globalVariables(
-  c("bic_animal_tissue_code",
+  c("assay_codes",
+    "bic_animal_tissue_code",
     "phenotypes_pass1a06_short"))
 
 
@@ -28,19 +29,11 @@ check_metadata_metabolites <- function(df,
   # issue_count
   ic <- 0
 
-  if(name_id == "named"){
-    emeta_metabo_coln_named <- c("metabolite_name", "refmet_name", "rt", "mz", "neutral_mass", "formula")
-  }else if(name_id == "unnamed"){
-    emeta_metabo_coln_named <- c("metabolite_name", "rt", "mz", "neutral_mass")
-  }else{
-    stop("{name_id} option not valid. Options: named/unnamed")
-  }
+  df <- filter_required_columns(df = df,
+                                type = "m_m",
+                                name_id = name_id,
+                                verbose = verbose)
 
-  colnames(df) <- tolower(colnames(df))
-
-  if(all(emeta_metabo_coln_named %in% colnames(df))){
-    if(verbose) message("   + (+) All required columns present")
-  }
 
   # Evaluate every column
   flag_mm <- FALSE
@@ -181,20 +174,12 @@ check_metadata_samples <- function(df,
   # issue_count
   ic = 0
 
-  # Columns to check
-  emeta_sample_coln <- c("sample_id", "sample_type", "sample_order", "raw_file")
-
-  # colnames(df) <- tolower(colnames(df))
-
-  if( all(emeta_sample_coln %in% colnames(df)) ){
-    if(verbose) message("   + (+) All required columns present")
-  }else{
-    if(verbose) message("      - (-) Expected COLUMN NAMES are missed: FAIL")
-    ic <- ic + 1
-  }
+  # filter only expected columns
+  df <- filter_required_columns(df = df,
+                                type = "m_s",
+                                verbose = FALSE)
 
   # Check every column
-
   # sample_id: si
   flag_si <- FALSE
   if( "sample_id" %in% colnames(df) ){
@@ -303,12 +288,14 @@ check_results <- function(r_m,
   if(!setequal(colnames(r_m), eresults_coln)){
     extra_in_results <- setdiff(colnames(r_m), eresults_coln)
     if(length(extra_in_results > 0)){
-      if(verbose) message("\n      - (-) Column(s) NOT expected in {results_metabolite} file which are missed in {metadata_samples}: \n\t\t - ", paste(extra_in_results, collapse = "\n\t\t - "))
+      if(verbose) message("\n      - (-) Column(s) NOT expected in {results_metabolite} file which are missed in {metadata_samples}: \n\t\t - ",
+                          paste(extra_in_results, collapse = "\n\t\t - "))
     }
 
     extra_in_msr <- setdiff(eresults_coln, colnames(r_m))
     if(length(extra_in_msr)){
-      if(verbose) message("\n      - (-) Column(s) available in {metadata_samples} missed in {results_metabolite}: \n\t\t - ", paste(extra_in_msr, collapse = "\n\t\t - "))
+      if(verbose) message("\n      - (-) Column(s) available in {metadata_samples} missed in {results_metabolite}: \n\t\t - ",
+                          paste(extra_in_msr, collapse = "\n\t\t - "))
     }
     flag_out <- FALSE
     ic <- ic + 1
@@ -319,22 +306,55 @@ check_results <- function(r_m,
   # Check that metabolites names matches
   if(!is.null(m_m)){
     if("metabolite_name" %in% colnames(r_m) & "metabolite_name" %in% colnames(m_m)){
+      # Both values must be equal
       if(!setequal(r_m$metabolite_name, m_m$metabolite_name)){
-        if(verbose) message("      - (-) {metabolite_name} in [results], not found in [metadata_metabolites]:\n\t\t- ",
-                paste(setdiff(r_m$me, m_m$metabolite_name), collapse = "\n\t\t- "))
+        if(verbose){
+          message("      - (-) {metabolite_name} in [results], not found in [metadata_metabolites]:\n\t\t- ",
+                  paste(setdiff(r_m$me, m_m$metabolite_name), collapse = "\n\t\t- "))
+        }
         ic <- ic + 1
       }else{
         if(verbose) message("   + (+) {metabolite_name} is identical in both [results] and [metadata_metabolites] files: OK")
       }
+      # No duplications allowed
+      if( any(duplicated(m_m$metabolite_name)) ){
+        if(verbose) message("      - (-) DUPLICATIONS in {metabolite_name} in [metadata_metabolites]:\n\t\t- ",
+                            paste(m_m$metabolite_name[duplicated(m_m$metabolite_name)], collapse = ","))
+        ic <- ic + 1
+      }
+      # No duplications allowed
+      if( any(duplicated(r_m$metabolite_name)) ){
+        if(verbose) message("      - (-) DUPLICATIONS in {metabolite_name} in [results]:\n\t\t- ",
+                            paste(r_m$metabolite_name[duplicated(r_m$metabolite_name)], collapse = ", "))
+        dupli_meta <- r_m$metabolite_name[duplicated(r_m$metabolite_name)]
+        ic <- ic + 1
+
+        # remove duplications: uncommented for 20200630 internal release
+        # bef <- dim(r_m)[1]
+        # r_m <- unique(r_m)
+        # aft <- dim(r_m)[1]
+        # if( (bef-aft)==length(dupli_meta) ){
+        #   if(verbose) message("\n\t -", paste(length(dupli_meta)), " duplications REMOVED. Before: ", bef, " After: ", aft )
+        # }else{
+        #   ic <- ic + 1
+        # }
+      }
+    }else{
+      if(verbose) message("      - (-) {metabolite_name} column is not available in both [results] and [metadata_metabolites]")
+      ic <- ic + 1
     }
+  }else{
+    if(verbose) message("\n      - (-) {metabolite_name} in [metadata_metabolite] cannot be checked: FAIL")
+    ic <- ic + 1
   }
+
 
   # Check if sample columns are numeric (but only if sample matches between them)
   if(flag_out){
-    r_m_num <- r_m[,m_s$sample_id] %>% dplyr::select_if(is.numeric)
-    if( !identical(r_m_num, r_m[,m_s$sample_id]) ){
+    r_m_num <- r_m[,as.character(m_s$sample_id)] %>% dplyr::select_if(is.numeric)
+    if( !identical(r_m_num, r_m[,as.character(m_s$sample_id)]) ){
       if(verbose) message("      - (-) Non-numeric columns identified")
-      r_m_nn <- r_m[,m_s$sample_id] %>% dplyr::select_if(negate(is.numeric))
+      r_m_nn <- r_m[,as.character(m_s$sample_id)] %>% dplyr::select_if(negate(is.numeric))
       if(verbose) message("      - (-) Non-numeric columns: ", paste(colnames(r_m_nn), collapse = ","))
       ic <- ic + 1
     }else{
@@ -510,10 +530,19 @@ check_viallabel_dmaqc <- function(vl_submitted,
   pass <- gsub("(.*)(-)(.*)", "\\1", phase)
   month <- gsub("(.*)(-)(.*)", "\\3", phase)
 
-  dmaqc_labels <- dmaqc_shipping_info$vial_label[which(dmaqc_shipping_info$bic_tissue_code == tissue_code &
-                                                         dmaqc_shipping_info$site_code == tolower(cas) &
-                                                         dmaqc_shipping_info$phase == pass &
-                                                         dmaqc_shipping_info$animal_age == month)]
+  dmaqc_shipping_df <- read.delim(dmaqc_shipping_info, stringsAsFactors = FALSE)
+
+  if(month == "06"){
+    month <- gsub("0", "", month)
+  }
+
+  month <- as.integer(month)
+
+  dmaqc_labels <- dmaqc_shipping_df$vial_label[which(dmaqc_shipping_df$bic_tissue_code == tissue_code &
+                                                         dmaqc_shipping_df$site_code == tolower(cas) &
+                                                         dmaqc_shipping_df$phase == pass &
+                                                         dmaqc_shipping_df$animal_age == month)]
+
   if(setequal(vl_submitted, dmaqc_labels)){
     if(verbose) message("   + (+) DMAQC CHECK POINT: samples sent to CAS have been processed: OK")
     ic <- "OK"
@@ -532,6 +561,61 @@ check_viallabel_dmaqc <- function(vl_submitted,
 
   }
   if(return_n_issues) return(ic)
+}
+
+#' @title filter required metadata_metabolites columns only
+#'
+#' @description it returns a data frame with only the required columns for metadata_metabolites
+#' @param df (data.frame) metadata_metabolites
+#' @param type (char) Type of file to filter columns:
+#' - `m_m`: metadata metabolites
+#' - `m_s`: metadata samples
+#' @param name_id (char) specify whether `named` or `unnamed` files
+#' @param verbose (logical) `TRUE` (default) shows messages
+#' @return (data.frame) filtered data frame with only the required columns
+#' @examples {
+#' df_filtered <- filter_required_columns(df = metadata_metabolites_named, name_id = "named")
+#' }
+#' @export
+filter_required_columns <- function(df,
+                                    type = c("m_m", "m_s"),
+                                    name_id = NULL,
+                                    verbose = TRUE){
+
+  type <- match.arg(type)
+
+  if (type == "m_m"){
+    if(name_id == "named"){
+      emeta_metabo_coln_named <- c("metabolite_name", "refmet_name", "rt", "mz", "neutral_mass", "formula")
+    }else if(name_id == "unnamed"){
+      if("neutral_mass" %in% colnames(df)){
+        emeta_metabo_coln_named <- c("metabolite_name", "rt", "mz", "neutral_mass")
+      }else{
+        emeta_metabo_coln_named <- c("metabolite_name", "rt", "mz")
+      }
+    }else{
+      stop("{name_id} option not valid. Options: named/unnamed")
+    }
+
+    colnames(df) <- tolower(colnames(df))
+
+    if(all(emeta_metabo_coln_named %in% colnames(df))){
+      if(verbose) message("   + (+) All required columns present")
+      df <- subset(df, select = emeta_metabo_coln_named)
+    }else{
+      if(verbose) message("      - (-) Expected COLUMN NAMES are missed: FAIL")
+    }
+    return(df)
+  } else if (type == "m_s"){
+    emeta_sample_coln <- c("sample_id", "sample_type", "sample_order", "raw_file")
+    if( all(emeta_sample_coln %in% colnames(df)) ){
+      if(verbose) message("   + (+) All required columns present")
+      df <- subset(df, select = emeta_sample_coln)
+    }else{
+      if(verbose) message("      - (-) Expected COLUMN NAMES are missed: FAIL")
+    }
+    return(df)
+  }
 }
 
 
@@ -556,6 +640,7 @@ validate_metabolomics <- function(input_results_folder,
                                   full_report = FALSE,
                                   verbose = TRUE){
 
+  # validate folder structure -----
   validate_cas(cas = cas)
 
   processfolder <- validate_processFolder(input_results_folder)
@@ -594,23 +679,28 @@ validate_metabolomics <- function(input_results_folder,
   if(verbose) message("+ Site: ", cas)
   if(verbose) message("+ Folder: `",paste0(input_folder_short),"`")
 
-  # Is a targeted site? Unname compounds not checked
+  # Is a targeted site? Unnamed compounds not checked
   untargeted <- TRUE
 
   if(cas %in% c("mayo", "emory", "duke")){
     untargeted <- FALSE
   }
 
+  # qc metadata-metabolites----
   if(verbose) message("\n## QC metadata_metabolites")
   cat("\n")
   if(verbose) message("*NAMED metadata metabolites*\n")
 
   lista <- open_file(input_results_folder = input_results_folder,
-                     filepattern = "metadata_metabolites_named.*.txt|Metadata_named_metabolites.txt")
+                     filepattern = "metadata_metabolites_named.*.txt|Metadata_named_metabolites.txt",
+                     verbose = verbose)
   f_mmn <- lista$flag
   if(f_mmn){
     m_m_n <- lista$df
-    ic_m_m_n <- check_metadata_metabolites(m_m_n, "named", return_n_issues = TRUE)
+    ic_m_m_n <- check_metadata_metabolites(df = m_m_n,
+                                           name_id = "named",
+                                           return_n_issues = TRUE,
+                                           verbose = verbose)
   }else{
     if(verbose) message("      - (-) {metadata_metabolites_named} not available")
     ic <- ic + 1
@@ -618,26 +708,29 @@ validate_metabolomics <- function(input_results_folder,
 
   if(untargeted){
     if(verbose) message("\n*UNNAMED metadata metabolites*\n")
-    lista <- open_file(input_results_folder, "metadata_metabolites_unnamed.*.txt|Metadata_unnamed_metabolites.txt")
+    lista <- open_file(input_results_folder, "metadata_metabolites_unnamed.*.txt|Metadata_unnamed_metabolites.txt", verbose = verbose)
     f_mmu <- lista$flag
     if(f_mmu) {
       m_m_u <- lista$df
-      ic_m_m_u <- check_metadata_metabolites(m_m_u, "unnamed", return_n_issues = TRUE)
+      ic_m_m_u <- check_metadata_metabolites(m_m_u, "unnamed", return_n_issues = TRUE, verbose = verbose)
     }else{
       if(verbose) message("      - (-) {metadata_metabolites_unnamed} not available")
       ic <- ic + 1
     }
   }
 
-  if(verbose) message("\n\n## QC metadata_sample files\n")
+  # qc metadata_samples----
+  if(verbose) message("\n\n## QC metadata_samples files\n")
 
   if(verbose) message("\n*NAMED metadata_sample*\n")
 
-  lista <- open_file(input_results_folder, filepattern = "metadata_sample.*_named.*.txt")
+  lista <- open_file(input_results_folder,
+                     filepattern = "metadata_sample_named.*.txt|metadata_samples_named.*.txt",
+                     verbose = verbose)
   f_msn <- lista$flag
   if(f_msn){
     m_s_n <- lista$df
-    ic_m_s_n <- check_metadata_samples(df = m_s_n, cas = cas, return_n_issues = TRUE)
+    ic_m_s_n <- check_metadata_samples(df = m_s_n, cas = cas, return_n_issues = TRUE, verbose = verbose)
     # Extract the number of samples
     if(!is.null(m_s_n)){
       #Double check that the columns are there
@@ -646,15 +739,23 @@ validate_metabolomics <- function(input_results_folder,
         qc_samples <- length(m_s_n$sample_id[which(m_s_n$sample_type != "Sample")])
       }
     }
+  }else{
+    if(verbose) message("      - (-) {metadata_samples_name} not available")
+    ic <- ic + 1
   }
 
   if(untargeted){
     if(verbose) message("\n*UNNAMED metadata_sample*\n")
-    lista <- open_file(input_results_folder, "metadata_sample.*_unnamed.*.txt")
+    lista <- open_file(input_results_folder,
+                       "metadata_sample_unnamed.*.txt|metadata_samples_unnamed.*.txt",
+                       verbose = verbose)
     f_msu <- lista$flag
     if(f_msu){
       m_s_u <- lista$df
-      ic_m_s_u <- check_metadata_samples(m_s_u, cas, return_n_issues = TRUE)
+      ic_m_s_u <- check_metadata_samples(m_s_u, cas, return_n_issues = TRUE, verbose = verbose)
+    }else{
+      if(verbose) message("      - (-) {metadata_samples_unname} not available")
+      ic <- ic + 1
     }
 
     # NAMED AND UNNAMED MUST MATCH TESTS
@@ -665,6 +766,8 @@ validate_metabolomics <- function(input_results_folder,
         if(verbose) message("      - (-) Metadata samples: named and unnamed files differ")
         ic <- ic + 1
       }
+    }else{
+      stop("there is no metadata samples unnamed")
     }
   }
 
@@ -675,7 +778,9 @@ validate_metabolomics <- function(input_results_folder,
   # if(cas == "emory"){
   #   lista <- open_file(input_results_folder, "results_metabolites_named.*adjusted.*.txt")
   # }else{
-  lista <- open_file(input_results_folder, "results_metabolites_named.*.txt|Results_named_metabolites.txt")
+  lista <- open_file(input_results_folder,
+                     "results_metabolites_named.*.txt|Results_named_metabolites.txt",
+                     verbose = verbose)
   # }
 
   f_rmn <- lista$flag
@@ -686,7 +791,11 @@ validate_metabolomics <- function(input_results_folder,
       ic_r_m_n <- check_results(r_m = r_m_n,
                                 m_s = m_s_n,
                                 m_m = m_m_n,
-                                return_n_issues = TRUE)
+                                return_n_issues = TRUE,
+                                verbose = verbose)
+    }else{
+      if(verbose) message("      - (-) RESULTS CANNOT BE CHECKED")
+      ic <- ic + 1
     }
   }else{
     if(verbose) message("      - (-) RESULTS-NAMED file not available")
@@ -695,7 +804,9 @@ validate_metabolomics <- function(input_results_folder,
 
   if(untargeted){
     if(verbose) message("\n*UNNAMED results_metabolites*\n")
-    lista <- open_file(input_results_folder, "results_metabolites_unnamed.*.txt|Results_unnamed_metabolites.txt")
+    lista <- open_file(input_results_folder,
+                       "results_metabolites_unnamed.*.txt|Results_unnamed_metabolites.txt",
+                       verbose = verbose)
     f_rmu <- lista$flag
     if(f_rmu){
       r_m_u <- lista$df
@@ -703,7 +814,8 @@ validate_metabolomics <- function(input_results_folder,
         ic_r_m_u <- check_results(r_m_u,
                                   m_s_u,
                                   m_m_u,
-                                  return_n_issues = TRUE)
+                                  return_n_issues = TRUE,
+                                  verbose = verbose)
       }
     }else{
       if(verbose) message("      - (-) UNNAMED-RESULTS file not available ")
@@ -733,7 +845,8 @@ validate_metabolomics <- function(input_results_folder,
     if(verbose) message("\n\n## QC raw_file information\n")
     ic_mrd <- check_manifest_rawdata(input_results_folder = input_results_folder,
                                      m_s_n_raw = unique(m_s_n$raw_file),
-                                     return_n_issues = TRUE)
+                                     return_n_issues = TRUE,
+                                     verbose = verbose)
   }else{
     if(verbose) message("\n\n## Validate {raw_files} match between [RAW/Manifest.txt] and [metadata_samples]\n")
     if(verbose) message("      (-) FAIL (medatada_samples file not available)")
@@ -741,7 +854,7 @@ validate_metabolomics <- function(input_results_folder,
   }
 
   if(verbose) message("\n\n## DMAQC validation\n")
-  failed_samples <- check_failedsamples(input_results_folder = input_results_folder)
+  failed_samples <- check_failedsamples(input_results_folder = input_results_folder, verbose = verbose)
 
   # Validate vial labels from DMAQC
   if(is.na(ic_vl)){
@@ -753,7 +866,8 @@ validate_metabolomics <- function(input_results_folder,
                                      phase = phase,
                                      failed_samples = failed_samples,
                                      dmaqc_shipping_info = dmaqc_shipping_info,
-                                     return_n_issues = TRUE)
+                                     return_n_issues = TRUE,
+                                     verbose = verbose)
     }
   }
 
@@ -772,8 +886,8 @@ validate_metabolomics <- function(input_results_folder,
   t_name <- bic_animal_tissue_code$bic_tissue_name[which(bic_animal_tissue_code$bic_tissue_code == tissue_code)]
 
   if(return_n_issues){
-    issues <- sum(ic, ic_mrd, ic_m_m_n, ic_m_m_u, ic_m_s_n, ic_m_s_u, ic_r_m_n, ic_r_m_u, na.rm = TRUE)
-    if(verbose) message("\nTOTAL NUMBER OF ISSUES: ", issues,"\n")
+    total_issues <- sum(ic, ic_mrd, ic_m_m_n, ic_m_m_u, ic_m_s_n, ic_m_s_u, ic_r_m_n, ic_r_m_u, na.rm = TRUE)
+    if(verbose) message("\nTOTAL NUMBER OF ISSUES: ", total_issues,"\n")
     if(full_report){
       reports <- data.frame(cas = cas,
                             phase= phase,
@@ -794,9 +908,194 @@ validate_metabolomics <- function(input_results_folder,
                             results_u = ic_r_m_u,
                             qc_date = qc_date)
       return(reports)
+    }else{
+      return(total_issues)
     }
   }
 }
+
+#' @title Load metabolomics batch
+#'
+#' @description Open, check, and return all metabolomics files
+#' @param input_results_folder (char) Path to the PROCESSED_YYYYMMDD folder
+#' @param cas (char) Chemical Analytical Site code (e.g "umichigan")
+#' @param verbose (logical) `TRUE` (default) shows messages
+#' @return (list of data.frames) List of all the data frames
+#' @examples
+#' \dontrun{
+#' here <-
+#'    load_metabolomics_batch(
+#'       input_results_folder = /path/to/PROCESSED_YYYYMMDD/,
+#'       cas = "cassite")
+#' }
+load_metabolomics_batch <- function(input_results_folder,
+                                    cas,
+                                    verbose = TRUE){
+
+  m_m_n = m_m_u = m_s_n = r_m_n = r_m_u = NULL
+
+  # Validations----
+  cas <- tolower(cas)
+  validate_cas(cas)
+  phase <- validate_phase(input_results_folder)
+  processfolder <- validate_processFolder(input_results_folder)
+  assay <- validate_assay(input_results_folder)
+  tissue_code <- validate_tissue(input_results_folder)
+
+  # Output name----
+  output_name <- paste0(cas, ".", tissue_code, ".", tolower(phase), ".",tolower(assay), ".", tolower(processfolder))
+
+  total_issues <- validate_metabolomics(input_results_folder = input_results_folder, cas = cas, return_n_issues = TRUE, full_report = FALSE, verbose = FALSE)
+
+  if(total_issues > 1){
+    stop("Too many issues identified (", total_issues,"). This batch cannot be processed until the issues are solved")
+  }
+
+  vial_label <- NA
+  qc_samples <- NA
+
+  # Load Metabolomics----
+  if(verbose) message("# LOAD METABOLOMICS BATCH")
+  if(verbose) message("+ Site: ", cas)
+  if(verbose) message("+ Folder: `",paste0(input_results_folder),"`")
+
+  # Is a targeted site? Unname compounds not checked
+  untargeted <- TRUE
+
+  if(cas %in% c("mayo", "emory", "duke")){
+    untargeted <- FALSE
+  }
+
+  # metadata_metabolites------
+  lista <- open_file(input_results_folder = input_results_folder,
+                     filepattern = "metadata_metabolites_named.*.txt|Metadata_named_metabolites.txt",
+                     verbose = verbose)
+  f_mmn <- lista$flag
+  if(f_mmn){
+    m_m_n <- lista$df
+    m_m_n <- filter_required_columns(df = m_m_n,
+                                     type = "m_m",
+                                     name_id = "named",
+                                     verbose = FALSE)
+  }else{
+    if(verbose) message("      - (-) {metadata_metabolites_named} not available")
+  }
+
+  if(untargeted){
+    if(verbose) message("\n*UNNAMED metadata metabolites*\n")
+    lista <- open_file(input_results_folder,
+                       "metadata_metabolites_unnamed.*.txt|Metadata_unnamed_metabolites.txt",
+                       verbose = verbose)
+    f_mmu <- lista$flag
+    if(f_mmu) {
+      m_m_u <- lista$df
+      m_m_u <- filter_required_columns(df = m_m_u,
+                                       type = "m_m",
+                                       name_id = "unnamed",
+                                       verbose = FALSE)
+      if( any(is.na(m_m_u$metabolite_name)) ){
+        m_m_u <- m_m_u[!is.na(m_m_u$metabolite_name),]
+      }
+    }else{
+      if(verbose) message("      - (-) {metadata_metabolites_unnamed} not available")
+    }
+  }
+
+  # metadata_sample-----
+  if(verbose) message("\n\n## Metadata_sample files\n")
+  if(verbose) message("\n*NAMED metadata_sample*\n")
+
+  lista <- open_file(input_results_folder,
+                     "metadata_sample_named.*.txt|metadata_samples_named.*.txt",
+                     verbose = verbose)
+  f_msn <- lista$flag
+  if(f_msn){
+    m_s_n <- lista$df
+    m_s_n <- filter_required_columns(df = m_s_n,
+                                     type = "m_s",
+                                     verbose = FALSE)
+  }else{
+    if(verbose) message("      - (-) {metadata_samples_named} not available")
+  }
+
+  if(untargeted){
+    if(verbose) message("\n*UNNAMED metadata_sample*\n")
+    lista <- open_file(input_results_folder,
+                       "metadata_sample_unnamed.*.txt|metadata_samples_unnamed.*.txt",
+                       verbose = verbose)
+    f_msu <- lista$flag
+    if(f_msu){
+      m_s_u <- lista$df
+      m_s_u <- filter_required_columns(df = m_s_u,
+                                       type = "m_s",
+                                       verbose = FALSE)
+    }
+  }
+
+
+  # results --------------------------------------------------------------------
+  if(verbose) message("\n\n## Results\n")
+  if(verbose) message("\n*NAMED results_metabolites*\n")
+
+  lista <- open_file(input_results_folder,
+                     "results_metabolites_named.*.txt|results_metabolite_named.*.txt",
+                     verbose = verbose)
+
+  f_rmn <- lista$flag
+  if(f_rmn){
+    r_m_n <- lista$df
+
+    if( any(duplicated(r_m_n$metabolite_name)) ){
+      message("      - (-) DUPLICATIONS in {metabolite_name} in [results]:\n\t\t- ",
+                          paste(r_m_n$metabolite_name[duplicated(r_m_n$metabolite_name)], collapse = ", "))
+      dupli_meta <- r_m_n$metabolite_name[duplicated(r_m_n$metabolite_name)]
+      bef <- dim(r_m_n)[1]
+      r_m_n <- unique(r_m_n)
+      aft <- dim(r_m_n)[1]
+      aft == bef
+      if( (bef-aft)==length(dupli_meta) ){
+        message("\t -", paste(length(dupli_meta)), " duplications REMOVED. Before: ", bef, " After: ", aft )
+      }else{
+        ic <- ic + 1
+      }
+    }
+  }else{
+    if(verbose) message("      - (-) RESULTS-NAMED file not available")
+  }
+
+  if(untargeted){
+    if(verbose) message("\n*UNNAMED results_metabolites*\n")
+    lista <- open_file(input_results_folder,
+                       "results_metabolites_unnamed.*.txt|Results_unnamed_metabolites.txt",
+                       verbose = verbose)
+    f_rmu <- lista$flag
+    if(f_rmu){
+      r_m_u <- lista$df
+      if( any(is.na(r_m_u$metabolite_name)) ){
+        r_m_u <- r_m_u[!is.na(r_m_u$metabolite_name),]
+      }
+    }else{
+      if(verbose) message("      - (-) UNNAMED-RESULTS file not available ")
+    }
+  }
+
+  if(untargeted){
+    list_df <- list ("m_m_n" = m_m_n,
+                     "m_m_u" = m_m_u,
+                     "m_s_n" = m_s_n,
+                     "r_m_n" = r_m_n,
+                     "r_m_u" = r_m_u,
+                     "phase" = phase)
+  }else{
+    list_df <- list ("m_m_n" = m_m_n,
+                     "m_s_n" = m_s_n,
+                     "r_m_n" = r_m_n,
+                     "phase" = phase)
+  }
+
+  return(list_df)
+}
+
 
 #' @title Combines all files from a Metabolomics batch
 #'
@@ -818,199 +1117,20 @@ combine_metabolomics_batch <- function(input_results_folder,
                                        cas,
                                        verbose = TRUE){
 
-  m_m_n = m_m_u = m_s_n = r_m_n = r_m_u = NULL
-
-  # Validations----
-  cas <- tolower(cas)
-  validate_cas(cas)
-  phase <- validate_phase(input_results_folder)
-
-  if(grepl("^PASS1A-06$", phase)){
-    stop("<combine_metabolomics_batch> only supports PASS1A batches")
-  }
-
-  processfolder <- validate_processFolder(input_results_folder)
-  assay <- validate_assay(input_results_folder)
-  tissue_code <- validate_tissue(input_results_folder)
-
-  # Output name----
-  output_name <- paste0(cas, ".", tissue_code, ".", tolower(phase), ".",tolower(assay), ".", tolower(processfolder))
-
-  # COUNTS AND FLAGS
-  ic <- 0
-
-  vial_label <- NA
-  qc_samples <- NA
-
-  # Load Metabolomics
-  if(verbose) message("# LOAD METABOLOMICS BATCH")
-  if(verbose) message("+ Site: ", cas)
-  if(verbose) message("+ Folder: `",paste0(input_results_folder),"`")
-
-  # Is a targeted site? Unname compounds not checked
-  untargeted <- TRUE
-
-  if(cas %in% c("mayo", "emory", "duke")){
-    untargeted <- FALSE
-  }
-
-  # metadata_metabolites------
-  lista <- open_file(input_results_folder = input_results_folder,
-                     filepattern = "metadata_metabolites_named.*.txt|Metadata_named_metabolites.txt",
-                     verbose = verbose)
-  f_mmn <- lista$flag
-  if(f_mmn){
-    m_m_n <- lista$df
-    check_metadata_metabolites(m_m_n, "named",
-                               return_n_issues = FALSE,
-                               verbose = verbose)
-  }else{
-    if(verbose) message("      - (-) {metadata_metabolites_named} not available")
-    ic <- ic + 1
-  }
-
-  if(untargeted){
-    if(verbose) message("\n*UNNAMED metadata metabolites*\n")
-    lista <- open_file(input_results_folder,
-                       "metadata_metabolites_unnamed.*.txt|Metadata_unnamed_metabolites.txt",
-                       verbose = verbose)
-    f_mmu <- lista$flag
-    if(f_mmu) {
-      m_m_u <- lista$df
-      check_metadata_metabolites(m_m_u, "unnamed",
-                                 return_n_issues = FALSE,
-                                 verbose = verbose)
-    }else{
-      if(verbose) message("      - (-) {metadata_metabolites_unnamed} not available")
-      ic <- ic + 1
-    }
-  }
-
-  # metadata_sample-----
-  if(verbose) message("\n\n## Metadata_sample files\n")
-  if(verbose) message("\n*NAMED metadata_sample*\n")
-
-  lista <- open_file(input_results_folder,
-                     "metadata_sample_named.*.txt|Metadata_named_samples.txt",
-                     verbose = verbose)
-  f_msn <- lista$flag
-  if(f_msn){
-    m_s_n <- lista$df
-    check_metadata_samples(df = m_s_n,
-                           cas = cas,
-                           return_n_issues = FALSE,
-                           verbose = verbose)
-    # Extract the number of samples
-    if(!is.null(m_s_n)){
-      #Double check that the columns are there
-      if( all(c("sample_id", "sample_type") %in% colnames(m_s_n)) ){
-        vial_label <- length(m_s_n$sample_id[which(m_s_n$sample_type == "Sample")])
-        qc_samples <- length(m_s_n$sample_id[which(m_s_n$sample_type != "Sample")])
-        if(verbose) message("\t+ Number of Samples: ",vial_label, " QCs: ", qc_samples)
-      }
-    }
-  }
-
-  if(untargeted){
-    if(verbose) message("\n*UNNAMED metadata_sample*\n")
-    lista <- open_file(input_results_folder,
-                       "metadata_sample_unnamed.*.txt|Metadata_unnamed_samples.txt",
-                       verbose = verbose)
-    f_msu <- lista$flag
-    if(f_msu){
-      m_s_u <- lista$df
-      check_metadata_samples(m_s_u, cas,
-                             return_n_issues = FALSE,
-                             verbose = verbose)
-    }
-
-    # NAMED AND UNNAMED MUST MATCH TESTS
-    if(f_msn & f_msu){
-      if(isTRUE(all.equal(m_s_n, m_s_u))){
-        if(verbose) message("   + (+) Metadata samples: named and unnamed are identical: OK")
-      }else{
-        stop("      - (-) Metadata samples: named and unnamed files differ")
-        # ic <- ic + 1
-      }
-    }
-  }
-
-
-  # results --------------------------------------------------------------------
-  if(verbose) message("\n\n## Results\n")
-  if(verbose) message("\n*NAMED results_metabolites*\n")
-
-  lista <- open_file(input_results_folder,
-                     "results_metabolites_named.*.txt|Results_named_metabolites.txt",
-                     verbose = verbose)
-
-  f_rmn <- lista$flag
-  if(f_rmn){
-    r_m_n <- lista$df
-    if(f_msn & f_mmn){
-      check_results(r_m = r_m_n,
-                    m_s = m_s_n,
-                    m_m = m_m_n,
-                    return_n_issues = FALSE,
-                    verbose = verbose)
-    }
-  }else{
-    if(verbose) message("      - (-) RESULTS-NAMED file not available")
-    ic <- ic + 1
-  }
-
-  if(untargeted){
-    if(verbose) message("\n*UNNAMED results_metabolites*\n")
-    lista <- open_file(input_results_folder,
-                       "results_metabolites_unnamed.*.txt|Results_unnamed_metabolites.txt",
-                       verbose = verbose)
-    f_rmu <- lista$flag
-    if(f_rmu){
-      r_m_u <- lista$df
-      if(f_msu & f_mmu){
-        check_results(r_m_u,
-                      m_s_u,
-                      m_m_u,
-                      return_n_issues = FALSE,
-                      verbose = verbose)
-      }
-    }else{
-      if(verbose) message("      - (-) UNNAMED-RESULTS file not available ")
-      ic <- ic + 1
-    }
-
-    if(f_rmn & f_rmu){
-      if(verbose) message("- Checking columns match between named and unnamed results")
-      if(setequal(colnames(r_m_n), colnames(r_m_u))){
-        if(verbose) message("   + (+) All samples found on both NAMED and UNNAMED files: OK")
-      }else{
-        if(verbose) message("      - (-) Samples DO NOT MATCH on both NAMED and UNNAMED files")
-        ic <- ic + 1
-        extra_in_rnamed <- setdiff(colnames(r_m_n), colnames(r_m_u))
-        if(length(extra_in_rnamed) > 0){
-          if(verbose) message("      - (-) Column(s) only found in [results NAMED] file: ", paste(extra_in_rnamed, collapse = "\n\t\t - "))
-        }
-
-        extra_in_unamed <- setdiff(colnames(r_m_u), colnames(r_m_n))
-        if(length(extra_in_unamed) > 0){
-          if(verbose) message("      - (-) Column(s) only found in [results UNNAMED] file: ", paste(extra_in_unamed, collapse = "\n\t\t - "))
-        }
-      }
-    }
-  }
-
-  if(ic > 0) stop("\nPROBLEMS merging datasets")
+  # Load all datasets
+  metab_dfs <- load_metabolomics_batch(input_results_folder = input_results_folder,
+                                       cas = cas)
 
   if(verbose) message("\n## MERGE")
   if(verbose) message("\nAll metabolomics datasets + basic phenotypic information")
   if(verbose) message("(it might take some time)")
 
-  all_merged <- merge_all_metabolomics(m_m_n = m_m_n,
-                                       m_m_u = m_m_u,
-                                       m_s_n = m_s_n,
-                                       r_n = r_m_n,
-                                       r_u = r_m_u,
-                                       phase = phase)
+  all_merged <- merge_all_metabolomics(m_m_n = metab_dfs$m_m_n,
+                                       m_m_u = metab_dfs$m_m_u,
+                                       m_s_n = metab_dfs$m_s_n,
+                                       r_m_n = metab_dfs$r_m_n,
+                                       r_m_u = metab_dfs$r_m_u,
+                                       phase = metab_dfs$phase)
 
   return(all_merged)
 
@@ -1156,8 +1276,8 @@ merge_phenotype_metabolomics <- function(df_long){
 #' @param m_m_n (metabolomics metadata named)
 #' @param m_m_u (metabolomics metadata unnamed)
 #' @param m_s_n (metabolomics sample named)
-#' @param r_n (results named)
-#' @param r_u (results unnamed)
+#' @param r_m_n (results named)
+#' @param r_m_u (results unnamed)
 #' @param phase (MoTrPAC Animal phase. Eg. PASS1A-06)
 #' @return (data.frame) Merged data frame long format
 #' @examples
@@ -1165,23 +1285,23 @@ merge_phenotype_metabolomics <- function(df_long){
 #'        m_m_n = metadata_metabolites_named,
 #'        m_m_u = metadata_metabolites_unnamed,
 #'        m_s_n = metadata_sample_named,
-#'        r_n = results_named,
-#'        r_u = results_unnamed,
+#'        r_m_n = results_named,
+#'        r_m_u = results_unnamed,
 #'        phase = "PASS1A-06")
 #' @export
 merge_all_metabolomics <- function(m_m_n,
                                    m_m_u = NULL,
                                    m_s_n,
-                                   r_n,
-                                   r_u = NULL,
+                                   r_m_n,
+                                   r_m_u = NULL,
                                    phase){
 
   # # Debug
   # m_m_n = metadata_metabolites_named
   # m_m_u = metadata_metabolites_unnamed
   # m_s_n = metadata_sample_named
-  # r_n = results_named
-  # r_u = results_unnamed
+  # r_m_n = results_named
+  # r_m_u = results_unnamed
 
   raw_file = NULL
 
@@ -1195,10 +1315,10 @@ merge_all_metabolomics <- function(m_m_n,
   }
 
   # merge results metabolites
-  if(is.null(r_u)){
-    r_m <- r_n
+  if(is.null(r_m_u)){
+    r_m <- r_m_n
   }else{
-    r_m <- rbind(r_n, r_u[names(r_n)])
+    r_m <- rbind(r_m_n, r_m_u[names(r_m_n)])
   }
 
   r_long <- tidyr::pivot_longer(r_m,
@@ -1233,6 +1353,117 @@ merge_all_metabolomics <- function(m_m_n,
 }
 
 
+#' @title Write metabolomics data release
+#'
+#' @description Write out metabolomics data releases. Doesn't check whether
+#' data has been submited according to guidelines
+#' @param input_results_folder (char) Path to the PROCESSED_YYYYMMDD folder
+#' @param cas (char) Chemical Analytical Site code (e.g "umichigan")
+#' @param folder_name (char) output files name. Must have a `.yaml` extension.
+#' @param folder_root (char) absolute path to write the output files. Default: current directory
+#' @param verbose (logical) `TRUE` (default) shows messages
+#' @return bic release folder/file structure `PHASE/OMICS/TCODE_NAME/ASSAY/` and file names, including:
+#' `motrpac_YYYYMMDD_phasecode_tissuecode_omics_assay_file-details.txt` where files-details can be:
+#' `named-experimentalDetails.txt`, `named-metadata-metabolites.txt`, `metadata-samples.txt`,
+#' `named-results.txt`
+#' @examples
+#' \dontrun{
+#' write_metabolomics_releases(
+#'    input_results_folder = "/full/path/to/PROCESSED_YYYYMMDD/")
+#' }
+#' @export
+write_metabolomics_releases <- function(input_results_folder,
+                                        cas,
+                                        folder_name = "motrpac_release",
+                                        folder_root = NULL,
+                                        verbose = TRUE){
 
+  # Get names from input_results_folder------
+  assay <- validate_assay(input_results_folder)
+  phase <- validate_phase(input_results_folder)
+  tissue_code <- validate_tissue(input_results_folder)
+  folder_phase <- tolower(phase)
+  folder_tissue <- bic_animal_tissue_code$tissue_name_release[which(bic_animal_tissue_code$bic_tissue_code == tissue_code)]
+  if(length(assay_codes$assay_code[which(assay_codes$submission_code == assay)]) == 1){
+    folder_assay <- assay_codes$assay_code[which(assay_codes$submission_code == assay)]
+  }else{
+    stop("ASSAY code ", assay, " not available in < assay_codes >")
+  }
+
+  if(verbose) message("+ Writing out ", cas, " ", phase, " ", tissue_code, " ", assay, " files", appendLF = FALSE)
+
+  # Load all datasets----
+  metab_dfs <- load_metabolomics_batch(input_results_folder = input_results_folder,
+                                       cas = cas,
+                                       verbose = FALSE)
+
+  # Create output folder-------
+  if (is.null(folder_root)){
+    folder_root <- getwd()
+  }else{
+    folder_root <- normalizePath(folder_root)
+  }
+
+  if(cas %in% c("umichigan", "broad_met", "gtech")){
+    output_folder <- file.path(folder_root, folder_name, folder_phase, "metabolomics-untargeted", folder_tissue, folder_assay)
+  }else{
+    output_folder <- file.path(folder_root, folder_name, folder_phase, "metabolomics-targeted", folder_tissue, folder_assay)
+  }
+
+  if(!dir.exists(file.path(output_folder))){
+    dir.create(file.path(output_folder), recursive = TRUE)
+  }
+
+  file_name_shared <- paste0("motrpac_",
+                             folder_phase, "_",
+                             folder_tissue, "_",
+                             folder_assay)
+
+
+  # Create and write FILES-----
+  named_metadata_metabolites <- file.path(output_folder, paste0(file_name_shared,"_named-metadata-metabolites.txt"))
+  named_metadata_samples <- file.path(output_folder, paste0(file_name_shared,"_named-metadata-samples.txt"))
+  named_results <- file.path(output_folder, paste0(file_name_shared,"_named-results.txt"))
+
+  write.table(metab_dfs$m_m_n, named_metadata_metabolites, row.names = FALSE, sep = "\t", quote = FALSE)
+  write.table(metab_dfs$m_s_n, named_metadata_samples, row.names = FALSE, sep = "\t", quote = FALSE)
+  write.table(metab_dfs$r_m_n, named_results, row.names = FALSE, sep = "\t", quote = FALSE)
+
+  named_experimentalDetails <- file.path(output_folder, paste0(file_name_shared,"_named-experimentalDetails.txt"))
+  submitted_named_experimentalDetails <- list.files(file.path(normalizePath(input_results_folder), "NAMED"),
+                                                    pattern="metadata_experimentalDetails.*",
+                                                    full.names= TRUE,
+                                                    recursive = TRUE)
+
+  if(length(submitted_named_experimentalDetails) == 1){
+   here <- file.copy(submitted_named_experimentalDetails, named_experimentalDetails, overwrite = TRUE)
+  }else{
+    stop("\n\nThe experimentalDetails file is missed")
+  }
+
+  if(cas %in% c("umichigan", "broad_met", "gtech")){
+    unnamed_metadata_metabolites <- file.path(output_folder, paste0(file_name_shared,"_unnamed-metadata-metabolites.txt"))
+    unnamed_metadata_samples <- file.path(output_folder, paste0(file_name_shared,"_unnamed-metadata-samples.txt"))
+    unnamed_results <- file.path(output_folder, paste0(file_name_shared,"_unnamed-results.txt"))
+
+    write.table(metab_dfs$m_m_u, unnamed_metadata_metabolites, row.names = FALSE, sep = "\t", quote = FALSE)
+    write.table(metab_dfs$m_s_n, unnamed_metadata_samples, row.names = FALSE, sep = "\t", quote = FALSE)
+    write.table(metab_dfs$r_m_u, unnamed_results, row.names = FALSE, sep = "\t", quote = FALSE)
+
+    unnamed_experimentalDetails <- file.path(output_folder, paste0(file_name_shared,"_unnamed-experimentalDetails.txt"))
+    submitted_named_experimentalDetails <- list.files(file.path(normalizePath(input_results_folder), "UNNAMED"),
+                                                      pattern="metadata_experimentalDetails.*",
+                                                      full.names= TRUE,
+                                                      recursive = TRUE)
+
+    if(length(submitted_named_experimentalDetails) == 1){
+      file.copy(submitted_named_experimentalDetails, unnamed_experimentalDetails, overwrite = TRUE)
+    }else{
+      stop("The experimentalDetails file is missed\n")
+    }
+  }
+
+  if(verbose) message("...done!")
+}
 
 

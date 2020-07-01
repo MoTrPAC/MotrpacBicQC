@@ -1,0 +1,42 @@
+bic_tissue_code	bic_tissue_name	motrpac_tissue_code	tissue_name_release
+T30	Blood RNA	T30 Rat PaxGene RNA	t30-blood-rna
+T31	EDTA Plasma	T31 Rat Plasma	t31-plasma
+T32	Packed Cells	T32 Rat Packed Cells	
+T33	Hippocampus	T33 Rat Hippocampus	
+T34	Cortex	T34 Rat Cortex	
+T35	Hypothalamus	T35 Rat Hypothalmus	
+T36	Gastrocnemius	T36 Rat Gastrocnemius	
+T37	Vastus Lateralis	T37 Rat Vastus Lateralis	
+T38	Tibia	T38 Rat Tibia	
+T39	Heart	T39 Rat Heart	
+T40	Kidney	T40 Rat Kidney	
+T41	Adrenals	T41 Rat Adrenals	
+T42	Colon	T42 Rat Colon	
+T43	Spleen	T43 Rat Spleen	
+T44	Testes	T44 Rat Testes	
+T45	Ovaries	T45 Rat Ovaries	
+T46	Brown Adipose	T46 Rat Brown Adipose	
+T47	White Adipose	T47 Rat White Adipose	
+T48	Aorta	T48 Rat Aorta	
+T49	Lung	T49 Rat Lung	
+T50	Small Intestine	T50 Rat Small Intestine	
+T51	Liver	T51 Rat Liver	
+T52	Hippocampus Powder	T52 Rat Hippocampus Powder	t52-hippocampus
+T53	Cortex Powder	T53 Rat Cortex Powder	t53-cortex
+T54	Hypothalamus Powder	T54 Rat Hypothalmus Powder	t54-hypothalmus
+T55	Gastrocnemius Powder	T55 Rat Gastrocnemius Powder	t55-gastrocnemius
+T56	Vastus Lateralis Powder	T56 Rat Vastus Lateralis Powder	t56-vastus-lateralis
+T57	Tibia Powder	T57 Rat Tibia Powder	t57-tibia
+T58	Heart Powder	T58 Rat Heart Powder	t58-heart
+T59	Kidney Powder	T59 Rat Kidney Powder	t59-kidney
+T60	Adrenal Powder	T60 Rat Adrenal Powder	t60-adrenal
+T61	Colon Powder	T61 Rat Colon Powder	t61-colon
+T62	Spleen Powder	T62 Rat Spleen Powder	t62-spleen
+T63	Testes Powder	T63 Rat Testes Powder	t63-testes
+T64	Ovaries Powder	T64 Rat Ovaries Powder	t64-ovaries
+T65	Aorta Powder	T65 Rat Aorta Powder	t65-aorta
+T66	Lung Powder	T66 Rat Lung Powder	t66-lung
+T67	Small Intestine Powder	T67 Rat Small Intestine Powder	t67-small-intestine
+T68	Liver Powder	T68 Rat Liver Powder	t68-liver
+T69	Brown Adipose Powder	T69 Rat Brown Adipose Powder	t69-brown-adipose
+T70	White Adipose Powder	T70 Rat White Adipose Powder	t70-white-adipose
