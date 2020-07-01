@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MotrpacBicQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
       </span>
     </div>
 
@@ -76,12 +76,12 @@
 
       
 
-      </header><div class="row">
+      </header><script src="metabolomics_qc_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>MotrpacBicQC: Metabolomics QC</h1>
             
-            <h4 class="date">2020-06-03</h4>
+            <h4 class="date">2020-07-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MoTrPAC/MotrpacBicQC/blob/master/vignettes/metabolomics_qc.Rmd"><code>vignettes/metabolomics_qc.Rmd</code></a></small>
       <div class="hidden name"><code>metabolomics_qc.Rmd</code></div>
@@ -100,24 +100,33 @@
 <a href="https://rstudio.com/products/rstudio/download/">RStudio</a> (free version)</li>
 </ul>
 <p>Then, open RStudio and install the <code>devtools</code> package</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"devtools"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"devtools"</span>)
+</pre></div>
 <p>Finally, install the <code>MotrpacBicQC</code> package</p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">devtools</span>)
-<span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu">install_github</span>(<span class="st">"MoTrPAC/MotrpacBicQC"</span>, <span class="kw">build_vignettes</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">devtools</span>)
+<span class="kw">devtools</span>::<span class="fu">install_github</span>(<span class="st">"MoTrPAC/MotrpacBicQC"</span>, build_vignettes = <span class="fl">TRUE</span>)
+</pre></div>
 </div>
 <div id="usage" class="section level1">
 <h1 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h1>
 <p>Load the library</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">MotrpacBicQC</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb3"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/MoTrPAC/MotrpacBicQC">MotrpacBicQC</a></span>)
+</pre></div>
 <p>And run any of the following tests to check that the package is correctly installed it works. For example:</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="co"># Just copy and paste in the RStudio terminal</span>
+<div class="sourceCode" id="cb4"><pre class="downlit">
+<span class="co"># Just copy and paste in the RStudio terminal</span>
 
-<span class="fu"><a href="../reference/check_metadata_metabolites.html">check_metadata_metabolites</a></span>(<span class="kw">df</span> <span class="kw">=</span> <span class="no">metadata_metabolites_named</span>, <span class="kw">name_id</span> <span class="kw">=</span> <span class="st">"named"</span>)
-<span class="fu"><a href="../reference/check_metadata_samples.html">check_metadata_samples</a></span>(<span class="kw">df</span> <span class="kw">=</span> <span class="no">metadata_sample_named</span>, <span class="kw">cas</span> <span class="kw">=</span> <span class="st">"umichigan"</span>)
-<span class="fu"><a href="../reference/check_results.html">check_results</a></span>(<span class="kw">r_m</span> <span class="kw">=</span> <span class="no">results_named</span>, <span class="kw">m_s</span> <span class="kw">=</span> <span class="no">metadata_sample_named</span>, <span class="kw">m_m</span> <span class="kw">=</span> <span class="no">metadata_metabolites_named</span>)</pre></body></html></div>
+<span class="fu"><a href="../reference/check_metadata_metabolites.html">check_metadata_metabolites</a></span>(df = <span class="kw">metadata_metabolites_named</span>, name_id = <span class="st">"named"</span>)
+<span class="fu"><a href="../reference/check_metadata_samples.html">check_metadata_samples</a></span>(df = <span class="kw">metadata_sample_named</span>, cas = <span class="st">"umichigan"</span>)
+<span class="fu"><a href="../reference/check_results.html">check_results</a></span>(r_m = <span class="kw">results_named</span>, m_s = <span class="kw">metadata_sample_named</span>, m_m = <span class="kw">metadata_metabolites_named</span>)
+</pre></div>
 <p>which should generate the following output:</p>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="../reference/check_metadata_metabolites.html">check_metadata_metabolites</a></span>(<span class="kw">df</span> <span class="kw">=</span> <span class="no">metadata_metabolites_named</span>, <span class="kw">name_id</span> <span class="kw">=</span> <span class="st">"named"</span>)
+<div class="sourceCode" id="cb5"><pre class="downlit">
+<span class="fu"><a href="../reference/check_metadata_metabolites.html">check_metadata_metabolites</a></span>(df = <span class="kw">metadata_metabolites_named</span>, name_id = <span class="st">"named"</span>)
 <span class="co">#&gt;    + (+) All required columns present</span>
 <span class="co">#&gt;    + (+) {metabolite_name} OK</span>
 <span class="co">#&gt;    + (+) {refmet_name} unique values: OK</span>
@@ -126,17 +135,17 @@
 <span class="co">#&gt;    + (+) {mz} all numeric: OK</span>
 <span class="co">#&gt;    + (+) {neutral_mass} all numeric values OK</span>
 <span class="co">#&gt;    + (+) {formula} available: OK</span>
-<span class="fu"><a href="../reference/check_metadata_samples.html">check_metadata_samples</a></span>(<span class="kw">df</span> <span class="kw">=</span> <span class="no">metadata_sample_named</span>, <span class="kw">cas</span> <span class="kw">=</span> <span class="st">"umichigan"</span>)
-<span class="co">#&gt;    + (+) All required columns present</span>
+<span class="fu"><a href="../reference/check_metadata_samples.html">check_metadata_samples</a></span>(df = <span class="kw">metadata_sample_named</span>, cas = <span class="st">"umichigan"</span>)
 <span class="co">#&gt;    + (+) {sample_id} seems OK</span>
 <span class="co">#&gt;    + (+) {sample_type} seems OK</span>
 <span class="co">#&gt;    + (+) {sample_order} is numeric</span>
 <span class="co">#&gt;    + (+) {sample_order} unique values OK</span>
 <span class="co">#&gt;    + (+) {raw_file} unique values OK</span>
-<span class="fu"><a href="../reference/check_results.html">check_results</a></span>(<span class="kw">r_m</span> <span class="kw">=</span> <span class="no">results_named</span>, <span class="kw">m_s</span> <span class="kw">=</span> <span class="no">metadata_sample_named</span>, <span class="kw">m_m</span> <span class="kw">=</span> <span class="no">metadata_metabolites_named</span>)
+<span class="fu"><a href="../reference/check_results.html">check_results</a></span>(r_m = <span class="kw">results_named</span>, m_s = <span class="kw">metadata_sample_named</span>, m_m = <span class="kw">metadata_metabolites_named</span>)
 <span class="co">#&gt;    + (+) All samples from [results_metabolite] are available in [metadata_sample]</span>
 <span class="co">#&gt;    + (+) {metabolite_name} is identical in both [results] and [metadata_metabolites] files: OK</span>
-<span class="co">#&gt;    + (+) {sample_id} columns are numeric: OK</span></pre></body></html></div>
+<span class="co">#&gt;    + (+) {sample_id} columns are numeric: OK</span>
+</pre></div>
 <div id="how-to-test-your-datasets" class="section level2">
 <h2 class="hasAnchor">
 <a href="#how-to-test-your-datasets" class="anchor"></a>How to test your datasets</h2>
@@ -145,8 +154,10 @@
 <h3 class="hasAnchor">
 <a href="#check-full-processed_yyyymmdd-folder-recommended" class="anchor"></a>Check full <code>PROCESSED_YYYYMMDD</code> folder (recommended)</h3>
 <p>Run test on the full submission. For that, run the following command:</p>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="fu"><a href="../reference/validate_metabolomics.html">validate_metabolomics</a></span>(<span class="kw">input_results_folder</span> <span class="kw">=</span> <span class="st">"/full/path/to/PROCESSED_YYYYMMDD"</span>,
-                      <span class="kw">cas</span> <span class="kw">=</span> <span class="st">"your_site_code"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb6"><pre class="downlit">
+<span class="fu"><a href="../reference/validate_metabolomics.html">validate_metabolomics</a></span>(input_results_folder = <span class="st">"/full/path/to/PROCESSED_YYYYMMDD"</span>, 
+                      cas = <span class="st">"your_site_code"</span>)
+</pre></div>
 <p><strong>cas</strong> is one of the followings:</p>
 <ul>
 <li>“broad_met” = Broad Metabolomics</li>
@@ -163,33 +174,39 @@
 <ul>
 <li>Check metadata metabolites:</li>
 </ul>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="co"># Open the metadata_metabolites file(s)</span>
+<div class="sourceCode" id="cb7"><pre class="downlit">
+<span class="co"># Open the metadata_metabolites file(s)</span>
 
-<span class="no">metadata_metabolites_named</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(<span class="kw">file</span> <span class="kw">=</span> <span class="st">"/path/to/your/file"</span>, <span class="kw">stringsAsFactors</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
-<span class="no">metadata_metabolites_unnamed</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(<span class="kw">file</span> <span class="kw">=</span> <span class="st">"/path/to/your/file"</span>, <span class="kw">stringsAsFactors</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
+<span class="kw">metadata_metabolites_named</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(file = <span class="st">"/path/to/your/file"</span>, stringsAsFactors = <span class="fl">FALSE</span>)
+<span class="kw">metadata_metabolites_unnamed</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(file = <span class="st">"/path/to/your/file"</span>, stringsAsFactors = <span class="fl">FALSE</span>)
 
-<span class="fu"><a href="../reference/check_metadata_metabolites.html">check_metadata_metabolites</a></span>(<span class="kw">df</span> <span class="kw">=</span> <span class="no">metadata_metabolites_named</span>, <span class="kw">name_id</span> <span class="kw">=</span> <span class="st">"named"</span>)
-<span class="fu"><a href="../reference/check_metadata_metabolites.html">check_metadata_metabolites</a></span>(<span class="kw">df</span> <span class="kw">=</span> <span class="no">metadata_metabolites_unnamed</span>, <span class="kw">name_id</span> <span class="kw">=</span> <span class="st">"unnamed"</span>)</pre></body></html></div>
+<span class="fu"><a href="../reference/check_metadata_metabolites.html">check_metadata_metabolites</a></span>(df = <span class="kw">metadata_metabolites_named</span>, name_id = <span class="st">"named"</span>)
+<span class="fu"><a href="../reference/check_metadata_metabolites.html">check_metadata_metabolites</a></span>(df = <span class="kw">metadata_metabolites_unnamed</span>, name_id = <span class="st">"unnamed"</span>)
+</pre></div>
 <ul>
 <li>Check metadata samples:</li>
 </ul>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="co"># Open your files</span>
-<span class="no">metadata_sample_named</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(<span class="kw">file</span> <span class="kw">=</span> <span class="st">"/path/to/your/file"</span>, <span class="kw">stringsAsFactors</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
-<span class="no">metadata_sample_unnamed</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(<span class="kw">file</span> <span class="kw">=</span> <span class="st">"/path/to/your/file"</span>, <span class="kw">stringsAsFactors</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
+<div class="sourceCode" id="cb8"><pre class="downlit">
+<span class="co"># Open your files</span>
+<span class="kw">metadata_sample_named</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(file = <span class="st">"/path/to/your/file"</span>, stringsAsFactors = <span class="fl">FALSE</span>)
+<span class="kw">metadata_sample_unnamed</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(file = <span class="st">"/path/to/your/file"</span>, stringsAsFactors = <span class="fl">FALSE</span>)
 
-<span class="fu"><a href="../reference/check_metadata_samples.html">check_metadata_samples</a></span>(<span class="kw">df</span> <span class="kw">=</span> <span class="no">metadata_sample_named</span>, <span class="kw">cas</span> <span class="kw">=</span> <span class="st">"your_side_id"</span>)
-<span class="fu"><a href="../reference/check_metadata_samples.html">check_metadata_samples</a></span>(<span class="kw">df</span> <span class="kw">=</span> <span class="no">metadata_sample_unnamed</span>, <span class="kw">cas</span> <span class="kw">=</span> <span class="st">"your_side_id"</span>)</pre></body></html></div>
+<span class="fu"><a href="../reference/check_metadata_samples.html">check_metadata_samples</a></span>(df = <span class="kw">metadata_sample_named</span>, cas = <span class="st">"your_side_id"</span>)
+<span class="fu"><a href="../reference/check_metadata_samples.html">check_metadata_samples</a></span>(df = <span class="kw">metadata_sample_unnamed</span>, cas = <span class="st">"your_side_id"</span>)
+</pre></div>
 <ul>
 <li>Check results, which needs both both metadata metabolites and samples</li>
 </ul>
-<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="co"># Open your files</span>
-<span class="no">metadata_metabolites_named</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(<span class="kw">file</span> <span class="kw">=</span> <span class="st">"/path/to/your/file"</span>, <span class="kw">stringsAsFactors</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
-<span class="no">metadata_sample_named</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(<span class="kw">file</span> <span class="kw">=</span> <span class="st">"/path/to/your/file"</span>, <span class="kw">stringsAsFactors</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
-<span class="no">results_named</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(<span class="kw">file</span> <span class="kw">=</span> <span class="st">"/path/to/your/file"</span>, <span class="kw">stringsAsFactors</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
+<div class="sourceCode" id="cb9"><pre class="downlit">
+<span class="co"># Open your files</span>
+<span class="kw">metadata_metabolites_named</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(file = <span class="st">"/path/to/your/file"</span>, stringsAsFactors = <span class="fl">FALSE</span>)
+<span class="kw">metadata_sample_named</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(file = <span class="st">"/path/to/your/file"</span>, stringsAsFactors = <span class="fl">FALSE</span>)
+<span class="kw">results_named</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(file = <span class="st">"/path/to/your/file"</span>, stringsAsFactors = <span class="fl">FALSE</span>)
 
-<span class="fu"><a href="../reference/check_results.html">check_results</a></span>(<span class="kw">r_m</span> <span class="kw">=</span> <span class="no">results_named</span>,
-              <span class="kw">m_s</span> <span class="kw">=</span> <span class="no">metadata_sample_named</span>,
-              <span class="kw">m_m</span> <span class="kw">=</span> <span class="no">metadata_metabolites_named</span>)</pre></body></html></div>
+<span class="fu"><a href="../reference/check_results.html">check_results</a></span>(r_m = <span class="kw">results_named</span>, 
+              m_s = <span class="kw">metadata_sample_named</span>, 
+              m_m = <span class="kw">metadata_metabolites_named</span>)
+</pre></div>
 </div>
 </div>
 <div id="merge-metabolomics-data-only-pass1a-supported" class="section level2">
@@ -221,16 +238,20 @@
 <p>With the following file relations…</p>
 <p><img src="BIC_Metabolomics_DataProcessing_Summary_20200303.png"></p>
 <p>To merge all data available in a <code>PROCESSED_YYYYMMDD</code> folder, run the following command:</p>
-<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="no">t31_ionpneg</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/combine_metabolomics_batch.html">combine_metabolomics_batch</a></span>(<span class="kw">input_results_folder</span> <span class="kw">=</span> <span class="st">"/full/path/to/PROCESSED_YYYYMMDD/"</span>,
-                                          <span class="kw">cas</span> <span class="kw">=</span> <span class="st">"umichigan"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb11"><pre class="downlit">
+<span class="kw">t31_ionpneg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/combine_metabolomics_batch.html">combine_metabolomics_batch</a></span>(input_results_folder = <span class="st">"/full/path/to/PROCESSED_YYYYMMDD/"</span>, 
+                                          cas = <span class="st">"umichigan"</span>)
+</pre></div>
 <p>Alternatively, each individual dataset can also be provided. For example:</p>
-<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="no">plasma.untargeted.merged</span> <span class="kw">&lt;-</span>
-  <span class="fu"><a href="../reference/merge_all_metabolomics.html">merge_all_metabolomics</a></span>(<span class="kw">m_m_n</span> <span class="kw">=</span> <span class="no">metadata_metabolites_named</span>,
-                         <span class="kw">m_m_u</span> <span class="kw">=</span> <span class="no">metadata_metabolites_unnamed</span>,
-                         <span class="kw">m_s_n</span> <span class="kw">=</span> <span class="no">metadata_sample_named</span>,
-                         <span class="kw">r_n</span> <span class="kw">=</span> <span class="no">results_named</span>,
-                         <span class="kw">r_u</span> <span class="kw">=</span> <span class="no">results_unnamed</span>,
-                         <span class="kw">phase</span> <span class="kw">=</span> <span class="st">"PASS1A-06"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb12"><pre class="downlit">
+<span class="kw">plasma.untargeted.merged</span> <span class="op">&lt;-</span> 
+  <span class="fu"><a href="../reference/merge_all_metabolomics.html">merge_all_metabolomics</a></span>(m_m_n = <span class="kw">metadata_metabolites_named</span>,
+                         m_m_u = <span class="kw">metadata_metabolites_unnamed</span>,
+                         m_s_n = <span class="kw">metadata_sample_named</span>,
+                         r_n = <span class="kw">results_named</span>,
+                         r_u = <span class="kw">results_unnamed</span>,
+                         phase = <span class="st">"PASS1A-06"</span>)
+</pre></div>
 <p>Check the function help for details</p>
 </div>
 </div>
@@ -238,7 +259,9 @@
 <h1 class="hasAnchor">
 <a href="#help" class="anchor"></a>Help</h1>
 <p>Additional details for each function can be found by typing, for example:</p>
-<div class="sourceCode" id="cb13"><html><body><pre class="r">?<span class="no">merge_all_metabolomics</span></pre></body></html></div>
+<div class="sourceCode" id="cb13"><pre class="downlit">
+<span class="op">?</span><span class="kw">merge_all_metabolomics</span>
+</pre></div>
 <p>Need extra help? Please, <a href="https://github.com/MoTrPAC/MotrpacBicQC/issues">submit an issue here</a> providing as many details as possible.</p>
 </div>
 <div id="credit" class="section level1">

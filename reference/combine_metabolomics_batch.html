@@ -74,7 +74,7 @@ folders" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MotrpacBicQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
       </span>
     </div>
 
@@ -133,7 +133,7 @@ including metadata_sample, metadata_metabolites, results for both "NAMED" and "U
 folders</p>
     </div>
 
-    <pre class="usage"><span class='fu'>combine_metabolomics_batch</span>(<span class='no'>input_results_folder</span>, <span class='no'>cas</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>combine_metabolomics_batch</span>(<span class='kw'>input_results_folder</span>, <span class='kw'>cas</span>, verbose = <span class='fl'>TRUE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -157,10 +157,10 @@ folders</p>
     <p>(int) number of issues identified</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='no'>all_datasets</span> <span class='kw'>&lt;-</span> <span class='fu'>combine_metabolomics_batch</span>(
-                        <span class='kw'>input_results_folder</span> <span class='kw'>=</span> <span class='st'>"/full/path/to/PROCESSED_YYYYMMDD/"</span>,
-                        <span class='kw'>cas</span> <span class='kw'>=</span> <span class='st'>"umichigan"</span>)
+    <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='kw'>all_datasets</span> <span class='op'>&lt;-</span> <span class='fu'>combine_metabolomics_batch</span>(
+                        input_results_folder = <span class='st'>"/full/path/to/PROCESSED_YYYYMMDD/"</span>,
+                        cas = <span class='st'>"umichigan"</span>)
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

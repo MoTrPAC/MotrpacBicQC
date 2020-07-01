@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Merge metabolomics metadata named and unnamed — merge_metabolomics_metadata • MotrpacBicQC</title>
+<title>filter required metadata_metabolites columns only — filter_required_columns • MotrpacBicQC</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Merge metabolomics metadata named and unnamed — merge_metabolomics_metadata" />
-<meta property="og:description" content="Merge metabolomics metadata" />
+<meta property="og:title" content="filter required metadata_metabolites columns only — filter_required_columns" />
+<meta property="og:description" content="it returns a data frame with only the required columns for metadata_metabolites" />
 
 
 
@@ -120,39 +120,54 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Merge metabolomics metadata named and unnamed</h1>
+    <h1>filter required metadata_metabolites columns only</h1>
     <small class="dont-index">Source: <a href='https://github.com/MoTrPAC/MotrpacBicQC/blob/master/R/metabolomics_qc.R'><code>R/metabolomics_qc.R</code></a></small>
-    <div class="hidden name"><code>merge_metabolomics_metadata.Rd</code></div>
+    <div class="hidden name"><code>filter_required_columns.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Merge metabolomics metadata</p>
+    <p>it returns a data frame with only the required columns for metadata_metabolites</p>
     </div>
 
-    <pre class="usage"><span class='fu'>merge_metabolomics_metadata</span>(<span class='kw'>m_m_n</span>, <span class='kw'>m_m_u</span>)</pre>
+    <pre class="usage"><span class='fu'>filter_required_columns</span>(
+  <span class='kw'>df</span>,
+  type = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"m_m"</span>, <span class='st'>"m_s"</span>),
+  name_id = <span class='kw'>NULL</span>,
+  verbose = <span class='fl'>TRUE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>m_m_n</th>
-      <td><p>(df) metabolomics metadata named</p></td>
+      <th>df</th>
+      <td><p>(data.frame) metadata_metabolites</p></td>
     </tr>
     <tr>
-      <th>m_m_u</th>
-      <td><p>(char) metabolomics metadata unnamed</p></td>
+      <th>type</th>
+      <td><p>(char) Type of file to filter columns:</p><ul>
+<li><p><code>m_m</code>: metadata metabolites</p></li>
+<li><p><code>m_s</code>: metadata samples</p></li>
+</ul></td>
+    </tr>
+    <tr>
+      <th>name_id</th>
+      <td><p>(char) specify whether <code>named</code> or <code>unnamed</code> files</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>(logical) <code>TRUE</code> (default) shows messages</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>(data.frame) merged metadata metabolites</p>
+    <p>(data.frame) filtered data frame with only the required columns</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>{
-<span class='kw'>m_m</span> <span class='op'>&lt;-</span> <span class='fu'>merge_metabolomics_metadata</span>(m_m_n = <span class='kw'>metadata_metabolites_named</span>,
-                                   m_m_u = <span class='kw'>metadata_metabolites_unnamed</span>)
-}</div></pre>
+<span class='kw'>df_filtered</span> <span class='op'>&lt;-</span> <span class='fu'>filter_required_columns</span>(df = <span class='kw'>metadata_metabolites_named</span>, name_id = <span class='st'>"named"</span>)
+}</div><div class='output co'>#&gt; <span class='message'>   + (+) All required columns present</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

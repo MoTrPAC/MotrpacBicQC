@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Merge metabolomics metadata named and unnamed — merge_metabolomics_metadata • MotrpacBicQC</title>
+<title>Motrpac assay codes — assay_codes • MotrpacBicQC</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Merge metabolomics metadata named and unnamed — merge_metabolomics_metadata" />
-<meta property="og:description" content="Merge metabolomics metadata" />
+<meta property="og:title" content="Motrpac assay codes — assay_codes" />
+<meta property="og:description" content="Motrpac assay codes" />
 
 
 
@@ -120,38 +120,32 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Merge metabolomics metadata named and unnamed</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MoTrPAC/MotrpacBicQC/blob/master/R/metabolomics_qc.R'><code>R/metabolomics_qc.R</code></a></small>
-    <div class="hidden name"><code>merge_metabolomics_metadata.Rd</code></div>
+    <h1>Motrpac assay codes</h1>
+    <small class="dont-index">Source: <a href='https://github.com/MoTrPAC/MotrpacBicQC/blob/master/R/data.R'><code>R/data.R</code></a></small>
+    <div class="hidden name"><code>assay_codes.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Merge metabolomics metadata</p>
+    <p>Motrpac assay codes</p>
     </div>
 
-    <pre class="usage"><span class='fu'>merge_metabolomics_metadata</span>(<span class='kw'>m_m_n</span>, <span class='kw'>m_m_u</span>)</pre>
+    <pre class="usage"><span class='kw'>assay_codes</span></pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>m_m_n</th>
-      <td><p>(df) metabolomics metadata named</p></td>
-    </tr>
-    <tr>
-      <th>m_m_u</th>
-      <td><p>(char) metabolomics metadata unnamed</p></td>
-    </tr>
-    </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>(data.frame) merged metadata metabolites</p>
+    <p>A data frame with assay codes</p><dl>
+<dt>omics_code</dt><dd><p>Main OMIC group</p></dd>
+<dt>submission_code</dt><dd><p>Assay submission code</p></dd>
+<dt>assay_code</dt><dd><p>Assay release code</p></dd>
+<dt>assay_name</dt><dd><p>Assay long name</p></dd>
+<dt>cas_code</dt><dd><p>MoTrPAC chemical analysis site</p></dd>
+
+</dl>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>{
-<span class='kw'>m_m</span> <span class='op'>&lt;-</span> <span class='fu'>merge_metabolomics_metadata</span>(m_m_n = <span class='kw'>metadata_metabolites_named</span>,
-                                   m_m_u = <span class='kw'>metadata_metabolites_unnamed</span>)
+    <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
+ <span class='kw'>assay_codes</span>
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

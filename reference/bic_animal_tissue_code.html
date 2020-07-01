@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MotrpacBicQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
       </span>
     </div>
 
@@ -129,13 +129,23 @@
     <p>BIC Tissue Code and Name</p>
     </div>
 
-    <pre class="usage"><span class='no'>bic_animal_tissue_code</span></pre>
+    <pre class="usage"><span class='kw'>bic_animal_tissue_code</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>data frame</p>
+    <p>A data frame with tissue codes</p><dl>
+<dt>bic_tissue_code</dt><dd><p><code>T</code> + integer, as encoded in vial_label by DMAQC</p></dd>
+<dt>bic_tissue_name</dt><dd><p>Tissue name (as provided by DMAQC)</p></dd>
+<dt>motrpac_tissue_code</dt><dd><p>Both code and tissue name</p></dd>
+<dt>tissue_name_release</dt><dd><p>Code + tissue name as used in releases</p></dd>
 
+</dl>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
+ <span class='kw'>bic_animal_tissue_code</span>
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
