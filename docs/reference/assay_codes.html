@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Combines all files from a Metabolomics batch — combine_metabolomics_batch • MotrpacBicQC</title>
+<title>Motrpac assay codes — assay_codes • MotrpacBicQC</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,8 @@
 
 
 
-<meta property="og:title" content="Combines all files from a Metabolomics batch — combine_metabolomics_batch" />
-<meta property="og:description" content="Combines all the files from an untargeted assay submission
-including metadata_sample, metadata_metabolites, results for both &quot;NAMED&quot; and &quot;UNNAMED&quot;
-folders" />
+<meta property="og:title" content="Motrpac assay codes — assay_codes" />
+<meta property="og:description" content="Motrpac assay codes" />
 
 
 
@@ -122,45 +120,32 @@ folders" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Combines all files from a Metabolomics batch</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MoTrPAC/MotrpacBicQC/blob/master/R/metabolomics_qc.R'><code>R/metabolomics_qc.R</code></a></small>
-    <div class="hidden name"><code>combine_metabolomics_batch.Rd</code></div>
+    <h1>Motrpac assay codes</h1>
+    <small class="dont-index">Source: <a href='https://github.com/MoTrPAC/MotrpacBicQC/blob/master/R/data.R'><code>R/data.R</code></a></small>
+    <div class="hidden name"><code>assay_codes.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Combines all the files from an untargeted assay submission
-including metadata_sample, metadata_metabolites, results for both "NAMED" and "UNNAMED"
-folders</p>
+    <p>Motrpac assay codes</p>
     </div>
 
-    <pre class="usage"><span class='fu'>combine_metabolomics_batch</span>(<span class='no'>input_results_folder</span>, <span class='no'>cas</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='no'>assay_codes</span></pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>input_results_folder</th>
-      <td><p>(char) Path to the PROCESSED_YYYYMMDD folder</p></td>
-    </tr>
-    <tr>
-      <th>cas</th>
-      <td><p>(char) Chemical Analytical Site code (e.g "umichigan")</p></td>
-    </tr>
-    <tr>
-      <th>verbose</th>
-      <td><p>(logical) <code>TRUE</code> (default) shows messages</p></td>
-    </tr>
-    </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>(int) number of issues identified</p>
+    <p>A data frame with assay codes</p><dl'>
+<dt>omics_code</dt><dd><p>Main OMIC group</p></dd>
+<dt>submission_code</dt><dd><p>Assay submission code</p></dd>
+<dt>assay_code</dt><dd><p>Assay release code</p></dd>
+<dt>assay_name</dt><dd><p>Assay long name</p></dd>
+<dt>cas_code</dt><dd><p>MoTrPAC chemical analysis site</p></dd>
+
+</dl>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='no'>all_datasets</span> <span class='kw'>&lt;-</span> <span class='fu'>combine_metabolomics_batch</span>(
-                        <span class='kw'>input_results_folder</span> <span class='kw'>=</span> <span class='st'>"/full/path/to/PROCESSED_YYYYMMDD/"</span>,
-                        <span class='kw'>cas</span> <span class='kw'>=</span> <span class='st'>"umichigan"</span>)
+ <span class='no'>assay_codes</span>
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

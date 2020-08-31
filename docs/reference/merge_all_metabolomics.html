@@ -73,7 +73,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MotrpacBicQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
       </span>
     </div>
 
@@ -131,7 +131,7 @@
 "metadata" files, for both targeted and untargeted datasets</p>
     </div>
 
-    <pre class="usage"><span class='fu'>merge_all_metabolomics</span>(<span class='no'>m_m_n</span>, <span class='kw'>m_m_u</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>m_s_n</span>, <span class='no'>r_n</span>, <span class='kw'>r_u</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>phase</span>)</pre>
+    <pre class="usage"><span class='fu'>merge_all_metabolomics</span>(<span class='no'>m_m_n</span>, <span class='kw'>m_m_u</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>m_s_n</span>, <span class='no'>r_m_n</span>, <span class='kw'>r_m_u</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>phase</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -149,11 +149,11 @@
       <td><p>(metabolomics sample named)</p></td>
     </tr>
     <tr>
-      <th>r_n</th>
+      <th>r_m_n</th>
       <td><p>(results named)</p></td>
     </tr>
     <tr>
-      <th>r_u</th>
+      <th>r_m_u</th>
       <td><p>(results unnamed)</p></td>
     </tr>
     <tr>
@@ -171,8 +171,8 @@
        <span class='kw'>m_m_n</span> <span class='kw'>=</span> <span class='no'>metadata_metabolites_named</span>,
        <span class='kw'>m_m_u</span> <span class='kw'>=</span> <span class='no'>metadata_metabolites_unnamed</span>,
        <span class='kw'>m_s_n</span> <span class='kw'>=</span> <span class='no'>metadata_sample_named</span>,
-       <span class='kw'>r_n</span> <span class='kw'>=</span> <span class='no'>results_named</span>,
-       <span class='kw'>r_u</span> <span class='kw'>=</span> <span class='no'>results_unnamed</span>,
+       <span class='kw'>r_m_n</span> <span class='kw'>=</span> <span class='no'>results_named</span>,
+       <span class='kw'>r_m_u</span> <span class='kw'>=</span> <span class='no'>results_unnamed</span>,
        <span class='kw'>phase</span> <span class='kw'>=</span> <span class='st'>"PASS1A-06"</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
