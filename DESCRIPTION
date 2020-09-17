@@ -23,8 +23,12 @@ Depends: R (>= 3.6.0)
 Imports:
     data.table,
     dplyr,
+    ggplot2,
+    grDevices,
+    inspectdf,
     jsonlite,
     knitr,
+    naniar,
     purrr,
     stringr,
     tidyr,
