@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>validate vial label from DMAQC — check_viallabel_dmaqc • MotrpacBicQC</title>
+<title>check proteomics vial metadata file — check_vial_metadata_proteomics • MotrpacBicQC</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="validate vial label from DMAQC — check_viallabel_dmaqc" />
-<meta property="og:description" content="validate vial label from DMAQC" />
+<meta property="og:title" content="check proteomics vial metadata file — check_vial_metadata_proteomics" />
+<meta property="og:description" content="check whether the proteomics rri results files is following guidelines" />
 
 
 
@@ -117,56 +117,27 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>validate vial label from DMAQC</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MoTrPAC/MotrpacBicQC/blob/master/R/metabolomics_qc.R'><code>R/metabolomics_qc.R</code></a></small>
-    <div class="hidden name"><code>check_viallabel_dmaqc.Rd</code></div>
+    <h1>check proteomics vial metadata file</h1>
+    <small class="dont-index">Source: <a href='https://github.com/MoTrPAC/MotrpacBicQC/blob/master/R/proteomics_qc.R'><code>R/proteomics_qc.R</code></a></small>
+    <div class="hidden name"><code>check_vial_metadata_proteomics.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>validate vial label from DMAQC</p>
+    <p>check whether the proteomics rri results files is following guidelines</p>
     </div>
 
-    <pre class="usage"><span class='fu'>check_viallabel_dmaqc</span>(
-  <span class='kw'>vl_submitted</span>,
-  <span class='kw'>dmaqc_shipping_info</span>,
-  <span class='kw'>tissue_code</span>,
-  <span class='kw'>cas</span>,
-  <span class='kw'>phase</span>,
-  <span class='kw'>failed_samples</span>,
-  return_n_issues = <span class='fl'>FALSE</span>,
-  verbose = <span class='fl'>TRUE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>check_vial_metadata_proteomics</span>(<span class='kw'>df_vm</span>, return_n_issues = <span class='fl'>FALSE</span>, verbose = <span class='fl'>TRUE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>vl_submitted</th>
-      <td><p>(vector) results df</p></td>
-    </tr>
-    <tr>
-      <th>dmaqc_shipping_info</th>
-      <td><p>(data.frame) dmaqc shipping information</p></td>
-    </tr>
-    <tr>
-      <th>tissue_code</th>
-      <td><p>(char) tissue code</p></td>
-    </tr>
-    <tr>
-      <th>cas</th>
-      <td><p>(char) CAS code</p></td>
-    </tr>
-    <tr>
-      <th>phase</th>
-      <td><p>(char) phase code</p></td>
-    </tr>
-    <tr>
-      <th>failed_samples</th>
-      <td><p>(char) metadata_metabolites df</p></td>
+      <th>df_vm</th>
+      <td><p>(data.frame) proteomics vial_label data frame (required)</p></td>
     </tr>
     <tr>
       <th>return_n_issues</th>
-      <td><p>(logical) if <code>TRUE</code> returns the number of issues</p></td>
+      <td><p>(logical) if <code>TRUE</code> returns the number of issues.</p></td>
     </tr>
     <tr>
       <th>verbose</th>
@@ -178,6 +149,13 @@
 
     <p>(int) number of issues identified</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>{
+<span class='kw'>test</span> <span class='op'>&lt;-</span> <span class='fu'>check_vial_metadata_proteomics</span>(df_vm = <span class='kw'>metadata_metabolites_named</span>,
+return_n_issues = <span class='fl'>TRUE</span>, verbose = <span class='fl'>FALSE</span>)
+<span class='co'># "test" should be NULL</span>
+}
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

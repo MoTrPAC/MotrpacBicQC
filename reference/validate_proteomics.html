@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>validate vial label from DMAQC — check_viallabel_dmaqc • MotrpacBicQC</title>
+<title>Validate a Proteomics submissions — validate_proteomics • MotrpacBicQC</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="validate vial label from DMAQC — check_viallabel_dmaqc" />
-<meta property="og:description" content="validate vial label from DMAQC" />
+<meta property="og:title" content="Validate a Proteomics submissions — validate_proteomics" />
+<meta property="og:description" content="Validate a Proteomics submission" />
 
 
 
@@ -117,23 +117,25 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>validate vial label from DMAQC</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MoTrPAC/MotrpacBicQC/blob/master/R/metabolomics_qc.R'><code>R/metabolomics_qc.R</code></a></small>
-    <div class="hidden name"><code>check_viallabel_dmaqc.Rd</code></div>
+    <h1>Validate a Proteomics submissions</h1>
+    <small class="dont-index">Source: <a href='https://github.com/MoTrPAC/MotrpacBicQC/blob/master/R/proteomics_qc.R'><code>R/proteomics_qc.R</code></a></small>
+    <div class="hidden name"><code>validate_proteomics.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>validate vial label from DMAQC</p>
+    <p>Validate a Proteomics submission</p>
     </div>
 
-    <pre class="usage"><span class='fu'>check_viallabel_dmaqc</span>(
-  <span class='kw'>vl_submitted</span>,
-  <span class='kw'>dmaqc_shipping_info</span>,
-  <span class='kw'>tissue_code</span>,
+    <pre class="usage"><span class='fu'>validate_proteomics</span>(
+  <span class='kw'>input_results_folder</span>,
+  <span class='kw'>isPTM</span>,
   <span class='kw'>cas</span>,
-  <span class='kw'>phase</span>,
-  <span class='kw'>failed_samples</span>,
-  return_n_issues = <span class='fl'>FALSE</span>,
+  dmaqc_shipping_info = <span class='kw'>NULL</span>,
+  f_proof = <span class='fl'>FALSE</span>,
+  out_qc_folder = <span class='kw'>NULL</span>,
+  return_n_issues = <span class='fl'>TRUE</span>,
+  full_report = <span class='fl'>FALSE</span>,
+  printPDF = <span class='fl'>TRUE</span>,
   verbose = <span class='fl'>TRUE</span>
 )</pre>
 
@@ -141,42 +143,55 @@
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>vl_submitted</th>
-      <td><p>(vector) results df</p></td>
+      <th>input_results_folder</th>
+      <td><p>(char) path to the PROCESSED folder to check</p></td>
     </tr>
     <tr>
-      <th>dmaqc_shipping_info</th>
-      <td><p>(data.frame) dmaqc shipping information</p></td>
-    </tr>
-    <tr>
-      <th>tissue_code</th>
-      <td><p>(char) tissue code</p></td>
+      <th>isPTM</th>
+      <td><p>(logical) <code>TRUE</code> if it is Post-Translational-Modification proteomics assay</p></td>
     </tr>
     <tr>
       <th>cas</th>
       <td><p>(char) CAS code</p></td>
     </tr>
     <tr>
-      <th>phase</th>
+      <th>dmaqc_shipping_info</th>
       <td><p>(char) phase code</p></td>
     </tr>
     <tr>
-      <th>failed_samples</th>
-      <td><p>(char) metadata_metabolites df</p></td>
+      <th>f_proof</th>
+      <td><p>(char) print out pdf with charts including:</p><ul>
+<li><p>Reported Ion Intensity boxplot distribution and percentage of NA values per sample</p></li>
+<li><p>Ratio: ratio boxplot distribution and percentage of NA values per samples</p></li>
+</ul></td>
+    </tr>
+    <tr>
+      <th>out_qc_folder</th>
+      <td><p>(char) if f_proof is TRUE, then a folder must be provided</p></td>
     </tr>
     <tr>
       <th>return_n_issues</th>
-      <td><p>(logical) if <code>TRUE</code> returns the number of issues</p></td>
+      <td><p>(logical) if <code>TRUE</code> (default) returns the number of issues</p></td>
+    </tr>
+    <tr>
+      <th>full_report</th>
+      <td><p>(logical) if <code>FALSE</code> (default) it returns only the
+total number of issues. If <code>TRUE</code> returns the details of the number of issues (by
+group of files, e.g., results, metadata_metabolites, etc)</p></td>
+    </tr>
+    <tr>
+      <th>printPDF</th>
+      <td><p>(logical) if <code>TRUE</code> (default print plots to pdf)</p></td>
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>(logical) <code>TRUE</code> (default) shows messages</p></td>
+      <td><p>(logical) <code>TRUE</code> (default) prints QC details.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>(int) number of issues identified</p>
+    <p>(data.frame) Summary of issues</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
