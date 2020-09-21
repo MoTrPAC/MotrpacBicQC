@@ -8,7 +8,7 @@ output:
     highlight: github
     toc: true
 vignette: >
-  %\VignetteIndexEntry{MotrpacBicQC}
+  %\VignetteIndexEntry{MotrpacBicQC-Metabolomics}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -52,7 +52,7 @@ library(MotrpacBicQC)
 ```
 
 And run any of the following tests to check that the package 
-is correctly installed it works. For example:
+is correctly installed and it works. For example:
 
 ```{r eval = FALSE}
 # Just copy and paste in the RStudio terminal

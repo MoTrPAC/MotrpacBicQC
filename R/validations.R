@@ -34,7 +34,11 @@ validate_processFolder <- function(input_results_folder){
   processfolder <- stringr::str_extract(string = input_results_folder, pattern = "PROCESSED_[0-9]+")
 
   if(is.na(processfolder)){
-    stop("PROCESS_YYYYMMDD folder is not recognize in the folder structure")
+    processfolder <- stringr::str_extract(string = input_results_folder, pattern = "RESULTS_[0-9]+")
+  }
+
+  if(is.na(processfolder)){
+    stop("PROCESS_YYYYMMDD or RESULTS_YYYYMMDD folder is not recognize in the folder structure")
   }else{
     return(processfolder)
   }

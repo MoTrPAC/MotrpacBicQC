@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>filter required metadata_metabolites columns only — filter_required_columns • MotrpacBicQC</title>
+<title>filter required columns only — filter_required_columns • MotrpacBicQC</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="filter required metadata_metabolites columns only — filter_required_columns" />
-<meta property="og:description" content="it returns a data frame with only the required columns for metadata_metabolites" />
+<meta property="og:title" content="filter required columns only — filter_required_columns" />
+<meta property="og:description" content="it returns a data frame with only the required columns for metabolomics and proteomics" />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MotrpacBicQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -95,7 +95,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/metabolomics_qc.html">MotrpacBicQC: Metabolomics QC</a>
+      <a href="../articles/qc_metabolomics.html">MotrpacBicQC: Metabolomics QC</a>
+    </li>
+    <li>
+      <a href="../articles/qc_proteomics.html">MotrpacBicQC: Proteomics QC</a>
     </li>
   </ul>
 </li>
@@ -120,18 +123,18 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>filter required metadata_metabolites columns only</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MoTrPAC/MotrpacBicQC/blob/master/R/metabolomics_qc.R'><code>R/metabolomics_qc.R</code></a></small>
+    <h1>filter required columns only</h1>
+    <small class="dont-index">Source: <a href='https://github.com/MoTrPAC/MotrpacBicQC/blob/master/R/misc.R'><code>R/misc.R</code></a></small>
     <div class="hidden name"><code>filter_required_columns.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>it returns a data frame with only the required columns for metadata_metabolites</p>
+    <p>it returns a data frame with only the required columns for metabolomics and proteomics</p>
     </div>
 
     <pre class="usage"><span class='fu'>filter_required_columns</span>(
   <span class='no'>df</span>,
-  <span class='kw'>type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"m_m"</span>, <span class='st'>"m_s"</span>),
+  <span class='kw'>type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"m_m"</span>, <span class='st'>"m_s"</span>, <span class='st'>"v_m"</span>),
   <span class='kw'>name_id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
 )</pre>
@@ -148,6 +151,7 @@
       <td><p>(char) Type of file to filter columns:</p><ul>
 <li><p><code>m_m</code>: metadata metabolites</p></li>
 <li><p><code>m_s</code>: metadata samples</p></li>
+<li><p><code>v_m</code>: proteomics vial_metadata</p></li>
 </ul></td>
     </tr>
     <tr>

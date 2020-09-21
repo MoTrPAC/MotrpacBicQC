@@ -37,7 +37,8 @@ devtools::install_github("MoTrPAC/MotrpacBicQC", build_vignettes = TRUE)
 
 # Usage
 
-[Follow this link](https://motrpac.github.io/MotrpacBicQC/articles/metabolomics_qc.html) to learn how to test and use this package.
+- Metabolomics: [follow this link](https://motrpac.github.io/MotrpacBicQC/articles/qc_metabolomics.html).
+- Proteomics: [follow this link](https://motrpac.github.io/MotrpacBicQC/articles/qc_proteomics.html).
 
 Alternatively, once the package is installed, run the following command to 
 access the same documentation:

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>remove empty rows in data frame — remove_empty_rows • MotrpacBicQC</title>
+<title>check proteomics reported ion intensity file — check_rii_proteomics • MotrpacBicQC</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="remove empty rows in data frame — remove_empty_rows" />
-<meta property="og:description" content="remove empty rows in data frame" />
+<meta property="og:title" content="check proteomics reported ion intensity file — check_rii_proteomics" />
+<meta property="og:description" content="check whether the proteomics rri results files is following guidelines" />
 
 
 
@@ -123,23 +123,57 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>remove empty rows in data frame</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MoTrPAC/MotrpacBicQC/blob/master/R/misc.R'><code>R/misc.R</code></a></small>
-    <div class="hidden name"><code>remove_empty_rows.Rd</code></div>
+    <h1>check proteomics reported ion intensity file</h1>
+    <small class="dont-index">Source: <a href='https://github.com/MoTrPAC/MotrpacBicQC/blob/master/R/proteomics_qc.R'><code>R/proteomics_qc.R</code></a></small>
+    <div class="hidden name"><code>check_rii_proteomics.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>remove empty rows in data frame</p>
+    <p>check whether the proteomics rri results files is following guidelines</p>
     </div>
 
-    <pre class="usage"><span class='fu'>remove_empty_rows</span>(<span class='no'>df</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>check_rii_proteomics</span>(
+  <span class='no'>df_rri</span>,
+  <span class='no'>isPTM</span>,
+  <span class='kw'>f_proof</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>output_prefix</span> <span class='kw'>=</span> <span class='st'>"rii-file"</span>,
+  <span class='kw'>out_qc_folder</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>return_n_issues</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>printPDF</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>df</th>
-      <td><p>(char) data frame</p></td>
+      <th>df_rri</th>
+      <td><p>(data.frame) proteomics rri data frame (required)</p></td>
+    </tr>
+    <tr>
+      <th>isPTM</th>
+      <td><p>(logical) <code>TRUE</code> if a PTM results file</p></td>
+    </tr>
+    <tr>
+      <th>f_proof</th>
+      <td><p>(logical) <code>TRUE</code> (default) to print out distribution and NA plots</p></td>
+    </tr>
+    <tr>
+      <th>output_prefix</th>
+      <td><p>(char) if <code>f_proof = TRUE</code>, provide a prefix for the output name</p></td>
+    </tr>
+    <tr>
+      <th>out_qc_folder</th>
+      <td><p>(char) if <code>f_proof is TRUE</code>, a folder path can be provided
+(otherwise print in current working directory)</p></td>
+    </tr>
+    <tr>
+      <th>return_n_issues</th>
+      <td><p>(logical) if <code>TRUE</code> returns the number of issues.</p></td>
+    </tr>
+    <tr>
+      <th>printPDF</th>
+      <td><p>(logical) if <code>TRUE</code> (default print plots to pdf)</p></td>
     </tr>
     <tr>
       <th>verbose</th>
@@ -149,8 +183,14 @@
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>(df) df without empty columns</p>
+    <p>(int) number of issues identified</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>{
+<span class='no'>test</span> <span class='kw'>&lt;-</span> <span class='fu'>check_rii_proteomics</span>(<span class='kw'>df_rri</span> <span class='kw'>=</span> <span class='no'>metadata_metabolites_named</span>,
+<span class='kw'>isPTM</span> <span class='kw'>=</span>  <span class='fl'>TRUE</span>, <span class='kw'>return_n_issues</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='co'># "test" should be NULL</span>
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
