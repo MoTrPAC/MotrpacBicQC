@@ -13,6 +13,7 @@ validate_proteomics(
   out_qc_folder = NULL,
   return_n_issues = TRUE,
   full_report = FALSE,
+  printPDF = TRUE,
   verbose = TRUE
 )
 }
@@ -38,6 +39,8 @@ validate_proteomics(
 \item{full_report}{(logical) if \code{FALSE} (default) it returns only the
 total number of issues. If \code{TRUE} returns the details of the number of issues (by
 group of files, e.g., results, metadata_metabolites, etc)}
+
+\item{printPDF}{(logical) if \code{TRUE} (default print plots to pdf)}
 
 \item{verbose}{(logical) \code{TRUE} (default) prints QC details.}
 }
