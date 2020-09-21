@@ -1,4 +1,357 @@
 
+utils::globalVariables(
+  c("col_name",
+    "confident_score",
+    "confident_site",
+    "entrez_id",
+    "gene_symbol",
+    "id_repeats",
+    "protein_id",
+    "ptm_id",
+    "ptm_peptide",
+    "ratio_values",
+    "ri_intensity",
+    "tmt11_channel",
+    "vial_label",
+    "all_vial_labels",
+    "tmt_plex"))
+
+#' @title check proteomics ratio file
+#'
+#' @description check whether the proteomics ratio results files is following guidelines
+#' @param df_ratio (data.frame) proteomics ratio results data frame (required)
+#' @param isPTM (logical) `TRUE` if a PTM results file
+#' @param f_proof (logical) `TRUE` (default) to print out distribution and NA plots
+#' @param output_prefix (char) if `f_proof = TRUE`, provide a prefix for the output name
+#' @param out_qc_folder (char) if `f_proof is TRUE`, a folder path can be provided
+#' (otherwise print in current working directory)
+#' @param printPDF (logical) if `TRUE` (default print plots to pdf)
+#' @param return_n_issues (logical) if `TRUE` returns the number of issues.
+#' @param verbose (logical) `TRUE` (default) shows messages
+#' @return (int) number of issues identified
+#' @examples {
+#' test <- check_ratio_proteomics(df_ratio = metadata_metabolites_named,
+#' isPTM =  TRUE, return_n_issues = TRUE, verbose = FALSE)
+#' # "test" should be NULL
+#' }
+#' @export
+check_ratio_proteomics <- function(df_ratio,
+                                   isPTM,
+                                   f_proof = TRUE,
+                                   output_prefix = "ratio-file",
+                                   out_qc_folder = NULL,
+                                   printPDF = TRUE,
+                                   return_n_issues = FALSE,
+                                   verbose = TRUE){
+
+  vial_label = all_vial_labels = tmt_plex = NULL
+
+  ic_rr <- NULL
+
+  if(isPTM){
+    required_columns <- c("ptm_id", "protein_id", "gene_symbol", "entrez_id")
+  }else{
+    required_columns <- c("protein_id", "gene_symbol", "entrez_id")
+  }
+
+  if(!all( required_columns %in% colnames(df_ratio) )){
+    if(verbose) message("      - (-) The following required columns are missed: ", appendLF = FALSE)
+    if(verbose) message(paste(required_columns[!required_columns %in% colnames(df_ratio)], collapse = ", "))
+    return(ic_rr)
+  }
+
+  ic_rr <- 0
+
+  if(isPTM){
+    # The ptm_id must be unique
+    if( any(duplicated(df_ratio$ptm_id)) ){
+      ic_rr <- ic_rr + 1
+      if(verbose) message("      - (-) NON UNIQUE ptm_id values ")
+      ic <- ic + 1
+      if(f_proof){
+        # Print out redundancies
+        # red_ids <- df_ratio$ptm_id[duplicated(df_ratio$ptm_id)]
+        # rii_redundant_ids <- df_ratio[which(df_ratio$ptm_id %in% red_ids),]
+
+        # Plot redundancies
+        ya <- df_ratio %>% group_by(ptm_id) %>% summarise(id_repeats = n()) %>%
+          group_by(id_repeats) %>% summarise(n = n()) %>%
+          ggplot2::ggplot(aes(x = as.factor(id_repeats), y = n, fill = as.factor(id_repeats))) +
+          geom_bar(stat = "identity") +
+          theme_linedraw() +
+          theme(legend.title = element_blank()) +
+          labs(title = "RATIO RESULTS: Number of redundant ptm_ids",
+               subtitle = paste(output_prefix))
+
+        if(is.null(out_qc_folder)){
+          out_plot_redundancies <- paste0(output_prefix,"-qc-ratior-redundant-ids.pdf")
+        }else{
+          out_plot_redundancies <- file.path(normalizePath(out_qc_folder), paste0(output_prefix,"-qc-ratior-redundant-ids.pdf"))
+        }
+
+        if(printPDF) pdf(out_plot_redundancies, width = 10, height = 8)
+        print(ya)
+        if(printPDF) garbage <- dev.off()
+      }
+    }else{
+      if(verbose) message("   + (+) ptm_id unique: ok")
+    }
+
+    if( any(is.na(df_ratio$ptm_id)) ){
+      ic_rr <- ic_rr + 1
+      if(verbose) message("      - (-) Some PTM_ID are missed")
+    }else{
+      if(verbose) message("   + (+) All PTM_ID available")
+    }
+  }else{
+    if( any(duplicated(df_ratio$protein_id)) ){
+      ic_rr <- ic_rr + 1
+      if(verbose) message("      - (-) Duplicated PROTEIN_ID found: FAIL")
+      ic <- ic + 1
+    }
+  }
+
+  if( any(is.na(df_ratio$protein_id)) ){
+    ic_rr <- ic_rr + 1
+    if(verbose) message("      - (-) Some PROTEIN_ID are missed")
+  }else{
+    if(verbose) message("   + (+) All PROTEIN_ID available")
+  }
+
+  if( any(is.na(df_ratio$gene_symbol)) ){
+    ic_rr <- ic_rr + 1
+    if(verbose) message("      - (-) Some GENE_SYMBOL are missed")
+  }else{
+    if(verbose) message("   + (+) All GENE_SYMBOL available")
+  }
+
+  if( any(is.na(df_ratio$entrez_id)) ){
+    ic_rr <- ic_rr + 1
+    if(verbose) message("      - (-) Some ENTREZ_ID are missed")
+  }else{
+    if(verbose) message("   + (+) All ENTREZ_ID available")
+  }
+
+  if(is.null(ic_rr) ){
+    ic_rr <- 0
+  }
+
+  if(return_n_issues) return(ic_rr)
+}
+
+#' @title check proteomics reported ion intensity file
+#'
+#' @description check whether the proteomics rri results files is following guidelines
+#' @param df_rri (data.frame) proteomics rri data frame (required)
+#' @param isPTM (logical) `TRUE` if a PTM results file
+#' @param f_proof (logical) `TRUE` (default) to print out distribution and NA plots
+#' @param output_prefix (char) if `f_proof = TRUE`, provide a prefix for the output name
+#' @param out_qc_folder (char) if `f_proof is TRUE`, a folder path can be provided
+#' (otherwise print in current working directory)
+#' @param printPDF (logical) if `TRUE` (default print plots to pdf)
+#' @param return_n_issues (logical) if `TRUE` returns the number of issues.
+#' @param verbose (logical) `TRUE` (default) shows messages
+#' @return (int) number of issues identified
+#' @examples {
+#' test <- check_rii_proteomics(df_rri = metadata_metabolites_named,
+#' isPTM =  TRUE, return_n_issues = TRUE, verbose = FALSE)
+#' # "test" should be NULL
+#' }
+#' @export
+check_rii_proteomics <- function(df_rri,
+                                 isPTM,
+                                 f_proof = TRUE,
+                                 output_prefix = "rii-file",
+                                 out_qc_folder = NULL,
+                                 return_n_issues = FALSE,
+                                 printPDF = TRUE,
+                                 verbose = TRUE){
+
+
+  ic_rii <- NULL
+
+  if(isPTM){
+    required_columns <- c("protein_id", "sequence", "ptm_id", "ptm_peptide", "gene_symbol", "entrez_id", "confident_score", "confident_site")
+  }else{
+    required_columns <- c("protein_id", "sequence", "gene_symbol", "entrez_id")
+  }
+
+  if(!all( required_columns %in% colnames(df_rri) )){
+    if(verbose) message("      - (-) The following required columns are missed: ", appendLF = FALSE)
+    if(verbose) message(paste(required_columns[!required_columns %in% colnames(df_rri)], collapse = ", "))
+    return(ic_rii)
+  }
+
+  ic_rii <- 0
+
+  if(isPTM){
+    # The ptm_id must be unique
+    if( any(duplicated(df_rri$ptm_peptide)) ){
+      ic_rii <- ic_rii + 1
+      if(verbose) message("      - (-) NON UNIQUE PTM_PEPTIDE values")
+      ic <- ic + 1
+      if(f_proof){
+        # Print out redundancies
+        # red_ids <- df_rri$ptm_peptide[duplicated(df_rri$ptm_peptide)]
+        # rii_redundant_ids <- df_rri[which(df_rri$ptm_peptide %in% red_ids),]
+
+        # Plot redundancies
+        df <- df_rri %>%
+          dplyr::group_by(ptm_peptide) %>%
+          dplyr::summarise(id_repeats = n()) %>%
+          dplyr::group_by(id_repeats) %>%
+          dplyr::summarise(n = n())
+
+        xa <- ggplot2::ggplot(df, aes(x = as.factor(id_repeats), y = n, fill = as.factor(id_repeats))) +
+          geom_bar(stat = "identity") +
+          theme_linedraw() +
+          theme(legend.title = element_blank()) +
+          labs(title = "RII: Number of redundant ptm_peptides",
+               subtitle = paste(output_prefix))
+        if(verbose) message("      - (p) Plot redundant values")
+
+        if(is.null(out_qc_folder)){
+          out_plot_redundancies <- paste0(output_prefix,"-qc-redundant-ids.pdf")
+        }else{
+          out_plot_redundancies <- file.path(normalizePath(out_qc_folder), paste0(output_prefix,"-qc-redundant-ids.pdf"))
+        }
+
+        if(printPDF) pdf(out_plot_redundancies, width = 10, height = 8)
+        print(xa)
+        if(printPDF) garbage <- dev.off()
+      }
+    }
+
+    if( any(is.na(df_rri$sequence)) ){
+      ic_rii <- ic_rii + 1
+      if(verbose) message("      - (-) Some SEQUENCE are missed")
+    }else{
+      if(verbose) message("   + (+) All SEQUENCE available")
+    }
+
+    if( any(is.na(df_rri$ptm_id)) ){
+      ic_rii <- ic_rii + 1
+      if(verbose) message("      - (-) Some PTM_ID are missed")
+    }else{
+      if(verbose) message("   + (+) All PTM_ID available")
+    }
+
+    if( any(is.na(df_rri$confident_score)) ){
+      ic_rii <- ic_rii + 1
+      if(verbose) message("      - (-) Some CONFIDENT_SCORE are missed")
+    }else{
+      if(verbose) message("   + (+) All CONFIDENT_SCORE available")
+    }
+
+    if( any(is.na(df_rri$confident_site)) ){
+      ic_rii <- ic_rii + 1
+      if(verbose) message("      - (-) Some CONFIDENT_SITE are missed")
+    }else{
+      if(verbose) message("   + (+) All CONFIDENT_SITE available")
+    }
+  }else{
+    df_rri$protein_sequence <- paste0(df_rri$protein_id,"-", df_rri$sequence)
+    if(any(duplicated(df_rri$protein_sequence))){
+      ic_rii <- ic_rii + 1
+      ic <- ic + 1
+      if(verbose) message("      - (-) Duplicated Protein + Sequence identified")
+    }else{
+      if(verbose) message("   + (+) All Protein + Sequence are unique")
+    }
+    df_rri$protein_sequence <- NULL
+  }
+
+  if( any(is.na(df_rri$protein_id)) ){
+    ic_rii <- ic_rii + 1
+    if(verbose) message("      - (-) Some PROTEIN_ID are missed")
+  }else{
+    if(verbose) message("   + (+) All PROTEIN_ID available")
+  }
+
+  if( any(is.na(df_rri$gene_symbol)) ){
+    ic_rii <- ic_rii + 1
+    if(verbose) message("      - (-) Some GENE_SYMBOL are missed")
+  }else{
+    if(verbose) message("   + (+) All GENE_SYMBOL available")
+  }
+
+  if( any(is.na(df_rri$entrez_id)) ){
+    ic_rii <- ic_rii + 1
+    if(verbose) message("      - (-) Some ENTREZ_ID are missed")
+  }else{
+    if(verbose) message("   + (+) All ENTREZ_ID available")
+  }
+
+  if( is.null(ic_rii) ){
+    ic_rii <- 0
+  }
+
+  if(return_n_issues) return(ic_rii)
+}
+
+
+#' @title check proteomics vial metadata file
+#'
+#' @description check whether the proteomics rri results files is following guidelines
+#' @param df_vm (data.frame) proteomics vial_label data frame (required)
+#' @param return_n_issues (logical) if `TRUE` returns the number of issues.
+#' @param verbose (logical) `TRUE` (default) shows messages
+#' @return (int) number of issues identified
+#' @examples {
+#' test <- check_vial_metadata_proteomics(df_vm = metadata_metabolites_named,
+#' return_n_issues = TRUE, verbose = FALSE)
+#' # "test" should be NULL
+#' }
+#' @export
+check_vial_metadata_proteomics <- function(df_vm,
+                                           return_n_issues = FALSE,
+                                           verbose = TRUE){
+
+  ic_vm <- NULL
+
+  required_columns <- c("vial_label", "tmt_plex", "tmt11_channel")
+
+  if(!all( required_columns %in% colnames(df_vm) )){
+    if(verbose) message("      - (-) The following required columns are missed: ", appendLF = FALSE)
+    if(verbose) message(paste(required_columns[!required_columns %in% colnames(df_vm)], collapse = ", "))
+    return(ic_vm)
+  }
+
+  ic_vm <- 0
+
+  df_vm$vial_label <- gsub(" ", "", df_vm$vial_label)
+  valid_channels <- c("126C", "127N", "127C", "128N", "128C", "129N", "129C", "130N", "130C", "131N", "131C")
+  plexes <- unique(df_vm$tmt_plex)
+
+  for(p in plexes){
+    temp_plex <- df_vm[which(df_vm$tmt_plex == p),]
+    if(all(valid_channels %in% temp_plex$tmt11_channel)){
+      if(verbose) message("   + (+) All tmt channels are valid in plex ", paste(p))
+    }else{
+      if(verbose) message("      - (-) Invalid tmt channels in the file")
+      ic_vm <- ic_vm + 1
+    }
+  }
+
+  all_samples <- df_vm$vial_label
+  all_vial_labels <- NA
+
+  if( any( grepl("Ref", df_vm$vial_label) ) ){
+    all_vial_labels <- all_samples[!grepl('^Ref', all_samples)]
+  }else{
+    if(verbose) message("      - (-) Ref channels not found in vial_metadata")
+    ic_vm <- ic_vm + 1
+  }
+
+  if(is.null(ic_vm)){
+    ic_vm <- 0
+  }
+
+  if(return_n_issues) return(ic_vm)
+}
+
+
+
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' @title Validate a Proteomics submissions
@@ -16,6 +369,7 @@
 #' @param full_report (logical) if `FALSE` (default) it returns only the
 #' total number of issues. If `TRUE` returns the details of the number of issues (by
 #' group of files, e.g., results, metadata_metabolites, etc)
+#' @param printPDF (logical) if `TRUE` (default print plots to pdf)
 #' @param verbose (logical) `TRUE` (default) prints QC details.
 #' @return (data.frame) Summary of issues
 #' @export
@@ -27,11 +381,8 @@ validate_proteomics <- function(input_results_folder,
                                 out_qc_folder = NULL,
                                 return_n_issues = TRUE,
                                 full_report = FALSE,
+                                printPDF = TRUE,
                                 verbose = TRUE){
-
-  "col_name" = "confident_score" = "confident_site" = "entrez_id" =
-    "gene_symbol" = "id_repeats" = "protein_id" = "ptm_id" = "ptm_peptide" =
-    "ratio_values" = "ri_intensity" = "tmt11_channel" = "vial_label" = NULL
 
   if(any(missing(input_results_folder) |
          missing(isPTM) |
@@ -47,14 +398,13 @@ validate_proteomics <- function(input_results_folder,
 
   # Print out proofs----
   if(f_proof){
-    if(is.null(out_qc_folder)){
-      stop("'out_qc_folder' cannot be null if f_proof = TRUE")
-    }else{
+    if(!is.null(out_qc_folder)){
       if(!dir.exists(file.path(out_qc_folder))){
         dir.create(file.path(out_qc_folder), recursive = TRUE)
       }
-      output_prefix <- paste0(cas, ".", tolower(phase), ".", tissue_code, ".",tolower(assay), ".", tolower(processfolder))
     }
+
+    output_prefix <- paste0(cas, ".", tolower(phase), ".", tissue_code, ".",tolower(assay), ".", tolower(processfolder))
   }
 
   input_folder_short <- regmatches(input_results_folder, regexpr("PASS.*RESULTS_[0-9]{8}", input_results_folder))
@@ -75,395 +425,255 @@ validate_proteomics <- function(input_results_folder,
   ic_vm <- NA # vial metadata
   ic_man <- NA # namifiest
 
+  if(missing(dmaqc_shipping_info)){
+    dmaqc_shipping_info = NULL
+  }
+
   if(is.null(dmaqc_shipping_info)){
     ic_vl <- "missed"
   } else{
     ic_vl <- NA
   }
 
+  if(missing(out_qc_folder)){
+    out_qc_folder = NULL
+  }
+
+  # if(is.null(dmaqc_shipping_info)){
+  #   message("dmaqc_shipping_info is ", paste(dmaqc_shipping_info), " imagino que NULL\n\n")
+  # }
+  #
+  # if(is.null(out_qc_folder)){
+  #   message("out_qc_folder is ", paste(out_qc_folder), " imagino que NULL\n\n")
+  # }
+  #
+
+  #
+  # message("ic_vl is now ", paste(ic_vl), " or ", ic_vl)
+
   # VIAL METADATA-----
 
   if(verbose) message("\n## VIAL METADATA\n")
 
-  lista <- MotrpacBicQC::open_file(input_results_folder = input_results_folder,
+  lista <- open_file(input_results_folder = input_results_folder,
                                    filepattern = "vial_metadata.txt",
                                    verbose = verbose)
   f_vm <- lista$flag
+
+  all_vial_labels <- NA
+
   if(f_vm){
     v_m <- lista$df
     v_m <- filter_required_columns(df = v_m,
                                    type = "v_m",
                                    verbose = verbose)
+    ic_vm <- check_vial_metadata_proteomics(df_vm = v_m,
+                                            return_n_issues = TRUE)
+    if(is.null(ic_vm)){
+      f_vm <- FALSE
+      ic <- ic + 1
+      ic_vm <- NA
+    }else{
+      if( any( grepl("Ref", v_m$vial_label) ) ){
+        all_samples <- v_m$vial_label
+        all_vial_labels <- all_samples[!grepl('^Ref', all_samples)]
+      }else{
+        if(verbose) message("      - (-) Ref channels not found in vial_metadata")
+        ic_vm <- ic_vm + 1
+      }
+    }
   }else{
     if(verbose) message("      - (-) {metadata_metabolites_named} not available")
     ic <- ic + 1
   }
 
-  if(f_vm){
-    v_m$vial_label <- gsub(" ", "", v_m$vial_label)
-    valid_channels <- c("126C", "127N", "127C", "128N", "128C", "129N", "129C", "130N", "130C", "131N", "131C")
-    plexes <- unique(v_m$tmt_plex)
-
-    for(p in plexes){
-      temp_plex <- v_m[which(v_m$tmt_plex == p),]
-      if(all(valid_channels %in% temp_plex$tmt11_channel)){
-        if(verbose) message("   + (+) All tmt channels are valid in plex ", paste(p))
-      }else{
-        if(verbose) message("      - (-) Invalid tmt channels in the file")
-        ic_vm <- ic_vm + 1
-      }
-    }
-
-    all_samples <- v_m$vial_label
-
-    if( any( grepl("Ref", v_m$vial_label) ) ){
-      vial_labels <- all_samples[!grepl('^Ref', all_samples)]
-    }else{
-      if(verbose) message("      - (-) Ref channels not found in vial_metadata")
-      ic_vm <- ic_vm + 1
-    }
-
-    if(is.na(ic_vm)){
-      ic_vm <- 0
-    }
-  }
 
   # REPORTED ION INTENSITY -----
   if(verbose) message("\n## REPORTED ION INTENSITY\n")
 
-  message("   + Loading the file (might take some time)")
-  lista <- MotrpacBicQC::open_file(input_results_folder = input_results_folder,
+  if(verbose) message("   + Loading the file (might take some time)")
+  lista <- open_file(input_results_folder = input_results_folder,
                                    filepattern = "results_RII-peptide.txt",
                                    verbose = verbose)
   f_rii <- lista$flag
   if(f_rii){
     peprii <- lista$df
+    ic_rii <- check_rii_proteomics(df_rri = peprii,
+                                  isPTM = isPTM,
+                                  f_proof = f_proof,
+                                  output_prefix = output_prefix,
+                                  return_n_issues = TRUE,
+                                  out_qc_folder = out_qc_folder,
+                                  printPDF = printPDF,
+                                  verbose = verbose)
+
+    if(is.null(ic_rii)){
+      f_rii <- FALSE
+      ic_rii <- NA
+      ic <- ic + 1
+    }else{
+      if(f_proof){
+
+        if(verbose) message("   + (+) PLOT: RII distribution and NA values")
+
+        # Check distributions
+        if(isPTM){
+          peptides_long <- peprii %>% tidyr::pivot_longer(cols = -c(ptm_peptide, ptm_id, protein_id, gene_symbol, sequence, entrez_id),
+                                                          names_to = "vial_label",
+                                                          values_to = "ri_intensity")
+        }else{
+          peptides_long <- peprii %>% tidyr::pivot_longer(cols = -c(protein_id, gene_symbol, sequence, entrez_id),
+                                                          names_to = "vial_label",
+                                                          values_to = "ri_intensity")
+        }
+
+        # Only if vial_label metadata is available
+        if(f_vm){
+
+          if(verbose) message("   + (p) Plot intensity distributions")
+
+          peptides_long <- merge(v_m, peptides_long, by = c("vial_label"))
+
+          peptides_long$vial_label <- as.character(peptides_long$vial_label)
+          peptides_long$vial_label <- as.factor(peptides_long$vial_label)
+          peptides_long$tmt_plex <- as.factor(peptides_long$tmt_plex)
+
+          pise <- ggplot2::ggplot(peptides_long,
+                                  aes(x = reorder(vial_label, log2(ri_intensity), FUN = median, na.rm = TRUE),
+                                      y = log2(ri_intensity),
+                                      fill = tmt_plex)) +
+            geom_boxplot(na.rm = TRUE) +
+            theme_linedraw() +
+            theme(axis.text.x = element_text(angle = 90,
+                                             hjust = 1,
+                                             vjust = 0.5,
+                                             size = 8)) + #legend.position = "none"
+            labs(x = "vial_label", y = "log2(ri_intensity)") +
+            labs(title = "Reporter Ion Intensity",
+                 subtitle = output_prefix)
+
+
+          # Plottingh NA values
+          if(verbose) message("   + (p) Plot NA values")
+
+          p_na_peprii <- peprii %>%
+            inspectdf::inspect_na() %>%
+            dplyr::arrange(match(col_name, colnames(peprii))) %>%
+            inspectdf::show_plot() +
+            ylim(0, 100) + theme_linedraw() +
+            theme(axis.text.x = element_text(angle = 90,
+                                             hjust = 1,
+                                             vjust = 0.5,
+                                             size = 8))
+
+          if(is.null(out_qc_folder)){
+            out_plot_dist <- paste0(output_prefix,"-qc-rii-distribution.pdf")
+          }else{
+            out_plot_dist <- file.path(normalizePath(out_qc_folder), paste0(output_prefix,"-qc-rii-distribution.pdf"))
+          }
+
+          if(printPDF) pdf(out_plot_dist, width = 12, height = 8)
+          print(pise)
+          print(p_na_peprii)
+          if(printPDF) garbage <- dev.off()
+        }
+      } # print plots
+    }
   }else{
     if(verbose) message("      - (-) {results_RII-peptide} file not available")
     ic <- ic + 1
   }
 
-  if(f_rii){
-    if(isPTM){
-      required_columns <- c("protein_id", "sequence", "ptm_id", "ptm_peptide", "gene_symbol", "entrez_id", "confident_score", "confident_site")
-    }else{
-      required_columns <- c("protein_id", "sequence", "gene_symbol", "entrez_id")
-    }
-
-    if(!all( required_columns %in% colnames(peprii) )){
-      if(verbose) message("      - (-) Missing required columns: ", appendLF = FALSE)
-      if(verbose) message(paste(required_columns[!required_columns %in% colnames(peprii)], collapse = ", "))
-      stop("Provide missed columns")
-    }
-
-    if(isPTM){
-      # The ptm_id must be unique
-      if( any(duplicated(peprii$ptm_peptide)) ){
-        ic_rii <- ic_rii + 1
-        if(verbose) message("      - (-) NON UNIQUE PTM_PEPTIDE values")
-        ic <- ic + 1
-        if(f_proof){
-          # Print out redundancies
-          # red_ids <- peprii$ptm_peptide[duplicated(peprii$ptm_peptide)]
-          # rii_redundant_ids <- peprii[which(peprii$ptm_peptide %in% red_ids),]
-
-          # Plot redundancies
-          df <- peprii %>%
-            dplyr::group_by(ptm_peptide) %>%
-            dplyr::summarise(id_repeats = n()) %>%
-            dplyr::group_by(id_repeats) %>%
-            dplyr::summarise(n = n())
-
-          xa <- ggplot2::ggplot(df, aes(x = as.factor(id_repeats), y = n, fill = as.factor(id_repeats))) +
-            geom_bar(stat = "identity") +
-            theme_linedraw() +
-            theme(legend.title = element_blank()) +
-            labs(title = "RII: Number of redundant ptm_peptides",
-                 subtitle = paste(output_prefix))
-
-          out_plot_redundancies <- file.path(out_qc_folder, paste0(output_prefix,"-qc-redundant-ids.pdf"))
-          pdf(out_plot_redundancies, width = 10, height = 8)
-          print(xa)
-          garbage <- dev.off()
-        }
-      }
-
-      if( any(is.na(peprii$sequence)) ){
-        ic_rii <- ic_rii + 1
-        if(verbose) message("      - (-) Some SEQUENCE are missed")
-      }else{
-        if(verbose) message("   + (+) All SEQUENCE available")
-      }
-
-      if( any(is.na(peprii$ptm_id)) ){
-        ic_rii <- ic_rii + 1
-        if(verbose) message("      - (-) Some PTM_ID are missed")
-      }else{
-        if(verbose) message("   + (+) All PTM_ID available")
-      }
-
-      if( any(is.na(peprii$confident_score)) ){
-        ic_rii <- ic_rii + 1
-        if(verbose) message("      - (-) Some CONFIDENT_SCORE are missed")
-      }else{
-        if(verbose) message("   + (+) All CONFIDENT_SCORE available")
-      }
-
-      if( any(is.na(peprii$confident_site)) ){
-        ic_rii <- ic_rii + 1
-        if(verbose) message("      - (-) Some CONFIDENT_SITE are missed")
-      }else{
-        if(verbose) message("   + (+) All CONFIDENT_SITE available")
-      }
-    }else{
-      peprii$protein_sequence <- paste0(peprii$protein_id,"-", peprii$sequence)
-      if(any(duplicated(peprii$protein_sequence))){
-        ic_rii <- ic_rii + 1
-        ic <- ic + 1
-        if(verbose) message("      - (-) Duplicated Protein + Sequence identified")
-      }else{
-        if(verbose) message("   + (+) All Protein + Sequence are unique")
-      }
-      peprii$protein_sequence <- NULL
-    }
-
-    if( any(is.na(peprii$protein_id)) ){
-      ic_rii <- ic_rii + 1
-      if(verbose) message("      - (-) Some PROTEIN_ID are missed")
-    }else{
-      if(verbose) message("   + (+) All PROTEIN_ID available")
-    }
-
-    if( any(is.na(peprii$gene_symbol)) ){
-      ic_rii <- ic_rii + 1
-      if(verbose) message("      - (-) Some GENE_SYMBOL are missed")
-    }else{
-      if(verbose) message("   + (+) All GENE_SYMBOL available")
-    }
-
-    if( any(is.na(peprii$entrez_id)) ){
-      ic_rii <- ic_rii + 1
-      if(verbose) message("      - (-) Some ENTREZ_ID are missed")
-    }else{
-      if(verbose) message("   + (+) All ENTREZ_ID available")
-    }
-
-    # Plot distributions
-
-    if(f_proof){
-
-      if(verbose) message("   + (+) PLOT: RII distribution and NA values")
-
-      # Check distributions
-      if(isPTM){
-        peptides_long <- peprii %>% tidyr::pivot_longer(cols = -c(ptm_peptide, ptm_id, protein_id, gene_symbol, sequence, entrez_id),
-                                                        names_to = "vial_label",
-                                                        values_to = "ri_intensity")
-      }else{
-        peptides_long <- peprii %>% tidyr::pivot_longer(cols = -c(protein_id, gene_symbol, sequence, entrez_id),
-                                                        names_to = "vial_label",
-                                                        values_to = "ri_intensity")
-      }
-
-      # Only if vial_label metadata is available
-      if(f_vm){
-        peptides_long <- merge(v_m[c("vial_label", "tmt11_channel")], peptides_long, by = c("vial_label"))
-        if(verbose) message("   + (p) Plotting intensity distributions")
-        pise <- ggplot2::ggplot(peptides_long,
-                       aes(x = as.factor(vial_label),
-                           y = log2(ri_intensity),
-                           fill = tmt11_channel)) +
-          geom_boxplot(aes(fill = tmt11_channel), na.rm = TRUE) +
-          theme_linedraw() +
-          theme(axis.text.x = element_text(angle = 90,
-                                           hjust = 1,
-                                           vjust = 0.5,
-                                           size = 8),
-                legend.position = "none") +
-          labs(x = "vial_label", y = "log2(ri_intensity)") +
-          labs(title = "Reporter Ion Intensity",
-               subtitle = output_prefix)
-
-        # Plottingh NA values
-        if(verbose) message("   + (p) Plotting NA values")
-        p_na_peprii <- peprii %>%
-          inspectdf::inspect_na() %>%
-          dplyr::arrange(match(col_name, colnames(peprii))) %>%
-          inspectdf::show_plot() +
-          ylim(0, 100) + theme_linedraw() +
-          theme(axis.text.x = element_text(angle = 90,
-                                           hjust = 1,
-                                           vjust = 0.5,
-                                           size = 8))
-
-        out_plot_dist <- file.path(normalizePath(out_qc_folder), paste0(output_prefix,"-qc-rii-distribution.pdf"))
-        pdf(out_plot_dist, width = 12, height = 8)
-        print(pise)
-        print(p_na_peprii)
-        garbage <- dev.off()
-      }
-    }
-
-    if(is.na(ic_rii) ){
-      ic_rii <- 0
-    }
-  } #if f_rii
-
-
   # RATIO----
 
   if(verbose) message("\n\n## RATIO results\n")
 
-  lista <- MotrpacBicQC::open_file(input_results_folder = input_results_folder,
-                                   filepattern = "results_ratio.txt",
-                                   verbose = verbose)
+  lista <- open_file(input_results_folder = input_results_folder,
+                     filepattern = "results_ratio.txt",
+                     verbose = verbose)
+
   f_rr <- lista$flag
   if(f_rr){
     ratior <- lista$df
+    ic_rr <- check_ratio_proteomics(df_ratio = ratior,
+                                    isPTM = isPTM,
+                                    f_proof = f_proof,
+                                    output_prefix = output_prefix,
+                                    out_qc_folder = out_qc_folder,
+                                    printPDF = printPDF,
+                                    return_n_issues = TRUE,
+                                    verbose = verbose)
+
+    if(is.null(ic_rr)){
+      f_rr <- FALSE
+      ic <- ic + 1
+      ic_rr <- NA
+    }else{
+      # Plot distributions
+
+      if(f_proof){
+
+        if(verbose) message("   + (+) PLOT: RATIO distribution and NA values")
+
+        # Check distributions
+        if(isPTM){
+          ratior_long <- ratior %>% tidyr::pivot_longer(cols = -c(ptm_id, protein_id, gene_symbol, entrez_id, confident_score, confident_site),
+                                                            names_to = "vial_label",
+                                                            values_to = "ratio_values")
+        }else{
+          ratior_long <- ratior %>% tidyr::pivot_longer(cols = -c(protein_id, gene_symbol, entrez_id),
+                                                            names_to = "vial_label",
+                                                            values_to = "ratio_values")
+        }
+
+        if(f_vm){
+          if(verbose) message("   + (p) Plotting ratio distributions")
+
+          ratior_long <- merge(v_m, ratior_long, by = c("vial_label"))
+
+          pisr <- ggplot2::ggplot(ratior_long,
+                                  aes(x = reorder(vial_label, ratio_values, FUN = median, na.rm = TRUE),
+                                      y = ratio_values,
+                                      fill = tmt_plex)) +
+            geom_boxplot(na.rm = TRUE) +
+            theme_linedraw() +
+            theme(axis.text.x = element_text(angle = 90,
+                                             hjust = 1,
+                                             vjust = 0.5,
+                                             size = 8)) + #legend.position = "none"
+            labs(x = "vial_label", y = "ratio_values") +
+            labs(title = "Ratio",
+                 subtitle = output_prefix)
+
+          # Plotting NA values
+          if(verbose) message("   + (p) Plotting NA percentage in ratio results")
+          p_na_ratior <- ratior %>%
+            inspectdf::inspect_na() %>%
+            dplyr::arrange(match(col_name, colnames(ratior))) %>%
+            inspectdf::show_plot() +
+            ylim(0, 100) + theme_linedraw() +
+            theme(axis.text.x = element_text(angle = 90,
+                                             hjust = 1,
+                                             vjust = 0.5,
+                                             size = 8))
+
+          if(is.null(out_qc_folder)){
+            out_plot_ratdist <- paste0(output_prefix,"-qc-ratio-distribution.pdf")
+          }else{
+            out_plot_ratdist <- file.path(normalizePath(out_qc_folder), paste0(output_prefix,"-qc-ratio-distribution.pdf"))
+          }
+
+          if(printPDF) pdf(out_plot_ratdist, width = 12, height = 8)
+          print(pisr)
+          print(p_na_ratior)
+          if(printPDF) garbage <- dev.off()
+        }
+      }
+    } #print plots
   }else{
     if(verbose) message("      - (-) {results_ratio.txt} file not available")
     ic <- ic + 1
   }
-
-  if(f_rr){
-
-    if(isPTM){
-      required_columns <- c("ptm_id", "protein_id", "gene_symbol", "entrez_id")
-    }else{
-      required_columns <- c("protein_id", "gene_symbol", "entrez_id")
-    }
-
-    if(!all( required_columns %in% colnames(ratior) )){
-      if(verbose) message("      - (-) Missing required columns: ", appendLF = FALSE)
-      if(verbose) message(paste(required_columns[!required_columns %in% colnames(ratior)], collapse = ", "))
-      stop("Provide missed columns")
-    }
-
-    if(isPTM){
-      # The ptm_id must be unique
-      if( any(duplicated(ratior$ptm_id)) ){
-        ic_rr <- ic_rr + 1
-        if(verbose) message("      - (-) NON UNIQUE ptm_id values ")
-        ic <- ic + 1
-        if(f_proof){
-          # Print out redundancies
-          # red_ids <- ratior$ptm_id[duplicated(ratior$ptm_id)]
-          # rii_redundant_ids <- ratior[which(ratior$ptm_id %in% red_ids),]
-
-          # Plot redundancies
-          ya <- ratior %>% group_by(ptm_id) %>% summarise(id_repeats = n()) %>%
-            group_by(id_repeats) %>% summarise(n = n()) %>%
-            ggplot2::ggplot(aes(x = as.factor(id_repeats), y = n, fill = as.factor(id_repeats))) +
-            geom_bar(stat = "identity") +
-            theme_linedraw() +
-            theme(legend.title = element_blank()) +
-            labs(title = "RATIO RESULTS: Number of redundant ptm_ids",
-                 subtitle = paste(output_prefix))
-
-          out_plot_redundancies <- file.path(normalizePath(out_qc_folder), paste0(output_prefix,"-qc-ratior-redundant-ids.pdf"))
-          pdf(out_plot_redundancies, width = 10, height = 8)
-          print(ya)
-          garbage <- dev.off()
-        }
-      }else{
-        if(verbose) message("   + (+) ptm_id unique: ok")
-      }
-
-      if( any(is.na(ratior$ptm_id)) ){
-        ic_rr <- ic_rr + 1
-        if(verbose) message("      - (-) Some PTM_ID are missed")
-      }else{
-        if(verbose) message("   + (+) All PTM_ID available")
-      }
-    }else{
-      if( any(duplicated(ratior$protein_id)) ){
-        ic_rr <- ic_rr + 1
-        if(verbose) message("      - (-) Duplicated PROTEIN_ID found: FAIL")
-        ic <- ic + 1
-      }
-    }
-
-    if( any(is.na(ratior$protein_id)) ){
-      ic_rr <- ic_rr + 1
-      if(verbose) message("      - (-) Some PROTEIN_ID are missed")
-    }else{
-      if(verbose) message("   + (+) All PROTEIN_ID available")
-    }
-
-    if( any(is.na(ratior$gene_symbol)) ){
-      ic_rr <- ic_rr + 1
-      if(verbose) message("      - (-) Some GENE_SYMBOL are missed")
-    }else{
-      if(verbose) message("   + (+) All GENE_SYMBOL available")
-    }
-
-    if( any(is.na(ratior$entrez_id)) ){
-      ic_rr <- ic_rr + 1
-      if(verbose) message("      - (-) Some ENTREZ_ID are missed")
-    }else{
-      if(verbose) message("   + (+) All ENTREZ_ID available")
-    }
-
-    # Plot distributions
-
-    if(f_proof){
-
-      if(verbose) message("   + (+) PLOT: RATIO distribution and NA values")
-
-      # Check distributions
-      if(isPTM){
-        ratior_long <- ratior %>% tidyr::pivot_longer(cols = -c(ptm_id, protein_id, gene_symbol, entrez_id, confident_score, confident_site),
-                                                      names_to = "vial_label",
-                                                      values_to = "ratio_values")
-      }else{
-        ratior_long <- ratior %>% tidyr::pivot_longer(cols = -c(protein_id, gene_symbol, entrez_id),
-                                                      names_to = "vial_label",
-                                                      values_to = "ratio_values")
-      }
-
-      if(f_vm){
-        ratior_long <- merge(v_m[c("vial_label", "tmt11_channel")], ratior_long, by = c("vial_label"))
-
-        if(verbose) message("   + (p) Plotting ratio distributions")
-        pisr <- ggplot2::ggplot(ratior_long,
-                       aes(x = as.factor(vial_label),
-                           y = ratio_values,
-                           fill = tmt11_channel)) +
-          geom_boxplot(aes(fill = tmt11_channel), na.rm = TRUE) +
-          theme_linedraw() +
-          theme(axis.text.x = element_text(angle = 90,
-                                           hjust = 1,
-                                           vjust = 0.5,
-                                           size = 8),
-                legend.position = "none") +
-          labs(x = "vial_label", y = "ratio_values") +
-          labs(title = "Ratio",
-               subtitle = output_prefix)
-
-        # Plotting NA values
-        if(verbose) message("   + (p) Plotting NA percentage in ratio results")
-        p_na_ratior <- ratior %>%
-          inspectdf::inspect_na() %>%
-          dplyr::arrange(match(col_name, colnames(ratior))) %>%
-          inspectdf::show_plot() +
-          ylim(0, 100) + theme_linedraw() +
-          theme(axis.text.x = element_text(angle = 90,
-                                           hjust = 1,
-                                           vjust = 0.5,
-                                           size = 8))
-
-        out_plot_dist <- file.path(normalizePath(out_qc_folder), paste0(output_prefix,"-qc-ratio-distribution.pdf"))
-        pdf(out_plot_dist, width = 12, height = 8)
-        print(pisr)
-        print(p_na_ratior)
-        garbage <- dev.off()
-      }
-    }
-
-    if(is.na(ic_rr) ){
-      ic_rr <- 0
-    }
-  } # f_rr
 
   # MANIFEST----
 
@@ -536,11 +746,14 @@ validate_proteomics <- function(input_results_folder,
   # CHECK DMAQC----
 
   # Validate vial labels from DMAQC
+
+  if(verbose) message("\n\n## DMAQC validation\n")
+  failed_samples <- check_failedsamples(input_results_folder = input_results_folder, verbose = verbose)
+
   if( is.na(ic_vl) ){
     if(f_vm){
-      if(verbose) message("\n\n## DMAQC validation\n")
-      failed_samples <- check_failedsamples(input_results_folder = input_results_folder, verbose = verbose)
-      ic_vl <- check_viallabel_dmaqc(vl_submitted = vial_labels,
+      message("before check viallabel, tell me the valud of ic_vl: ", paste(ic_vl),"\n\n")
+      ic_vl <- check_viallabel_dmaqc(vl_submitted = all_vial_labels,
                                      tissue_code = tissue_code,
                                      cas = cas,
                                      phase = phase,
@@ -548,6 +761,7 @@ validate_proteomics <- function(input_results_folder,
                                      dmaqc_shipping_info = dmaqc_shipping_info,
                                      return_n_issues = TRUE,
                                      verbose = verbose)
+      message("After")
     }else{
       ic <- ic + 1
       if(verbose) message("      - (-) DMAQC validation cannot be performed (no vial label data available)")
@@ -560,18 +774,18 @@ validate_proteomics <- function(input_results_folder,
 
   if(f_vm & f_rii & f_rr){
 
-    if( all(vial_labels %in% colnames(peprii)) ){
-      if(verbose) message("   + (+) All vial_labels in RII file")
+    if( all(all_vial_labels %in% colnames(peprii)) ){
+      if(verbose) message("   + (+) All all_vial_labels in RII file")
     }else{
       ic <- ic + 1
-      if(verbose) message("      - (-) Some vial_labels not available in RII file")
+      if(verbose) message("      - (-) Some all_vial_labels not available in RII file")
     }
 
-    if( all(vial_labels %in% colnames(ratior)) ){
-      if(verbose) message("   + (+) All vial_labels in RATIO results file")
+    if( all(all_vial_labels %in% colnames(ratior)) ){
+      if(verbose) message("   + (+) All all_vial_labels in RATIO results file")
     }else{
       ic <- ic + 1
-      if(verbose) message("      - (-) Some vial_labels not available in RATIO results file")
+      if(verbose) message("      - (-) Some all_vial_labels not available in RATIO results file")
     }
 
   }else{
@@ -585,7 +799,7 @@ validate_proteomics <- function(input_results_folder,
   qc_date <- gsub("-", "", qc_date)
   qc_date <- gsub(" ", "_", qc_date)
   qc_date <- gsub(":", "", qc_date)
-  t_name <- MotrpacBicQC::bic_animal_tissue_code$bic_tissue_name[which(bic_animal_tissue_code$bic_tissue_code == tissue_code)]
+  t_name <- bic_animal_tissue_code$bic_tissue_name[which(bic_animal_tissue_code$bic_tissue_code == tissue_code)]
 
   if(return_n_issues){
     total_issues <- sum(ic, ic_vm, ic_rr, ic_rii, na.rm = TRUE)
@@ -597,7 +811,7 @@ validate_proteomics <- function(input_results_folder,
                             t_name = t_name,
                             assay = assay,
                             version = batchversion,
-                            vial_label = length(vial_labels),
+                            vial_label = length(all_vial_labels),
                             qc_samples = NA,
                             dmaqc_valid = ic_vl,
                             critical_issues = ic,
@@ -612,62 +826,3 @@ validate_proteomics <- function(input_results_folder,
   }
 }
 
-# validate_proteomics(input_results_folder <- "~/DriveStanford/motrpac/proteomics/pnnl/PASS1B-06/T70/PROT_PH/BATCH1_20200609/RESULTS_20200909/",
-#                     dmaqc_shipping_info = "~/github/MoTrPAC/metabolomics-qc-data-transfer/data/dmaqc_shipping_info.txt",
-#                     cas = "pnnl",
-#                     verbose = TRUE,
-#                     isPTM = TRUE,
-#                     f_proof = TRUE,
-#                     out_qc_folder <- "~/DriveStanford/Shared/motrpac/proteomics_qc_reports",
-#                     return_n_issues = TRUE,
-#                     full_report = TRUE)
-
-# input_results_folder <- "~/DriveStanford/motrpac/proteomics/pnnl/PASS1B-06/T70/PROT_PR/BATCH1_20200609/RESULTS_20200909/"
-# dmaqc_shipping_info = "~/github/MoTrPAC/metabolomics-qc-data-transfer/data/dmaqc_shipping_info.txt"
-# cas = "pnnl"
-# verbose = TRUE
-# isPTM = FALSE
-# f_proof = TRUE
-# out_qc_folder <- "~/DriveStanford/Shared/motrpac/proteomics_qc_reports"
-# return_n_issues = TRUE
-# full_report = TRUE
-
-#
-# validate_proteomics(input_results_folder <- "~/DriveStanford/motrpac/proteomics/pnnl/PASS1B-06/T70/PROT_PH/BATCH1_20200609/RESULTS_20200909/",
-#                     dmaqc_shipping_info = "~/github/MoTrPAC/metabolomics-qc-data-transfer/data/dmaqc_shipping_info.txt",
-#                     cas = "pnnl",
-#                     verbose = TRUE,
-#                     isPTM = TRUE,
-#                     f_proof = FALSE,
-#                     out_qc_folder <- "~/DriveStanford/Shared/motrpac/proteomics_qc_reports",
-#                     return_n_issues = TRUE,
-#                     full_report = TRUE)
-#
-# validate_proteomics(input_results_folder <- "~/DriveStanford/motrpac/proteomics/pnnl/PASS1B-06/T70/PROT_PH/BATCH1_20200609/RESULTS_20200909/",
-#                     cas = "pnnl",
-#                     verbose = FALSE,
-#                     isPTM = TRUE,
-#                     f_proof = FALSE,
-#                     return_n_issues = TRUE,
-#                     full_report = FALSE)
-
-# # DEBUG PROT_PR
-# validate_proteomics(input_results_folder <- "~/DriveStanford/motrpac/proteomics/pnnl/PASS1B-06/T70/PROT_PR/BATCH1_20200609/RESULTS_20200909/",
-#                     dmaqc_shipping_info = "~/github/MoTrPAC/metabolomics-qc-data-transfer/data/dmaqc_shipping_info.txt",
-#                     cas = "pnnl",
-#                     verbose = TRUE,
-#                     isPTM = FALSE,
-#                     f_proof = TRUE,
-#                     out_qc_folder <- "~/DriveStanford/Shared/motrpac/proteomics_qc_reports",
-#                     return_n_issues = TRUE,
-#                     full_report = TRUE)
-#
-# input_results_folder <- "~/DriveStanford/motrpac/proteomics/pnnl/PASS1B-06/T70/PROT_PR/BATCH1_20200609/RESULTS_20200909/"
-# dmaqc_shipping_info = "~/github/MoTrPAC/metabolomics-qc-data-transfer/data/dmaqc_shipping_info.txt"
-# cas = "pnnl"
-# verbose = TRUE
-# isPTM = FALSE
-# f_proof = TRUE
-# out_qc_folder <- "~/DriveStanford/Shared/motrpac/proteomics_qc_reports"
-# return_n_issues = TRUE
-# full_report = TRUE

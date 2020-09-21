@@ -1,5 +1,21 @@
 # Add package by alphabetical order
 
+#' @importFrom data.table rbindlist as.data.table
+#' @import dplyr
+#' @import forcats
+#' @import ggplot2
+#' @importFrom grDevices dev.off pdf
+#' @importFrom inspectdf inspect_na
+#' @importFrom jsonlite fromJSON
+#' @import knitr
+#' @import naniar
+#' @import purrr
+#' @importFrom stats median reorder
+#' @import stringr
+#' @import tidyr
+#' @import utils
+#____________________________________________________________________________
+
 #' @title filter required columns only
 #'
 #' @description it returns a data frame with only the required columns for metabolomics and proteomics
@@ -64,21 +80,6 @@ filter_required_columns <- function(df,
     return(df)
   }
 }
-
-
-#' @importFrom data.table rbindlist as.data.table
-#' @import dplyr
-#' @import ggplot2
-#' @importFrom grDevices dev.off pdf
-#' @importFrom inspectdf inspect_na
-#' @importFrom jsonlite fromJSON
-#' @import knitr
-#' @import naniar
-#' @import purrr
-#' @import stringr
-#' @import tidyr
-#' @import utils
-#______________________________________________________________________________
 
 
 #' @title open files
