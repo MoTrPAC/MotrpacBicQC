@@ -351,6 +351,134 @@ check_vial_metadata_proteomics <- function(df_vm,
 }
 
 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' @title Load Proteomics batch
+#'
+#' @description Load a proteomics batch
+#' @param input_results_folder (char) path to the PROCESSED folder to check
+#' @param isPTM (logical) `TRUE` if it is Post-Translational-Modification proteomics assay
+#' @param verbose (logical) `TRUE` (default) prints QC details.
+#' @return (List) of data frames: rii,
+#' @export
+load_proteomics <- function(input_results_folder,
+                            isPTM,
+                            verbose = TRUE){
+
+
+  if(any(missing(input_results_folder) |
+         missing(isPTM)))
+    stop("One (or many) of the required arguments missed.
+        Please, check the help for this function to find out more")
+
+  # Validate folder structure-----
+  processfolder <- validate_processFolder(input_results_folder)
+  phase <- validate_phase(input_results_folder)
+
+  if(verbose) message("# LOAD PROTEOMICS BATCH\n\n")
+  if(verbose) message(paste(processfolder))
+
+  # COUNTS----
+  ic <- 0 # Critical issues
+  ic_rii <- NA # RII issues
+  ic_rr <- NA # ratio results
+  ic_vm <- NA # vial metadata
+  ic_man <- NA # namifiest
+
+
+  # VIAL METADATA-----
+  if(verbose) message("\n## VIAL METADATA\n")
+
+  lista <- open_file(input_results_folder = input_results_folder,
+                     filepattern = "vial_metadata.txt",
+                     verbose = verbose)
+  f_vm <- lista$flag
+
+  all_vial_labels <- NA
+
+  if(f_vm){
+    v_m <- lista$df
+    v_m <- filter_required_columns(df = v_m,
+                                   type = "v_m",
+                                   verbose = verbose)
+    # Remove space between "Ref_ A"
+    v_m$vial_label <- gsub(" ", "", v_m$vial_label)
+    ic_vm <- check_vial_metadata_proteomics(df_vm = v_m,
+                                            return_n_issues = TRUE,
+                                            verbose = verbose)
+
+    if(is.null(ic_vm)){
+      f_vm <- FALSE
+      ic <- ic + 1
+      ic_vm <- NA
+    }else{
+      if( any( grepl("Ref", v_m$vial_label) ) ){
+        all_samples <- v_m$vial_label
+        all_vial_labels <- all_samples[!grepl('^Ref', all_samples)]
+      }else{
+        if(verbose) message("      - (-) Ref channels not found in vial_metadata")
+        ic_vm <- ic_vm + 1
+      }
+    }
+  }else{
+    if(verbose) message("      - (-) {vial_metadata} not available")
+    ic <- ic + 1
+  }
+
+
+  # REPORTED ION INTENSITY -----
+  if(verbose) message("\n## REPORTED ION INTENSITY\n")
+
+  if(verbose) message("   + Loading the file (might take some time)")
+  lista <- open_file(input_results_folder = input_results_folder,
+                     filepattern = "results_RII-peptide.txt",
+                     verbose = verbose)
+  f_rii <- lista$flag
+  if(f_rii){
+    peprii <- lista$df
+    ic_rii <- check_rii_proteomics(df_rri = peprii,
+                                   isPTM = isPTM,
+                                   verbose = verbose)
+
+  }else{
+    if(verbose) message("      - (-) {results_RII-peptide} file not available")
+    ic <- ic + 1
+  }
+
+  # RATIO----
+
+  if(verbose) message("\n\n## RATIO results\n")
+
+  lista <- open_file(input_results_folder = input_results_folder,
+                     filepattern = "results_ratio.txt",
+                     verbose = verbose)
+
+  f_rr <- lista$flag
+  if(f_rr){
+    ratior <- lista$df
+    ic_rr <- check_ratio_proteomics(df_ratio = ratior,
+                                    isPTM = isPTM,
+                                    verbose = verbose)
+  }else{
+    if(verbose) message("      - (-) {results_ratio.txt} file not available")
+    ic <- ic + 1
+  }
+
+  if(f_rr & f_rii & f_vm){
+    list_df <- list ("peprii" = peprii,
+                     "v_m" = v_m,
+                     "ratior" = ratior,
+                     "phase" = phase)
+    return(list_df)
+  }else{
+    stop("PROBLEMS LOADING PROTEOMICS BATCH")
+  }
+
+}
+
+
+
+
+
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -468,7 +596,8 @@ validate_proteomics <- function(input_results_folder,
                                    type = "v_m",
                                    verbose = verbose)
     ic_vm <- check_vial_metadata_proteomics(df_vm = v_m,
-                                            return_n_issues = TRUE)
+                                            return_n_issues = TRUE,
+                                            verbose = verbose)
     if(is.null(ic_vm)){
       f_vm <- FALSE
       ic <- ic + 1
@@ -483,7 +612,7 @@ validate_proteomics <- function(input_results_folder,
       }
     }
   }else{
-    if(verbose) message("      - (-) {metadata_metabolites_named} not available")
+    if(verbose) message("      - (-) {vial_metadata} not available")
     ic <- ic + 1
   }
 
@@ -493,8 +622,9 @@ validate_proteomics <- function(input_results_folder,
 
   if(verbose) message("   + Loading the file (might take some time)")
   lista <- open_file(input_results_folder = input_results_folder,
-                                   filepattern = "results_RII-peptide.txt",
-                                   verbose = verbose)
+                     filepattern = "results_RII-peptide.txt",
+                     verbose = verbose)
+
   f_rii <- lista$flag
   if(f_rii){
     peprii <- lista$df
@@ -680,7 +810,6 @@ validate_proteomics <- function(input_results_folder,
   if(verbose) message("\n## MANIFEST\n")
 
   batch <- gsub("(.*)(RESULTS.*)", "\\1", input_results_folder)
-  results <- gsub("(.*)(RESULTS.*)", "\\2", input_results_folder)
 
   file_metametabolites <- list.files(normalizePath(batch),
                                      pattern="file_manifest",
@@ -824,5 +953,85 @@ validate_proteomics <- function(input_results_folder,
       return(total_issues)
     }
   }
+}
+
+
+
+#' @title Write proteomics data release
+#'
+#' @description Write out proteomics data releases. Doesn't check whether
+#' data has been submited according to guidelines
+#' @param input_results_folder (char) Path to the PROCESSED_YYYYMMDD folder
+#' @param isPTM (logical) is a proteomics PTM experiment?
+#' @param folder_name (char) output folder name.
+#' @param folder_root (char) absolute path to write the output folder. Default: current directory
+#' @param verbose (logical) `TRUE` (default) shows messages
+#' @return bic release folder/file structure `PHASE/OMICS/TCODE_NAME/ASSAY/` and file names, including:
+#' `motrpac_YYYYMMDD_phasecode_tissuecode_omics_assay_file-details.txt` where files-details can be:
+#' `rii-results.txt`, `ratio-results.txt`, `vial-metadata.txt`
+#' @examples
+#' \dontrun{
+#' write_proteomics_releases(
+#'    input_results_folder = "/full/path/to/RESULTS_YYYYMMDD/")
+#' }
+#' @export
+write_proteomics_releases <- function(input_results_folder,
+                                      isPTM,
+                                      folder_name = "motrpac_release",
+                                      folder_root = NULL,
+                                      verbose = TRUE){
+
+
+  # Get names from input_results_folder------
+  assay <- validate_assay(input_results_folder)
+  phase <- validate_phase(input_results_folder)
+  tissue_code <- validate_tissue(input_results_folder)
+  folder_phase <- tolower(phase)
+  folder_tissue <- bic_animal_tissue_code$tissue_name_release[which(bic_animal_tissue_code$bic_tissue_code == tissue_code)]
+
+  assay_codes$cas_code <- NULL
+  assay_codes <- unique(assay_codes)
+  if(length(assay_codes$assay_code[which(assay_codes$submission_code == assay)]) == 1){
+    folder_assay <- assay_codes$assay_code[which(assay_codes$submission_code == assay)]
+  }else{
+    stop("ASSAY code ", assay, " not available in < assay_codes >")
+  }
+
+  if(verbose) message("+ Writing out ", phase, " ", tissue_code, " ", assay, " files", appendLF = FALSE)
+
+  # Load all datasets----
+  prot_dfs <- load_proteomics(input_results_folder = input_results_folder,
+                              isPTM = isPTM,
+                              verbose = FALSE)
+
+  # Create output folder-------
+  if (is.null(folder_root)){
+    folder_root <- getwd()
+  }else{
+    folder_root <- normalizePath(folder_root)
+  }
+
+  output_folder <- file.path(folder_root, folder_name, folder_phase, "proteomics", folder_tissue, folder_assay)
+
+  if(!dir.exists(file.path(output_folder))){
+    dir.create(file.path(output_folder), recursive = TRUE)
+  }
+
+  file_name_shared <- paste0("motrpac_",
+                             folder_phase, "_",
+                             folder_tissue, "_",
+                             folder_assay)
+
+
+  # Create and write FILES-----
+  prot_rii <- file.path(output_folder, paste0(file_name_shared,"_rii-results.txt"))
+  prot_ratio <- file.path(output_folder, paste0(file_name_shared,"_ratio-results.txt"))
+  vial_metadata <- file.path(output_folder, paste0(file_name_shared,"_vial-metadata.txt"))
+
+  write.table(prot_dfs$peprii, prot_rii, row.names = FALSE, sep = "\t", quote = FALSE)
+  write.table(prot_dfs$ratior, prot_ratio, row.names = FALSE, sep = "\t", quote = FALSE)
+  write.table(prot_dfs$v_m, vial_metadata, row.names = FALSE, sep = "\t", quote = FALSE)
+
+  if(verbose) message("...done!")
 }
 
