@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MotrpacBicQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
       </span>
     </div>
 
@@ -126,16 +126,16 @@
     <p>check whether the proteomics ratio results files is following guidelines</p>
     </div>
 
-    <pre class="usage"><span class='fu'>check_ratio_proteomics</span>(
-  <span class='kw'>df_ratio</span>,
-  <span class='kw'>isPTM</span>,
-  f_proof = <span class='fl'>TRUE</span>,
-  output_prefix = <span class='st'>"ratio-file"</span>,
-  out_qc_folder = <span class='kw'>NULL</span>,
-  printPDF = <span class='fl'>TRUE</span>,
-  return_n_issues = <span class='fl'>FALSE</span>,
-  verbose = <span class='fl'>TRUE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>check_ratio_proteomics</span><span class='op'>(</span>
+  <span class='va'>df_ratio</span>,
+  <span class='va'>isPTM</span>,
+  f_proof <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  output_prefix <span class='op'>=</span> <span class='st'>"ratio-file"</span>,
+  out_qc_folder <span class='op'>=</span> <span class='cn'>NULL</span>,
+  printPDF <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  return_n_issues <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  verbose <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -180,11 +180,11 @@
     <p>(int) number of issues identified</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>{
-<span class='kw'>test</span> <span class='op'>&lt;-</span> <span class='fu'>check_ratio_proteomics</span>(df_ratio = <span class='kw'>metadata_metabolites_named</span>,
-isPTM =  <span class='fl'>TRUE</span>, return_n_issues = <span class='fl'>TRUE</span>, verbose = <span class='fl'>FALSE</span>)
+    <pre class="examples"><div class='input'><span class='op'>{</span>
+<span class='va'>test</span> <span class='op'>&lt;-</span> <span class='fu'>check_ratio_proteomics</span><span class='op'>(</span>df_ratio <span class='op'>=</span> <span class='va'>metadata_metabolites_named</span>,
+isPTM <span class='op'>=</span>  <span class='cn'>TRUE</span>, return_n_issues <span class='op'>=</span> <span class='cn'>TRUE</span>, verbose <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 <span class='co'># "test" should be NULL</span>
-}
+<span class='op'>}</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
