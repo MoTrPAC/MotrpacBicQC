@@ -48,6 +48,11 @@ check_metadata_metabolites <- function(df,
       flag_mm <- TRUE
       if(verbose) message("   + (+) {metabolite_name} OK")
     }
+
+    if(any(is.na(df$metabolite_name))){
+      if(verbose) message("      - (-) {metabolite_name} NA values detected: FAIL")
+      ic <- ic + 1
+    }
   }else{
     if(verbose) message("      - (-) {metabolite_name} is missed: FAIL")
     ic <- ic + 1
@@ -339,6 +344,10 @@ check_results <- function(r_m,
         #   ic <- ic + 1
         # }
       }
+      if(any(is.na(r_m$metabolite_name))){
+        if(verbose) message("      - (-) {metabolite_name} NA values detected: FAIL")
+        ic <- ic + 1
+      }
     }else{
       if(verbose) message("      - (-) {metabolite_name} column is not available in both [results] and [metadata_metabolites]")
       ic <- ic + 1
@@ -592,7 +601,7 @@ validate_metabolomics <- function(input_results_folder,
   phase <- validate_phase(input_results_folder)
   tissue_code <- validate_tissue(input_results_folder)
 
-  # issue_count
+  # issue_count-----
   ic <- 0
   ic_m_m_n <- NA
   ic_m_m_u <- NA
@@ -601,6 +610,7 @@ validate_metabolomics <- function(input_results_folder,
   ic_r_m_n <- NA
   ic_r_m_u <- NA
   ic_mrd <- NA
+  ic_man <- NA # new manifest
   if(is.null(dmaqc_shipping_info)){
     ic_vl <- "missed"
   } else{
@@ -782,18 +792,139 @@ validate_metabolomics <- function(input_results_folder,
     }
   }
 
+  # MANIFEST all files-----
+
+  if(verbose) message("\n## QC file_manifest_DATE.txt (required)\n")
+
+  batch <- gsub("(.*)(PROCESSED.*)", "\\1", input_results_folder)
+
+  file_manifest <- list.files(normalizePath(batch),
+                                     pattern="file_manifest",
+                                     ignore.case = TRUE,
+                                     full.names=TRUE,
+                                     recursive = TRUE)
+
+  if(length(file_manifest) == 0){
+    f_man <- FALSE
+    ic_man <- 1
+  }else if(length(file_manifest) > 1){
+    file_manifest <- file_manifest[length(file_manifest)]
+    f_man <- TRUE
+  }else if( length(file_manifest) == 1 ){
+    f_man <- TRUE
+  }
+
+  if(f_man){
+    manifest <- read.csv(file_manifest, stringsAsFactors = FALSE)
+    mani_columns <- c("file_name", "md5")
+    if( all(colnames(manifest) %in% mani_columns ) ){
+      if(verbose) message("   + (+)  (file_name, md5) columns available in manifest file")
+      if(f_mmn){
+        metadata_metabolites_named_file <- manifest$file_name[grepl(".*etadata_metabolit.*_named", manifest$file_name)]
+        if(file.exists(file.path(batch, metadata_metabolites_named_file))){
+          if(verbose) message("   + (+) metadata_metabolites_named file included")
+        }else{
+          if(verbose) message("      - (-) metadata_metabolites_named file is not included in manifest file")
+          ic_man <- 1
+        }
+      }
+
+      if(f_msn){
+        metadata_samples_named_file <- manifest$file_name[grepl(".*etadata_sam.*_named", manifest$file_name)]
+        if(file.exists(file.path(batch, metadata_samples_named_file))){
+          if(verbose) message("   + (+) metadata_samples_named_file included")
+        }else{
+          if(verbose) message("      - (-) metadata_samples_named_file file is not included in manifest file")
+          ic_man <- 1
+        }
+      }
+
+      if(f_rmn){
+        results_metabolites_named_file <- manifest$file_name[grepl(".*esults_metabolit.*_named", manifest$file_name)]
+        if(file.exists(file.path(batch, results_metabolites_named_file))){
+          if(verbose) message("   + (+) results_metabolites_named_file included")
+        }else{
+          if(verbose) message("      - (-) results_metabolites_named_file file is not included in manifest file")
+          ic_man <- 1
+        }
+      }
+
+      experimentalDetails_file <- manifest$file_name[grepl(".*xperimental.*_named", manifest$file_name)]
+      if(file.exists(file.path(batch, experimentalDetails_file))){
+        if(verbose) message("   + (+) experimentalDetails_file included")
+      }else{
+        if(verbose) message("      - (-) experimentalDetails_named_file is not included in manifest file")
+        ic_man <- 1
+      }
+
+
+      if(untargeted){
+
+        if(f_mmn){
+          metadata_metabolites_named_file <- manifest$file_name[grepl(".*etadata_metabolit.*_unnamed", manifest$file_name)]
+          if(file.exists(file.path(batch, metadata_metabolites_unnamed_file))){
+            if(verbose) message("   + (+) metadata_metabolites_unnamed file included")
+          }else{
+            if(verbose) message("      - (-) metadata_metabolites_unnamed file is not included in manifest file")
+            ic_man <- 1
+          }
+        }
+
+        if(f_msn){
+          metadata_samples_unnamed_file <- manifest$file_name[grepl(".*etadata_sam.*_unnamed", manifest$file_name)]
+          if(file.exists(file.path(batch, metadata_samples_unnamed_file))){
+            if(verbose) message("   + (+) metadata_samples_unnamed_file included")
+          }else{
+            if(verbose) message("      - (-) metadata_samples_unnamed_file file is not included in manifest file")
+            ic_man <- 1
+          }
+        }
+
+        if(f_rmn){
+          results_metabolites_unnamed_file <- manifest$file_name[grepl(".*esults_metabolit.*_unnamed", manifest$file_name)]
+          if(file.exists(file.path(batch, results_metabolites_unnamed_file))){
+            if(verbose) message("   + (+) results_metabolites_unnamed_file included")
+          }else{
+            if(verbose) message("      - (-) results_metabolites_unnamed_file file is not included in manifest file")
+            ic_man <- 1
+          }
+        }
+
+        experimentalDetails_file <- manifest$file_name[grepl(".*xperimental.*_unnamed", manifest$file_name)]
+        if(file.exists(file.path(batch, experimentalDetails_file))){
+          if(verbose) message("   + (+) experimentalDetails_file included")
+        }else{
+          if(verbose) message("      - (-) experimentalDetails_unnamed_file is not included in manifest file")
+          ic_man <- 1
+        }
+
+      }
+
+      if( any(is.na(manifest$md5)) ){
+        if(verbose) message("      - (-) MD5 column contains NA values")
+        ic_man <- ic_man + 1
+      }
+
+    }else{
+      if(verbose) message("      - (-) Not all the columns are available")
+      ic_man <- ic_man + 1
+    }
+  }else{
+    if(verbose) message("      - (-) file_manifest_DATE.txt file not found: FAIL")
+    ic_man <- ic_man + 1
+    ic <- ic + 1
+  }
+
+  # Manifest raw files ----
   if(f_msn){
-    if(verbose) message("\n\n## QC raw_file information\n")
+    if(verbose) message("\n\n## QC raw_file manifest (optional)\n")
     ic_mrd <- check_manifest_rawdata(input_results_folder = input_results_folder,
                                      m_s_n_raw = unique(m_s_n$raw_file),
                                      return_n_issues = TRUE,
                                      verbose = verbose)
-  }else{
-    if(verbose) message("\n\n## Validate {raw_files} match between [RAW/Manifest.txt] and [metadata_samples]\n")
-    if(verbose) message("      (-) FAIL (medatada_samples file not available)")
-    ic <- ic + 1
   }
 
+  # DMAQC validation -----
   if(verbose) message("\n\n## DMAQC validation\n")
   failed_samples <- check_failedsamples(input_results_folder = input_results_folder, verbose = verbose)
 
@@ -827,7 +958,7 @@ validate_metabolomics <- function(input_results_folder,
   t_name <- bic_animal_tissue_code$bic_tissue_name[which(bic_animal_tissue_code$bic_tissue_code == tissue_code)]
 
   if(return_n_issues){
-    total_issues <- sum(ic, ic_mrd, ic_m_m_n, ic_m_m_u, ic_m_s_n, ic_m_s_u, ic_r_m_n, ic_r_m_u, na.rm = TRUE)
+    total_issues <- sum(ic, ic_man, ic_m_m_n, ic_m_m_u, ic_m_s_n, ic_m_s_u, ic_r_m_n, ic_r_m_u, na.rm = TRUE)
     if(verbose) message("\nTOTAL NUMBER OF ISSUES: ", total_issues,"\n")
     if(full_report){
       reports <- data.frame(cas = cas,
@@ -840,7 +971,7 @@ validate_metabolomics <- function(input_results_folder,
                             qc_samples = qc_samples,
                             dmaqc_valid = ic_vl,
                             critical_issues = ic,
-                            raw_manifest = ic_mrd,
+                            raw_manifest = ic_man,
                             m_metab_n = ic_m_m_n,
                             m_metab_u = ic_m_m_u,
                             m_sample_n = ic_m_s_n,

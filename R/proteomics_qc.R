@@ -551,7 +551,7 @@ validate_proteomics <- function(input_results_folder,
   ic_rii <- NA # RII issues
   ic_rr <- NA # ratio results
   ic_vm <- NA # vial metadata
-  ic_man <- NA # namifiest
+  ic_man <- NA # manifest
 
   if(missing(dmaqc_shipping_info)){
     dmaqc_shipping_info = NULL
@@ -811,24 +811,24 @@ validate_proteomics <- function(input_results_folder,
 
   batch <- gsub("(.*)(RESULTS.*)", "\\1", input_results_folder)
 
-  file_metametabolites <- list.files(normalizePath(batch),
+  file_manifest <- list.files(normalizePath(batch),
                                      pattern="file_manifest",
                                      ignore.case = TRUE,
                                      full.names=TRUE,
                                      recursive = TRUE)
 
-  if(length(file_metametabolites) == 0){
+  if(length(file_manifest) == 0){
     f_man <- FALSE
     ic_man <- 1
-  }else if(length(file_metametabolites) > 1){
-    file_metametabolites <- file_metametabolites[length(file_metametabolites)]
+  }else if(length(file_manifest) > 1){
+    file_manifest <- file_manifest[length(file_manifest)]
     f_man <- TRUE
-  }else if( length(file_metametabolites) == 1 ){
+  }else if( length(file_manifest) == 1 ){
     f_man <- TRUE
   }
 
   if(f_man){
-    manifest <- read.csv(file_metametabolites, stringsAsFactors = FALSE)
+    manifest <- read.csv(file_manifest, stringsAsFactors = FALSE)
     mani_columns <- c("file_name", "md5")
     if( all(colnames(manifest) %in% mani_columns ) ){
       if(verbose) message("   + (+)  (file_name, md5) columns available in manifest file")
@@ -869,6 +869,7 @@ validate_proteomics <- function(input_results_folder,
     }else{
       if(verbose) message("      - (-) Not all the columns are available")
       ic_man <- ic_man + 1
+      ic <- ic + 1
     }
   }
 
