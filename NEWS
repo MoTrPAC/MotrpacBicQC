@@ -1,3 +1,7 @@
+Changes in version 0.3.2 (2020-10-06)
++ Check new required manifest file in both proteomics and metabolomics submissions
++ Raw file manifest now optional
+
 Changes in version 0.3.1 (2020-10-04)
 + Proteomics write proteomics
 + Proteomics load metabolomics
