@@ -619,6 +619,8 @@ validate_metabolomics <- function(input_results_folder,
   vial_label <- NA
   qc_samples <- NA
 
+  input_results_folder <- normalizePath(input_results_folder)
+
   input_folder_short <- regmatches(input_results_folder, regexpr("PASS.*PROCESSED_[0-9]{8}", input_results_folder))
   if(is_empty(input_folder_short)){
     if(verbose) message("\nThe PROCESSED_YYYYMMDD folder full path is not correct. Example:")
@@ -822,9 +824,9 @@ validate_metabolomics <- function(input_results_folder,
       if(f_mmn){
         metadata_metabolites_named_file <- manifest$file_name[grepl(".*etadata_metabolit.*_named", manifest$file_name)]
         if(file.exists(file.path(batch, metadata_metabolites_named_file))){
-          if(verbose) message("   + (+) metadata_metabolites_named file included")
+          if(verbose) message("   + (+) metadata_metabolites_named_file included")
         }else{
-          if(verbose) message("      - (-) metadata_metabolites_named file is not included in manifest file")
+          if(verbose) message("      - (-) metadata_metabolites_named_file is not included in manifest file")
           ic_man <- 1
         }
       }
@@ -860,17 +862,17 @@ validate_metabolomics <- function(input_results_folder,
 
       if(untargeted){
 
-        if(f_mmn){
-          metadata_metabolites_named_file <- manifest$file_name[grepl(".*etadata_metabolit.*_unnamed", manifest$file_name)]
+        if(f_mmu){
+          metadata_metabolites_unnamed_file <- manifest$file_name[grepl(".*etadata_metabolit.*_unnamed", manifest$file_name)]
           if(file.exists(file.path(batch, metadata_metabolites_unnamed_file))){
-            if(verbose) message("   + (+) metadata_metabolites_unnamed file included")
+            if(verbose) message("   + (+) metadata_metabolites_unnamed_file included")
           }else{
-            if(verbose) message("      - (-) metadata_metabolites_unnamed file is not included in manifest file")
+            if(verbose) message("      - (-) metadata_metabolites_unnamed_file is not included in manifest file")
             ic_man <- 1
           }
         }
 
-        if(f_msn){
+        if(f_msu){
           metadata_samples_unnamed_file <- manifest$file_name[grepl(".*etadata_sam.*_unnamed", manifest$file_name)]
           if(file.exists(file.path(batch, metadata_samples_unnamed_file))){
             if(verbose) message("   + (+) metadata_samples_unnamed_file included")
@@ -880,7 +882,7 @@ validate_metabolomics <- function(input_results_folder,
           }
         }
 
-        if(f_rmn){
+        if(f_rmu){
           results_metabolites_unnamed_file <- manifest$file_name[grepl(".*esults_metabolit.*_unnamed", manifest$file_name)]
           if(file.exists(file.path(batch, results_metabolites_unnamed_file))){
             if(verbose) message("   + (+) results_metabolites_unnamed_file included")
