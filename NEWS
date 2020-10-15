@@ -1,3 +1,6 @@
+Changes in version 0.3.4 (2020-10-15)
++ Add a check point when expected files are not available in the manifest file
+
 Changes in version 0.3.3 (2020-10-14)
 + Fix bugs affecting manifest files
 + Adjustments when files don't meet requirements

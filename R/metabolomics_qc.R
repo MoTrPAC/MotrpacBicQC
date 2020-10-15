@@ -823,39 +823,72 @@ validate_metabolomics <- function(input_results_folder,
       if(verbose) message("   + (+)  (file_name, md5) columns available in manifest file")
       if(f_mmn){
         metadata_metabolites_named_file <- manifest$file_name[grepl(".*etadata_metabolit.*_named", manifest$file_name)]
-        if(file.exists(file.path(batch, metadata_metabolites_named_file))){
-          if(verbose) message("   + (+) metadata_metabolites_named_file included")
+        if( length(metadata_metabolites_named_file) == 1 ){
+          if(file.exists(file.path(batch, metadata_metabolites_named_file))){
+            if(verbose) message("   + (+) metadata_metabolites_named_file included: OK")
+          }else{
+            if(verbose) message("      - (-) metadata_metabolites_named_file is not included in manifest file: FAIL")
+            ic_man <- 1
+          }
+        }else if(length(metadata_metabolites_named_file) > 1){
+          if(verbose) message("      - (-) More than one 'metadata_metabolites_named_file' included in manifest file: FAIL")
+          ic_man <- 1
         }else{
-          if(verbose) message("      - (-) metadata_metabolites_named_file is not included in manifest file")
+          if(verbose) message("      - (-) The 'metadata_metabolites_named_file' was not found in the folder: FAIL")
           ic_man <- 1
         }
+
       }
 
       if(f_msn){
         metadata_samples_named_file <- manifest$file_name[grepl(".*etadata_sam.*_named", manifest$file_name)]
-        if(file.exists(file.path(batch, metadata_samples_named_file))){
-          if(verbose) message("   + (+) metadata_samples_named_file included")
+        if( length(metadata_samples_named_file) == 1 ){
+          if(file.exists(file.path(batch, metadata_samples_named_file))){
+            if(verbose) message("   + (+) metadata_samples_named_file included: OK")
+          }else{
+            if(verbose) message("      - (-) metadata_samples_named_file is not included in manifest file: FAIL")
+            ic_man <- 1
+          }
+        }else if(length(metadata_samples_named_file) > 1){
+          if(verbose) message("      - (-) More than one 'metadata_samples_named_file' included in manifest file: FAIL")
+          ic_man <- 1
         }else{
-          if(verbose) message("      - (-) metadata_samples_named_file file is not included in manifest file")
+          if(verbose) message("      - (-) The 'metadata_samples_named_file' was not found in the folder: FAIL")
           ic_man <- 1
         }
-      }
+      } # f_msn
 
       if(f_rmn){
         results_metabolites_named_file <- manifest$file_name[grepl(".*esults_metabolit.*_named", manifest$file_name)]
-        if(file.exists(file.path(batch, results_metabolites_named_file))){
-          if(verbose) message("   + (+) results_metabolites_named_file included")
+        if( length(results_metabolites_named_file) == 1 ){
+          if(file.exists(file.path(batch, results_metabolites_named_file))){
+            if(verbose) message("   + (+) results_metabolites_named_file included: OK")
+          }else{
+            if(verbose) message("      - (-) results_metabolites_named_file is not included in manifest file: FAIL")
+            ic_man <- 1
+          }
+        }else if(length(results_metabolites_named_file) > 1){
+          if(verbose) message("      - (-) More than one 'results_metabolites_named_file' included in manifest file: FAIL")
+          ic_man <- 1
         }else{
-          if(verbose) message("      - (-) results_metabolites_named_file file is not included in manifest file")
+          if(verbose) message("      - (-) The 'results_metabolites_named_file' was not found in the folder: FAIL")
           ic_man <- 1
         }
       }
 
       experimentalDetails_file <- manifest$file_name[grepl(".*xperimental.*_named", manifest$file_name)]
-      if(file.exists(file.path(batch, experimentalDetails_file))){
-        if(verbose) message("   + (+) experimentalDetails_file included")
+      if( length(experimentalDetails_file) == 1 ){
+        if(file.exists(file.path(batch, experimentalDetails_file))){
+          if(verbose) message("   + (+) experimentalDetails_file included: OK")
+        }else{
+          if(verbose) message("      - (-) experimentalDetails_file is not included in manifest file: FAIL")
+          ic_man <- 1
+        }
+      }else if(length(experimentalDetails_file) > 1){
+        if(verbose) message("      - (-) More than one 'experimentalDetails_file' included in manifest file: FAIL")
+        ic_man <- 1
       }else{
-        if(verbose) message("      - (-) experimentalDetails_named_file is not included in manifest file")
+        if(verbose) message("      - (-) The 'experimentalDetails_file' was not found in the folder: FAIL")
         ic_man <- 1
       }
 
@@ -864,51 +897,83 @@ validate_metabolomics <- function(input_results_folder,
 
         if(f_mmu){
           metadata_metabolites_unnamed_file <- manifest$file_name[grepl(".*etadata_metabolit.*_unnamed", manifest$file_name)]
-          if(file.exists(file.path(batch, metadata_metabolites_unnamed_file))){
-            if(verbose) message("   + (+) metadata_metabolites_unnamed_file included")
+          if( length(metadata_metabolites_unnamed_file) == 1 ){
+            if(file.exists(file.path(batch, metadata_metabolites_unnamed_file))){
+              if(verbose) message("   + (+) metadata_metabolites_unnamed_file included: OK")
+            }else{
+              if(verbose) message("      - (-) metadata_metabolites_unnamed_file is not included in manifest file: FAIL")
+              ic_man <- 1
+            }
+          }else if(length(metadata_metabolites_unnamed_file) > 1){
+            if(verbose) message("      - (-) More than one 'metadata_metabolites_unnamed_file' included in manifest file: FAIL")
+            ic_man <- 1
           }else{
-            if(verbose) message("      - (-) metadata_metabolites_unnamed_file is not included in manifest file")
+            if(verbose) message("      - (-) The 'metadata_metabolites_unnamed_file' was not found in the folder: FAIL")
             ic_man <- 1
           }
         }
 
         if(f_msu){
           metadata_samples_unnamed_file <- manifest$file_name[grepl(".*etadata_sam.*_unnamed", manifest$file_name)]
-          if(file.exists(file.path(batch, metadata_samples_unnamed_file))){
-            if(verbose) message("   + (+) metadata_samples_unnamed_file included")
+          if( length(metadata_samples_unnamed_file) == 1 ){
+            if(file.exists(file.path(batch, metadata_samples_unnamed_file))){
+              if(verbose) message("   + (+) metadata_samples_unnamed_file included: OK")
+            }else{
+              if(verbose) message("      - (-) metadata_samples_unnamed_file is not included in manifest file: FAIL")
+              ic_man <- 1
+            }
+          }else if(length(metadata_samples_unnamed_file) > 1){
+            if(verbose) message("      - (-) More than one 'metadata_samples_unnamed_file' included in manifest file: FAIL")
+            ic_man <- 1
           }else{
-            if(verbose) message("      - (-) metadata_samples_unnamed_file file is not included in manifest file")
+            if(verbose) message("      - (-) The 'metadata_samples_unnamed_file' was not found in the folder: FAIL")
             ic_man <- 1
           }
         }
 
         if(f_rmu){
           results_metabolites_unnamed_file <- manifest$file_name[grepl(".*esults_metabolit.*_unnamed", manifest$file_name)]
-          if(file.exists(file.path(batch, results_metabolites_unnamed_file))){
-            if(verbose) message("   + (+) results_metabolites_unnamed_file included")
+          if( length(results_metabolites_unnamed_file) == 1 ){
+            if(file.exists(file.path(batch, results_metabolites_unnamed_file))){
+              if(verbose) message("   + (+) results_metabolites_unnamed_file included: OK")
+            }else{
+              if(verbose) message("      - (-) results_metabolites_unnamed_file is not included in manifest file: FAIL")
+              ic_man <- 1
+            }
+          }else if(length(results_metabolites_unnamed_file) > 1){
+            if(verbose) message("      - (-) More than one 'results_metabolites_unnamed_file' included in manifest file: FAIL")
+            ic_man <- 1
           }else{
-            if(verbose) message("      - (-) results_metabolites_unnamed_file file is not included in manifest file")
+            if(verbose) message("      - (-) The 'results_metabolites_unnamed_file' was not found in the folder: FAIL")
             ic_man <- 1
           }
         }
 
         experimentalDetails_file <- manifest$file_name[grepl(".*xperimental.*_unnamed", manifest$file_name)]
-        if(file.exists(file.path(batch, experimentalDetails_file))){
-          if(verbose) message("   + (+) experimentalDetails_file included")
+        if( length(experimentalDetails_file) == 1 ){
+          if(file.exists(file.path(batch, experimentalDetails_file))){
+            if(verbose) message("   + (+) experimentalDetails_file included: OK")
+          }else{
+            if(verbose) message("      - (-) experimentalDetails_file is not included in manifest file: FAIL")
+            ic_man <- 1
+          }
+        }else if(length(experimentalDetails_file) > 1){
+          if(verbose) message("      - (-) More than one 'experimentalDetails_file' included in manifest file: FAIL")
+          ic_man <- 1
         }else{
-          if(verbose) message("      - (-) experimentalDetails_unnamed_file is not included in manifest file")
+          if(verbose) message("      - (-) The 'experimentalDetails_file' was not found in the folder: FAIL")
           ic_man <- 1
         }
 
       }
 
       if( any(is.na(manifest$md5)) ){
-        if(verbose) message("      - (-) MD5 column contains NA values")
+        if(verbose) message("      - (-) MD5 column contains NA values: FAIL")
         ic_man <- ic_man + 1
       }
 
     }else{
-      if(verbose) message("      - (-) Not all the columns are available")
+      if(verbose) message("      - (-) Not all the required columns are available: FAIL")
       ic_man <- ic_man + 1
     }
   }else{
