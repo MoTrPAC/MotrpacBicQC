@@ -552,23 +552,29 @@ check_viallabel_dmaqc <- function(vl_submitted,
                                                          dmaqc_shipping_df$phase == pass &
                                                          dmaqc_shipping_df$animal_age == month)]
 
-  if(setequal(vl_submitted, dmaqc_labels)){
-    if(verbose) message("   + (+) DMAQC CHECK POINT: samples sent to CAS have been processed: OK")
-    ic <- "OK"
+  if( length(dmaqc_labels) == 0){
+    if(verbose) message("   + (+) DMAQC CHECK POINT: sample IDs not available in DMAQC dataset. Needs to be revised by BIC")
+    ic <- "NOT_AVAILABLE"
   }else{
-    samples_missed <- setdiff(dmaqc_labels, vl_submitted)
-    if(!is.null(failed_samples)){
-      if(setequal(failed_samples, samples_missed)){
-        if(verbose) message("   + (+) DMAQC CHECK POINT: samples sent to CAS have been processed (with known issues for some samples): OK")
-        ic <- "OK"
-      }
+    if(setequal(vl_submitted, dmaqc_labels)){
+      if(verbose) message("   + (+) DMAQC CHECK POINT: samples sent to CAS have been processed: OK")
+      ic <- "OK"
     }else{
-      if(verbose) message("      - (-) DMAQC CHECK POINT: samples not found in metadata_results: FAIL")
-      if(verbose) message("\t - ", paste(samples_missed, collapse = "\n\t - "))
-      ic <- "FAIL"
+      samples_missed <- setdiff(dmaqc_labels, vl_submitted)
+      if(!is.null(failed_samples)){
+        if(setequal(failed_samples, samples_missed)){
+          if(verbose) message("   + (+) DMAQC CHECK POINT: samples sent to CAS have been processed (with known issues for some samples): OK")
+          ic <- "OK"
+        }
+      }else{
+        if(verbose) message("      - (-) DMAQC CHECK POINT: samples not found in metadata_results: FAIL")
+        if(verbose) message("\t - ", paste(samples_missed, collapse = "\n\t - "))
+        ic <- "FAIL"
+      }
     }
 
   }
+
   if(return_n_issues) return(ic)
 }
 
@@ -996,7 +1002,7 @@ validate_metabolomics <- function(input_results_folder,
   failed_samples <- check_failedsamples(input_results_folder = input_results_folder, verbose = verbose)
 
   # Validate vial labels from DMAQC
-  if(is.na(ic_vl)){
+  if( is.na(ic_vl) ){
     if(f_msn){
       vl_results <- m_s_n$sample_id[which(m_s_n$sample_type == "Sample")]
       ic_vl <- check_viallabel_dmaqc(vl_submitted = vl_results,
