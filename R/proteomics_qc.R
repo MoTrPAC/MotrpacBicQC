@@ -130,14 +130,14 @@ check_ratio_proteomics <- function(df_ratio,
   }
 
   if( any(is.na(df_ratio$gene_symbol)) ){
-    ic_rr <- ic_rr + 1
+    # ic_rr <- ic_rr + 1
     if(verbose) message("      - (-) Some GENE_SYMBOL are missed")
   }else{
     if(verbose) message("   + (+) All GENE_SYMBOL available")
   }
 
   if( any(is.na(df_ratio$entrez_id)) ){
-    ic_rr <- ic_rr + 1
+    # ic_rr <- ic_rr + 1
     if(verbose) message("      - (-) Some ENTREZ_ID are missed")
   }else{
     if(verbose) message("   + (+) All ENTREZ_ID available")
@@ -277,14 +277,14 @@ check_rii_proteomics <- function(df_rri,
   }
 
   if( any(is.na(df_rri$gene_symbol)) ){
-    ic_rii <- ic_rii + 1
+    # ic_rii <- ic_rii + 1
     if(verbose) message("      - (-) Some GENE_SYMBOL are missed")
   }else{
     if(verbose) message("   + (+) All GENE_SYMBOL available")
   }
 
   if( any(is.na(df_rri$entrez_id)) ){
-    ic_rii <- ic_rii + 1
+    # ic_rii <- ic_rii + 1
     if(verbose) message("      - (-) Some ENTREZ_ID are missed")
   }else{
     if(verbose) message("   + (+) All ENTREZ_ID available")
@@ -336,8 +336,15 @@ check_vial_metadata_proteomics <- function(df_vm,
     if(all(valid_channels %in% temp_plex$tmt11_channel)){
       if(verbose) message("   + (+) All tmt channels are valid in plex ", paste(p))
     }else{
-      if(verbose) message("      - (-) Invalid tmt channels in the file")
-      ic_vm <- ic_vm + 1
+      # Broad exception
+      valid_channels <- c("126C", "127N", "127C", "128N", "128C", "129N", "129C", "130N", "131N", "131C")
+      if(all(valid_channels %in% temp_plex$tmt11_channel)){
+        if(verbose) message("   + ( ) Channel 130C missed in ", paste(p))
+        ic_vm <- ic_vm + 1
+      }else{
+        if(verbose) message("      - (-) TMT Channels are missed in ", paste(p))
+        ic_vm <- ic_vm + 1
+      }
     }
   }
 
@@ -348,6 +355,11 @@ check_vial_metadata_proteomics <- function(df_vm,
     all_vial_labels <- all_samples[!grepl('^Ref', all_samples)]
   }else{
     if(verbose) message("      - (-) Ref channels not found in vial_metadata")
+    ic_vm <- ic_vm + 1
+  }
+
+  if( any(duplicated(df_vm$vial_label)) ){
+    if(verbose) message("      - (-) VIAL_METADATA: duplications detected in the `vial_label` column: FAIL")
     ic_vm <- ic_vm + 1
   }
 
@@ -447,6 +459,18 @@ load_proteomics <- function(input_results_folder,
                                    isPTM = isPTM,
                                    verbose = verbose)
 
+    if( !is.null(all_vial_labels) ){
+      required_columns <- get_required_columns(isPTM = isPTM,
+                                               prot_file = "rii")
+      required_columns <- c(required_columns, all_vial_labels)
+
+      if( all(required_columns %in% colnames(peprii)) ){
+        peprii <- subset(peprii, select = required_columns)
+      }else{
+        stop("RII: required columns from vial_label are not available in RII file")
+      }
+    }
+
   }else{
     if(verbose) message("      - (-) {results_RII-peptide} file not available")
     ic <- ic + 1
@@ -466,6 +490,18 @@ load_proteomics <- function(input_results_folder,
     ic_rr <- check_ratio_proteomics(df_ratio = ratior,
                                     isPTM = isPTM,
                                     verbose = verbose)
+
+    if( !is.null(all_vial_labels) ){
+      required_columns <- get_required_columns(isPTM = isPTM,
+                                               prot_file = "ratio")
+      required_columns <- c(required_columns, all_vial_labels)
+
+      if( all(required_columns %in% colnames(ratior)) ){
+        ratior <- subset(ratior, select = required_columns)
+      }else{
+        stop("RATIO: required columns from vial_label are not available in RATIO file")
+      }
+    }
   }else{
     if(verbose) message("      - (-) {results_ratio.txt} file not available")
     ic <- ic + 1
@@ -592,8 +628,9 @@ validate_proteomics <- function(input_results_folder,
   if(verbose) message("\n## VIAL METADATA\n")
 
   lista <- open_file(input_results_folder = input_results_folder,
-                                   filepattern = "vial_metadata.txt",
-                                   verbose = verbose)
+                     filepattern = "vial_metadata.txt",
+                     verbose = verbose)
+
   f_vm <- lista$flag
 
   all_vial_labels <- NULL
