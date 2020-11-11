@@ -81,7 +81,6 @@ filter_required_columns <- function(df,
   }
 }
 
-
 #' @title open files
 #'
 #' @description open files and check that they are right
