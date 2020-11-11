@@ -28,6 +28,9 @@
 #'   \item{bic_tissue_name}{Tissue name (as provided by DMAQC)}
 #'   \item{motrpac_tissue_code}{Both code and tissue name}
 #'   \item{tissue_name_release}{Code + tissue name as used in releases}
+#'   \item{abbreviation}{Tissue abbreviation}
+#'   \item{tissue_hex_colour}{Tissue Hex Colour code}
+#'   
 #' }
 #' @examples
 #' \dontrun{
