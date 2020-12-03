@@ -4,7 +4,8 @@
 \name{metadata_metabolites_named}
 \alias{metadata_metabolites_named}
 \title{Metadata Metabolites test dataset for NAMED metabolites}
-\format{A data frame with 53 rows and 6 columns:
+\format{
+A data frame with 53 rows and 6 columns:
 \describe{
 \item{metabolite_name}{metabolite names}
 \item{refmet_name}{RefMet id (metabolomics workbench)}
@@ -12,7 +13,8 @@
 \item{rt}{retention time}
 \item{formula}{chemical formula}
 \item{neutral_mass}{neutral mass}
-}}
+}
+}
 \usage{
 metadata_metabolites_named
 }

@@ -4,7 +4,8 @@
 \name{phenotypes_pass1a06_short}
 \alias{phenotypes_pass1a06_short}
 \title{Motrpac Phenotypes PASS1A 6 Months}
-\format{A data frame with 8616 rows and 6 columns:
+\format{
+A data frame with 8616 rows and 6 columns:
 \describe{
 \item{tissue_code}{MoTrPAC Tissue code}
 \item{vial_label}{Vial label id (only available for MoTrPAC Samples)}
@@ -12,7 +13,8 @@
 \item{group_time_point}{Group time point}
 \item{sex}{Animal sex}
 \item{site_code}{cas}
-}}
+}
+}
 \usage{
 phenotypes_pass1a06_short
 }
