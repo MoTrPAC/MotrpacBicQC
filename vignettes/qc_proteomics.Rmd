@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 
 
 
-# Installation
+## Installation
 
 First, download and install R and RStudio:
 
@@ -43,7 +43,7 @@ devtools::install_github("MoTrPAC/MotrpacBicQC", build_vignettes = TRUE)
 ```
 
 
-# Usage
+## Usage
 
 Load the library
 
@@ -72,11 +72,11 @@ which should generate the following outputs:
 - (-) The following required columns are missed: vial_label, tmt_plex, tmt11_channel
 ```
 
-## How to test your datasets
+### How to test your datasets
 
 Two approaches available:
 
-### Check full `RESULTS_YYYYMMDD` folder (recommended)
+#### Check full `RESULTS_YYYYMMDD` folder (recommended)
 
 ```
 |-- PASS1B-06
@@ -130,7 +130,7 @@ validate_proteomics(input_results_folder = "/full/path/to/PASS1B-06/T55/PROT_PH/
 - "pnnl"       = PNNL
 
 
-### Check individual files
+#### Check individual files
 
 - Check ratio resuls file
 
@@ -165,7 +165,7 @@ check_vial_metadata_proteomics(df_vm = vial_metadata)
 
 
 
-# Help
+## Help
 
 Additional details for each function can be found by typing, for example:
 
@@ -176,6 +176,3 @@ Additional details for each function can be found by typing, for example:
 Need extra help? Please, [submit an issue here](https://github.com/MoTrPAC/MotrpacBicQC/issues) 
 providing as many details as possible.
 
-# Credit
-
-[MoTrPAC Bioinformatics Center](https://motrpac-data.org/)
