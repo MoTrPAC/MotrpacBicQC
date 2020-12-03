@@ -336,7 +336,31 @@
 #' }
 "phenotypes_pass1a06_short"
 
+#' assay abbreviations
+"assay_abbr"
 
+#' assay order
+"assay_order"
 
+#' group abbreviations
+"group_abbr"
+
+#' group colors
+"group_cols"
+
+#' sex abbreviations
+"sex_abbr"
+
+#' sex colors
+"sex_cols"
+
+#' tissue abbreviations
+"tissue_abbr"
+
+#' tissue colors
+"tissue_cols"
+
+#' tissue order
+"tissue_order"
 
 

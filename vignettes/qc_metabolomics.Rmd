@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 
 
 
-# Installation
+## Installation
 
 First, download and install R and RStudio:
 
@@ -43,7 +43,7 @@ devtools::install_github("MoTrPAC/MotrpacBicQC", build_vignettes = TRUE)
 ```
 
 
-# Usage
+## Usage
 
 Load the library
 
@@ -70,11 +70,11 @@ check_metadata_samples(df = metadata_sample_named, cas = "umichigan")
 check_results(r_m = results_named, m_s = metadata_sample_named, m_m = metadata_metabolites_named)
 ```
 
-## How to test your datasets
+### How to test your datasets
 
 Two approaches available:
 
-### Check full `PROCESSED_YYYYMMDD` folder (recommended)
+#### Check full `PROCESSED_YYYYMMDD` folder (recommended)
 
 Run test on the full submission. For that, run the following command:
 
@@ -92,7 +92,7 @@ validate_metabolomics(input_results_folder = "/full/path/to/PROCESSED_YYYYMMDD",
 - "gtech"     = Georgia Tech
 - "duke"      = Duke
 
-### Check individual files
+#### Check individual files
 
 - Check metadata metabolites:
 
@@ -131,7 +131,7 @@ check_results(r_m = results_named,
               m_m = metadata_metabolites_named)
 ```
 
-## Merge metabolomics data (only PASS1A supported)
+### Merge metabolomics data (only PASS1A supported)
 
 The following functions enable merging all results and metadata files into a 
 single data frame. 
@@ -187,7 +187,7 @@ plasma.untargeted.merged <-
 
 Check the function help for details
 
-# Help
+## Help
 
 Additional details for each function can be found by typing, for example:
 
@@ -198,6 +198,3 @@ Additional details for each function can be found by typing, for example:
 Need extra help? Please, [submit an issue here](https://github.com/MoTrPAC/MotrpacBicQC/issues) 
 providing as many details as possible.
 
-# Credit
-
-[MoTrPAC Bioinformatics Center](https://motrpac-data.org/)

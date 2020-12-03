@@ -4,7 +4,8 @@
 \name{results_unnamed}
 \alias{results_unnamed}
 \title{Results test dataset for UNNAMED metabolites}
-\format{A data frame with 58 rows and 98 columns:
+\format{
+A data frame with 58 rows and 98 columns:
 \describe{
 \item{metabolite_name}{metabolite names based on mz_rt}
 \item{90001013104}{Sample id. Unit: Peak Area}
@@ -104,7 +105,8 @@
 \item{CSMR80014-2}{Sample id. Unit: Peak Area}
 \item{CSMR80015-1}{Sample id. Unit: Peak Area}
 \item{CSMR80015-2}{Sample id. Unit: Peak Area}
-}}
+}
+}
 \usage{
 results_unnamed
 }
