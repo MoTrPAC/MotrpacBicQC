@@ -4,13 +4,15 @@
 \name{metadata_metabolites_unnamed}
 \alias{metadata_metabolites_unnamed}
 \title{Metadata Metabolites test dataset for UNNAMED metabolites}
-\format{A data frame with 53 rows and 4 columns:
+\format{
+A data frame with 53 rows and 4 columns:
 \describe{
 \item{metabolite_name}{metabolite names based on mz_rt}
 \item{mz}{mass over charge}
 \item{rt}{retention time}
 \item{neutral_mass}{neutral mass}
-}}
+}
+}
 \usage{
 metadata_metabolites_unnamed
 }

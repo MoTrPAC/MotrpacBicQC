@@ -4,7 +4,8 @@
 \name{bic_animal_tissue_code}
 \alias{bic_animal_tissue_code}
 \title{BIC Tissue Code and Name}
-\format{A data frame with tissue codes
+\format{
+A data frame with tissue codes
 \describe{
 \item{bic_tissue_code}{\code{T} + integer, as encoded in vial_label by DMAQC}
 \item{bic_tissue_name}{Tissue name (as provided by DMAQC)}
@@ -13,7 +14,8 @@
 \item{abbreviation}{Tissue abbreviation}
 \item{tissue_hex_colour}{Tissue Hex Colour code}
 
-}}
+}
+}
 \usage{
 bic_animal_tissue_code
 }

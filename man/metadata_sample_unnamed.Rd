@@ -4,13 +4,15 @@
 \name{metadata_sample_unnamed}
 \alias{metadata_sample_unnamed}
 \title{Metadata Sample test dataset for UNNAMED metabolites}
-\format{A data frame with 97 rows and 4 columns:
+\format{
+A data frame with 97 rows and 4 columns:
 \describe{
 \item{sample_id}{metabolite names based on mz_rt}
 \item{sample_type}{mass over charge}
 \item{sample_order}{retention time}
 \item{raw_file}{neutral mass}
-}}
+}
+}
 \usage{
 metadata_sample_unnamed
 }
