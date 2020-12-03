@@ -2,7 +2,8 @@ pandoc: 2.7.3
 pkgdown: 1.6.1.9000
 pkgdown_sha: 6094ac3dd80a1f3f1d4e2f47d0ed4716d51362b0
 articles:
+  other_functions: other_functions.html
   qc_metabolomics: qc_metabolomics.html
   qc_proteomics: qc_proteomics.html
-last_built: 2020-11-11T20:46Z
+last_built: 2020-12-03T16:22Z
 
