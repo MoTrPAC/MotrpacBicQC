@@ -459,10 +459,10 @@ load_proteomics <- function(input_results_folder,
                                    isPTM = isPTM,
                                    verbose = verbose)
 
-    if( !is.null(all_vial_labels) ){
+    if( !is.null(all_samples) ){
       required_columns <- get_required_columns(isPTM = isPTM,
                                                prot_file = "rii")
-      required_columns <- c(required_columns, all_vial_labels)
+      required_columns <- c(required_columns, sort(all_samples))
 
       if( all(required_columns %in% colnames(peprii)) ){
         peprii <- subset(peprii, select = required_columns)

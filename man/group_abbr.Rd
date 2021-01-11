@@ -5,7 +5,7 @@
 \alias{group_abbr}
 \title{group abbreviations}
 \format{
-An object of class \code{character} of length 6.
+An object of class \code{character} of length 7.
 }
 \usage{
 group_abbr

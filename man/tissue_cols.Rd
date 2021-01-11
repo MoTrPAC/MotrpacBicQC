@@ -5,7 +5,7 @@
 \alias{tissue_cols}
 \title{tissue colors}
 \format{
-An object of class \code{character} of length 62.
+An object of class \code{character} of length 82.
 }
 \usage{
 tissue_cols

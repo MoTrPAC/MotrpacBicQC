@@ -5,7 +5,7 @@
 \alias{tissue_abbr}
 \title{tissue abbreviations}
 \format{
-An object of class \code{character} of length 33.
+An object of class \code{character} of length 54.
 }
 \usage{
 tissue_abbr
