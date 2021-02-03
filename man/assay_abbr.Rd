@@ -5,7 +5,7 @@
 \alias{assay_abbr}
 \title{assay abbreviations}
 \format{
-An object of class \code{character} of length 16.
+An object of class \code{character} of length 19.
 }
 \usage{
 assay_abbr

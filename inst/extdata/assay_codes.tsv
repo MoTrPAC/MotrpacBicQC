@@ -1,6 +1,8 @@
 omics_code	submission_code	assay_code	assay_name	cas_code
 transcriptomics		transcript-rna-seq	rna-seq	stanford
 transcriptomics		transcript-rna-seq	rna-seq	mssm
+transcriptomics		transcript-rna-seq-splicing	rna-seq	stanford
+transcriptomics		transcript-rna-seq-splicing	rna-seq	mssm
 epigenomics		epigen-rrbs	RRBS	mssm
 epigenomics		epigen-atac-seq	atac-seq	stanford
 proteomics	PROT_PR	prot-pr	Global Proteomics	broad_prot
@@ -8,6 +10,7 @@ proteomics	PROT_PR	prot-pr	Global Proteomics	pnnl
 proteomics	PROT_PH	prot-ph	Phophoproteomics	broad_prot
 proteomics	PROT_PH	prot-ph	Phophoproteomics	pnnl
 proteomics	PROT_AC	prot-ac	Acetyl proteomics	broad_prot
+proteomics	PROT_UB	prot-ub	Protein Ubiquitination	broad_prot
 metabolomics-targeted	3HIB	metab-t-3hib	Targeted 3-Hydroxyisobutyric Acid (3-HIB)	duke
 metabolomics-targeted	AA	metab-t-aa	Targeted Amino Acids	duke
 metabolomics-targeted	AC_DUKE	metab-t-ac-duke	Targeted Acylcarnitines (Duke)	duke

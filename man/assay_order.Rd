@@ -5,7 +5,7 @@
 \alias{assay_order}
 \title{assay order}
 \format{
-An object of class \code{character} of length 9.
+An object of class \code{character} of length 10.
 }
 \usage{
 assay_order

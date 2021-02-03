@@ -1,3 +1,6 @@
+Changes in version 0.3.8 (2021-02-03)
++ Add new assays
+
 Changes in version 0.3.5 (2020-10-20)
 + Bug fix on DMAQC to deal with missing data in DMAQC table
 + Proteomics: Address 130C missing channel issue affecting the Broad

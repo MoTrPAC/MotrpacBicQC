@@ -4,7 +4,9 @@
 assay_abbr = c(atac='ATAC',
                atacseq='ATAC',
                'atac-seq'='ATAC',
+               'epigen-atac-seq'='ATAC',
                rrbs='METHYL',
+               'epigen-rrbs'='METHYL',
                rnaseq='TRNSCRPT',
                'rna-seq'='TRNSCRPT',
                'transcript-rna-seq'='TRNSCRPT',
@@ -16,7 +18,8 @@ assay_abbr = c(atac='ATAC',
                'named-metab'='N-METAB',
                'prot-pr'='PROT',
                'prot-ac'='ACETYL',
-               'prot-ph'='PHOSPHO')
+               'prot-ph'='PHOSPHO',
+               'prot-ub'='UBIQ')
 
 
 save(assay_abbr, 
@@ -29,6 +32,7 @@ assay_order = c('METHYL',
                 'PROT',
                 'PHOSPHO',
                 'ACETYL',
+                'UBIQ',
                 'N-METAB',
                 'U-METAB')
 
