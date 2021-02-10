@@ -1068,11 +1068,10 @@ validate_metabolomics <- function(input_results_folder,
 #' @return (list of data.frames) List of all the data frames
 #' @examples
 #' \dontrun{
-#' here <-
-#'    load_metabolomics_batch(
-#'       input_results_folder = /path/to/PROCESSED_YYYYMMDD/,
-#'       cas = "cassite")
+#' here <- load_metabolomics_batch(input_results_folder = "/path/to/PROCESSED_YYYYMMDD/", 
+#'                                 cas = "cassite")
 #' }
+#' @export
 load_metabolomics_batch <- function(input_results_folder,
                                     cas,
                                     verbose = TRUE){

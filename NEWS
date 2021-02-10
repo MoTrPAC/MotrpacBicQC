@@ -1,3 +1,6 @@
+Changes in version 0.3.9 (2021-02-10)
++ Bug fix: restore previous version of bic_animal_tissue_code
+
 Changes in version 0.3.8 (2021-02-03)
 + Add new assays
 
