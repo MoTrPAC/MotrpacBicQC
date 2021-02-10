@@ -21,9 +21,7 @@ Open, check, and return all metabolomics files
 }
 \examples{
 \dontrun{
-here <-
-   load_metabolomics_batch(
-      input_results_folder = /path/to/PROCESSED_YYYYMMDD/,
-      cas = "cassite")
+here <- load_metabolomics_batch(input_results_folder = "/path/to/PROCESSED_YYYYMMDD/", 
+                                cas = "cassite")
 }
 }
