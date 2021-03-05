@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>sex colors — sex_cols • MotrpacBicQC</title>
+<title>Metabolomics data dictionary — metabolomics_data_dictionary • MotrpacBicQC</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="sex colors — sex_cols" />
-<meta property="og:description" content="sex colors" />
+<meta property="og:title" content="Metabolomics data dictionary — metabolomics_data_dictionary" />
+<meta property="og:description" content="Metabolomics data dictionary" />
 
 
 
@@ -128,22 +128,45 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>sex colors</h1>
+    <h1>Metabolomics data dictionary</h1>
     <small class="dont-index">Source: <a href='https://github.com/MoTrPAC/MotrpacBicQC/blob/master/R/data.R'><code>R/data.R</code></a></small>
-    <div class="hidden name"><code>sex_cols.Rd</code></div>
+    <div class="hidden name"><code>metabolomics_data_dictionary.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>sex colors</p>
+    <p>Metabolomics data dictionary</p>
     </div>
 
-    <pre class="usage"><span class='va'>sex_cols</span></pre>
+    <pre class="usage"><span class='va'>metabolomics_data_dictionary</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>An object of class <code>character</code> of length 6.</p>
+    <p>A data frame with &gt; 2000 rows and 16 15 columns (variables):</p><dl>
+<dt>CURRENT_REFMET_NAME</dt><dd><p>Updated version of RefMet (after December 2020)</p></dd>
+<dt>refmet_name</dt><dd><p>Old version of refmet_name</p></dd>
+<dt>metabolite_name</dt><dd><p>Metabolite name provided by each laboratory</p></dd>
+<dt>is_standard</dt><dd><p>is a reference standard? 1: yes, 0: no</p></dd>
+<dt>super_class</dt><dd><p>Metabolite super class</p></dd>
+<dt>main_class</dt><dd><p>Metabolite main class</p></dd>
+<dt>sub_class</dt><dd><p>Metabolite sub class</p></dd>
+<dt>formula</dt><dd><p>Metabolite formula</p></dd>
+<dt>exactmass</dt><dd><p>Metaboliteexact mass</p></dd>
+<dt>pubchem_cid</dt><dd><p>Metabolite pubchem id</p></dd>
+<dt>kegg_id</dt><dd><p>Metabolite kegg id</p></dd>
+<dt>inchi_key</dt><dd><p>Metabolite inchi key</p></dd>
+<dt>lm_id</dt><dd><p>Metabolite lm id</p></dd>
+<dt>hmdb_id</dt><dd><p>Metabolite hmdb id</p></dd>
+<dt>chebi_id</dt><dd><p>Metabolite chebi id</p></dd>
 
+</dl>
+
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+ <span class='va'>metabolomics_data_dictionary</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

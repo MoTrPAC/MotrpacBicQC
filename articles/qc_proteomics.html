@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MotrpacBicQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
       </span>
     </div>
 
@@ -61,7 +63,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/MoTrPAC/MotrpacBicQC/">
+  <a href="https://github.com/MoTrPAC/MotrpacBicQC/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -81,9 +83,9 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>MotrpacBicQC: Proteomics QC</h1>
             
-            <h4 class="date">2021-02-03</h4>
+            <h4 data-toc-skip class="date">2021-03-05</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/MoTrPAC/MotrpacBicQC/blob/master/vignettes/qc_proteomics.Rmd"><code>vignettes/qc_proteomics.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/MoTrPAC/MotrpacBicQC/blob/master/vignettes/qc_proteomics.Rmd" class="external-link"><code>vignettes/qc_proteomics.Rmd</code></a></small>
       <div class="hidden name"><code>qc_proteomics.Rmd</code></div>
 
     </div>
@@ -95,16 +97,16 @@
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>First, download and install R and RStudio:</p>
 <ul>
-<li><a href="https://mirror.las.iastate.edu/CRAN/">R</a></li>
+<li><a href="https://mirror.las.iastate.edu/CRAN/" class="external-link">R</a></li>
 <li>
-<a href="https://rstudio.com/products/rstudio/download/">RStudio</a> (free version)</li>
+<a href="https://rstudio.com/products/rstudio/download/" class="external-link">RStudio</a> (free version)</li>
 </ul>
 <p>Then, open RStudio and install the <code>devtools</code> package</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></code></pre></div>
 <p>Finally, install the <code>MotrpacBicQC</code> package</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">devtools</span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">devtools</span><span class="op">)</span>
 <span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"MoTrPAC/MotrpacBicQC"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="usage" class="section level2">
@@ -112,7 +114,7 @@
 <a href="#usage" class="anchor"></a>Usage</h2>
 <p>Load the library</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/MoTrPAC/MotrpacBicQC">MotrpacBicQC</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/MoTrPAC/MotrpacBicQC" class="external-link">MotrpacBicQC</a></span><span class="op">)</span></code></pre></div>
 <p>And run any of the following tests to check that the package is correctly installed and it works. For example:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Just copy and paste in the RStudio terminal</span>
@@ -185,7 +187,7 @@
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Open the ratio results file</span>
 
-<span class="va">proteomics_ratio_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"/path/to/your/file"</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="va">proteomics_ratio_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"/path/to/your/file"</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 
 <span class="fu"><a href="../reference/check_ratio_proteomics.html">check_ratio_proteomics</a></span><span class="op">(</span>df_ratio <span class="op">=</span> <span class="va">proteomics_ratio_results</span>, 
                        isPTM <span class="op">=</span> <span class="cn">TRUE</span>, 
@@ -195,7 +197,7 @@
 </ul>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Open your files</span>
-<span class="va">proteomics_ratio_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"/path/to/your/file"</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="va">proteomics_ratio_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"/path/to/your/file"</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 
 <span class="fu"><a href="../reference/check_rii_proteomics.html">check_rii_proteomics</a></span><span class="op">(</span>df_rri <span class="op">=</span> <span class="va">proteomics_ratio_results</span>, cas <span class="op">=</span> <span class="st">"your_side_id"</span><span class="op">)</span></code></pre></div>
 <ul>
@@ -203,7 +205,7 @@
 </ul>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Open your files</span>
-<span class="va">vial_metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"/path/to/your/file"</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="va">vial_metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"/path/to/your/file"</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 
 <span class="fu"><a href="../reference/check_vial_metadata_proteomics.html">check_vial_metadata_proteomics</a></span><span class="op">(</span>df_vm <span class="op">=</span> <span class="va">vial_metadata</span><span class="op">)</span></code></pre></div>
 </div>
@@ -215,7 +217,7 @@
 <p>Additional details for each function can be found by typing, for example:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="op">?</span><span class="va">check_vial_metadata_proteomics</span></code></pre></div>
-<p>Need extra help? Please, <a href="https://github.com/MoTrPAC/MotrpacBicQC/issues">submit an issue here</a> providing as many details as possible.</p>
+<p>Need extra help? Please, <a href="https://github.com/MoTrPAC/MotrpacBicQC/issues" class="external-link">submit an issue here</a> providing as many details as possible.</p>
 </div>
   </div>
 
@@ -230,11 +232,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by David Jimenez-Morales.</p>
+  <p></p>
+<p>Developed by David Jimenez-Morales.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link external-link">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>
@@ -242,6 +246,8 @@
 
   
 
+
+  
 
   </body>
 </html>
