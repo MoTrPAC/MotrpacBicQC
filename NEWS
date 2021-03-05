@@ -1,3 +1,8 @@
+Changes in version 0.4.0 (2021-03-04)
++ Metabolomics data dictionary available as a data object: metabolomics_data_dictionary
++ The function get_and_validate_mdd() still works, but does not pull the data from Metabolomics Workbench. Just return metabolomics_data_dictionary
++ Bug fix: the manifest issue count now properly displays the number of issues detected.
+
 Changes in version 0.3.9 (2021-02-10)
 + Bug fix: restore previous version of bic_animal_tissue_code
 

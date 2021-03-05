@@ -599,7 +599,7 @@ validate_proteomics <- function(input_results_folder,
   ic_rii <- NA # RII issues
   ic_rr <- NA # ratio results
   ic_vm <- NA # vial metadata
-  ic_man <- NA # manifest
+  ic_man <- 0 # manifest
 
   if(missing(dmaqc_shipping_info)){
     dmaqc_shipping_info = NULL
@@ -903,7 +903,7 @@ validate_proteomics <- function(input_results_folder,
   if(f_man){
     manifest <- read.csv(file_manifest, stringsAsFactors = FALSE)
     mani_columns <- c("file_name", "md5")
-    if( all(colnames(manifest) %in% mani_columns ) ){
+    if( all(mani_columns %in% colnames(manifest)) ){
       if(verbose) message("   + (+)  (file_name, md5) columns available in manifest file")
       if(f_rr){
         ratio_file <- manifest$file_name[grepl("ratio.txt", manifest$file_name)]
@@ -973,7 +973,10 @@ validate_proteomics <- function(input_results_folder,
       ic <- ic + 1
     }
   }
-
+  
+  if(ic_man > 0){
+    ic <- ic + ic_man
+  }
 
   # INTER-FILE VALIDATION----
 
@@ -1035,7 +1038,7 @@ validate_proteomics <- function(input_results_folder,
   t_name <- bic_animal_tissue_code$bic_tissue_name[which(bic_animal_tissue_code$bic_tissue_code == tissue_code)]
 
   if(return_n_issues){
-    total_issues <- sum(ic, ic_vm, ic_rr, ic_rii, na.rm = TRUE)
+    total_issues <- sum(ic, ic_vm, ic_rr, ic_rii, ic_man, na.rm = TRUE)
     if(verbose) message("\nTOTAL NUMBER OF ISSUES: ", total_issues,"\n")
     if(full_report){
       reports <- data.frame(cas = cas,
