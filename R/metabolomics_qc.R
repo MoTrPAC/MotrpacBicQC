@@ -434,7 +434,7 @@ check_manifest_rawdata <- function(input_results_folder,
 
           extra_in_a <- setdiff(ofile$raw_file, m_s_n_raw)
           if(length(extra_in_a) > 0){
-            if(verbose) message("      - ", length(extra_in_a)," extra {raw_file} found in [raw/manifest]. This is: OK")
+            if(verbose) message("          - ", length(extra_in_a)," extra {raw_file} found in [raw/manifest]. This is: OK")
           }
 
           extra_in_b <- setdiff(m_s_n_raw, ofile$raw_file)
@@ -834,14 +834,14 @@ validate_metabolomics <- function(input_results_folder,
             if(verbose) message("   + (+) metadata_metabolites_named_file included: OK")
           }else{
             if(verbose) message("      - (-) metadata_metabolites_named_file is not included in manifest file: FAIL")
-            ic_man <- 1
+            ic_man <- ic_man + 1
           }
         }else if(length(metadata_metabolites_named_file) > 1){
           if(verbose) message("      - (-) More than one 'metadata_metabolites_named_file' included in manifest file: FAIL")
-          ic_man <- 1
+          ic_man <- ic_man + 1
         }else{
           if(verbose) message("      - (-) The 'metadata_metabolites_named_file' was not found in the folder: FAIL")
-          ic_man <- 1
+          ic_man <- ic_man + 1
         }
 
       }
@@ -853,14 +853,14 @@ validate_metabolomics <- function(input_results_folder,
             if(verbose) message("   + (+) metadata_samples_named_file included: OK")
           }else{
             if(verbose) message("      - (-) metadata_samples_named_file is not included in manifest file: FAIL")
-            ic_man <- 1
+            ic_man <- ic_man + 1
           }
         }else if(length(metadata_samples_named_file) > 1){
           if(verbose) message("      - (-) More than one 'metadata_samples_named_file' included in manifest file: FAIL")
-          ic_man <- 1
+          ic_man <- ic_man + 1
         }else{
           if(verbose) message("      - (-) The 'metadata_samples_named_file' was not found in the folder: FAIL")
-          ic_man <- 1
+          ic_man <- ic_man + 1
         }
       } # f_msn
 
@@ -871,14 +871,14 @@ validate_metabolomics <- function(input_results_folder,
             if(verbose) message("   + (+) results_metabolites_named_file included: OK")
           }else{
             if(verbose) message("      - (-) results_metabolites_named_file is not included in manifest file: FAIL")
-            ic_man <- 1
+            ic_man <- ic_man + 1
           }
         }else if(length(results_metabolites_named_file) > 1){
           if(verbose) message("      - (-) More than one 'results_metabolites_named_file' included in manifest file: FAIL")
-          ic_man <- 1
+          ic_man <- ic_man + 1
         }else{
           if(verbose) message("      - (-) The 'results_metabolites_named_file' was not found in the folder: FAIL")
-          ic_man <- 1
+          ic_man <- ic_man + 1
         }
       }
 
@@ -888,14 +888,14 @@ validate_metabolomics <- function(input_results_folder,
           if(verbose) message("   + (+) experimentalDetails_file included: OK")
         }else{
           if(verbose) message("      - (-) experimentalDetails_file is not included in manifest file: FAIL")
-          ic_man <- 1
+          ic_man <- ic_man + 1
         }
       }else if(length(experimentalDetails_file) > 1){
         if(verbose) message("      - (-) More than one 'experimentalDetails_file' included in manifest file: FAIL")
-        ic_man <- 1
+        ic_man <- ic_man + 1
       }else{
         if(verbose) message("      - (-) The 'experimentalDetails_file' was not found in the folder: FAIL")
-        ic_man <- 1
+        ic_man <- ic_man + 1
       }
 
 
@@ -908,14 +908,14 @@ validate_metabolomics <- function(input_results_folder,
               if(verbose) message("   + (+) metadata_metabolites_unnamed_file included: OK")
             }else{
               if(verbose) message("      - (-) metadata_metabolites_unnamed_file is not included in manifest file: FAIL")
-              ic_man <- 1
+              ic_man <- ic_man + 1
             }
           }else if(length(metadata_metabolites_unnamed_file) > 1){
             if(verbose) message("      - (-) More than one 'metadata_metabolites_unnamed_file' included in manifest file: FAIL")
-            ic_man <- 1
+            ic_man <- ic_man + 1
           }else{
             if(verbose) message("      - (-) The 'metadata_metabolites_unnamed_file' was not found in the folder: FAIL")
-            ic_man <- 1
+            ic_man <- ic_man + 1
           }
         }
 
@@ -926,14 +926,14 @@ validate_metabolomics <- function(input_results_folder,
               if(verbose) message("   + (+) metadata_samples_unnamed_file included: OK")
             }else{
               if(verbose) message("      - (-) metadata_samples_unnamed_file is not included in manifest file: FAIL")
-              ic_man <- 1
+              ic_man <- ic_man + 1
             }
           }else if(length(metadata_samples_unnamed_file) > 1){
             if(verbose) message("      - (-) More than one 'metadata_samples_unnamed_file' included in manifest file: FAIL")
-            ic_man <- 1
+            ic_man <- ic_man + 1
           }else{
             if(verbose) message("      - (-) The 'metadata_samples_unnamed_file' was not found in the folder: FAIL")
-            ic_man <- 1
+            ic_man <- ic_man + 1
           }
         }
 
@@ -944,14 +944,14 @@ validate_metabolomics <- function(input_results_folder,
               if(verbose) message("   + (+) results_metabolites_unnamed_file included: OK")
             }else{
               if(verbose) message("      - (-) results_metabolites_unnamed_file is not included in manifest file: FAIL")
-              ic_man <- 1
+              ic_man <- ic_man + 1
             }
           }else if(length(results_metabolites_unnamed_file) > 1){
             if(verbose) message("      - (-) More than one 'results_metabolites_unnamed_file' included in manifest file: FAIL")
-            ic_man <- 1
+            ic_man <- ic_man + 1
           }else{
             if(verbose) message("      - (-) The 'results_metabolites_unnamed_file' was not found in the folder: FAIL")
-            ic_man <- 1
+            ic_man <- ic_man + 1
           }
         }
 
@@ -961,14 +961,14 @@ validate_metabolomics <- function(input_results_folder,
             if(verbose) message("   + (+) experimentalDetails_file included: OK")
           }else{
             if(verbose) message("      - (-) experimentalDetails_file is not included in manifest file: FAIL")
-            ic_man <- 1
+            ic_man <- ic_man + 1
           }
         }else if(length(experimentalDetails_file) > 1){
           if(verbose) message("      - (-) More than one 'experimentalDetails_file' included in manifest file: FAIL")
-          ic_man <- 1
+          ic_man <- ic_man + 1
         }else{
           if(verbose) message("      - (-) The 'experimentalDetails_file' was not found in the folder: FAIL")
-          ic_man <- 1
+          ic_man <- ic_man + 1
         }
 
       }
@@ -984,7 +984,7 @@ validate_metabolomics <- function(input_results_folder,
     }
   }else{
     if(verbose) message("      - (-) file_manifest_DATE.txt file not found: FAIL")
-    ic_man <- ic_man + 1
+    ic_man <- ic_man + 6
     ic <- ic + 1
   }
 
@@ -1017,9 +1017,8 @@ validate_metabolomics <- function(input_results_folder,
   }
 
   if(ic > 4){
-    message("\nERROR: Too many files missed. Please, provide the full path to PROCESSED_YYYYMMDD folder
-         input_results_folder = /full/path/to/PROCESSED_YYYYMMDD\n")
-    stop("Revise <input_results_folder> argument")
+    message("\nTOTAL NUMBER OF CRITICAL ERROR: ", ic,"\n")
+    message("WARNING: Too many errors. Revise input folder")
   }
 
   batchversion <- stringr::str_extract(string = input_results_folder, pattern = "BATCH.*_[0-9]+/PROCESSED_[0-9]+")
