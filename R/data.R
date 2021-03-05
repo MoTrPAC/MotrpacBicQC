@@ -256,6 +256,32 @@
 #' }
 "results_unnamed"
 
+#' Metabolomics data dictionary
+#'
+#' @format A data frame with > 2000 rows and 16 15 columns (variables):
+#' \describe{
+#'   \item{CURRENT_REFMET_NAME}{Updated version of RefMet (after December 2020)}
+#'   \item{refmet_name}{Old version of refmet_name}
+#'   \item{metabolite_name}{Metabolite name provided by each laboratory}
+#'   \item{is_standard}{is a reference standard? 1: yes, 0: no}
+#'   \item{super_class}{Metabolite super class}
+#'   \item{main_class}{Metabolite main class}
+#'   \item{sub_class}{Metabolite sub class}
+#'   \item{formula}{Metabolite formula}
+#'   \item{exactmass}{Metaboliteexact mass}
+#'   \item{pubchem_cid}{Metabolite pubchem id}
+#'   \item{kegg_id}{Metabolite kegg id}
+#'   \item{inchi_key}{Metabolite inchi key}
+#'   \item{lm_id}{Metabolite lm id}
+#'   \item{hmdb_id}{Metabolite hmdb id}
+#'   \item{chebi_id}{Metabolite chebi id}
+#' }
+#' @examples
+#' \dontrun{
+#'  metabolomics_data_dictionary
+#' }
+"metabolomics_data_dictionary"
+
 #' Metadata Metabolites test dataset for NAMED metabolites
 #'
 #' @format A data frame with 53 rows and 6 columns:
@@ -269,7 +295,7 @@
 #' }
 #' @examples
 #' \dontrun{
-#'  metadata_metabolites_named
+#'  data(metadata_metabolites_named)
 #' }
 "metadata_metabolites_named"
 
@@ -284,7 +310,7 @@
 #' }
 #' @examples
 #' \dontrun{
-#'  metadata_metabolites_unnamed
+#'  data(metadata_metabolites_unnamed)
 #' }
 "metadata_metabolites_unnamed"
 
@@ -300,7 +326,7 @@
 #' }
 #' @examples
 #' \dontrun{
-#'  metadata_sample_named
+#'  data(metadata_sample_named)
 #' }
 "metadata_sample_named"
 
