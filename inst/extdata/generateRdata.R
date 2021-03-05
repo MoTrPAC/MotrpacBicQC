@@ -16,8 +16,21 @@ use_data(assay_codes, overwrite = TRUE)
 # phenotypes_pass1a06_short <- phenotypes[c("tissue_ecode", "vial_label", "tissue_name", "group_time_point", "sex", "site_code")]
 # colnames(phenotypes_pass1a06_short)[grep("tissue_ecode", colnames(phenotypes_pass1a06_short))] <- "tissue_code"
 # save(phenotypes_pass1a06_short, file = "~/github/MoTrPAC/MotrpacBicQC/data/phenotypes_pass1a06_short.RData")
-use_data(phenotypes_pass1a06_short)
+# use_data(phenotypes_pass1a06_short)
 
+
+# Metabolomics Workbench data dictionary
+
+metabolomics_data_dictionary <- read.csv("inst/extdata/motrpac-metabolomics-named-revised-20210222.csv", stringsAsFactors = FALSE)
+metabolomics_data_dictionary$assay <- NULL
+
+if(any(duplicated(metabolomics_data_dictionary$refmet_name))){
+  metabolomics_data_dictionary <- metabolomics_data_dictionary[!duplicated(metabolomics_data_dictionary$refmet_name), ]  
+}else{
+  message("No duplicated ref_met ids")
+}
+
+use_data(metabolomics_data_dictionary, overwrite = TRUE)
 
 
 # FILES NOT IN PACKAGE--------------------------------------------------------------

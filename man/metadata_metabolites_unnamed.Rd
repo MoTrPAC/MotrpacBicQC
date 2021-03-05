@@ -21,7 +21,7 @@ Metadata Metabolites test dataset for UNNAMED metabolites
 }
 \examples{
 \dontrun{
- metadata_metabolites_unnamed
+ data(metadata_metabolites_unnamed)
 }
 }
 \keyword{datasets}
