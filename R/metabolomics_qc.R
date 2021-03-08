@@ -815,22 +815,28 @@ validate_metabolomics <- function(input_results_folder,
   if(length(file_manifest) == 0){
     f_man <- FALSE
     ic_man <- 1
-  }else if(length(file_manifest) > 1){
+  }else if(length(file_manifest) >= 1){
     file_manifest <- file_manifest[length(file_manifest)]
-    f_man <- TRUE
-  }else if( length(file_manifest) == 1 ){
     f_man <- TRUE
   }
 
   if(f_man){
-    manifest <- read.csv(file_manifest, stringsAsFactors = FALSE)
+    f_list = list()
+    for (f in file_manifest ){
+      f_list[[f]] = read.csv(f)
+      f_list[[f]]$file <- f
+    }
+    
+    manifest <- bind_rows(f_list)
+    colnames(manifest) <- tolower(colnames(manifest))
+    manifest$file_name <- basename(manifest$file_name)
     mani_columns <- c("file_name", "md5")
-    if( all(colnames(manifest) %in% mani_columns ) ){
-      if(verbose) message("   + (+)  (file_name, md5) columns available in manifest file")
+    if( all( mani_columns %in% colnames(manifest)) ){
+      if(verbose) message("   + (+) <file_name, md5> columns available in manifest file")
       if(f_mmn){
         metadata_metabolites_named_file <- manifest$file_name[grepl(".*etadata_metabolit.*_named", manifest$file_name)]
         if( length(metadata_metabolites_named_file) == 1 ){
-          if(file.exists(file.path(batch, metadata_metabolites_named_file))){
+          if( file.exists(file.path(input_results_folder, "/NAMED/", metadata_metabolites_named_file)) ){
             if(verbose) message("   + (+) metadata_metabolites_named_file included: OK")
           }else{
             if(verbose) message("      - (-) metadata_metabolites_named_file is not included in manifest file: FAIL")
@@ -849,7 +855,7 @@ validate_metabolomics <- function(input_results_folder,
       if(f_msn){
         metadata_samples_named_file <- manifest$file_name[grepl(".*etadata_sam.*_named", manifest$file_name)]
         if( length(metadata_samples_named_file) == 1 ){
-          if(file.exists(file.path(batch, metadata_samples_named_file))){
+          if(file.exists( file.path(input_results_folder, "/NAMED/", metadata_samples_named_file)) ){
             if(verbose) message("   + (+) metadata_samples_named_file included: OK")
           }else{
             if(verbose) message("      - (-) metadata_samples_named_file is not included in manifest file: FAIL")
@@ -862,12 +868,24 @@ validate_metabolomics <- function(input_results_folder,
           if(verbose) message("      - (-) The 'metadata_samples_named_file' was not found in the folder: FAIL")
           ic_man <- ic_man + 1
         }
+        # Check RAW FILES
+        msn <- read.delim(file.path(input_results_folder, "/NAMED/", metadata_samples_named_file), stringsAsFactors = FALSE)
+        if(all(msn$raw_file %in% manifest$file_name)){
+          if(verbose) message("   + (+) All raw files included: OK")
+        }else{
+          if(verbose){
+            message("      - (-) RAW FILES available in metadata_samples_named not included in the manifest file: FAIL")
+            message(            "> ", paste( msn$raw_file[!(msn$raw_file %in% manifest$file_name)], collapse = ", " ) )
+          } 
+          ic_man <- ic_man + 1
+        }
+        
       } # f_msn
 
       if(f_rmn){
         results_metabolites_named_file <- manifest$file_name[grepl(".*esults_metabolit.*_named", manifest$file_name)]
         if( length(results_metabolites_named_file) == 1 ){
-          if(file.exists(file.path(batch, results_metabolites_named_file))){
+          if(file.exists(file.path(input_results_folder, "/NAMED/", results_metabolites_named_file))){
             if(verbose) message("   + (+) results_metabolites_named_file included: OK")
           }else{
             if(verbose) message("      - (-) results_metabolites_named_file is not included in manifest file: FAIL")
@@ -884,7 +902,7 @@ validate_metabolomics <- function(input_results_folder,
 
       experimentalDetails_file <- manifest$file_name[grepl(".*xperimental.*_named", manifest$file_name)]
       if( length(experimentalDetails_file) == 1 ){
-        if(file.exists(file.path(batch, experimentalDetails_file))){
+        if(file.exists(file.path(input_results_folder, "/NAMED/", experimentalDetails_file))){
           if(verbose) message("   + (+) experimentalDetails_file included: OK")
         }else{
           if(verbose) message("      - (-) experimentalDetails_file is not included in manifest file: FAIL")
@@ -904,7 +922,7 @@ validate_metabolomics <- function(input_results_folder,
         if(f_mmu){
           metadata_metabolites_unnamed_file <- manifest$file_name[grepl(".*etadata_metabolit.*_unnamed", manifest$file_name)]
           if( length(metadata_metabolites_unnamed_file) == 1 ){
-            if(file.exists(file.path(batch, metadata_metabolites_unnamed_file))){
+            if(file.exists(file.path(input_results_folder, "/UNNAMED/", metadata_metabolites_unnamed_file))){
               if(verbose) message("   + (+) metadata_metabolites_unnamed_file included: OK")
             }else{
               if(verbose) message("      - (-) metadata_metabolites_unnamed_file is not included in manifest file: FAIL")
@@ -922,7 +940,7 @@ validate_metabolomics <- function(input_results_folder,
         if(f_msu){
           metadata_samples_unnamed_file <- manifest$file_name[grepl(".*etadata_sam.*_unnamed", manifest$file_name)]
           if( length(metadata_samples_unnamed_file) == 1 ){
-            if(file.exists(file.path(batch, metadata_samples_unnamed_file))){
+            if(file.exists(file.path(input_results_folder, "/UNNAMED/", metadata_samples_unnamed_file))){
               if(verbose) message("   + (+) metadata_samples_unnamed_file included: OK")
             }else{
               if(verbose) message("      - (-) metadata_samples_unnamed_file is not included in manifest file: FAIL")
@@ -935,12 +953,24 @@ validate_metabolomics <- function(input_results_folder,
             if(verbose) message("      - (-) The 'metadata_samples_unnamed_file' was not found in the folder: FAIL")
             ic_man <- ic_man + 1
           }
+          
+          # Check RAW FILES
+          msn <- read.delim(file.path(input_results_folder, "/UNNAMED/", metadata_samples_named_file), stringsAsFactors = FALSE)
+          if(all(msn$raw_file %in% manifest$file_name)){
+            if(verbose) message("   + (+) All raw files included: OK")
+          }else{
+            if(verbose){
+              message("      - (-) RAW FILES available in metadata_samples_unnamed not included in the manifest file: FAIL")
+              message(            "> ", paste( msn$raw_file[!(msn$raw_file %in% manifest$file_name)], collapse = ", " ) )
+            } 
+            ic_man <- ic_man + 1
+          }
         }
 
         if(f_rmu){
           results_metabolites_unnamed_file <- manifest$file_name[grepl(".*esults_metabolit.*_unnamed", manifest$file_name)]
           if( length(results_metabolites_unnamed_file) == 1 ){
-            if(file.exists(file.path(batch, results_metabolites_unnamed_file))){
+            if(file.exists(file.path(input_results_folder, "/UNNAMED/", results_metabolites_unnamed_file))){
               if(verbose) message("   + (+) results_metabolites_unnamed_file included: OK")
             }else{
               if(verbose) message("      - (-) results_metabolites_unnamed_file is not included in manifest file: FAIL")
@@ -957,7 +987,7 @@ validate_metabolomics <- function(input_results_folder,
 
         experimentalDetails_file <- manifest$file_name[grepl(".*xperimental.*_unnamed", manifest$file_name)]
         if( length(experimentalDetails_file) == 1 ){
-          if(file.exists(file.path(batch, experimentalDetails_file))){
+          if(file.exists(file.path(input_results_folder, "/UNNAMED/", experimentalDetails_file))){
             if(verbose) message("   + (+) experimentalDetails_file included: OK")
           }else{
             if(verbose) message("      - (-) experimentalDetails_file is not included in manifest file: FAIL")
@@ -983,7 +1013,7 @@ validate_metabolomics <- function(input_results_folder,
       ic_man <- ic_man + 1
     }
   }else{
-    if(verbose) message("      - (-) file_manifest_DATE.txt file not found: FAIL")
+    if(verbose) message("      - (-) MANIFEST ERROR: Missing columns (must contain <file_name> and <md5>)")
     ic_man <- ic_man + 6
     ic <- ic + 1
   }

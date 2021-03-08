@@ -893,23 +893,32 @@ validate_proteomics <- function(input_results_folder,
   if(length(file_manifest) == 0){
     f_man <- FALSE
     ic_man <- ic_man + 1
-  }else if(length(file_manifest) > 1){
+  }else if(length(file_manifest) >= 1){
     file_manifest <- file_manifest[length(file_manifest)]
-    f_man <- TRUE
-  }else if( length(file_manifest) == 1 ){
     f_man <- TRUE
   }
 
   if(f_man){
-    manifest <- read.csv(file_manifest, stringsAsFactors = FALSE)
+    
+    # load all files in manifest:
+    f_list = list()
+    for (f in file_manifest ){
+      f_list[[f]] = read.csv(f)
+      f_list[[f]]$file <- f
+    }
+    
+    manifest <- bind_rows(f_list)
+    
+    manifest$file_name <- basename(manifest$file_name)
+    
     mani_columns <- c("file_name", "md5")
     if( all(mani_columns %in% colnames(manifest)) ){
-      if(verbose) message("   + (+)  (file_name, md5) columns available in manifest file")
+      if(verbose) message("   + (+) <file_name, md5> columns available in manifest file")
       if(f_rr){
         ratio_file <- manifest$file_name[grepl("ratio.txt", manifest$file_name)]
         if( length(ratio_file) == 1 ){
-          if( file.exists(file.path(batch, ratio_file)) ){
-            if(verbose) message("   + (+) ratio file included")
+          if( file.exists(file.path(input_results_folder, ratio_file)) ){
+            if(verbose) message("   + (+) RATIO file included")
           }else{
             if(verbose) message("      - (-) The ratio file name provided in manifest is not found in folder")
             ic_man <- ic_man + 1
@@ -927,7 +936,7 @@ validate_proteomics <- function(input_results_folder,
       if(f_rii){
         rii_file <- manifest$file_name[grepl("RII-peptide.txt", manifest$file_name, ignore.case = TRUE)]
         if(length(rii_file) == 1){
-          if(file.exists(file.path(batch, rii_file))){
+          if(file.exists(file.path(input_results_folder, rii_file))){
             if(verbose) message("   + (+) RII file included")
           }else{
             if(verbose) message("      - (-) RII file name provided in manifest is not found in folder")
@@ -947,7 +956,7 @@ validate_proteomics <- function(input_results_folder,
       if(f_vm){
         vm_file <- manifest$file_name[grepl("vial_metadata", manifest$file_name, ignore.case = TRUE)]
         if( length(vm_file) == 1 ){
-          if(file.exists(file.path(batch, vm_file))){
+          if(file.exists(file.path(input_results_folder, vm_file))){
             if(verbose) message("   + (+) VIAL_METADATA file included")
           }else{
             if(verbose) message("      - (-) vial_metadata name provided in manifest is not found in folder")
@@ -968,10 +977,13 @@ validate_proteomics <- function(input_results_folder,
       }
 
     }else{
-      if(verbose) message("      - (-) Not all the columns are available")
+      if(verbose) message("      - (-) MANIFEST ERROR: Missing columns (must contain <file_name> and <md5>)")
       ic_man <- ic_man + 1
       ic <- ic + 1
     }
+  }else{
+    message("      - (-) ERROR: manifest file not found")
+    ic_man = 6
   }
   
   if(ic_man > 0){
