@@ -5,7 +5,7 @@
 \alias{metabolomics_data_dictionary}
 \title{Metabolomics data dictionary}
 \format{
-A data frame with > 2000 rows and 16 15 columns (variables):
+A data frame with > 2000 rows and 15 columns (variables):
 \describe{
 \item{CURRENT_REFMET_NAME}{Updated version of RefMet (after December 2020)}
 \item{refmet_name}{Old version of refmet_name}
