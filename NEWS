@@ -1,3 +1,6 @@
+Changes in version 0.4.1 (2021-03-08)
+- Improved QC for the required manifest file (proteomics and metabolomics)
+
 Changes in version 0.4.0 (2021-03-04)
 + Metabolomics data dictionary available as a data object: metabolomics_data_dictionary
 + The function get_and_validate_mdd() still works, but does not pull the data from Metabolomics Workbench. Just return metabolomics_data_dictionary
