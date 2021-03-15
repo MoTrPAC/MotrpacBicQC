@@ -955,7 +955,7 @@ validate_metabolomics <- function(input_results_folder,
           }
           
           # Check RAW FILES
-          msn <- read.delim(file.path(input_results_folder, "/UNNAMED/", metadata_samples_named_file), stringsAsFactors = FALSE)
+          msn <- read.delim(file.path(input_results_folder, "/UNNAMED/", metadata_samples_unnamed_file), stringsAsFactors = FALSE)
           if(all(msn$raw_file %in% manifest$file_name)){
             if(verbose) message("   + (+) All raw files included: OK")
           }else{
