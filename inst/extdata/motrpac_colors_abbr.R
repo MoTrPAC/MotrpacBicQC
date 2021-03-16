@@ -21,9 +21,7 @@ assay_abbr = c(atac='ATAC',
                'prot-ph'='PHOSPHO',
                'prot-ub'='UBIQ')
 
-
-save(assay_abbr, 
-     file = "data/assay_abbr.RData" )
+use_data(assay_abbr, overwrite = TRUE)
 
 assay_order = c('METHYL',
                 'ATAC',
@@ -36,8 +34,7 @@ assay_order = c('METHYL',
                 'N-METAB',
                 'U-METAB')
 
-save(assay_order, 
-     file = "data/assay_order.RData" )
+use_data(assay_order, overwrite = TRUE)
 
 group_abbr = c('control'='SED',
                'control8w'='SED',
@@ -47,8 +44,7 @@ group_abbr = c('control'='SED',
                '4w'='4W',
                '8w'='8W')
 
-save(group_abbr, 
-     file = "data/group_abbr.RData" )
+use_data(group_abbr, overwrite = TRUE)
 
 group_cols = c('SED'='white',
                'control'='white',
@@ -63,16 +59,14 @@ group_cols = c('SED'='white',
                '8W' = "#002612",
                '8w' = "#002612")
 
-save(group_cols, 
-     file = "data/group_cols.RData" )
+use_data(group_cols, overwrite = TRUE)
 
 sex_abbr = c('female'='F',
              'Female'='F',
              'male'='M',
              'Male'='M')
 
-save(sex_abbr, 
-     file = "data/sex_abbr.RData" )
+use_data(sex_abbr, overwrite = TRUE)
 
 sex_cols = c('M' = '#5555ff',
              'Male' = '#5555ff',
@@ -81,8 +75,7 @@ sex_cols = c('M' = '#5555ff',
              'Female' = '#ff6eff',
              'female' = '#ff6eff')
 
-save(sex_cols, 
-     file = "data/sex_cols.RData" )
+use_data(sex_cols, overwrite = TRUE)
 
 tissue_abbr = c(adrenals='ADRNL',
                 adrenal='ADRNL',
@@ -139,93 +132,91 @@ tissue_abbr = c(adrenals='ADRNL',
                 'white adipose'='WAT-SC',
                 "t70-white-adipose"='WAT-SC')
 
-save(tissue_abbr, 
-     file = "data/tissue_abbr.RData" )
+use_data(tissue_abbr, overwrite = TRUE)
 
-tissue_cols = c('paxgene rna'='#FF0000', # blood and paxgene rna are the same (RNA-seq)
-                'paxgene-rna'='#FF0000',
-                'paxgene_rna'='#FF0000',
-                blood='#FF0000',
-                'blood rna'='#FF0000',
-                'blood-rna'='#FF0000',
-                'blood_rna'='#FF0000',
-                BLOOD='#FF0000',
-                "t30-blood-rna"='#FF0000',
-                'edta plasma'="#FF6161",
-                'edta-plasma'="#FF6161",
-                'edta_plasma'="#FF6161",
-                plasma="#FF6161",
-                PLASMA="#FF6161",
-                "t31-plasma"="#FF6161", 
-                heart='#EB7602',
-                HEART='#EB7602',
-                "t58-heart"='#EB7602',
-                aorta="#B22222",
-                'vena cava'="#B22222",
-                'vena-cava'="#B22222",
-                'vena_cava'="#B22222",
-                VENACV="#B22222",
-                "t65-aorta"="#B22222",
-                spleen="#0000FF",
-                SPLEEN="#0000FF",
-                "t62-spleen"="#0000FF",
-                gastrocnemius='#00CD00',
-                'SKM-GN'='#00CD00',
-                "t55-gastrocnemius"='#00CD00',
-                'vastus lateralis'='#077D07',
-                'vastus-lateralis'='#077D07',
-                'vastus_lateralis'='#077D07',
-                'SKM-VL'='#077D07',"t56-vastus-lateralis"='#077D07',
-                'white adipose'='#1E90FF',
-                'white-adipose'='#1E90FF',
-                'white_adipose'='#1E90FF',
-                'WAT-SC'='#1E90FF',
-                "t70-white-adipose"='#1E90FF',
-                'brown adipose'='#FFA500',
-                'brown-adipose'='#FFA500',
-                'brown_adipose'='#FFA500',
-                'BAT'='#FFA500',
-                "t69-brown-adipose"='#FFA500',
-                liver="#E349E3",
-                LIVER="#E349E3",
-                "t68-liver"="#E349E3",
-                lung="#14AE9E",
-                LUNG="#14AE9E",
-                "t66-lung"="#14AE9E",
-                kidney='#A020F0',
-                KIDNEY='#A020F0',
-                "t59-kidney"='#A020F0', 
+tissue_cols = c('paxgene rna'='#d92c04', # blood and paxgene rna are the same (RNA-seq)
+                'paxgene-rna'='#d92c04',
+                'paxgene_rna'='#d92c04',
+                blood='#d92c04',
+                'blood rna'='#d92c04',
+                'blood-rna'='#d92c04',
+                'blood_rna'='#d92c04',
+                BLOOD='#d92c04',
+                "t30-blood-rna"='#d92c04',
+                'edta plasma'="#f1997c",
+                'edta-plasma'="#f1997c",
+                'edta_plasma'="#f1997c",
+                plasma="#f1997c",
+                PLASMA="#f1997c",
+                "t31-plasma"="#f1997c", 
+                heart='#f28b2f',
+                HEART='#f28b2f',
+                "t58-heart"='#f28b2f',
+                aorta="#a5415b",
+                'vena cava'="#a5415b",
+                'vena-cava'="#a5415b",
+                'vena_cava'="#a5415b",
+                VENACV="#a5415b",
+                "t65-aorta"="#a5415b",
+                spleen="#f3c288",
+                SPLEEN="#f3c288",
+                "t62-spleen"="#f3c288",
+                gastrocnemius='#088c03',
+                'SKM-GN'='#088c03',
+                "t55-gastrocnemius"='#088c03',
+                'vastus lateralis'='#025939',
+                'vastus-lateralis'='#025939',
+                'vastus_lateralis'='#025939',
+                'SKM-VL'='#077D07',"t56-vastus-lateralis"='#025939',
+                'white adipose'='#214da6',
+                'white-adipose'='#214da6',
+                'white_adipose'='#214da6',
+                'WAT-SC'='#214da6',
+                "t70-white-adipose"='#214da6',
+                'brown adipose'='#8c5220',
+                'brown-adipose'='#8c5220',
+                'brown_adipose'='#8c5220',
+                'BAT'='#8c5220',
+                "t69-brown-adipose"='#8c5220',
+                liver="#da6c75",
+                LIVER="#da6c75",
+                "t68-liver"="#da6c75",
+                lung="#04bf8a",
+                LUNG="#04bf8a",
+                "t66-lung"="#04bf8a",
+                kidney='#7553a7',
+                KIDNEY='#7553a7',
+                "t59-kidney"='#7553a7', 
                 adrenal="#DDA0DD",
                 adrenals="#DDA0DD",
                 ADRNL="#DDA0DD",
                 "t60-adrenal"="#DDA0DD",
-                cortex='#F2CA00',
-                CORTEX='#F2CA00',
-                "t53-cortex"='#F2CA00', 
-                hypothalamus='#C1A100',
-                HYPOTH='#C1A100',
-                hypothalmus='#C1A100',
-                "t54-hypothalamus"='#C1A100',
-                hippocampus='#937B00',
-                HIPPOC='#937B00',
-                "t52-hippocampus"='#937B00',
+                cortex='#f2e751',
+                CORTEX='#f2e751',
+                "t53-cortex"='#f2e751', 
+                hypothalamus='#f2b443',
+                HYPOTH='#f2b443',
+                hypothalmus='#f2b443',
+                "t54-hypothalamus"='#f2b443',
+                hippocampus='#bf7534',
+                HIPPOC='#bf7534',
+                "t52-hippocampus"='#bf7534',
                 'small intestine'='#A18277',
                 'small-intestine'='#A18277',
                 'small_intestine'='#A18277',
                 'SMLINT'='#A18277',
                 "t67-small-intestine"='#A18277',
-                colon='#7D4C3B',
-                COLON='#7D4C3B',
-                "t61-colon"='#7D4C3B',
-                ovaries="#FFAEB9",
-                OVARY="#FFAEB9",
-                "t64-ovaries"="#FFAEB9",
-                testes="#000080",
-                TESTES="#000080",
-               "t63-testes"="#000080")
+                colon='#5a2e15',
+                COLON='#5a2e15',
+                "t61-colon"='#5a2e15',
+                ovaries="#f2ced0",
+                OVARY="#f2ced0",
+                "t64-ovaries"="#f2ced0",
+                testes="#6d86a5",
+                TESTES="#6d86a5",
+               "t63-testes"="#6d86a5")
 
-save(tissue_cols, 
-     file = "data/tissue_cols.RData" )
+use_data(tissue_cols, overwrite = TRUE)
 
 tissue_order = c('BLOOD',
                  'PLASMA',
@@ -248,6 +239,5 @@ tissue_order = c('BLOOD',
                  'OVARY',
                  'TESTES')
 
-save(tissue_order, 
-     file = "data/tissue_order.RData" )
+use_data(tissue_order, overwrite = TRUE)
 
