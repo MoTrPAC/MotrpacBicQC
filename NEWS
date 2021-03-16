@@ -1,3 +1,6 @@
+Changes in version 0.4.3 (2021-03-16)
+- Update tissue_cols data object (Nicole Gay)
+
 Changes in version 0.4.2 (2021-03-10)
 - Fix bug in validate_metabolomics affecting unnamed sample check
 

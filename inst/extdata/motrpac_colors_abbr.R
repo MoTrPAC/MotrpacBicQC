@@ -21,9 +21,7 @@ assay_abbr = c(atac='ATAC',
                'prot-ph'='PHOSPHO',
                'prot-ub'='UBIQ')
 
-
-save(assay_abbr, 
-     file = "data/assay_abbr.RData" )
+use_data(assay_abbr, overwrite = TRUE)
 
 assay_order = c('METHYL',
                 'ATAC',
@@ -36,8 +34,7 @@ assay_order = c('METHYL',
                 'N-METAB',
                 'U-METAB')
 
-save(assay_order, 
-     file = "data/assay_order.RData" )
+use_data(assay_order, overwrite = TRUE)
 
 group_abbr = c('control'='SED',
                'control8w'='SED',
@@ -47,8 +44,7 @@ group_abbr = c('control'='SED',
                '4w'='4W',
                '8w'='8W')
 
-save(group_abbr, 
-     file = "data/group_abbr.RData" )
+use_data(group_abbr, overwrite = TRUE)
 
 group_cols = c('SED'='white',
                'control'='white',
@@ -63,16 +59,14 @@ group_cols = c('SED'='white',
                '8W' = "#002612",
                '8w' = "#002612")
 
-save(group_cols, 
-     file = "data/group_cols.RData" )
+use_data(group_cols, overwrite = TRUE)
 
 sex_abbr = c('female'='F',
              'Female'='F',
              'male'='M',
              'Male'='M')
 
-save(sex_abbr, 
-     file = "data/sex_abbr.RData" )
+use_data(sex_abbr, overwrite = TRUE)
 
 sex_cols = c('M' = '#5555ff',
              'Male' = '#5555ff',
@@ -81,8 +75,7 @@ sex_cols = c('M' = '#5555ff',
              'Female' = '#ff6eff',
              'female' = '#ff6eff')
 
-save(sex_cols, 
-     file = "data/sex_cols.RData" )
+use_data(sex_cols, overwrite = TRUE)
 
 tissue_abbr = c(adrenals='ADRNL',
                 adrenal='ADRNL',
@@ -139,8 +132,7 @@ tissue_abbr = c(adrenals='ADRNL',
                 'white adipose'='WAT-SC',
                 "t70-white-adipose"='WAT-SC')
 
-save(tissue_abbr, 
-     file = "data/tissue_abbr.RData" )
+use_data(tissue_abbr, overwrite = TRUE)
 
 tissue_cols = c('paxgene rna'='#d92c04', # blood and paxgene rna are the same (RNA-seq)
                 'paxgene-rna'='#d92c04',
@@ -224,8 +216,7 @@ tissue_cols = c('paxgene rna'='#d92c04', # blood and paxgene rna are the same (R
                 TESTES="#6d86a5",
                "t63-testes"="#6d86a5")
 
-save(tissue_cols, 
-     file = "data/tissue_cols.RData" )
+use_data(tissue_cols, overwrite = TRUE)
 
 tissue_order = c('BLOOD',
                  'PLASMA',
@@ -248,6 +239,5 @@ tissue_order = c('BLOOD',
                  'OVARY',
                  'TESTES')
 
-save(tissue_order, 
-     file = "data/tissue_order.RData" )
+use_data(tissue_order, overwrite = TRUE)
 
