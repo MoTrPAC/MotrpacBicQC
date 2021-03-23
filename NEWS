@@ -1,3 +1,6 @@
+Changes in version 0.4.4 (2021-03-22)
+- Fix and improve check (new required) manifest file for untargeted metabolomics datasets
+
 Changes in version 0.4.3 (2021-03-16)
 - Update tissue_cols data object (Nicole Gay)
 
@@ -21,8 +24,7 @@ Changes in version 0.3.8 (2021-02-03)
 Changes in version 0.3.5 (2020-10-20)
 + Bug fix on DMAQC to deal with missing data in DMAQC table
 + Proteomics: Address 130C missing channel issue affecting the Broad
-+ Proteomics: add an additional QC check point to validate that all values in
-vial_label column are unique
++ Proteomics: add an additional QC check point to validate that all values in vial_label column are unique
 + Proteomics: write_proteomics updated (only required columns selected)
 + Fix bugs and typos
 

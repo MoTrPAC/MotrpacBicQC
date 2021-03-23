@@ -111,9 +111,11 @@ open_file <- function(input_results_folder,
     }
     flag <- FALSE
     ofile <- NULL
+    filename <- NULL
   }else{
     flag <- TRUE
-    ofile <- read.delim(file_metametabolites[1], stringsAsFactors = FALSE, check.names = FALSE)
+    filename <- file_metametabolites[1]
+    ofile <- read.delim(filename, stringsAsFactors = FALSE, check.names = FALSE)
     ofile <- remove_empty_columns(ofile, verbose = verbose)
     ofile <- remove_empty_rows(ofile, verbose = verbose)
     if(verbose) message("   + (+) File successfully opened")
@@ -129,7 +131,7 @@ open_file <- function(input_results_folder,
     }
   }
 
-  list_back <- list("flag" = flag, "df" = ofile)
+  list_back <- list("flag" = flag, "df" = ofile, "filename" = filename)
   return(list_back)
 }
 

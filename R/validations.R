@@ -45,6 +45,23 @@ validate_processFolder <- function(input_results_folder){
 }
 
 
+#' @title extract BATCH_YYYYMMDD folder
+#'
+#' @description extract BATCH_YYYYMMDD folder from input folder path
+#' @param input_results_folder (char) input_results_folder path
+#' @return (vector) BATCH_YYYYMMDD folder name
+#' @export
+validate_batch <- function(input_results_folder){
+  
+  batch_folder <- gsub("(.*BATCH\\d{1}\\_\\d{8})(.*)", "\\1", input_results_folder)
+  
+  if(is.na(batch_folder)){
+    stop("BATCH#_YYYYMMDD folder is not recognized in the folder structure")
+  }else{
+    return(batch_folder)
+  }
+}
+
 
 #' @title extract ASSAY from input folder path
 #'
@@ -90,17 +107,10 @@ validate_phase <- function(input_results_folder){
 #' @return (vector) PHASE code
 #' @export
 validate_tissue <- function(input_results_folder){
-  tissue_db <- c("T30", "T31", "T32", "T33", "T34", "T35", "T36", "T37",
-                 "T38", "T39", "T40", "T41", "T42", "T43", "T44", "T45",
-                 "T46", "T47", "T48", "T49", "T50", "T51", "T52", "T53",
-                 "T54", "T55", "T56", "T57", "T58", "T59", "T60", "T61",
-                 "T62", "T63", "T64", "T65", "T66", "T67", "T68", "T69",
-                 "T70")
-
   tissue_code <- gsub("(.*)(T[0-9]{2})(.*)", "\\2", input_results_folder)
 
-  if(!tissue_code %in% tissue_db){
-    stop("tissue_code: <", tissue_code, "> is not valid. Must be one of the followings:\n- ", paste(tissue_db, collapse = ", "))
+  if(!tissue_code %in% bic_animal_tissue_code$bic_tissue_code){
+    stop("tissue_code: <", tissue_code, "> is not valid. Must be one of the following codes (check data object MotrpacBicQC::bic_animal_tissue_code):\n- ", paste(bic_animal_tissue_code$bic_tissue_code, collapse = ", "))
   }else{
     return(tissue_code)
   }
