@@ -541,10 +541,6 @@ check_viallabel_dmaqc <- function(vl_submitted,
 
   dmaqc_shipping_df <- read.delim(dmaqc_shipping_info, stringsAsFactors = FALSE)
 
-  if(month == "06"){
-    month <- gsub("0", "", month)
-  }
-
   month <- as.integer(month)
 
   dmaqc_labels <- dmaqc_shipping_df$vial_label[which(dmaqc_shipping_df$bic_tissue_code == tissue_code &
@@ -565,10 +561,18 @@ check_viallabel_dmaqc <- function(vl_submitted,
         if(setequal(failed_samples, samples_missed)){
           if(verbose) message("   + (+) DMAQC CHECK POINT: samples sent to CAS have been processed (with known issues for some samples): OK")
           ic <- "OK"
+        }else{
+          if(verbose){
+            message("      - (-) DMAQC CHECK POINT: samples not found in metadata_results: FAIL")
+            message("\t - ", paste(samples_missed, collapse = "\n\t - "))
+            ic <- "FAIL"
+          }
         }
       }else{
-        if(verbose) message("      - (-) DMAQC CHECK POINT: samples not found in metadata_results: FAIL")
-        if(verbose) message("\t - ", paste(samples_missed, collapse = "\n\t - "))
+        if(verbose){
+          message("      - (-) DMAQC CHECK POINT: samples not found in metadata_results: FAIL")
+          message("\t - ", paste(samples_missed, collapse = "\n\t - "))
+        }
         ic <- "FAIL"
       }
     }
@@ -981,7 +985,7 @@ validate_metabolomics <- function(input_results_folder,
       ic_man <- ic_man + 1
     }
   }else{
-    if(verbose) message("      - (-) MANIFEST ERROR: Missing columns (must contain <file_name> and <md5>)")
+    if(verbose) message("      - (-) MANIFEST (REQUIRED) FILE NOT FOUND (file_manifest_DATE.txt). Please, check guidelines")
     ic_man <- ic_man + 6
     ic <- ic + 1
   }

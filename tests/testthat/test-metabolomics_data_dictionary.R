@@ -2,7 +2,7 @@ context("Test metabolomics data dictionary")
 
 
 test_that("Metabolomics data dictionary", {
-  expected_mdd_colnames <- c("CURRENT_REFMET_NAME", "refmet_name", "metabolite_name", "is_standard", "super_class", "main_class", "sub_class", "formula", "exactmass", "pubchem_cid", "kegg_id", "inchi_key", "lm_id", "hmdb_id", "chebi_id")
+  expected_mdd_colnames <- c("CURRENT_REFMET_NAME", "refmet_name", "metabolite_name", "is_standard", "super_class", "main_class", "sub_class", "formula", "exactmass", "pubchem_cid", "kegg_id", "inchi_key", "lm_id", "hmdb_id", "chebi_id", "is_review")
   mdd <- get_and_validate_mdd()
   expect_equal( setequal(expected_mdd_colnames, colnames(mdd)), TRUE)
   expect_gt(dim(mdd)[1], 2000)

@@ -53,7 +53,8 @@ validate_processFolder <- function(input_results_folder){
 #' @export
 validate_batch <- function(input_results_folder){
   
-  batch_folder <- gsub("(.*BATCH\\d{1}\\_\\d{8})(.*)", "\\1", input_results_folder)
+  batch_folder <- stringr::str_extract(string = input_results_folder, 
+                                       pattern = "(.*/BATCH\\d{1}\\_\\d{8})/")
   
   if(is.na(batch_folder)){
     stop("BATCH#_YYYYMMDD folder is not recognized in the folder structure")

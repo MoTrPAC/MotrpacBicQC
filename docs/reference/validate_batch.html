@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Load metabolomics batch — load_metabolomics_batch • MotrpacBicQC</title>
+<title>extract BATCH_YYYYMMDD folder — validate_batch • MotrpacBicQC</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Load metabolomics batch — load_metabolomics_batch" />
-<meta property="og:description" content="Open, check, and return all metabolomics files" />
+<meta property="og:title" content="extract BATCH_YYYYMMDD folder — validate_batch" />
+<meta property="og:description" content="extract BATCH_YYYYMMDD folder from input folder path" />
 
 
 
@@ -126,44 +126,30 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Load metabolomics batch</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MoTrPAC/MotrpacBicQC/blob/master/R/metabolomics_qc.R'><code>R/metabolomics_qc.R</code></a></small>
-    <div class="hidden name"><code>load_metabolomics_batch.Rd</code></div>
+    <h1>extract BATCH_YYYYMMDD folder</h1>
+    <small class="dont-index">Source: <a href='https://github.com/MoTrPAC/MotrpacBicQC/blob/master/R/validations.R'><code>R/validations.R</code></a></small>
+    <div class="hidden name"><code>validate_batch.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Open, check, and return all metabolomics files</p>
+    <p>extract BATCH_YYYYMMDD folder from input folder path</p>
     </div>
 
-    <pre class="usage"><span class='fu'>load_metabolomics_batch</span><span class='op'>(</span><span class='va'>input_results_folder</span>, <span class='va'>cas</span>, verbose <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>validate_batch</span><span class='op'>(</span><span class='va'>input_results_folder</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>input_results_folder</th>
-      <td><p>(char) Path to the PROCESSED_YYYYMMDD folder</p></td>
-    </tr>
-    <tr>
-      <th>cas</th>
-      <td><p>(char) Chemical Analytical Site code (e.g "umichigan")</p></td>
-    </tr>
-    <tr>
-      <th>verbose</th>
-      <td><p>(logical) <code>TRUE</code> (default) shows messages</p></td>
+      <td><p>(char) input_results_folder path</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>(list of data.frames) List of all the data frames</p>
+    <p>(vector) BATCH_YYYYMMDD folder name</p>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='va'>here</span> <span class='op'>&lt;-</span> <span class='fu'>load_metabolomics_batch</span><span class='op'>(</span>input_results_folder <span class='op'>=</span> <span class='st'>"/path/to/PROCESSED_YYYYMMDD/"</span>, 
-                                cas <span class='op'>=</span> <span class='st'>"cassite"</span><span class='op'>)</span>
-<span class='op'>}</span>
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
