@@ -1,7 +1,7 @@
 context("Test check_metabolomics functions")
 
 test_that("check_metadata_metabolites returns the right number of issues", {
-  expect_equal(check_metadata_metabolites(df = metadata_metabolites_named, name_id = "named", return_n_issues = TRUE, verbose = FALSE), 1)
+  expect_equal(check_metadata_metabolites(df = metadata_metabolites_named, name_id = "named", return_n_issues = TRUE, verbose = FALSE), 0)
   expect_equal(check_metadata_metabolites(df = metadata_metabolites_unnamed, name_id = "unnamed", return_n_issues = TRUE, verbose = FALSE), 0)
   expect_equal(check_metadata_metabolites(df = metadata_metabolites_unnamed, name_id = "named", return_n_issues = TRUE, verbose = FALSE), 2)
 })

@@ -1,3 +1,10 @@
+Changes in version 0.4.5 (2021-03-22)
+- Update metabolomics data dictionary, including:
+   + Broad Metabolomics revision (39 new kegg ids + minor corrections)
+   + targeted refmet_name 
+- Fix text in warning in case of missing manifest file
+- Add and improve tests
+
 Changes in version 0.4.4 (2021-03-22)
 - Fix and improve check (new required) manifest file for untargeted metabolomics datasets
 
