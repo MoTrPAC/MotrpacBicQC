@@ -1,9 +1,9 @@
 pandoc: 2.7.3
-pkgdown: 1.6.1.9000
-pkgdown_sha: 39071eea1bc3e40e88e5f4e474e5441e3add2b0b
+pkgdown: 1.6.1.9001
+pkgdown_sha: 9a5a8f5cd29bb06616c1452d1b9b5cab7cebf7c2
 articles:
   other_functions: other_functions.html
   qc_metabolomics: qc_metabolomics.html
   qc_proteomics: qc_proteomics.html
-last_built: 2021-03-23T20:22Z
+last_built: 2021-03-26T07:58Z
 
