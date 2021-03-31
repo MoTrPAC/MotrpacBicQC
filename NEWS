@@ -1,4 +1,7 @@
-Changes in version 0.4.5 (2021-03-22)
+Changes in version 0.4.6 (2021-03-26)
+- New QC checks for the new proteomics requirements
+
+Changes in version 0.4.5 (2021-03-25)
 - Update metabolomics data dictionary, including:
    + Broad Metabolomics revision (39 new kegg ids + minor corrections)
    + targeted refmet_name 
