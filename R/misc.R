@@ -105,7 +105,7 @@ open_file <- function(input_results_folder,
   if(length(file_metametabolites) != 1){
     if(length(file_metametabolites) >= 1){
       if(verbose) message("      - (-) PROBLEM: more than one file detected: FAIL")
-      if(verbose) message("\n\t\t - ", paste(file_metametabolites, collapse = "\n\t\t - "))
+      if(verbose) message("\t\t - ", paste(file_metametabolites, collapse = "\n\t\t - "))
     }else{
       if(verbose) message("      - (-) PROBLEM file [", filepattern, "] not found: FAIL")
     }

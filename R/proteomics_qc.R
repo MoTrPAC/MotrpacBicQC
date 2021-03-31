@@ -46,18 +46,17 @@ check_ratio_proteomics <- function(df_ratio,
 
   vial_label = all_vial_labels = tmt_plex = NULL
 
-  ic_rr <- NULL
+  ic_rr <- 0
 
   required_columns <- get_required_columns(isPTM = isPTM,
                                            prot_file = "ratio")
 
   if(!all( required_columns %in% colnames(df_ratio) )){
-    if(verbose) message("      - (-) The following required columns are missed: ", appendLF = FALSE)
+    if(verbose) message("      - (-) CRITICAL REQUIRED column(s) missed: ", appendLF = FALSE)
     if(verbose) message(paste(required_columns[!required_columns %in% colnames(df_ratio)], collapse = ", "))
+    ic_rr <- 10
     return(ic_rr)
   }
-
-  ic_rr <- 0
 
   if(isPTM){
     # The ptm_id must be unique
@@ -114,13 +113,93 @@ check_ratio_proteomics <- function(df_ratio,
     }else{
       if(verbose) message("   + (+) All CONFIDENT_SITE available")
     }
+    
+    if( any(is.na(df_ratio$flanking_sequence)) ){
+      ic_rr <- ic_rr + 1
+      if(verbose) message("      - (-) Some FLANKING_SEQUENCEs are missed")
+    }else{
+      if(verbose) message("   + (+) All FLANKING_SEQUENCEs available")
+    }
+    
+    if("ptm_score" %in% colnames(df_ratio)){
+      if( any(is.na(df_ratio$ptm_score)) ){
+        ic_rr <- ic_rr + 1
+        if(verbose) message("      - (-) Some PTM_SCOREs are missed")
+      }else{
+        if(verbose) message("   + (+) All PTM_SCOREs available")
+      }
+      if(is.numeric(df_ratio$ptm_score)){
+        if(verbose) message("   + (+) PTM_SCORE is numeric")
+      }else{
+        ic_rr <- ic_rr + 1
+        if(verbose) message("      - (-) PTM_SCORE is  NOT NUMERIC")
+      }
+    }else{
+      ic_rr <- ic_rr + 2
+      if(verbose) message("      - (-) ptm_score column missed")
+    }
   }else{
     if( any(duplicated(df_ratio$protein_id)) ){
       ic_rr <- ic_rr + 1
       if(verbose) message("      - (-) Duplicated PROTEIN_ID found: FAIL")
       ic <- ic + 1
     }
-  }
+    
+    if("num_peptides" %in% colnames(df_ratio)){
+      if( any(is.na(df_ratio$num_peptides)) ){
+        ic_rr <- ic_rr + 1
+        if(verbose) message("      - (-) Some num_peptides are missed")
+      }else{
+        if(verbose) message("   + (+) All num_peptides available")
+      }
+      if(is.numeric(df_ratio$num_peptides)){
+        if(verbose) message("   + (+) num_peptides is numeric")
+      }else{
+        ic_rr <- ic_rr + 1
+        if(verbose) message("      - (-) num_peptides is NOT NUMERIC")
+      }
+    }else{
+      ic_rr <- ic_rr + 2
+      if(verbose) message("      - (-) num_peptides column missed")
+    }
+    
+    if("percent_coverage" %in% colnames(df_ratio)){
+      if( any(is.na(df_ratio$percent_coverage)) ){
+        ic_rr <- ic_rr + 1
+        if(verbose) message("      - (-) Some percent_coverage are missed")
+      }else{
+        if(verbose) message("   + (+) All percent_coverage available")
+      }
+      if(is.numeric(df_ratio$percent_coverage)){
+        if(verbose) message("   + (+) percent_coverage is numeric")
+      }else{
+        ic_rr <- ic_rr + 1
+        if(verbose) message("      - (-) percent_coverage is NOT NUMERIC")
+      }
+    }else{
+      ic_rr <- ic_rr + 2
+      if(verbose) message("      - (-) percent_coverage column missed")
+    }
+    
+    if("protein_score" %in% colnames(df_ratio)){
+      if( any(is.na(df_ratio$protein_score)) ){
+        ic_rr <- ic_rr + 1
+        if(verbose) message("      - (-) Some protein_score are missed")
+      }else{
+        if(verbose) message("   + (+) All protein_score available")
+      }
+      if(is.numeric(df_ratio$protein_score)){
+        if(verbose) message("   + (+) protein_score is numeric")
+      }else{
+        ic_rr <- ic_rr + 1
+        if(verbose) message("      - (-) protein_score is NOT NUMERIC")
+      }
+    }else{
+      ic_rr <- ic_rr + 2
+      if(verbose) message("      - (-) protein_score column missed")
+    }
+
+  } # PROTEIN RATIO
 
   if( any(is.na(df_ratio$protein_id)) ){
     ic_rr <- ic_rr + 1
@@ -142,6 +221,43 @@ check_ratio_proteomics <- function(df_ratio,
   }else{
     if(verbose) message("   + (+) All ENTREZ_ID available")
   }
+  
+  if( any(is.na(df_ratio$redundant_ids)) ){
+    ic_rr <- ic_rr + 1
+    if(verbose) message("      - (-) Some redundant_ids are missed")
+  }else{
+    if(verbose) message("   + (+) All redundant_ids available")
+  }
+  
+  if( any(is.na(df_ratio$organism_name)) ){
+    ic_rr <- ic_rr + 1
+    if(verbose) message("      - (-) Some organism_name are missed")
+  }else{
+    if(verbose) message("   + (+) All organism_name available")
+  }
+  
+  if("is_contaminant" %in% colnames(df_ratio)){
+    if(is.logical(df_ratio$is_contaminant)){
+      if(verbose) message("   + (+) All is_contaminant available")
+    }else{
+      ic_rr <- ic_rr + 1
+      if(verbose) message("      - (-) is_contaminant is not logical (TRUE/FALSE)")
+    }
+    if( any(is.na(df_ratio$is_contaminant)) ){
+      ic_rr <- ic_rr + 1
+      if(verbose) message("      - (-) Some is_contaminant are missed")
+    }else{
+      if(verbose) message("   + (+) All is_contaminant available")
+    }
+  }
+  
+  if( any(is.na(df_ratio$is_contaminant)) ){
+    ic_rr <- ic_rr + 1
+    if(verbose) message("      - (-) Some organism_name are missed")
+  }else{
+    if(verbose) message("   + (+) All organism_name available")
+  }
+  
 
   if(is.null(ic_rr) ){
     ic_rr <- 0
@@ -179,24 +295,23 @@ check_rii_proteomics <- function(df_rri,
                                  verbose = TRUE){
 
 
-  ic_rii <- NULL
+  ic_rii <- 0
 
   required_columns <- get_required_columns(isPTM = isPTM,
                                            prot_file = "rii")
 
   if(!all( required_columns %in% colnames(df_rri) )){
-    if(verbose) message("      - (-) The following required columns are missed: ", appendLF = FALSE)
+    ic_rii <- 10
+    if(verbose) message("      - (-) Error! Critical Required column(s) not found: ", appendLF = FALSE)
     if(verbose) message(paste(required_columns[!required_columns %in% colnames(df_rri)], collapse = ", "))
     return(ic_rii)
   }
-
-  ic_rii <- 0
 
   if(isPTM){
     # The ptm_id must be unique
     if( any(duplicated(df_rri$ptm_peptide)) ){
       ic_rii <- ic_rii + 1
-      if(verbose) message("      - (-) NON UNIQUE PTM_PEPTIDE values")
+      if(verbose) message("      - (-) ERROR: NON UNIQUE PTM_PEPTIDE values")
       ic <- ic + 1
       if(f_proof){
         # Print out redundancies
@@ -230,39 +345,55 @@ check_rii_proteomics <- function(df_rri,
       }
     }
 
-    if( any(is.na(df_rri$sequence)) ){
-      ic_rii <- ic_rii + 1
-      if(verbose) message("      - (-) Some SEQUENCE are missed")
-    }else{
-      if(verbose) message("   + (+) All SEQUENCE available")
-    }
-
     if( any(is.na(df_rri$ptm_id)) ){
       ic_rii <- ic_rii + 1
-      if(verbose) message("      - (-) Some PTM_ID are missed")
+      if(verbose) message("      - (-) ERROR: Some PTM_ID values are missed")
     }else{
       if(verbose) message("   + (+) All PTM_ID available")
     }
-
-    if( any(is.na(df_rri$confident_score)) ){
-      ic_rii <- ic_rii + 1
-      if(verbose) message("      - (-) Some CONFIDENT_SCORE are missed")
-    }else{
-      if(verbose) message("   + (+) All CONFIDENT_SCORE available")
+    
+    if("confident_score" %in% colnames(df_rri)){
+      if(is.numeric(df_rri$confident_score)){
+        if(verbose) message("   + (+) All CONFIDENT_SCORE are numeric")
+      }else{
+        ic_rii <- ic_rii + 1
+        if(verbose) message("      - (-) ERROR: CONFIDENT_SCORE is not numeric!")
+      }
+      
+      if( any(is.na(df_rri$confident_score)) ){
+        ic_rii <- ic_rii + 1
+        if(verbose) message("      - (-) ERROR: Some CONFIDENT_SCORE values are missed")
+      }else{
+        if(verbose) message("   + (+) All CONFIDENT_SCORE available")
+      }
     }
 
-    if( any(is.na(df_rri$confident_site)) ){
-      ic_rii <- ic_rii + 1
-      if(verbose) message("      - (-) Some CONFIDENT_SITE are missed")
+    if("confident_site" %in% colnames(df_rri)){
+      if( any(is.na(df_rri$confident_site)) ){
+        ic_rii <- ic_rii + 1
+        if(verbose) message("      - (-) ERROR: Some CONFIDENT_SITE are missed")
+      }else{
+        if(verbose) message("   + (+) All CONFIDENT_SITE available")
+      }
+      
+      if(is.logical(df_rri$confident_site)){
+        if(verbose) message("   + (+) confident_site is a logical variable")
+      }else{
+        ic_rii <- ic_rii + 1
+        if(verbose) message("   + (+) confident_site is NOT a logical variable (all values should be TRUE/FALSE)")
+      }
     }else{
-      if(verbose) message("   + (+) All CONFIDENT_SITE available")
+      ic_rii <- ic_rii + 1
+      if(verbose) message("      - (-) ERROR: confident_site column is not available")
     }
+    
+    # isPTM == TRUE
   }else{
     df_rri$protein_sequence <- paste0(df_rri$protein_id,"-", df_rri$sequence)
     if(any(duplicated(df_rri$protein_sequence))){
       ic_rii <- ic_rii + 1
       ic <- ic + 1
-      if(verbose) message("      - (-) Duplicated Protein + Sequence identified")
+      if(verbose) message("      - (-) ERROR: Duplicated Protein + Sequence identified")
     }else{
       if(verbose) message("   + (+) All Protein + Sequence are unique")
     }
@@ -271,23 +402,80 @@ check_rii_proteomics <- function(df_rri,
 
   if( any(is.na(df_rri$protein_id)) ){
     ic_rii <- ic_rii + 1
-    if(verbose) message("      - (-) Some PROTEIN_ID are missed")
+    if(verbose) message("      - (-) ERROR: (some) PROTEIN_IDs missed")
   }else{
-    if(verbose) message("   + (+) All PROTEIN_ID available")
+    if(verbose) message("   + (+) All PROTEIN_ID values available")
   }
 
   if( any(is.na(df_rri$gene_symbol)) ){
     # ic_rii <- ic_rii + 1
-    if(verbose) message("      - (-) Some GENE_SYMBOL are missed")
+    if(verbose) message("      - ( ) Some GENE_SYMBOL values are missed")
   }else{
-    if(verbose) message("   + (+) All GENE_SYMBOL available")
+    if(verbose) message("   + (+) All GENE_SYMBOL ids available")
   }
 
   if( any(is.na(df_rri$entrez_id)) ){
-    # ic_rii <- ic_rii + 1
-    if(verbose) message("      - (-) Some ENTREZ_ID are missed")
+    ic_rii <- ic_rii + 1
+    if(verbose) message("      - (-) ERROR: Some ENTREZ_ID values are missed")
   }else{
-    if(verbose) message("   + (+) All ENTREZ_ID available")
+    if(verbose) message("   + (+) All ENTREZ_ID ids available")
+  }
+  
+  if( any(is.na(df_rri$redundant_ids)) ){
+    # ic_rii <- ic_rii + 1
+    if(verbose) message("      - ( ) Some REDUNDANT_IDS values are missed (it should be fine)")
+  }else{
+    if(verbose) message("   + (+) All REDUNDANT_IDS values available")
+  }
+  
+  if( any(is.na(df_rri$sequence)) ){
+    ic_rii <- ic_rii + 1
+    if(verbose) message("      - (-) ERROR: Some SEQUENCE values are missed")
+  }else{
+    if(verbose) message("   + (+) All SEQUENCE values available")
+  }
+  
+  if("is_contaminant" %in% colnames(df_rri)){
+    if( any(is.na(df_rri$is_contaminant)) ){
+      ic_rii <- ic_rii + 1
+      if(verbose) message("      - (-) ERROR: Some IS_CONTAMINANT values are missed")
+    }else{
+      if(verbose) message("   + (+) All is_contaminant values available")
+    }
+    
+    if(is.logical(df_rri$is_contaminant)){
+      if(verbose) message("   + (+) IS_CONTAMINANT is a logical variable")
+    }else{
+      ic_rii <- ic_rii + 1
+      if(verbose) message("   + (+) IS_CONTAMINANT is NOT a logical variable (all values should be TRUE/FALSE)")
+    }
+  }else{
+    ic_rii <- ic_rii + 1
+    if(verbose) message("      - (-) ERROR: IS_CONTAMINANT column is not available")
+  }
+  
+  if("peptide_score" %in% colnames(df_rri)){
+    
+    if( any(is.na(df_rri$peptide_score)) ){
+      ic_rii <- ic_rii + 1
+      if(verbose) message("      - (-) ERROR: Some PEPTIDE_SCORE values are missed")
+    }else{
+      if(verbose) message("   + (+) All PEPTIDE_SCORE values available")
+    }
+    
+    if(is.numeric(df_rri$peptide_score)){
+      if(verbose) message("   + (+) All PEPTIDE_SCORE values are numeric")
+    }else{
+      ic_rii <- ic_rii + 1
+      if(verbose) message("      - (-) ERROR: PEPTIDE_SCORE is not numeric!")
+    }
+  }
+  
+  if( any(is.na(df_rri$organism_name)) ){
+    ic_rii <- ic_rii + 1
+    if(verbose) message("      - (-) ERROR: Some 	ORGANISM_NAME values are missed")
+  }else{
+    if(verbose) message("   + (+) All ORGANISM_NAME values available")
   }
 
   if( is.null(ic_rii) ){
@@ -320,8 +508,9 @@ check_vial_metadata_proteomics <- function(df_vm,
   required_columns <- c("vial_label", "tmt_plex", "tmt11_channel")
 
   if(!all( required_columns %in% colnames(df_vm) )){
-    if(verbose) message("      - (-) The following required columns are missed: ", appendLF = FALSE)
+    if(verbose) message("      - (-) CRITICAL column(s) missed: ", appendLF = FALSE)
     if(verbose) message(paste(required_columns[!required_columns %in% colnames(df_vm)], collapse = ", "))
+    ic_vm <- 3
     return(ic_vm)
   }
 
@@ -467,13 +656,14 @@ load_proteomics <- function(input_results_folder,
       if( all(required_columns %in% colnames(peprii)) ){
         peprii <- subset(peprii, select = required_columns)
       }else{
-        stop("RII: required columns from vial_label are not available in RII file")
+        what_is_missed <- required_columns[!(required_columns %in% colnames(peprii))]
+        stop("RII: required columns from vial_label are not available in RII file. \nMissed columns: ", paste(what_is_missed, collapse = ","))
       }
     }
 
   }else{
     if(verbose) message("      - (-) {results_RII-peptide} file not available")
-    ic <- ic + 1
+    ic <- ic + 10
   }
 
   # RATIO----
@@ -504,7 +694,7 @@ load_proteomics <- function(input_results_folder,
     }
   }else{
     if(verbose) message("      - (-) {results_ratio.txt} file not available")
-    ic <- ic + 1
+    ic <- ic + 10
   }
 
   if(f_rr & f_rii & f_vm){
@@ -569,6 +759,7 @@ validate_proteomics <- function(input_results_folder,
   assay <- validate_assay(input_results_folder)
   phase <- validate_phase(input_results_folder)
   tissue_code <- validate_tissue(input_results_folder)
+  validate_batch(input_results_folder)
 
   # Print out proofs----
   if(f_proof){
@@ -610,18 +801,6 @@ validate_proteomics <- function(input_results_folder,
   } else{
     ic_vl <- NA
   }
-
-  # if(is.null(dmaqc_shipping_info)){
-  #   message("dmaqc_shipping_info is ", paste(dmaqc_shipping_info), " imagino que NULL\n\n")
-  # }
-  #
-  # if(is.null(out_qc_folder)){
-  #   message("out_qc_folder is ", paste(out_qc_folder), " imagino que NULL\n\n")
-  # }
-  #
-
-  #
-  # message("ic_vl is now ", paste(ic_vl), " or ", ic_vl)
 
   # VIAL METADATA-----
 
@@ -674,13 +853,13 @@ validate_proteomics <- function(input_results_folder,
   if(f_rii){
     peprii <- lista$df
     ic_rii <- check_rii_proteomics(df_rri = peprii,
-                                  isPTM = isPTM,
-                                  f_proof = f_proof,
-                                  output_prefix = output_prefix,
-                                  return_n_issues = TRUE,
-                                  out_qc_folder = out_qc_folder,
-                                  printPDF = printPDF,
-                                  verbose = verbose)
+                                   isPTM = isPTM,
+                                   f_proof = f_proof,
+                                   output_prefix = output_prefix,
+                                   return_n_issues = TRUE,
+                                   out_qc_folder = out_qc_folder,
+                                   printPDF = printPDF,
+                                   verbose = verbose)
 
     if( is.null(ic_rii) ){
       f_rii <- FALSE
@@ -694,18 +873,22 @@ validate_proteomics <- function(input_results_folder,
         if( !is.null(all_vial_labels) ){
           required_columns <- get_required_columns(isPTM = isPTM,
                                                    prot_file = "rii")
-          required_columns <- c(required_columns, all_vial_labels)
+          required_columns <- c(required_columns, all_samples)
 
           if( all(required_columns %in% colnames(peprii)) ){
             # Check distributions
-            fpeprii <- subset(peprii, select = required_columns)
 
             if(isPTM){
-              peptides_long <- fpeprii %>% tidyr::pivot_longer(cols = -c(ptm_peptide, ptm_id, protein_id, gene_symbol, sequence, entrez_id),
-                                                                                 names_to = "vial_label",
-                                                                                 values_to = "ri_intensity")
+              r_c <- c("ptm_peptide", all_samples)
+              fpeprii <- subset(peprii, select = r_c)
+              peptides_long <- fpeprii %>% tidyr::pivot_longer(cols = -c(ptm_peptide),
+                                                               names_to = "vial_label",
+                                                               values_to = "ri_intensity")
+                                                                                 
             }else{
-              peptides_long <- fpeprii %>% tidyr::pivot_longer(cols = -c(protein_id, gene_symbol, sequence, entrez_id),
+              r_c <- c("protein_id", "sequence", all_samples)
+              fpeprii <- subset(peprii, select = r_c)
+              peptides_long <- fpeprii %>% tidyr::pivot_longer(cols = -c(protein_id, sequence),
                                                               names_to = "vial_label",
                                                               values_to = "ri_intensity")
             }
@@ -768,7 +951,7 @@ validate_proteomics <- function(input_results_folder,
     }
   }else{
     if(verbose) message("      - (-) {results_RII-peptide} file not available")
-    ic <- ic + 1
+    ic <- ic + 10
   }
 
   # RATIO----
@@ -797,7 +980,6 @@ validate_proteomics <- function(input_results_folder,
       ic_rr <- NA
     }else{
       # Plot distributions
-
       if(f_proof){
 
         if(verbose) message("   + (+) PLOT: RATIO distribution and NA values")
@@ -808,15 +990,16 @@ validate_proteomics <- function(input_results_folder,
           required_columns <- c(required_columns, all_vial_labels)
 
           if( all(required_columns %in% colnames(ratior)) ){
-
-            fratior <- subset(ratior, select = required_columns)
-
             if(isPTM){
-              ratior_long <- fratior %>% tidyr::pivot_longer(cols = -c(ptm_id, protein_id, gene_symbol, entrez_id, confident_score, confident_site),
+              r_c <- c("ptm_id", all_vial_labels)
+              fratior <- subset(ratior, select = r_c)
+              ratior_long <- fratior %>% tidyr::pivot_longer(cols = -c(ptm_id),
                                                             names_to = "vial_label",
                                                             values_to = "ratio_values")
             }else{
-              ratior_long <- fratior %>% tidyr::pivot_longer(cols = -c(protein_id, gene_symbol, entrez_id),
+              r_c <- c("protein_id", all_vial_labels)
+              fratior <- subset(ratior, select = r_c)
+              ratior_long <- fratior %>% tidyr::pivot_longer(cols = -c(protein_id),
                                                             names_to = "vial_label",
                                                             values_to = "ratio_values")
             }
@@ -875,7 +1058,7 @@ validate_proteomics <- function(input_results_folder,
     } #print plots
   }else{
     if(verbose) message("      - (-) {results_ratio.txt} file not available")
-    ic <- ic + 1
+    ic <- ic + 10
   }
 
   # MANIFEST----
@@ -1011,7 +1194,7 @@ validate_proteomics <- function(input_results_folder,
     }
 
   }else{
-    if(verbose) message("      - (-) CRITICAL: One of the files is not available: FAIL")
+    if(verbose) message("      - (-) CRITICAL: One or many of the files are not available: FAIL")
     ic <- ic + 3
   }
 
@@ -1157,16 +1340,43 @@ write_proteomics_releases <- function(input_results_folder,
 # @title Get proteomics required columns
 get_required_columns <- function(isPTM, prot_file){
   if(prot_file == "ratio"){
+    both_required <- c("protein_id", 
+                       "gene_symbol", 
+                       "entrez_id", 
+                       "redundant_ids", 
+                       "organism_name", 
+                       "is_contaminant")
     if(isPTM){
-      required_columns <- c("ptm_id", "protein_id", "gene_symbol", "entrez_id", "confident_score", "confident_site")
+      required_columns <- c(both_required, 
+                            "ptm_id", 
+                            "confident_score", 
+                            "confident_site", 
+                            "flanking_sequence", 
+                            "ptm_score")
+      
     }else{
-      required_columns <- c("protein_id", "gene_symbol", "entrez_id")
+      required_columns <- c(both_required, 
+                            "num_peptides", 
+                            "percent_coverage", 
+                            "protein_score")
     }
   }else if(prot_file == "rii"){
+    both_required <- c("protein_id", 
+                       "redundant_ids",
+                       "is_contaminant",
+                       "peptide_score", 
+                       "sequence", 
+                       "gene_symbol", 
+                       "entrez_id", 
+                       "organism_name")
     if(isPTM){
-      required_columns <- c("protein_id", "sequence", "ptm_id", "ptm_peptide", "gene_symbol", "entrez_id", "confident_score", "confident_site")
+      required_columns <- c(both_required,
+                            "ptm_id", 
+                            "ptm_peptide", 
+                            "confident_score", 
+                            "confident_site")
     }else{
-      required_columns <- c("protein_id", "sequence", "gene_symbol", "entrez_id")
+      required_columns <- c(both_required)
     }
   }
   return(required_columns)
