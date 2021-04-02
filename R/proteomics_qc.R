@@ -208,16 +208,20 @@ check_ratio_proteomics <- function(df_ratio,
     if(verbose) message("   + (+) All PROTEIN_ID available")
   }
 
-  if( any(is.na(df_ratio$gene_symbol)) ){
-    # ic_rr <- ic_rr + 1
-    if(verbose) message("      - (-) Some GENE_SYMBOL are missed")
+  if( any( is.na( df_ratio$gene_symbol[which(df_ratio$is_contaminant == FALSE)] ) ) ){
+    # ic_rii <- ic_rii + 1
+    if(verbose) message("      - ( ) Some GENE_SYMBOL values are missed for some protein ids:", 
+                        paste(df_ratio$protein_id[which(is.na( df_ratio$gene_symbol[which(df_ratio$is_contaminant == FALSE)] ))], 
+                              collapse = ", "))
   }else{
     if(verbose) message("   + (+) All GENE_SYMBOL available")
   }
 
-  if( any(is.na(df_ratio$entrez_id)) ){
-    # ic_rr <- ic_rr + 1
-    if(verbose) message("      - (-) Some ENTREZ_ID are missed")
+  if( any( is.na( df_ratio$entrez_id[which(df_ratio$is_contaminant == FALSE)] ) ) ){
+    # ic_rii <- ic_rii + 1
+    if(verbose) message("      - ( ) Some ENTREZ_ID values are missed for some protein ids:", 
+                        paste(df_ratio$protein_id[which(is.na( df_ratio$entrez_id[which(df_ratio$is_contaminant == FALSE)] ))], 
+                              collapse = ", "))
   }else{
     if(verbose) message("   + (+) All ENTREZ_ID available")
   }
@@ -312,7 +316,6 @@ check_rii_proteomics <- function(df_rri,
     if( any(duplicated(df_rri$ptm_peptide)) ){
       ic_rii <- ic_rii + 1
       if(verbose) message("      - (-) ERROR: NON UNIQUE PTM_PEPTIDE values")
-      ic <- ic + 1
       if(f_proof){
         # Print out redundancies
         # red_ids <- df_rri$ptm_peptide[duplicated(df_rri$ptm_peptide)]
@@ -386,7 +389,6 @@ check_rii_proteomics <- function(df_rri,
       ic_rii <- ic_rii + 1
       if(verbose) message("      - (-) ERROR: confident_site column is not available")
     }
-    
     # isPTM == TRUE
   }else{
     df_rri$protein_sequence <- paste0(df_rri$protein_id,"-", df_rri$sequence)
@@ -407,16 +409,20 @@ check_rii_proteomics <- function(df_rri,
     if(verbose) message("   + (+) All PROTEIN_ID values available")
   }
 
-  if( any(is.na(df_rri$gene_symbol)) ){
+  if( any( is.na( df_rri$gene_symbol[which(df_rri$is_contaminant == FALSE)] ) ) ){
     # ic_rii <- ic_rii + 1
-    if(verbose) message("      - ( ) Some GENE_SYMBOL values are missed")
+    if(verbose) message("      - ( ) Some GENE_SYMBOL values are missed for some protein ids:", 
+                        paste(df_rri$protein_id[which(is.na( df_rri$gene_symbol[which(df_rri$is_contaminant == FALSE)] ))], 
+                              collapse = ", "))
   }else{
     if(verbose) message("   + (+) All GENE_SYMBOL ids available")
   }
 
-  if( any(is.na(df_rri$entrez_id)) ){
-    ic_rii <- ic_rii + 1
-    if(verbose) message("      - (-) ERROR: Some ENTREZ_ID values are missed")
+  if( any( is.na( df_rri$entrez_id[which(df_rri$is_contaminant == FALSE)] ) ) ){
+    # ic_rii <- ic_rii + 1
+    if(verbose) message("      - ( ) Some ENTREZ_ID values are missed for some protein ids:", 
+                        paste(df_rri$protein_id[which(is.na( df_rri$entrez_id[which(df_rri$is_contaminant == FALSE)] ))], 
+                              collapse = ", "))
   }else{
     if(verbose) message("   + (+) All ENTREZ_ID ids available")
   }
