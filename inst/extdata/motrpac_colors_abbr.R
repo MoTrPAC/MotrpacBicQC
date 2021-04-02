@@ -1,6 +1,9 @@
 
 # Motrpac colors abbreviations
 
+library(dplyr)
+library(devtools)
+
 assay_abbr = c(atac='ATAC',
                atacseq='ATAC',
                'atac-seq'='ATAC',

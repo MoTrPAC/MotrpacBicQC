@@ -1,3 +1,9 @@
+Changes in version 0.4.7 (2021-04-02)
+- Proteomics QC: update warnings affecting gene_symbol and entrez_id when missing ids
+- Fix issue affecting Windows machines (Pierre J-B)
+- Several Color code fixes + assay (Nicole G)
+- Bug fixes
+
 Changes in version 0.4.6 (2021-03-26)
 - New QC checks for the new proteomics requirements
 
