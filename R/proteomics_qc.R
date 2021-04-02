@@ -752,7 +752,7 @@ validate_proteomics <- function(input_results_folder,
     stop("One (or many) of the required arguments missed.
         Please, check the help for this function to find out more")
 
-  input_results_folder <- normalizePath(input_results_folder)
+  input_results_folder <- normalizePath(input_results_folder, winslash = "/")
 
   # Validate folder structure-----
   processfolder <- validate_processFolder(input_results_folder)
