@@ -81,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MotrpacBicQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.8</span>
       </span>
     </div>
 
@@ -148,7 +148,8 @@
   return_n_issues <span class='op'>=</span> <span class='cn'>TRUE</span>,
   full_report <span class='op'>=</span> <span class='cn'>FALSE</span>,
   printPDF <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  verbose <span class='op'>=</span> <span class='cn'>TRUE</span>
+  verbose <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  run_by_bic <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -198,6 +199,11 @@ group of files, e.g., results, metadata_metabolites, etc)</p></td>
     <tr>
       <th>verbose</th>
       <td><p>(logical) <code>TRUE</code> (default) prints QC details.</p></td>
+    </tr>
+    <tr>
+      <th>run_by_bic</th>
+      <td><p>(logical) <code>TRUE</code> if the dataset was generated running the
+BIC proteomics pipeline (default <code>FALSE</code>)</p></td>
     </tr>
     </table>
 
