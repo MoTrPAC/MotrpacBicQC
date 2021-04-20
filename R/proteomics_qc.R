@@ -653,7 +653,8 @@ load_proteomics <- function(input_results_folder,
     ic_rii <- check_rii_proteomics(df_rri = peprii,
                                    isPTM = isPTM,
                                    verbose = verbose)
-
+    
+    # Rename
     if( !is.null(all_samples) ){
       required_columns <- get_required_columns(isPTM = isPTM,
                                                prot_file = "rii")
@@ -738,6 +739,8 @@ load_proteomics <- function(input_results_folder,
 #' total number of issues. If `TRUE` returns the details of the number of issues (by
 #' group of files, e.g., results, metadata_metabolites, etc)
 #' @param printPDF (logical) if `TRUE` (default print plots to pdf)
+#' @param run_by_bic (logical) `TRUE` if the dataset was generated running the 
+#' BIC proteomics pipeline (default `FALSE`)
 #' @param verbose (logical) `TRUE` (default) prints QC details.
 #' @return (data.frame) Summary of issues
 #' @export
@@ -750,7 +753,8 @@ validate_proteomics <- function(input_results_folder,
                                 return_n_issues = TRUE,
                                 full_report = FALSE,
                                 printPDF = TRUE,
-                                verbose = TRUE){
+                                verbose = TRUE,
+                                run_by_bic = FALSE){
 
   if(any(missing(input_results_folder) |
          missing(isPTM) |
@@ -765,7 +769,7 @@ validate_proteomics <- function(input_results_folder,
   assay <- validate_assay(input_results_folder)
   phase <- validate_phase(input_results_folder)
   tissue_code <- validate_tissue(input_results_folder)
-  validate_batch(input_results_folder)
+  batch_folder <- validate_batch(input_results_folder)
 
   # Print out proofs----
   if(f_proof){
@@ -858,6 +862,18 @@ validate_proteomics <- function(input_results_folder,
   f_rii <- lista$flag
   if(f_rii){
     peprii <- lista$df
+    
+    # PlexedPiper temporal error
+    if( all(c("Ref_S1", "Ref_S2", "Ref_S3", "Ref_S4", "Ref_S5", "Ref_S6") %in% colnames(peprii)) ){
+      Ref_S1=Ref_S2=Ref_S3=Ref_S4=Ref_S5=Ref_S6=NULL
+      peprii <- rename(peprii, Ref_A=Ref_S1)
+      peprii <- rename(peprii, Ref_B=Ref_S2)
+      peprii <- rename(peprii, Ref_C=Ref_S3)
+      peprii <- rename(peprii, Ref_D=Ref_S4)
+      peprii <- rename(peprii, Ref_E=Ref_S5)
+      peprii <- rename(peprii, Ref_F=Ref_S6)
+    }
+    
     ic_rii <- check_rii_proteomics(df_rri = peprii,
                                    isPTM = isPTM,
                                    f_proof = f_proof,
@@ -1070,110 +1086,116 @@ validate_proteomics <- function(input_results_folder,
   # MANIFEST----
 
   if(verbose) message("\n## MANIFEST\n")
-
-  batch <- gsub("(.*)(RESULTS.*)", "\\1", input_results_folder)
-
-  file_manifest <- list.files(normalizePath(batch),
-                                     pattern="file_manifest",
-                                     ignore.case = TRUE,
-                                     full.names=TRUE,
-                                     recursive = TRUE)
-
-  if(length(file_manifest) == 0){
+  
+  if(run_by_bic){
+    if(verbose) message("   + (+) Pipeline run by the BIC")
     f_man <- FALSE
-    ic_man <- ic_man + 1
-  }else if(length(file_manifest) >= 1){
-    file_manifest <- file_manifest[length(file_manifest)]
-    f_man <- TRUE
-  }
-
-  if(f_man){
-    
-    # load all files in manifest:
-    f_list = list()
-    for (f in file_manifest ){
-      f_list[[f]] = read.csv(f)
-      f_list[[f]]$file <- f
-    }
-    
-    manifest <- bind_rows(f_list)
-    
-    manifest$file_name <- basename(manifest$file_name)
-    
-    mani_columns <- c("file_name", "md5")
-    if( all(mani_columns %in% colnames(manifest)) ){
-      if(verbose) message("   + (+) <file_name, md5> columns available in manifest file")
-      if(f_rr){
-        ratio_file <- manifest$file_name[grepl("ratio.txt", manifest$file_name)]
-        if( length(ratio_file) == 1 ){
-          if( file.exists(file.path(input_results_folder, ratio_file)) ){
-            if(verbose) message("   + (+) RATIO file included")
-          }else{
-            if(verbose) message("      - (-) The ratio file name provided in manifest is not found in folder")
-            ic_man <- ic_man + 1
-          }
-        }else if (length(ratio_file) > 1){
-          if(verbose) message("      - (-) More than one ratio.txt files available in the folder")
-          ic_man <- ic_man + 1
-        }else{
-          # This should never happen
-          if(verbose) message("      - (-) No ratio.txt file available in the manifest file")
-          ic_man <- ic_man + 1
-        }
-      }
-
-      if(f_rii){
-        rii_file <- manifest$file_name[grepl("RII-peptide.txt", manifest$file_name, ignore.case = TRUE)]
-        if(length(rii_file) == 1){
-          if(file.exists(file.path(input_results_folder, rii_file))){
-            if(verbose) message("   + (+) RII file included")
-          }else{
-            if(verbose) message("      - (-) RII file name provided in manifest is not found in folder")
-            ic_man <- ic_man + 1
-          }
-        }else if (length(rii_file) > 1){
-          if(verbose) message("      - (-) More than one RII-peptide.txt files available in the folder")
-          ic_man <- ic_man + 1
-        }else{
-          # This should never happen
-          if(verbose) message("      - (-) No RII-peptide.txt available in the manifest file")
-          ic_man <- ic_man + 1
-        }
-
-      }
-
-      if(f_vm){
-        vm_file <- manifest$file_name[grepl("vial_metadata", manifest$file_name, ignore.case = TRUE)]
-        if( length(vm_file) == 1 ){
-          if(file.exists(file.path(input_results_folder, vm_file))){
-            if(verbose) message("   + (+) VIAL_METADATA file included")
-          }else{
-            if(verbose) message("      - (-) vial_metadata name provided in manifest is not found in folder")
-            ic_man <- ic_man + 1
-          }
-        }else if( length(vm_file) > 1 ) {
-          if(verbose) message("      - (-) VIAL_METADATA file is not included in manifest file")
-          ic_man <- ic_man + 1
-        }else{
-          if(verbose) message("      - (-) VIAL_METADATA file is not included in manifest file")
-          ic_man <- ic_man + 1
-        }
-      }
-
-      if( any(is.na(manifest$md5)) ){
-        if(verbose) message("      - (-) MD5 column contains NA values")
-        ic_man <- ic_man + 1
-      }
-
-    }else{
-      if(verbose) message("      - (-) MANIFEST ERROR: Missing columns (must contain <file_name> and <md5>)")
-      ic_man <- ic_man + 1
-      ic <- ic + 1
-    }
+    ic_man <- 0
   }else{
-    message("      - (-) ERROR: manifest file not found")
-    ic_man = 6
-  }
+    batch <- gsub("(.*)(RESULTS.*)", "\\1", input_results_folder)
+    
+    file_manifest <- list.files(normalizePath(batch),
+                                pattern="file_manifest",
+                                ignore.case = TRUE,
+                                full.names=TRUE,
+                                recursive = TRUE)
+    
+    if(length(file_manifest) == 0){
+      f_man <- FALSE
+      ic_man <- ic_man + 1
+    }else if(length(file_manifest) >= 1){
+      file_manifest <- file_manifest[length(file_manifest)]
+      f_man <- TRUE
+    }
+    
+    if(f_man){
+      
+      # load all files in manifest:
+      f_list = list()
+      for (f in file_manifest ){
+        f_list[[f]] = read.csv(f)
+        f_list[[f]]$file <- f
+      }
+      
+      manifest <- bind_rows(f_list)
+      
+      manifest$file_name <- basename(manifest$file_name)
+      
+      mani_columns <- c("file_name", "md5")
+      if( all(mani_columns %in% colnames(manifest)) ){
+        if(verbose) message("   + (+) <file_name, md5> columns available in manifest file")
+        if(f_rr){
+          ratio_file <- manifest$file_name[grepl("ratio.txt", manifest$file_name)]
+          if( length(ratio_file) == 1 ){
+            if( file.exists(file.path(input_results_folder, ratio_file)) ){
+              if(verbose) message("   + (+) RATIO file included")
+            }else{
+              if(verbose) message("      - (-) The ratio file name provided in manifest is not found in folder")
+              ic_man <- ic_man + 1
+            }
+          }else if (length(ratio_file) > 1){
+            if(verbose) message("      - (-) More than one ratio.txt files available in the folder")
+            ic_man <- ic_man + 1
+          }else{
+            # This should never happen
+            if(verbose) message("      - (-) No ratio.txt file available in the manifest file")
+            ic_man <- ic_man + 1
+          }
+        }
+        
+        if(f_rii){
+          rii_file <- manifest$file_name[grepl("RII-peptide.txt", manifest$file_name, ignore.case = TRUE)]
+          if(length(rii_file) == 1){
+            if(file.exists(file.path(input_results_folder, rii_file))){
+              if(verbose) message("   + (+) RII file included")
+            }else{
+              if(verbose) message("      - (-) RII file name provided in manifest is not found in folder")
+              ic_man <- ic_man + 1
+            }
+          }else if (length(rii_file) > 1){
+            if(verbose) message("      - (-) More than one RII-peptide.txt files available in the folder")
+            ic_man <- ic_man + 1
+          }else{
+            # This should never happen
+            if(verbose) message("      - (-) No RII-peptide.txt available in the manifest file")
+            ic_man <- ic_man + 1
+          }
+          
+        }
+        
+        if(f_vm){
+          vm_file <- manifest$file_name[grepl("vial_metadata", manifest$file_name, ignore.case = TRUE)]
+          if( length(vm_file) == 1 ){
+            if(file.exists(file.path(input_results_folder, vm_file))){
+              if(verbose) message("   + (+) VIAL_METADATA file included")
+            }else{
+              if(verbose) message("      - (-) vial_metadata name provided in manifest is not found in folder")
+              ic_man <- ic_man + 1
+            }
+          }else if( length(vm_file) > 1 ) {
+            if(verbose) message("      - (-) VIAL_METADATA file is not included in manifest file")
+            ic_man <- ic_man + 1
+          }else{
+            if(verbose) message("      - (-) VIAL_METADATA file is not included in manifest file")
+            ic_man <- ic_man + 1
+          }
+        }
+        
+        if( any(is.na(manifest$md5)) ){
+          if(verbose) message("      - (-) MD5 column contains NA values")
+          ic_man <- ic_man + 1
+        }
+        
+      }else{
+        if(verbose) message("      - (-) MANIFEST ERROR: Missing columns (must contain <file_name> and <md5>)")
+        ic_man <- ic_man + 1
+        ic <- ic + 1
+      }
+    }else{
+      message("      - (-) ERROR: manifest file not found")
+      ic_man = 6
+    }
+  } #run_by_bic?
   
   if(ic_man > 0){
     ic <- ic + ic_man
