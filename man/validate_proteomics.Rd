@@ -14,7 +14,8 @@ validate_proteomics(
   return_n_issues = TRUE,
   full_report = FALSE,
   printPDF = TRUE,
-  verbose = TRUE
+  verbose = TRUE,
+  run_by_bic = FALSE
 )
 }
 \arguments{
@@ -43,6 +44,9 @@ group of files, e.g., results, metadata_metabolites, etc)}
 \item{printPDF}{(logical) if \code{TRUE} (default print plots to pdf)}
 
 \item{verbose}{(logical) \code{TRUE} (default) prints QC details.}
+
+\item{run_by_bic}{(logical) \code{TRUE} if the dataset was generated running the
+BIC proteomics pipeline (default \code{FALSE})}
 }
 \value{
 (data.frame) Summary of issues

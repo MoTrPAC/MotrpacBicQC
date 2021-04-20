@@ -1,3 +1,7 @@
+Changes in version 0.4.8 (2021-04-20)
+- Proteomics QC: enable option to check data processed at the BIC
+- Bug fixes (color code)
+
 Changes in version 0.4.7 (2021-04-02)
 - Proteomics QC: update warnings affecting gene_symbol and entrez_id when missing ids
 - Fix issue affecting Windows machines (Pierre J-B)
