@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MotrpacBicQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.9</span>
       </span>
     </div>
 
@@ -83,7 +83,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>MotrpacBicQC: Metabolomics QC</h1>
             
-            <h4 data-toc-skip class="date">2021-04-20</h4>
+            <h4 data-toc-skip class="date">2021-04-27</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MoTrPAC/MotrpacBicQC/blob/master/vignettes/qc_metabolomics.Rmd" class="external-link"><code>vignettes/qc_metabolomics.Rmd</code></a></small>
       <div class="hidden name"><code>qc_metabolomics.Rmd</code></div>
@@ -94,7 +94,7 @@
     
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
+<a href="#installation" class="anchor" aria-hidden="true"></a>Installation</h2>
 <p>First, download and install R and RStudio:</p>
 <ul>
 <li><a href="https://mirror.las.iastate.edu/CRAN/" class="external-link">R</a></li>
@@ -111,7 +111,7 @@
 </div>
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
-<a href="#usage" class="anchor"></a>Usage</h2>
+<a href="#usage" class="anchor" aria-hidden="true"></a>Usage</h2>
 <p>Load the library</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/MoTrPAC/MotrpacBicQC" class="external-link">MotrpacBicQC</a></span><span class="op">)</span></code></pre></div>
@@ -145,11 +145,11 @@
 <span class="co">#&gt;    + (+) {sample_id} columns are numeric: OK</span></code></pre></div>
 <div id="how-to-test-your-datasets" class="section level3">
 <h3 class="hasAnchor">
-<a href="#how-to-test-your-datasets" class="anchor"></a>How to test your datasets</h3>
+<a href="#how-to-test-your-datasets" class="anchor" aria-hidden="true"></a>How to test your datasets</h3>
 <p>Two approaches available:</p>
 <div id="check-full-processed_yyyymmdd-folder-recommended" class="section level4">
 <h4 class="hasAnchor">
-<a href="#check-full-processed_yyyymmdd-folder-recommended" class="anchor"></a>Check full <code>PROCESSED_YYYYMMDD</code> folder (recommended)</h4>
+<a href="#check-full-processed_yyyymmdd-folder-recommended" class="anchor" aria-hidden="true"></a>Check full <code>PROCESSED_YYYYMMDD</code> folder (recommended)</h4>
 <p>Run test on the full submission. For that, run the following command:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/validate_metabolomics.html">validate_metabolomics</a></span><span class="op">(</span>input_results_folder <span class="op">=</span> <span class="st">"/full/path/to/PROCESSED_YYYYMMDD"</span>, 
@@ -166,7 +166,7 @@
 </div>
 <div id="check-individual-files" class="section level4">
 <h4 class="hasAnchor">
-<a href="#check-individual-files" class="anchor"></a>Check individual files</h4>
+<a href="#check-individual-files" class="anchor" aria-hidden="true"></a>Check individual files</h4>
 <ul>
 <li>Check metadata metabolites:</li>
 </ul>
@@ -204,7 +204,7 @@
 </div>
 <div id="merge-metabolomics-data-only-pass1a-supported" class="section level3">
 <h3 class="hasAnchor">
-<a href="#merge-metabolomics-data-only-pass1a-supported" class="anchor"></a>Merge metabolomics data (only PASS1A supported)</h3>
+<a href="#merge-metabolomics-data-only-pass1a-supported" class="anchor" aria-hidden="true"></a>Merge metabolomics data (only PASS1A supported)</h3>
 <p>The following functions enable merging all results and metadata files into a single data frame.</p>
 <p>The folder/file structure of a required untargeted metabolomics submission is as follows:</p>
 <pre><code>PASS1A-06/
@@ -248,7 +248,7 @@
 </div>
 <div id="help" class="section level2">
 <h2 class="hasAnchor">
-<a href="#help" class="anchor"></a>Help</h2>
+<a href="#help" class="anchor" aria-hidden="true"></a>Help</h2>
 <p>Additional details for each function can be found by typing, for example:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="op">?</span><span class="va">merge_all_metabolomics</span></code></pre></div>
