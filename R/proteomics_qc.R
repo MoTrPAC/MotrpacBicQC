@@ -616,7 +616,7 @@ load_proteomics <- function(input_results_folder,
                                    type = "v_m",
                                    verbose = verbose)
     # Remove space between "Ref_ A"
-    v_m$vial_label <- gsub(" ", "", v_m$vial_label)
+    # v_m$vial_label <- gsub(" ", "", v_m$vial_label)
     ic_vm <- check_vial_metadata_proteomics(df_vm = v_m,
                                             return_n_issues = TRUE,
                                             verbose = verbose)
@@ -863,16 +863,16 @@ validate_proteomics <- function(input_results_folder,
   if(f_rii){
     peprii <- lista$df
     
-    # PlexedPiper temporal error
-    if( all(c("Ref_S1", "Ref_S2", "Ref_S3", "Ref_S4", "Ref_S5", "Ref_S6") %in% colnames(peprii)) ){
-      Ref_S1=Ref_S2=Ref_S3=Ref_S4=Ref_S5=Ref_S6=NULL
-      peprii <- rename(peprii, Ref_A=Ref_S1)
-      peprii <- rename(peprii, Ref_B=Ref_S2)
-      peprii <- rename(peprii, Ref_C=Ref_S3)
-      peprii <- rename(peprii, Ref_D=Ref_S4)
-      peprii <- rename(peprii, Ref_E=Ref_S5)
-      peprii <- rename(peprii, Ref_F=Ref_S6)
-    }
+    # # PlexedPiper temporal error
+    # if( all(c("Ref_S1", "Ref_S2", "Ref_S3", "Ref_S4", "Ref_S5", "Ref_S6") %in% colnames(peprii)) ){
+    #   Ref_S1=Ref_S2=Ref_S3=Ref_S4=Ref_S5=Ref_S6=NULL
+    #   peprii <- rename(peprii, Ref_A=Ref_S1)
+    #   peprii <- rename(peprii, Ref_B=Ref_S2)
+    #   peprii <- rename(peprii, Ref_C=Ref_S3)
+    #   peprii <- rename(peprii, Ref_D=Ref_S4)
+    #   peprii <- rename(peprii, Ref_E=Ref_S5)
+    #   peprii <- rename(peprii, Ref_F=Ref_S6)
+    # }
     
     ic_rii <- check_rii_proteomics(df_rri = peprii,
                                    isPTM = isPTM,
@@ -967,6 +967,7 @@ validate_proteomics <- function(input_results_folder,
             } # if vm
           }else{
             if(verbose) message("      - (-) Not all required columns available in RII: print proof is not possible")
+            required_columns[!(required_columns %in% colnames(peprii))]
           }
         } # !is.null(all_vial_labels)
       } # print plots
