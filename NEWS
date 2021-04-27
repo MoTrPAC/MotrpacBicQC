@@ -1,3 +1,7 @@
+Changes in version 0.4.8 (2021-04-27)
+- Bug fixes
+- Update readme
+
 Changes in version 0.4.8 (2021-04-20)
 - Proteomics QC: enable option to check data processed at the BIC
 - Bug fixes (color code)
