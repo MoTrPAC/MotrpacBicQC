@@ -21,7 +21,8 @@ use_data(assay_codes, overwrite = TRUE)
 
 # Metabolomics Workbench data dictionary
 
-metabolomics_data_dictionary <- read.csv("inst/extdata/motrpac-metabolomics-named-revised-20210325.csv", stringsAsFactors = FALSE)
+# metabolomics_data_dictionary <- read.csv("inst/extdata/motrpac-metabolomics-named-revised-20210325.csv", stringsAsFactors = FALSE)
+metabolomics_data_dictionary <- read.csv("inst/extdata/motrpac-metabolomics-named-revised-20210429.csv", stringsAsFactors = FALSE)
 metabolomics_data_dictionary$assay <- NULL
 
 if(any(duplicated(metabolomics_data_dictionary$refmet_name))){
