@@ -22,7 +22,6 @@ A data frame with > 2000 rows and 15 columns (variables):
 \item{lm_id}{Metabolite lm id}
 \item{hmdb_id}{Metabolite hmdb id}
 \item{chebi_id}{Metabolite chebi id}
-\item{is_review}{has the kegg id review and add it by the site? TRUE/FALSE}
 }
 }
 \usage{

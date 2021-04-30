@@ -15,6 +15,10 @@ Chemical Analysis Sites (CAS).
 
 Currently supports both Metabolomics and Proteomics datasets.
 
+## Package Updates
+
+This package is frequently updated. Please, check the file [NEWS.md](https://github.com/MoTrPAC/MotrpacBicQC/blob/master/NEWS.md) to find out more about the changes affecting every version
+
 ## Installation
 
 First, download and install R and RStudio:
