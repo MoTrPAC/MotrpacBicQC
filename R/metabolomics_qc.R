@@ -203,7 +203,7 @@ check_metadata_samples <- function(df,
   # sample_type: st
   esample_types <- c("Sample", "QC-Pooled", "QC-Reference", "QC-Blank",
                      "QC-Identification", "QC-InternalStandard", "QC-PreRun",
-                     "QC-ExternalStandard", "QC-DriftCorrection")
+                     "QC-ExternalStandard", "QC-DriftCorrection", "QC-ReCAS")
 
   if("sample_type" %in% colnames(df)){
     if(!all(df$sample_type %in% esample_types)){
