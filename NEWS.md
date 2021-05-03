@@ -1,7 +1,11 @@
+
+# MotrpacBicQC 0.5.1 (2021-05-03)
+
+* New metabolomics `sample_type`: `QC-ReCAS`, Global reference biological material prepared at
+
 # MotrpacBicQC 0.5.0 (2021-04-29)
 
 * Update data dictionary (GTech's kegg revision)
-
 
 # MotrpacBicQC 0.4.9 (2021-04-27)
 
