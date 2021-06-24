@@ -91,9 +91,9 @@ validate_assay <- function(input_results_folder){
 #' @export
 validate_phase <- function(input_results_folder){
   phase <- stringr::str_extract(string = input_results_folder,
-                                pattern = "(PASS1A-06|PASS1A-18|PASS1B-06|PASS1B-18)")
+                                pattern = "(PASS1A-06|PASS1A-18|PASS1B-06|PASS1B-18|HUMAN)")
   if(is.na(phase)){
-    stop("<project phase (e.g. PASS1A-06> is not found in the folder structure")
+    stop("<project phase (e.g. PASS1A-06)> is not found in the folder structure, please, check guidelines")
   }else{
     return(phase)
   }
