@@ -1,7 +1,6 @@
 
 # MotrpacBicQC 0.5.2 (2021-06-23)
 
-* R version >= 4.0.0 is now required
 * New Phase: HUMAN (name of the new project folder for the human studies)
 * Proteomics QC: new proteomics QC plot, number of unique ids per sample
 * Proteomics QC: improved QC plots
