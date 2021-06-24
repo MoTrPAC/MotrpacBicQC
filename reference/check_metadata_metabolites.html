@@ -58,9 +58,6 @@
 
 
 
-<!-- dependencies from examples -->
-
-
   
 
   
@@ -83,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MotrpacBicQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
       </span>
     </div>
 
@@ -143,12 +140,12 @@
     <p>check whether metadata_metabolites is following guidelines</p>
     </div>
 
-    <pre class="usage"><span class='fu'>check_metadata_metabolites</span><span class='op'>(</span>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>check_metadata_metabolites</span><span class='op'>(</span>
   <span class='va'>df</span>,
   <span class='va'>name_id</span>,
   return_n_issues <span class='op'>=</span> <span class='cn'>FALSE</span>,
   verbose <span class='op'>=</span> <span class='cn'>TRUE</span>
-<span class='op'>)</span></pre>
+<span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -176,10 +173,18 @@
     <p>(int) number of issues identified</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='op'>{</span>
-<span class='fu'>check_metadata_metabolites</span><span class='op'>(</span>df <span class='op'>=</span> <span class='va'>metadata_metabolites_named</span>, name_id <span class='op'>=</span> <span class='st'>"named"</span><span class='op'>)</span>
-<span class='op'>}</span>
-</div><div class='co'>#&gt;    + (+) All required columns present</div><div class='co'>#&gt;    + (+) {metabolite_name} OK</div><div class='co'>#&gt;    + (+) {refmet_name} unique values: OK</div><div class='co'>#&gt;    + (+) {refmet_name} ids found in refmet: OK</div><div class='co'>#&gt;    + (+) {rt} all numeric: OK</div><div class='co'>#&gt;    + (+) {mz} all numeric: OK</div><div class='co'>#&gt;    + (+) {neutral_mass} all numeric values OK</div><div class='co'>#&gt;    + (+) {formula} available: OK</div></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='op'>{</span></span>
+<span class='r-in'><span class='fu'>check_metadata_metabolites</span><span class='op'>(</span>df <span class='op'>=</span> <span class='va'>metadata_metabolites_named</span>, name_id <span class='op'>=</span> <span class='st'>"named"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>    + (+) All required columns present</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>    + (+) {metabolite_name} OK</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>    + (+) {refmet_name} unique values: OK</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>    + (+) {refmet_name} ids found in refmet: OK</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>    + (+) {rt} all numeric: OK</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>    + (+) {mz} all numeric: OK</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>    + (+) {neutral_mass} all numeric values OK</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>    + (+) {formula} available: OK</span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
