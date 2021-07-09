@@ -85,7 +85,10 @@ plot_basic_metabolomics_qc <- function(results,
   uid3 <- unique(uid2[c("metabolite_name", "sample_id", "sample_type", "sample_order", "id_type")]) %>%
     count(sample_id, sample_type, sample_order, id_type)
   
-  puid1 <- ggplot(uid3, aes(x = reorder(sample_id, sample_order), y = n, fill = sample_type)) +
+  puid1 <- ggplot(uid3, 
+                  aes(x = reorder(sample_id, sample_order), 
+                      y = n, 
+                      fill = sample_type)) +
     geom_bar(stat = "identity",
              position="stack",
              na.rm = TRUE) +
@@ -116,7 +119,10 @@ plot_basic_metabolomics_qc <- function(results,
   uid4 <- unique(uid2[c("metabolite_name", "sample_id", "sample_type", "sample_order")]) %>%
     count(sample_id, sample_type, sample_order)
   
-  puid2 <- ggplot(uid4, aes(x = reorder(sample_id, sample_order), y = n, fill = sample_type)) +
+  puid2 <- ggplot(uid4, 
+                  aes(x = reorder(sample_id, sample_order), 
+                      y = n, 
+                      fill = sample_type)) +
     geom_bar(stat = "identity",
              na.rm = TRUE) +
     theme_linedraw() +

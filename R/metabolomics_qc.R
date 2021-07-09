@@ -825,7 +825,7 @@ validate_metabolomics <- function(input_results_folder,
   
   if(f_proof){
     
-    if(verbose) message("## QC Plots")
+    if(verbose) message("\n\n## QC Plots\n")
     
     output_prefix <- paste0(cas, ".", tolower(phase), ".", tissue_code, ".",tolower(assay), ".", tolower(processfolder))
     
@@ -850,6 +850,14 @@ validate_metabolomics <- function(input_results_folder,
   
     }else{
       message("\n- (-) QC plots are not possible: critical datasets are missed")
+    }
+    
+    if(f_rmn & f_mmn){
+      m_m_n <- filter_required_columns(df = m_m_n,
+                                    type = "m_m",
+                                    name_id = "named",
+                                    verbose = FALSE)
+      r_m_merge <- merge(r_m_n, m_m_n, by = "metabolite_name")
     }
   }
 

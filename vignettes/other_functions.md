@@ -1,6 +1,6 @@
 ---
 title: "MotrpacBicQC: Other Functions"
-date: "`r Sys.Date()`"
+date: "2021-07-08"
 output:
   rmdformats::downcute:
     code_folding: show
