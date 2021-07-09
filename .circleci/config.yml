@@ -2,18 +2,9 @@ version: 1
 jobs:
   build:
     docker:
-      - image: r-base:4.1.0
+      - image: rocker/verse:3.6.2
     steps:
       - checkout
-      - run:
-          name: Update apt-get
-          command: apt-get update
-      - run:
-          name: Install required libraries
-          command: apt-get -y install libcurl4-gnutls-dev libxml2-dev libssl-dev
-      -run:
-          name: Install devtools
-          command: R -e "install.packages(\"devtools\")"
       - run:
           name: Install package dependencies
           command: R -e "devtools::install_deps(dep = TRUE)"
