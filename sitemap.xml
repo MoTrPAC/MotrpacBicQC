@@ -13,10 +13,19 @@
     <loc>/articles/other_functions.html</loc>
   </url>
   <url>
+    <loc>/articles/other_functions_files/jqueryui-1.11.4/index.html</loc>
+  </url>
+  <url>
     <loc>/articles/qc_metabolomics.html</loc>
   </url>
   <url>
+    <loc>/articles/qc_metabolomics_files/jqueryui-1.11.4/index.html</loc>
+  </url>
+  <url>
     <loc>/articles/qc_proteomics.html</loc>
+  </url>
+  <url>
+    <loc>/articles/qc_proteomics_files/jqueryui-1.11.4/index.html</loc>
   </url>
   <url>
     <loc>/authors.html</loc>
@@ -122,6 +131,9 @@
   </url>
   <url>
     <loc>/reference/phenotypes_pass1a06_short.html</loc>
+  </url>
+  <url>
+    <loc>/reference/plot_basic_metabolomics_qc.html</loc>
   </url>
   <url>
     <loc>/reference/remove_empty_columns.html</loc>
