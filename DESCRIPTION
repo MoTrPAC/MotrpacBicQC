@@ -1,8 +1,8 @@
 Package: MotrpacBicQC
 Type: Package
 Title: QC/QA functions for the MoTrPAC community
-Version: 0.5.2
-Date: 2021-06-23
+Version: 0.5.3
+Date: 2021-07-08
 Author: MoTrPAC Bioinformatics Center
 Maintainer: David Jimenez-Morales <davidjm@stanford.edu>
 Description: R Package for the analysis of MoTrPAC datasets. 
@@ -12,20 +12,21 @@ Description: R Package for the analysis of MoTrPAC datasets.
     (the "molecular map") that underlie the effects of physical activity 
     in humans. 
     This package provides a set of functions for Primary and Secondary 
-    QC/QA analysis of datasets generated and submitted by the consortium 
-    Chemical Analysis Sites (CAS).
+    QC/QA analysis of datasets generated and submitted 
+    by the consortium Chemical Analysis Sites.
 License: MIT + file LICENSE
 URL: https://github.com/MoTrPAC/MotrpacBicQC
 Encoding: UTF-8
 LazyData: true
 BugReports: https://github.com/MoTrPAC/MotrpacBicQC/issues
-Depends: R (>= 3.6.2)
+Depends: R (>= 3.6.0)
 Imports:
     data.table,
     dplyr,
     forcats,
     ggplot2,
     grDevices,
+    gridExtra,
     inspectdf,
     jsonlite,
     knitr,
@@ -41,5 +42,6 @@ RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
 Suggests: 
     testthat,
+    markdown,
     rmarkdown,
-    prettydoc
+    rmdformats

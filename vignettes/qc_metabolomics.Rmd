@@ -1,26 +1,20 @@
 ---
 title: "MotrpacBicQC: Metabolomics QC"
-#rmarkdown::html_vignette
 date: "`r Sys.Date()`"
-output: 
-  prettydoc::html_pretty:
-    theme: tactile
-    highlight: github
-    toc: true
+output:
+  rmdformats::downcute:
+    code_folding: show
+    self_contained: true
+    thumbnails: false
+    lightbox: true
+pkgdown:
+  as_is: true
+  
 vignette: >
-  %\VignetteIndexEntry{MotrpacBicQC-Metabolomics}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteIndexEntry{MotrpacBicQC: Metabolomics QC}
+  %\usepackage[UTF-8]{inputenc}  
 ---
-
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
-
-
 
 ## Installation
 
@@ -70,11 +64,11 @@ check_metadata_samples(df = metadata_sample_named, cas = "umichigan")
 check_results(r_m = results_named, m_s = metadata_sample_named, m_m = metadata_metabolites_named)
 ```
 
-### How to test your datasets
+## How to test your datasets
 
 Two approaches available:
 
-#### Check full `PROCESSED_YYYYMMDD` folder (recommended)
+### Check full `PROCESSED_YYYYMMDD` folder (recommended)
 
 Run test on the full submission. For that, run the following command:
 
@@ -92,7 +86,7 @@ validate_metabolomics(input_results_folder = "/full/path/to/PROCESSED_YYYYMMDD",
 - "gtech"     = Georgia Tech
 - "duke"      = Duke
 
-#### Check individual files
+### Check individual files
 
 - Check metadata metabolites:
 

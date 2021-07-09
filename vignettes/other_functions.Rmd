@@ -1,24 +1,20 @@
 ---
 title: "MotrpacBicQC: Other Functions"
-#rmarkdown::html_vignette
 date: "`r Sys.Date()`"
-output: 
-  prettydoc::html_pretty:
-    theme: tactile
-    highlight: github
-    toc: false
+output:
+  rmdformats::downcute:
+    code_folding: show
+    self_contained: true
+    thumbnails: false
+    lightbox: true
+pkgdown:
+  as_is: true
+  
 vignette: >
-  %\VignetteIndexEntry{MotrpacBicQC-OtherFunctions}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteIndexEntry{MotrpacBicQC: Other Functions}
+  %\usepackage[UTF-8]{inputenc}
 ---
-
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
 
 
 ## Data Objects

@@ -10,7 +10,10 @@ validate_metabolomics(
   dmaqc_shipping_info = NULL,
   return_n_issues = FALSE,
   full_report = FALSE,
-  verbose = TRUE
+  verbose = TRUE,
+  f_proof = FALSE,
+  out_qc_folder = NULL,
+  printPDF = TRUE
 )
 }
 \arguments{
@@ -27,6 +30,17 @@ total number of issues. If \code{TRUE} returns the details of the number of issu
 group of files, e.g., results, metadata_metabolites, etc)}
 
 \item{verbose}{(logical) \code{TRUE} (default) shows messages}
+
+\item{f_proof}{(char) print out pdf with charts including:
+\itemize{
+\item Sample intensity distribution
+\item Unique ID counts
+\item NA values
+}}
+
+\item{out_qc_folder}{(char) output qc folder (it creates the folder if it doesn't exist)}
+
+\item{printPDF}{(logical) if \code{TRUE} (default print plots to pdf)}
 }
 \value{
 (data.frame) Summary of issues

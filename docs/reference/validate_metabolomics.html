@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MotrpacBicQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.3</span>
       </span>
     </div>
 
@@ -144,7 +144,10 @@
   dmaqc_shipping_info <span class='op'>=</span> <span class='cn'>NULL</span>,
   return_n_issues <span class='op'>=</span> <span class='cn'>FALSE</span>,
   full_report <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  verbose <span class='op'>=</span> <span class='cn'>TRUE</span>
+  verbose <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  f_proof <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  out_qc_folder <span class='op'>=</span> <span class='cn'>NULL</span>,
+  printPDF <span class='op'>=</span> <span class='cn'>TRUE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -175,6 +178,22 @@ group of files, e.g., results, metadata_metabolites, etc)</p></td>
     <tr>
       <th>verbose</th>
       <td><p>(logical) <code>TRUE</code> (default) shows messages</p></td>
+    </tr>
+    <tr>
+      <th>f_proof</th>
+      <td><p>(char) print out pdf with charts including:</p><ul>
+<li><p>Sample intensity distribution</p></li>
+<li><p>Unique ID counts</p></li>
+<li><p>NA values</p></li>
+</ul></td>
+    </tr>
+    <tr>
+      <th>out_qc_folder</th>
+      <td><p>(char) output qc folder (it creates the folder if it doesn't exist)</p></td>
+    </tr>
+    <tr>
+      <th>printPDF</th>
+      <td><p>(logical) if <code>TRUE</code> (default print plots to pdf)</p></td>
     </tr>
     </table>
 

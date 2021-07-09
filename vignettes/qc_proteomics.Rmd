@@ -1,25 +1,20 @@
 ---
 title: "MotrpacBicQC: Proteomics QC"
-#rmarkdown::html_vignette
 date: "`r Sys.Date()`"
-output: 
-  prettydoc::html_pretty:
-    theme: tactile
-    highlight: github
-    toc: true
+output:
+  rmdformats::downcute:
+    code_folding: show
+    self_contained: true
+    thumbnails: false
+    lightbox: true
+pkgdown:
+  as_is: true
+  
 vignette: >
-  %\VignetteIndexEntry{MotrpacBicQC-Proteomics}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteIndexEntry{MotrpacBicQC: Proteomics QC}
+  %\usepackage[UTF-8]{inputenc}
 ---
-
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
-
 
 
 ## Installation
@@ -72,11 +67,11 @@ which should generate the following outputs:
 - (-) The following required columns are missed: vial_label, tmt_plex, tmt11_channel
 ```
 
-### How to test your datasets
+## How to test your datasets
 
 Two approaches available:
 
-#### Check full `RESULTS_YYYYMMDD` folder (recommended)
+### Check full `RESULTS_YYYYMMDD` folder (recommended)
 
 ```
 |-- PASS1B-06
@@ -130,7 +125,7 @@ validate_proteomics(input_results_folder = "/full/path/to/PASS1B-06/T55/PROT_PH/
 - "pnnl"       = PNNL
 
 
-#### Check individual files
+### Check individual files
 
 - Check ratio resuls file
 

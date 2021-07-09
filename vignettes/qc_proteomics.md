@@ -1,0 +1,179 @@
+---
+title: "MotrpacBicQC: Proteomics QC"
+date: "2021-07-08"
+output:
+  rmdformats::downcute:
+    code_folding: show
+    self_contained: true
+    thumbnails: false
+    lightbox: true
+pkgdown:
+  as_is: true
+  
+vignette: >
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteIndexEntry{MotrpacBicQC: Proteomics QC}
+  %\usepackage[UTF-8]{inputenc}
+---
+
+
+## Installation
+
+First, download and install R and RStudio:
+
+- [R](https://mirror.las.iastate.edu/CRAN/) 
+- [RStudio](https://rstudio.com/products/rstudio/download/) (free version)
+
+Then, open RStudio and install the `devtools` package
+
+
+```r
+install.packages("devtools")
+```
+
+Finally, install the `MotrpacBicQC` package
+
+
+```r
+library(devtools)
+devtools::install_github("MoTrPAC/MotrpacBicQC", build_vignettes = TRUE)
+```
+
+
+## Usage
+
+Load the library
+
+
+```r
+library(MotrpacBicQC)
+```
+
+And run any of the following tests to check that the package 
+is correctly installed and it works. For example:
+
+
+```r
+# Just copy and paste in the RStudio terminal
+test <- check_ratio_proteomics(df_ratio = metadata_metabolites_named, 
+                               isPTM =  TRUE)
+test <- check_rii_proteomics(df_rri = metadata_metabolites_named, 
+                             isPTM =  TRUE)
+test <- check_vial_metadata_proteomics(df_vm = metadata_metabolites_named)
+```
+
+which should generate the following outputs:
+
+```
+- (-) The following required columns are missed: ptm_id, protein_id, gene_symbol, entrez_id
+- (-) The following required columns are missed: protein_id, sequence, ptm_id, ptm_peptide, gene_symbol, entrez_id, confident_score, confident_site
+- (-) The following required columns are missed: vial_label, tmt_plex, tmt11_channel
+```
+
+## How to test your datasets
+
+Two approaches available:
+
+### Check full `RESULTS_YYYYMMDD` folder (recommended)
+
+```
+|-- PASS1B-06
+|   |-- T55
+|   |   |-- PROT_PH
+|   |   |   `-- BATCH1_20200312
+|   |   |       |-- RAW_20200312
+|   |   |       |   |-- 01MOTRPAC_PASS1B-06_T55_PH_PN_20191231
+|   |   |       |   |   |-- 01MOTRPAC_PASS1B-06_T55_PH_PN_201912319_MANIFEST.txt
+|   |   |       |   |   `-- 01MOTRPAC_PASS1B-06_T55_PH_PN_201912319_TMTdetails.txt
+|   |   |       |   |-- 02MOTRPAC_PASS1B-06_T55_PH_PN_20191231
+|   |   |       |   |   |-- 02MOTRPAC_PASS1B-06_T55_PH_PN_201912319_MANIFEST.txt
+|   |   |       |   |   `-- 02MOTRPAC_PASS1B-06_T55_PH_PN_201912319_TMTdetails.txt
+|   |   |       |   |-- 03MOTRPAC_PASS1B-06_T55_PH_PN_20191231
+|   |   |       |   |   |-- 03MOTRPAC_PASS1B-06_T55_PH_PN_201912319_MANIFEST.txt
+|   |   |       |   |   `-- 03MOTRPAC_PASS1B-06_T55_PH_PN_201912319_TMTdetails.txt
+|   |   |       |   |-- 04MOTRPAC_PASS1B-06_T55_PH_PN_20191231
+|   |   |       |   |   |-- 04MOTRPAC_PASS1B-06_T55_PH_PN_201912319_MANIFEST.txt
+|   |   |       |   |   `-- 04MOTRPAC_PASS1B-06_T55_PH_PN_201912319_TMTdetails.txt
+|   |   |       |   |-- 05MOTRPAC_PASS1B-06_T55_PH_PN_20191231
+|   |   |       |   |   |-- 05MOTRPAC_PASS1B-06_T55_PH_PN_201912319_MANIFEST.txt
+|   |   |       |   |   `-- 05MOTRPAC_PASS1B-06_T55_PH_PN_201912319_TMTdetails.txt
+|   |   |       |   `-- 06MOTRPAC_PASS1B-06_T55_PH_PN_20191231
+|   |   |       |       |-- 06MOTRPAC_PASS1B-06_T55_PH_PN_201912319_MANIFEST.txt
+|   |   |       |       `-- 06MOTRPAC_PASS1B-06_T55_PH_PN_201912319_TMTdetails.txt
+|   |   |       |-- RESULTS_20200909
+|   |   |       |   |-- MOTRPAC_PASS1B-06_T55_PH_PN_20200909_results_RII-peptide.txt
+|   |   |       |   |-- MOTRPAC_PASS1B-06_T55_PH_PN_20200909_results_ratio.txt
+|   |   |       |   `-- MOTRPAC_PASS1B-06_T55_PH_PN_20200909_vial_metadata.txt
+|   |   |       `-- file_manifest_20200910.csv
+```
+
+
+Run test on the full submission. For that, run the following command:
+
+
+```r
+validate_proteomics(input_results_folder = "/full/path/to/RESULTS_YYYYMMDD", 
+                    cas = "your_site_code")
+
+# in the example above...
+validate_proteomics(input_results_folder = "/full/path/to/PASS1B-06/T55/PROT_PH/BATCH1_20200312/RESULTS_20200909", 
+                    cas = "pnnl",
+                    isPTM = TRUE,
+                    return_n_issues = FALSE)
+```
+
+**cas** is one of the followings:
+
+- "broad_prot" = Broad Proteomics
+- "pnnl"       = PNNL
+
+
+### Check individual files
+
+- Check ratio resuls file
+
+
+```r
+# Open the ratio results file
+
+proteomics_ratio_results <- read.delim(file = "/path/to/your/file", stringsAsFactors = FALSE)
+
+check_ratio_proteomics(df_ratio = proteomics_ratio_results, 
+                       isPTM = TRUE, 
+                       printPDF = FALSE)
+```
+
+- Check proteomics reporter ion intensity file:
+
+
+```r
+# Open your files
+proteomics_ratio_results <- read.delim(file = "/path/to/your/file", stringsAsFactors = FALSE)
+
+check_rii_proteomics(df_rri = proteomics_ratio_results, cas = "your_side_id")
+```
+
+- Check proteomics vial metadata file
+
+
+```r
+# Open your files
+vial_metadata <- read.delim(file = "/path/to/your/file", stringsAsFactors = FALSE)
+
+check_vial_metadata_proteomics(df_vm = vial_metadata)
+```
+
+
+
+## Help
+
+Additional details for each function can be found by typing, for example:
+
+
+```r
+?check_vial_metadata_proteomics
+```
+
+Need extra help? Please, [submit an issue here](https://github.com/MoTrPAC/MotrpacBicQC/issues) 
+providing as many details as possible.
+

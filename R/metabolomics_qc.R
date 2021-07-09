@@ -594,6 +594,12 @@ check_viallabel_dmaqc <- function(vl_submitted,
 #' @param full_report (logical) if `FALSE` (default) it returns only the
 #' total number of issues. If `TRUE` returns the details of the number of issues (by
 #' group of files, e.g., results, metadata_metabolites, etc)
+#' @param f_proof (char) print out pdf with charts including:
+#' - Sample intensity distribution
+#' - Unique ID counts
+#' - NA values
+#' @param out_qc_folder (char) output qc folder (it creates the folder if it doesn't exist)
+#' @param printPDF (logical) if `TRUE` (default print plots to pdf)
 #' @param verbose (logical) `TRUE` (default) shows messages
 #' @return (data.frame) Summary of issues
 #' @export
@@ -602,7 +608,10 @@ validate_metabolomics <- function(input_results_folder,
                                   dmaqc_shipping_info = NULL,
                                   return_n_issues = FALSE,
                                   full_report = FALSE,
-                                  verbose = TRUE){
+                                  verbose = TRUE,
+                                  f_proof = FALSE,
+                                  out_qc_folder = NULL,
+                                  printPDF = TRUE){
 
   # validate folder structure -----
   validate_cas(cas = cas)
@@ -809,6 +818,46 @@ validate_metabolomics <- function(input_results_folder,
           if(verbose) message("\n      - (-) Column(s) only found in [results UNNAMED] file:\n", paste(extra_in_unamed, collapse = "\n\t\t - "))
         }
       }
+    }
+  }
+  
+  # QC PLOTS------
+  
+  if(f_proof){
+    
+    if(verbose) message("\n\n## QC Plots\n")
+    
+    output_prefix <- paste0(cas, ".", tolower(phase), ".", tissue_code, ".",tolower(assay), ".", tolower(processfolder))
+    
+    if(f_rmn & f_msn ){
+      
+      r_m_n$id_type <- "named"
+      eresults_coln <- c("metabolite_name", "id_type", unique(m_s_n$sample_id))
+      if(untargeted){
+        # This means that this dataset is untargeted
+        r_m_u$id_type <- "unnamed"  
+        results <- rbind(r_m_n[eresults_coln], r_m_u[eresults_coln])
+      }else{
+        # This is targeted (no unnamed metabolites)
+        results <- r_m_n[eresults_coln]
+      }
+      
+      plot_basic_metabolomics_qc(results = results, 
+                                 m_s_n = m_s_n, 
+                                 out_qc_folder = out_qc_folder, 
+                                 output_prefix = output_prefix,
+                                 printPDF = printPDF)
+  
+    }else{
+      message("\n- (-) QC plots are not possible: critical datasets are missed")
+    }
+    
+    if(f_rmn & f_mmn){
+      m_m_n <- filter_required_columns(df = m_m_n,
+                                    type = "m_m",
+                                    name_id = "named",
+                                    verbose = FALSE)
+      r_m_merge <- merge(r_m_n, m_m_n, by = "metabolite_name")
     }
   }
 

@@ -1,3 +1,8 @@
+# MotrpacBicQC 0.5.3 (2021-06-25)
+
+* Metabolomics QC: new metabolomics QC plots, including number of IDs per sample, intensity distribution, and percentage of NA values
+* Markdown: Replace `prettydoc` by `rmdformats`
+* New assay code: CONV (Targeted Conventional metabolites or clinical analytes, provided by Duke)
 
 # MotrpacBicQC 0.5.2 (2021-06-23)
 
