@@ -730,6 +730,10 @@ load_proteomics <- function(input_results_folder,
 #' @param isPTM (logical) `TRUE` if it is Post-Translational-Modification proteomics assay
 #' @param cas (char) CAS code
 #' @param dmaqc_shipping_info (char) phase code
+#' @param dmaqc_phase2validate (char) Provide phase to validate. Examples of submissions:
+#' - Only PASS1A-06: type either "PASS1A-06" or leave it `NULL`
+#' - Both PASS1A-06 and PASS1C-06: type "PASS1A-06|PASS1C-06"
+#' - Only PASS1C-06: type "PASS1C-06"
 #' @param f_proof (char) print out pdf with charts including:
 #' - Reported Ion Intensity boxplot distribution and percentage of NA values per sample
 #' - Ratio: ratio boxplot distribution and percentage of NA values per samples
@@ -748,6 +752,7 @@ validate_proteomics <- function(input_results_folder,
                                 isPTM,
                                 cas,
                                 dmaqc_shipping_info = NULL,
+                                dmaqc_phase2validate = NULL,
                                 f_proof = FALSE,
                                 out_qc_folder = NULL,
                                 return_n_issues = TRUE,
@@ -1365,15 +1370,22 @@ validate_proteomics <- function(input_results_folder,
   # Validate vial labels from DMAQC
 
   if(verbose) message("\n\n## DMAQC validation\n")
-  failed_samples <- check_failedsamples(input_results_folder = input_results_folder, verbose = verbose)
+  failed_samples <- check_failedsamples(input_results_folder = input_results_folder, 
+                                        verbose = verbose)
 
   if( is.na(ic_vl) ){
     if(f_vm){
+      # Take care of PASS1C
+      if( !is.null(dmaqc_phase2validate) ){
+        phase2check <- dmaqc_phase2validate
+      }else{
+        phase2check <- phase
+      }
 
       ic_vl <- check_viallabel_dmaqc(vl_submitted = all_vial_labels,
                                      tissue_code = tissue_code,
                                      cas = cas,
-                                     phase = phase,
+                                     phase = phase2check,
                                      failed_samples = failed_samples,
                                      dmaqc_shipping_info = dmaqc_shipping_info,
                                      return_n_issues = TRUE,

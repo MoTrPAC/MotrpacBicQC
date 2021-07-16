@@ -9,6 +9,7 @@ validate_proteomics(
   isPTM,
   cas,
   dmaqc_shipping_info = NULL,
+  dmaqc_phase2validate = NULL,
   f_proof = FALSE,
   out_qc_folder = NULL,
   return_n_issues = TRUE,
@@ -26,6 +27,13 @@ validate_proteomics(
 \item{cas}{(char) CAS code}
 
 \item{dmaqc_shipping_info}{(char) phase code}
+
+\item{dmaqc_phase2validate}{(char) Provide phase to validate. Examples of submissions:
+\itemize{
+\item Only PASS1A-06: type either "PASS1A-06" or leave it \code{NULL}
+\item Both PASS1A-06 and PASS1C-06: type "PASS1A-06|PASS1C-06"
+\item Only PASS1C-06: type "PASS1C-06"
+}}
 
 \item{f_proof}{(char) print out pdf with charts including:
 \itemize{
