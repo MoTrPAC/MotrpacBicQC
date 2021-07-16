@@ -511,85 +511,16 @@ check_failedsamples <- function(input_results_folder,
 }
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' @title validate vial label from DMAQC
-#'
-#' @description validate vial label from DMAQC
-#' @param vl_submitted (vector) results df
-#' @param dmaqc_shipping_info (data.frame) dmaqc shipping information
-#' @param tissue_code (char) tissue code
-#' @param cas (char) CAS code
-#' @param phase (char) phase code
-#' @param failed_samples (char) metadata_metabolites df
-#' @param return_n_issues (logical) if `TRUE` returns the number of issues
-#' @param verbose (logical) `TRUE` (default) shows messages
-#' @return (int) number of issues identified
-#' @export
-check_viallabel_dmaqc <- function(vl_submitted,
-                                  dmaqc_shipping_info,
-                                  tissue_code,
-                                  cas,
-                                  phase,
-                                  failed_samples,
-                                  return_n_issues = FALSE,
-                                  verbose = TRUE){
-
-  # issue_count
-  ic <- NA
-
-  pass <- gsub("(.*)(-)(.*)", "\\1", phase)
-  month <- gsub("(.*)(-)(.*)", "\\3", phase)
-
-  dmaqc_shipping_df <- read.delim(dmaqc_shipping_info, stringsAsFactors = FALSE)
-
-  month <- as.integer(month)
-
-  dmaqc_labels <- dmaqc_shipping_df$vial_label[which(dmaqc_shipping_df$bic_tissue_code == tissue_code &
-                                                         dmaqc_shipping_df$site_code == tolower(cas) &
-                                                         dmaqc_shipping_df$phase == pass &
-                                                         dmaqc_shipping_df$animal_age == month)]
-
-  if( length(dmaqc_labels) == 0){
-    if(verbose) message("   + (+) DMAQC CHECK POINT: sample IDs not available in DMAQC dataset. Needs to be revised by BIC")
-    ic <- "NOT_AVAILABLE"
-  }else{
-    if(setequal(vl_submitted, dmaqc_labels)){
-      if(verbose) message("   + (+) DMAQC CHECK POINT: samples sent to CAS have been processed: OK")
-      ic <- "OK"
-    }else{
-      samples_missed <- setdiff(dmaqc_labels, vl_submitted)
-      if(!is.null(failed_samples)){
-        if(setequal(failed_samples, samples_missed)){
-          if(verbose) message("   + (+) DMAQC CHECK POINT: samples sent to CAS have been processed (with known issues for some samples): OK")
-          ic <- "OK"
-        }else{
-          if(verbose){
-            message("      - (-) DMAQC CHECK POINT: samples not found in metadata_results: FAIL")
-            message("\t - ", paste(samples_missed, collapse = "\n\t - "))
-            ic <- "FAIL"
-          }
-        }
-      }else{
-        if(verbose){
-          message("      - (-) DMAQC CHECK POINT: samples not found in metadata_results: FAIL")
-          message("\t - ", paste(samples_missed, collapse = "\n\t - "))
-        }
-        ic <- "FAIL"
-      }
-    }
-
-  }
-
-  if(return_n_issues) return(ic)
-}
-
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' @title Validate a Metabolomics submission
 #'
 #' @description Validate a Metabolomics submission
 #' @param input_results_folder (char) path to the PROCESSED folder to check
 #' @param cas (char) CAS code
-#' @param dmaqc_shipping_info (char) phase code
+#' @param dmaqc_shipping_info (char) File path to the DMAQC file
+#' @param dmaqc_phase2validate (char) Provide phase to validate. Examples of submissions:
+#' - Only PASS1A-06: type either "PASS1A-06" or leave it `NULL`
+#' - Both PASS1A-06 and PASS1C-06: type "PASS1A-06|PASS1C-06"
+#' - Only PASS1C-06: type "PASS1C-06"
 #' @param return_n_issues (logical) if `TRUE` returns the number of issues
 #' @param full_report (logical) if `FALSE` (default) it returns only the
 #' total number of issues. If `TRUE` returns the details of the number of issues (by
@@ -606,6 +537,7 @@ check_viallabel_dmaqc <- function(vl_submitted,
 validate_metabolomics <- function(input_results_folder,
                                   cas,
                                   dmaqc_shipping_info = NULL,
+                                  dmaqc_phase2validate = NULL,
                                   return_n_issues = FALSE,
                                   full_report = FALSE,
                                   verbose = TRUE,
@@ -883,22 +815,24 @@ validate_metabolomics <- function(input_results_folder,
   }
 
   if(f_man){
-    f_list = list()
-    for (f in file_manifest ){
-      f_list[[f]] = read.csv(f)
-      f_list[[f]]$file <- f
-    }
-    
-    manifest <- dplyr::bind_rows(f_list)
-    colnames(manifest) <- tolower(colnames(manifest))
-    manifest$file_base <- basename(manifest$file_name)
+    # if we would need to process multiple manifest files:
+    # f_list = list()
+    # for (f in file_manifest ){
+    #   f_list[[f]] = read.csv(f)
+    #   f_list[[f]]$file <- f
+    # }
+    # manifest <- dplyr::bind_rows(f_list)
+    manifest <- read.csv(file_manifest)
     mani_columns <- c("file_name", "md5")
     if( all( mani_columns %in% colnames(manifest)) ){
       if(verbose) message("   + (+) <file_name, md5> columns available in manifest file")
+      
+      manifest$file_base <- basename(manifest$file_name)
+      
       if(f_mmn){
-        metadata_metabolites_named_file <- manifest$file_name[grepl(".*etadata_metabolit.*_named", manifest$file_name)]
-        tocheck <- gsub("(.*/)(PROCESSED.*)","\\2", m_m_n_f)
-        if( any(grepl(tocheck, metadata_metabolites_named_file)) ){
+        metadata_metabolites_named_file <- basename(manifest$file_name[grepl(".*etadata_metabolit.*_named", manifest$file_name)])
+        tocheck <- basename(m_m_n_f)
+        if( tocheck == metadata_metabolites_named_file){
           if(verbose) message("   + (+) metadata_metabolites_named_file included in manifest: OK")
         }else{
           if(verbose) message("      - (-) metadata_metabolites_named_file is not included in manifest file: FAIL")
@@ -907,9 +841,9 @@ validate_metabolomics <- function(input_results_folder,
       }
 
       if(f_msn){
-        metadata_samples_named_file <- manifest$file_name[grepl(".*etadata_samp.*_named", manifest$file_name)]
-        tocheck <- gsub("(.*/)(PROCESSED.*)","\\2", m_s_n_f)
-        if( any(grepl(tocheck, metadata_samples_named_file)) ){
+        metadata_samples_named_file <- basename(manifest$file_name[grepl(".*etadata_samp.*_named", manifest$file_name)])
+        tocheck <- basename(m_s_n_f)
+        if( tocheck == metadata_samples_named_file ){
           if(verbose) message("   + (+) metadata_sample_named_file included in manifest: OK")
         }else{
           if(verbose) message("      - (-) metadata_sample_named_file is not included in manifest file: FAIL")
@@ -917,14 +851,13 @@ validate_metabolomics <- function(input_results_folder,
         }
 
         # Check RAW FILES
-        
-        manifest$file_base <- basename(manifest$file_name)
         if( all(m_s_n$raw_file %in% manifest$file_base) ){
           if(verbose) message("   + (+) All raw files included: OK")
         }else{
           if(verbose){
             message("      - (-) RAW FILES available in metadata_samples_named not included in the manifest file: FAIL")
             message(            "> ", paste( m_s_n$raw_file[!(m_s_n$raw_file %in% manifest$file_name)], collapse = ", " ) )
+            message("\n       HINT: is the file extension included in the metadata_samples files?\n")
           } 
           ic_man <- ic_man + 1
         }
@@ -932,9 +865,9 @@ validate_metabolomics <- function(input_results_folder,
       } # f_msn
 
       if(f_rmn){
-        results_metabolites_named_file <- manifest$file_name[grepl(".*esults_metabolit.*_named", manifest$file_name)]
-        tocheck <- gsub("(.*/)(PROCESSED.*)","\\2", r_m_n_f)
-        if( any(grepl(tocheck, results_metabolites_named_file)) ){
+        results_metabolites_named_file <- basename(manifest$file_name[grepl(".*esults_metabolit.*_named", manifest$file_name)])
+        tocheck <- basename(r_m_n_f)
+        if( tocheck == results_metabolites_named_file ){
           if(verbose) message("   + (+) results_metabolites_named_file included in manifest: OK")
         }else{
           if(verbose) message("      - (-) results_metabolites_named_file is not included in manifest file: FAIL")
@@ -946,10 +879,12 @@ validate_metabolomics <- function(input_results_folder,
 
       if( any(grepl(processfolder, experimentalDetails_file)) ){
         if(verbose) message("   + (+) experimentalDetails_file included in manifest: OK")
-        if( file.exists(file.path(batch_folder, experimentalDetails_file[grepl(processfolder, experimentalDetails_file)])) ){
-          if(verbose) message("   + (+) experimentalDetails_file can be opened: OK")
+        full_path_edf <- file.path(normalizePath(batch_folder) , experimentalDetails_file )
+        if( file.exists(full_path_edf)  ){
+          if(verbose) message("   + (+) experimentalDetails_file exists: OK")
         }else{
-          if(verbose) message("      - (-) experimentalDetails_file cannot be opened: FAIL")
+          if(verbose) message("      - (-) experimentalDetails_file cannot be found: FAIL")
+          if(verbose) message("       File searched and not found: ", paste(full_path_edf))
           ic_man <- ic_man + 1
         }
       }else{
@@ -960,9 +895,9 @@ validate_metabolomics <- function(input_results_folder,
       if(untargeted){
 
         if(f_mmu){
-          metadata_metabolites_unnamed_file <- manifest$file_name[grepl(".*etadata_metabolit.*_unnamed", manifest$file_name)]
-          tocheck <- gsub("(.*/)(PROCESSED.*)","\\2", m_m_u_f)
-          if( any(grepl(tocheck, metadata_metabolites_unnamed_file)) ){
+          metadata_metabolites_unnamed_file <- basename(manifest$file_name[grepl(".*etadata_metabolit.*_unnamed", manifest$file_name)])
+          tocheck <- basename(m_m_u_f)
+          if( tocheck == metadata_metabolites_unnamed_file ){
             if(verbose) message("   + (+) results_metabolites_unnamed_file included in manifest: OK")
           }else{
             if(verbose) message("      - (-) results_metabolites_unnamed_file is not included in manifest file: FAIL")
@@ -971,9 +906,9 @@ validate_metabolomics <- function(input_results_folder,
         }
 
         if(f_msu){
-          metadata_samples_unnamed_file <- manifest$file_name[grepl(".*etadata_sam.*_unnamed", manifest$file_name)]
-          tocheck <- gsub("(.*/)(PROCESSED.*)","\\2", m_s_u_f)
-          if( any(grepl(tocheck, metadata_samples_unnamed_file)) ){
+          metadata_samples_unnamed_file <- basename(manifest$file_name[grepl(".*etadata_sam.*_unnamed", manifest$file_name)])
+          tocheck <- basename(m_s_u_f)
+          if( tocheck == metadata_samples_unnamed_file ){
             if(verbose) message("   + (+) metadata_sample_unnamed_file included in manifest: OK")
           }else{
             if(verbose) message("      - (-) metadata_sample_unnamed_file is not included in manifest file: FAIL")
@@ -987,7 +922,7 @@ validate_metabolomics <- function(input_results_folder,
             if(verbose) message("   + (+) All raw files included: OK")
           }else{
             if(verbose){
-              message("      - (-) RAW FILES available in metadata_samples_named not included in the manifest file: FAIL")
+              message("      - (-) RAW FILES available in metadata_samples_unnamed not included in the manifest file: FAIL")
               message(            "> ", paste( m_s_u$raw_file[!(m_s_u$raw_file %in% manifest$file_name)], collapse = ", " ) )
             } 
             ic_man <- ic_man + 1
@@ -996,10 +931,10 @@ validate_metabolomics <- function(input_results_folder,
         }
 
         if(f_rmu){
-          results_metabolites_unnamed_file <- manifest$file_name[grepl(".*esults_metabolit.*_unnamed", manifest$file_name)]
+          results_metabolites_unnamed_file <- basename(manifest$file_name[grepl(".*esults_metabolit.*_unnamed", manifest$file_name)])
             
-          tocheck <- gsub("(.*/)(PROCESSED.*)","\\2", r_m_u_f)
-          if( any(grepl(tocheck, results_metabolites_unnamed_file)) ){
+          tocheck <- basename(r_m_u_f)
+          if( tocheck == results_metabolites_unnamed_file ){
             if(verbose) message("   + (+) results_metabolites_unnamed_file included in manifest: OK")
           }else{
             if(verbose) message("      - (-) results_metabolites_unnamed_file is not included in manifest file: FAIL")
@@ -1008,17 +943,19 @@ validate_metabolomics <- function(input_results_folder,
         }
 
         experimentalDetails_file <- manifest$file_name[grepl(".*xperimental.*_unnamed", manifest$file_name)]
-
+        
         if( any(grepl(processfolder, experimentalDetails_file)) ){
-          if(verbose) message("   + (+) experimentalDetails_file unamed included in manifest: OK")
-          if( file.exists(file.path(batch_folder, experimentalDetails_file[grepl(processfolder, experimentalDetails_file)])) ){
-            if(verbose) message("   + (+) experimentalDetails_file unnamed can be opened: OK")
+          if(verbose) message("   + (+) experimentalDetails_file included in manifest: OK")
+          full_path_edf <- file.path(normalizePath(batch_folder) , experimentalDetails_file )
+          if( file.exists(full_path_edf)  ){
+            if(verbose) message("   + (+) experimentalDetails_file exists: OK")
           }else{
-            if(verbose) message("      - (-) experimentalDetails_file unnamed cannot be opened: FAIL")
+            if(verbose) message("      - (-) experimentalDetails_file cannot be found: FAIL")
+            if(verbose) message("       File searched and not found: ", paste(full_path_edf))
             ic_man <- ic_man + 1
           }
         }else{
-          if(verbose) message("      - (-) experimentalDetails_file unnamed is not included in manifest file: FAIL")
+          if(verbose) message("      - (-) experimentalDetails_file is not included in manifest file: FAIL")
           ic_man <- ic_man + 1
         }
 
@@ -1039,7 +976,7 @@ validate_metabolomics <- function(input_results_folder,
     ic <- ic + 1
   }
 
-  # Optional: Manifest raw files ----
+  # Optional: Manifest raw files------
   if(f_msn){
     if(verbose) message("\n\n## QC raw_file manifest (optional)\n")
     ic_mrd <- check_manifest_rawdata(input_results_folder = input_results_folder,
@@ -1050,16 +987,22 @@ validate_metabolomics <- function(input_results_folder,
 
   # DMAQC validation -----
   if(verbose) message("\n\n## DMAQC validation\n")
-  failed_samples <- check_failedsamples(input_results_folder = input_results_folder, verbose = verbose)
+  failed_samples <- check_failedsamples(input_results_folder = input_results_folder, 
+                                        verbose = verbose)
 
   # Validate vial labels from DMAQC
   if( is.na(ic_vl) ){
     if(f_msn){
       vl_results <- m_s_n$sample_id[which(m_s_n$sample_type == "Sample")]
+      if( !is.null(dmaqc_phase2validate) ){
+        phase2check <- dmaqc_phase2validate
+      }else{
+        phase2check <- phase
+      }
       ic_vl <- check_viallabel_dmaqc(vl_submitted = vl_results,
                                      tissue_code = tissue_code,
                                      cas = cas,
-                                     phase = phase,
+                                     phase = phase2check,
                                      failed_samples = failed_samples,
                                      dmaqc_shipping_info = dmaqc_shipping_info,
                                      return_n_issues = TRUE,
