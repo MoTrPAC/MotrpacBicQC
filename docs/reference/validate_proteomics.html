@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MotrpacBicQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.4</span>
       </span>
     </div>
 
@@ -143,6 +143,7 @@
   <span class='va'>isPTM</span>,
   <span class='va'>cas</span>,
   dmaqc_shipping_info <span class='op'>=</span> <span class='cn'>NULL</span>,
+  dmaqc_phase2validate <span class='op'>=</span> <span class='cn'>NULL</span>,
   f_proof <span class='op'>=</span> <span class='cn'>FALSE</span>,
   out_qc_folder <span class='op'>=</span> <span class='cn'>NULL</span>,
   return_n_issues <span class='op'>=</span> <span class='cn'>TRUE</span>,
@@ -170,6 +171,14 @@
     <tr>
       <th>dmaqc_shipping_info</th>
       <td><p>(char) phase code</p></td>
+    </tr>
+    <tr>
+      <th>dmaqc_phase2validate</th>
+      <td><p>(char) Provide phase to validate. Examples of submissions:</p><ul>
+<li><p>Only PASS1A-06: type either "PASS1A-06" or leave it <code>NULL</code></p></li>
+<li><p>Both PASS1A-06 and PASS1C-06: type "PASS1A-06|PASS1C-06"</p></li>
+<li><p>Only PASS1C-06: type "PASS1C-06"</p></li>
+</ul></td>
     </tr>
     <tr>
       <th>f_proof</th>
