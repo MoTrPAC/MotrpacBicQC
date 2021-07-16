@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MotrpacBicQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.4</span>
       </span>
     </div>
 
@@ -142,6 +142,7 @@
   <span class='va'>input_results_folder</span>,
   <span class='va'>cas</span>,
   dmaqc_shipping_info <span class='op'>=</span> <span class='cn'>NULL</span>,
+  dmaqc_phase2validate <span class='op'>=</span> <span class='cn'>NULL</span>,
   return_n_issues <span class='op'>=</span> <span class='cn'>FALSE</span>,
   full_report <span class='op'>=</span> <span class='cn'>FALSE</span>,
   verbose <span class='op'>=</span> <span class='cn'>TRUE</span>,
@@ -163,7 +164,15 @@
     </tr>
     <tr>
       <th>dmaqc_shipping_info</th>
-      <td><p>(char) phase code</p></td>
+      <td><p>(char) File path to the DMAQC file</p></td>
+    </tr>
+    <tr>
+      <th>dmaqc_phase2validate</th>
+      <td><p>(char) Provide phase to validate. Examples of submissions:</p><ul>
+<li><p>Only PASS1A-06: type either "PASS1A-06" or leave it <code>NULL</code></p></li>
+<li><p>Both PASS1A-06 and PASS1C-06: type "PASS1A-06|PASS1C-06"</p></li>
+<li><p>Only PASS1C-06: type "PASS1C-06"</p></li>
+</ul></td>
     </tr>
     <tr>
       <th>return_n_issues</th>

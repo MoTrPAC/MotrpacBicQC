@@ -1,3 +1,8 @@
+# MotrpacBicQC 0.5.4 (2021-07-16)
+
+* Improved version for checking the file manifest from metabolomics submissions
+* Enable DMAQC validation for submissions combining multiple phases (e.g. PASS1A-06 + PASS1C-06)
+
 # MotrpacBicQC 0.5.3 (2021-06-25)
 
 * Metabolomics QC: new metabolomics QC plots, including number of IDs per sample, intensity distribution, and percentage of NA values

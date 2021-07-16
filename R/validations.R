@@ -1,5 +1,86 @@
 # VALIDATIONS
 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' @title Validate vial labels from DMAQC
+#'
+#' @description validate vial label from DMAQC
+#' @param vl_submitted (vector) results df
+#' @param dmaqc_shipping_info (data.frame) dmaqc shipping information
+#' @param tissue_code (char) tissue code
+#' @param cas (char) CAS code
+#' @param phase (char) phase code
+#' @param failed_samples (char) metadata_metabolites df
+#' @param return_n_issues (logical) if `TRUE` returns the number of issues
+#' @param verbose (logical) `TRUE` (default) shows messages
+#' @return (int) number of issues identified
+#' @export
+check_viallabel_dmaqc <- function(vl_submitted,
+                                  dmaqc_shipping_info,
+                                  tissue_code,
+                                  cas,
+                                  phase,
+                                  failed_samples,
+                                  return_n_issues = FALSE,
+                                  verbose = TRUE){
+  
+  # issue_count
+  ic <- NA
+  # There might be multiple phases to check: load both
+  ph <- unlist(strsplit(phase, split = "\\|"))
+  dmaqc_labels <- vector()
+  for(i in 1:length(ph)){
+    eph <- ph[i]
+    pass <- gsub("(.*)(-)(.*)", "\\1", eph)
+    month <- gsub("(.*)(-)(.*)", "\\3", eph)
+    month <- as.integer(month)
+    
+    dmaqc_shipping_df <- read.delim(dmaqc_shipping_info, stringsAsFactors = FALSE)
+    
+    dmaqc_labels_temp <- dmaqc_shipping_df$vial_label[which(dmaqc_shipping_df$bic_tissue_code == tissue_code &
+                                                              dmaqc_shipping_df$site_code == tolower(cas) &
+                                                              dmaqc_shipping_df$phase == pass &
+                                                              dmaqc_shipping_df$animal_age == month)]
+    if(i == 1){
+      dmaqc_labels <- as.character(dmaqc_labels_temp)
+    }else{
+      dmaqc_labels <- append(dmaqc_labels, as.character(dmaqc_labels_temp))
+    }
+  }
+  
+  if( length(dmaqc_labels) == 0){
+    if(verbose) message("   + (+) DMAQC CHECK POINT: sample IDs not available in DMAQC dataset. Needs to be revised by BIC")
+    ic <- "NOT_AVAILABLE"
+  }else{
+    if( setequal(vl_submitted, dmaqc_labels) ){
+      if(verbose) message("   + (+) DMAQC CHECK POINT: samples sent to CAS have been processed: OK")
+      ic <- "OK"
+    }else{
+      samples_missed <- setdiff(dmaqc_labels, vl_submitted)
+      if(!is.null(failed_samples)){
+        if(setequal(failed_samples, samples_missed)){
+          if(verbose) message("   + (+) DMAQC CHECK POINT: samples sent to CAS have been processed (with known issues for some samples): OK")
+          ic <- "OK"
+        }else{
+          if(verbose){
+            message("      - (-) DMAQC CHECK POINT: samples not found in metadata_results: FAIL")
+            message("\t - ", paste(samples_missed, collapse = "\n\t - "))
+            ic <- "FAIL"
+          }
+        }
+      }else{
+        if(verbose){
+          message("      - (-) DMAQC CHECK POINT: samples not found in metadata_results: FAIL")
+          message("\t - ", paste(samples_missed, collapse = "\n\t - "))
+        }
+        ic <- "FAIL"
+      }
+    }
+    
+  }
+  
+  if(return_n_issues) return(ic)
+}
+
 
 #' @title validate cas code
 #'
