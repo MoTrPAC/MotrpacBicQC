@@ -189,7 +189,7 @@ validate_phase <- function(input_results_folder){
 #' @return (vector) PHASE code
 #' @export
 validate_tissue <- function(input_results_folder){
-  tissue_code <- gsub("(.*)(T[0-9]{2})(.*)", "\\2", input_results_folder)
+  tissue_code <- gsub("(.*)(T[0-9]{2,3})(.*)", "\\2", input_results_folder)
 
   if(!tissue_code %in% bic_animal_tissue_code$bic_tissue_code){
     stop("tissue_code: <", tissue_code, "> is not valid. Must be one of the following codes (check data object MotrpacBicQC::bic_animal_tissue_code):\n- ", paste(bic_animal_tissue_code$bic_tissue_code, collapse = ", "))
