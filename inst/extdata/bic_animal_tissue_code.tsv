@@ -1,4 +1,25 @@
 bic_tissue_code	bic_tissue_name	motrpac_tissue_code	tissue_name_release
+T01	Human Serum	T01 Human Serum	t01-serum
+T02	Human EDTA Plasma	T02 Human EDTA Plasma	t02-plasma
+T03	Human EDTA Packed Cells	T03 Human EDTA Packed Cells	
+T04	Human PAXgene RNA	T04 Human PAXgene RNA	
+T05	Human PBMC	T05 Human PBMC	t05-pbmc
+T06	Human Muscle	T06 Human Muscle	t06-muscle
+T07	Human Adipose	T07 Human Adipose	t07-adipose
+T08	Human Urine	T08 Human Urine	t08-urine
+T09	Human Stool	T09 Human Stool	t09-stool
+T10	Human Muscle Powder	T10 Human Muscle Powder	t10-muscle
+T11	Human Adipose Powder	T11 Human Adipose Powder	t11-adipose
+T12	Human EDTA 2 Plasma	T12 Human EDTA 2 Plasma	t12-plasma
+T13	Human Heparin Plasma	T13 Human Heparin Plasma	t13-heparin-plasma
+T14	Human IMAT	T14 Human IMAT	t14-imat
+T15	Human Packed Cells DMSO	T15 Human Packed Cells DMSO	t15-packed-cells-dmso
+T16	Human Muscle Cell Passage 2	T16 Human Muscle Cell Passage 2	t16-muscle-cell-passage2
+T17	Human Muscle Cell Passage 3	T17 Human Muscle Cell Passage 3	t17-muscle-cell-passage3
+T18	Human Muscle Cell Passage 4	T18 Human Muscle Cell Passage 4	t18-muscle-cell-passage4
+T19	Human Mycoplasma	T19 Human Mycoplasma	t19-mycoplasma
+T20	Human Muscle Histology	T20 Human Muscle Histology	t20-muscle-histology
+T21	Human Adipose Histology	T21 Human Adipose Histology	t21-adipose-histology
 T30	Blood RNA	T30 Rat PaxGene RNA	t30-blood-rna
 T31	EDTA Plasma	T31 Rat Plasma	t31-plasma
 T32	Packed Cells	T32 Rat Packed Cells	

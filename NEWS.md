@@ -1,3 +1,7 @@
+# MotrpacBicQC 0.5.5 (2021-07-21)
+
+* Update: add human tissue codes
+
 # MotrpacBicQC 0.5.4 (2021-07-16)
 
 * Improved version for checking the file manifest from metabolomics submissions
