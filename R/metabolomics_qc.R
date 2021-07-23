@@ -830,7 +830,7 @@ validate_metabolomics <- function(input_results_folder,
       manifest$file_base <- basename(manifest$file_name)
       
       if(f_mmn){
-        metadata_metabolites_named_file <- basename(manifest$file_name[grepl(".*etadata_metabolit.*_named", manifest$file_name)])
+        metadata_metabolites_named_file <- basename(manifest$file_name[grepl(".*etadata_metabolit.*_named", manifest$file_name)])[1]
         tocheck <- basename(m_m_n_f)
         if( tocheck == metadata_metabolites_named_file){
           if(verbose) message("   + (+) metadata_metabolites_named_file included in manifest: OK")
@@ -841,7 +841,7 @@ validate_metabolomics <- function(input_results_folder,
       }
 
       if(f_msn){
-        metadata_samples_named_file <- basename(manifest$file_name[grepl(".*etadata_samp.*_named", manifest$file_name)])
+        metadata_samples_named_file <- basename(manifest$file_name[grepl(".*etadata_samp.*_named", manifest$file_name)])[1]
         tocheck <- basename(m_s_n_f)
         if( tocheck == metadata_samples_named_file ){
           if(verbose) message("   + (+) metadata_sample_named_file included in manifest: OK")
@@ -865,7 +865,7 @@ validate_metabolomics <- function(input_results_folder,
       } # f_msn
 
       if(f_rmn){
-        results_metabolites_named_file <- basename(manifest$file_name[grepl(".*esults_metabolit.*_named", manifest$file_name)])
+        results_metabolites_named_file <- basename(manifest$file_name[grepl(".*esults_metabolit.*_named", manifest$file_name)])[1]
         tocheck <- basename(r_m_n_f)
         if( tocheck == results_metabolites_named_file ){
           if(verbose) message("   + (+) results_metabolites_named_file included in manifest: OK")
@@ -880,7 +880,8 @@ validate_metabolomics <- function(input_results_folder,
       if( any(grepl(processfolder, experimentalDetails_file)) ){
         if(verbose) message("   + (+) experimentalDetails_file included in manifest: OK")
         full_path_edf <- file.path(normalizePath(batch_folder) , experimentalDetails_file )
-        if( file.exists(full_path_edf)  ){
+        full_path_edf <- sort(full_path_edf, decreasing = TRUE)
+        if( file.exists(full_path_edf[1])  ){
           if(verbose) message("   + (+) experimentalDetails_file exists: OK")
         }else{
           if(verbose) message("      - (-) experimentalDetails_file cannot be found: FAIL")
@@ -895,7 +896,7 @@ validate_metabolomics <- function(input_results_folder,
       if(untargeted){
 
         if(f_mmu){
-          metadata_metabolites_unnamed_file <- basename(manifest$file_name[grepl(".*etadata_metabolit.*_unnamed", manifest$file_name)])
+          metadata_metabolites_unnamed_file <- basename(manifest$file_name[grepl(".*etadata_metabolit.*_unnamed", manifest$file_name)])[1]
           tocheck <- basename(m_m_u_f)
           if( tocheck == metadata_metabolites_unnamed_file ){
             if(verbose) message("   + (+) results_metabolites_unnamed_file included in manifest: OK")
@@ -906,7 +907,7 @@ validate_metabolomics <- function(input_results_folder,
         }
 
         if(f_msu){
-          metadata_samples_unnamed_file <- basename(manifest$file_name[grepl(".*etadata_sam.*_unnamed", manifest$file_name)])
+          metadata_samples_unnamed_file <- basename(manifest$file_name[grepl(".*etadata_sam.*_unnamed", manifest$file_name)])[1]
           tocheck <- basename(m_s_u_f)
           if( tocheck == metadata_samples_unnamed_file ){
             if(verbose) message("   + (+) metadata_sample_unnamed_file included in manifest: OK")
@@ -931,7 +932,7 @@ validate_metabolomics <- function(input_results_folder,
         }
 
         if(f_rmu){
-          results_metabolites_unnamed_file <- basename(manifest$file_name[grepl(".*esults_metabolit.*_unnamed", manifest$file_name)])
+          results_metabolites_unnamed_file <- basename(manifest$file_name[grepl(".*esults_metabolit.*_unnamed", manifest$file_name)])[1]
             
           tocheck <- basename(r_m_u_f)
           if( tocheck == results_metabolites_unnamed_file ){
@@ -947,7 +948,8 @@ validate_metabolomics <- function(input_results_folder,
         if( any(grepl(processfolder, experimentalDetails_file)) ){
           if(verbose) message("   + (+) experimentalDetails_file included in manifest: OK")
           full_path_edf <- file.path(normalizePath(batch_folder) , experimentalDetails_file )
-          if( file.exists(full_path_edf)  ){
+          full_path_edf <- sort(full_path_edf, decreasing = TRUE)
+          if( file.exists(full_path_edf)[1]  ){
             if(verbose) message("   + (+) experimentalDetails_file exists: OK")
           }else{
             if(verbose) message("      - (-) experimentalDetails_file cannot be found: FAIL")

@@ -1,3 +1,7 @@
+# MotrpacBicQC 0.5.6 (2021-07-22)
+
+* Bug fix
+
 # MotrpacBicQC 0.5.5 (2021-07-21)
 
 * Update: add human tissue codes
