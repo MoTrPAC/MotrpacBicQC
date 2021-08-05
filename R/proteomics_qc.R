@@ -760,6 +760,8 @@ validate_proteomics <- function(input_results_folder,
                                 printPDF = TRUE,
                                 verbose = TRUE,
                                 run_by_bic = FALSE){
+  
+  percent_coverage <- NULL
 
   if(any(missing(input_results_folder) |
          missing(isPTM) |
@@ -1045,7 +1047,7 @@ validate_proteomics <- function(input_results_folder,
     ic <- ic + 10
   }
 
-  # RATIO----
+ # RATIO----
 
   if(verbose) message("\n\n## RATIO results\n")
 
@@ -1192,6 +1194,24 @@ validate_proteomics <- function(input_results_folder,
                 ggtitle("Ratio: Unique IDs in samples") +
                 xlab("Vial Labels")
               
+              # Plotting protein coverage-----
+              if(!isPTM){
+                if(verbose) message("       - (p) Plotting protein coverage")
+                ppp <- ggplot(ratior, aes(x=percent_coverage)) +
+                  geom_histogram( binwidth=2, fill="#69b3a2", color="#e9ecef", alpha=0.9) +
+                  ggtitle("Overall Protein Identification Coverage") +
+                  theme_light() +
+                  theme(plot.title = element_text(size=14)) + 
+                  labs(x = "Percent Coverage", y = "Number of Proteins")
+                
+                pbp <- ggplot(ratior, aes(y = percent_coverage)) + 
+                  geom_boxplot(col="#69b3a2") +
+                  ggtitle("") +
+                  theme_light() +
+                  theme(plot.title = element_text(size=14)) + 
+                  theme(axis.title.x=element_blank())
+              }
+              
               # + scale_fill_brewer(palette="Reds")
               
               if(is.null(out_qc_folder)){
@@ -1201,10 +1221,11 @@ validate_proteomics <- function(input_results_folder,
               }
 
               if(printPDF) pdf(out_plot_ratdist, width = 12, height = 8)
-              print(pisr)
-              print(puid1)
-              print(puid2)
-              print(p_na_ratior)
+                print(pisr)
+                print(puid1)
+                print(puid2)
+                print(p_na_ratior)
+                if(!isPTM) grid.arrange(arrangeGrob(ppp, pbp, ncol = 2))
               if(printPDF) garbage <- dev.off()
             }
           }else{
