@@ -5,6 +5,7 @@
 #' @import forcats
 #' @import ggplot2
 #' @importFrom grDevices dev.off pdf
+#' @importFrom gridExtra grid.arrange arrangeGrob
 #' @importFrom inspectdf inspect_na
 #' @importFrom jsonlite fromJSON
 #' @import knitr
