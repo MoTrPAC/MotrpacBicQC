@@ -1,3 +1,7 @@
+# MotrpacBicQC 0.5.7 (2021-08-05)
+
+* New proteomics QC plots for protein coverage
+
 # MotrpacBicQC 0.5.6 (2021-07-22)
 
 * Bug fix
