@@ -1,3 +1,7 @@
+# MotrpacBicQC 0.5.8 (2021-08-06)
+
+* New Metabolomics QC plots: number and proportion of named vs unnamed features identified
+
 # MotrpacBicQC 0.5.7 (2021-08-05)
 
 * New proteomics QC plots for protein coverage
