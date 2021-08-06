@@ -11,6 +11,7 @@
 #' @import knitr
 #' @import naniar
 #' @import purrr
+#' @importFrom scales percent
 #' @importFrom stats median reorder
 #' @import stringr
 #' @import tidyr

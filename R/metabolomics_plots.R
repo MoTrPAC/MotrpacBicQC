@@ -76,7 +76,7 @@ plot_basic_metabolomics_qc <- function(results,
          subtitle = paste(output_prefix),
          caption = "Sort by injection order")
   
-  # Get data ready to count IDs
+  # Get data ready to count IDs------
   if(verbose) message("       - (p) Plot ID counts")
   uid <- results_long %>%
     group_by(across(all_of(c("metabolite_name", "sample_id", "sample_type", "sample_order", "id_type")))) %>%
@@ -147,6 +147,30 @@ plot_basic_metabolomics_qc <- function(results,
     labs(caption = "Sort by injection order") +
     xlab("Sample IDs")
   
+  # Plot proportion of ids------
+  if(verbose) message("       - (p) Plot ID proportions")
+  
+  ppids <- ggplot(results, aes(x = as.factor(id_type), fill = as.factor(id_type))) +
+    geom_bar(aes(y = (..count..)/sum(..count..))) +
+    geom_text(aes(y = ((..count..)/sum(..count..)), 
+                  label = scales::percent((..count..)/sum(..count..))), 
+              stat = "count", vjust = -0.25) +
+    scale_y_continuous(labels = percent) +
+    labs(title = "Proportion of Features Identified", y = "", x = "") +
+    theme_light() +
+    theme(legend.position = "none",
+          axis.text.x = element_text(size = 18)) + 
+    scale_fill_brewer(palette = "Dark2")
+  
+  pnids <- ggplot(results, aes(x = id_type, fill = id_type)) +
+    geom_bar() +
+    geom_text(stat = 'count',aes(label =..count.., vjust = -0.2)) +
+    labs(title = "Number of Features Identified", y = "", x = "") +
+    theme_light() +
+    theme(legend.position = "none",
+          axis.text.x = element_text(size = 18)) + 
+    scale_fill_brewer(palette = "Dark2")
+  
   # Plot NA values------
   if(verbose) message("       - (p) Plot NA values")
   
@@ -177,6 +201,7 @@ plot_basic_metabolomics_qc <- function(results,
   print(puid1)
   print(piseio)
   gridExtra::grid.arrange(piseso, puid2, ncol = 1, heights = c(2, 1))
+  gridExtra::grid.arrange(ppids, pnids, ncol = 2)
   print(p_na_peprii)
   if(printPDF) garbage <- dev.off()
 }

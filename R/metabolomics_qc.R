@@ -3,7 +3,8 @@
 utils::globalVariables(
   c("assay_codes",
     "bic_animal_tissue_code",
-    "phenotypes_pass1a06_short"))
+    "phenotypes_pass1a06_short",
+    "..count.."))
 
 
 # METABOLOMICS DATASETS: PRIMARY QC
@@ -762,7 +763,6 @@ validate_metabolomics <- function(input_results_folder,
     output_prefix <- paste0(cas, ".", tolower(phase), ".", tissue_code, ".",tolower(assay), ".", tolower(processfolder))
     
     if(f_rmn & f_msn ){
-      
       r_m_n$id_type <- "named"
       eresults_coln <- c("metabolite_name", "id_type", unique(m_s_n$sample_id))
       if(untargeted){
