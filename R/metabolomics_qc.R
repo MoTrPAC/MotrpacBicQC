@@ -553,6 +553,12 @@ validate_metabolomics <- function(input_results_folder,
   phase <- validate_phase(input_results_folder)
   tissue_code <- validate_tissue(input_results_folder)
   batch_folder <- validate_batch(input_results_folder)
+  
+  if( !is.null(dmaqc_phase2validate) ){
+    phase2check <- dmaqc_phase2validate
+  }else{
+    phase2check <- phase
+  }
 
   # issue_count-----
   ic <- 0
@@ -574,10 +580,10 @@ validate_metabolomics <- function(input_results_folder,
 
   input_results_folder <- normalizePath(input_results_folder)
 
-  input_folder_short <- regmatches(input_results_folder, regexpr("PASS.*PROCESSED_[0-9]{8}", input_results_folder))
+  input_folder_short <- regmatches(input_results_folder, regexpr("(HUMAN|PASS).*PROCESSED_[0-9]{8}", input_results_folder))
   if(is_empty(input_folder_short)){
     if(verbose) message("\nThe PROCESSED_YYYYMMDD folder full path is not correct. Example:")
-    if(verbose) message("/full/path/to/folder/PASS1A-06/T66/RPNEG/BATCH1_20190822/PROCESSED_202003")
+    if(verbose) message("/full/path/to/folder/PASS1A-06/T66/RPNEG/BATCH1_20190822/PROCESSED_20200302")
     stop("Input folder not according to guidelines")
   }
 
@@ -760,7 +766,7 @@ validate_metabolomics <- function(input_results_folder,
     
     if(verbose) message("\n\n## QC Plots\n")
     
-    output_prefix <- paste0(cas, ".", tolower(phase), ".", tissue_code, ".",tolower(assay), ".", tolower(processfolder))
+    output_prefix <- paste0(cas, ".", tolower(phase2check), ".", tissue_code, ".",tolower(assay), ".", tolower(processfolder))
     
     if(f_rmn & f_msn ){
       r_m_n$id_type <- "named"
@@ -996,11 +1002,6 @@ validate_metabolomics <- function(input_results_folder,
   if( is.na(ic_vl) ){
     if(f_msn){
       vl_results <- m_s_n$sample_id[which(m_s_n$sample_type == "Sample")]
-      if( !is.null(dmaqc_phase2validate) ){
-        phase2check <- dmaqc_phase2validate
-      }else{
-        phase2check <- phase
-      }
       ic_vl <- check_viallabel_dmaqc(vl_submitted = vl_results,
                                      tissue_code = tissue_code,
                                      cas = cas,
@@ -1030,7 +1031,7 @@ validate_metabolomics <- function(input_results_folder,
     if(verbose) message("\nTOTAL NUMBER OF ISSUES: ", total_issues,"\n")
     if(full_report){
       reports <- data.frame(cas = cas,
-                            phase= phase,
+                            phase= phase2check,
                             tissue = tissue_code,
                             t_name = t_name,
                             assay = assay,
