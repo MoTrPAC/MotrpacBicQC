@@ -1,3 +1,8 @@
+# MotrpacBicQC 0.5.9 (2021-08-10)
+
+* Adjustments for PASS1C-06
+* Bug fixes affecting HUMAN phase processing
+
 # MotrpacBicQC 0.5.8 (2021-08-06)
 
 * New Metabolomics QC plots: number and proportion of named vs unnamed features identified
