@@ -31,15 +31,24 @@ check_viallabel_dmaqc <- function(vl_submitted,
   for(i in 1:length(ph)){
     eph <- ph[i]
     pass <- gsub("(.*)(-)(.*)", "\\1", eph)
-    month <- gsub("(.*)(-)(.*)", "\\3", eph)
-    month <- as.integer(month)
+    if(tolower(pass) != "human"){
+      month <- gsub("(.*)(-)(.*)", "\\3", eph)
+      month <- as.integer(month)
+    }
     
     dmaqc_shipping_df <- read.delim(dmaqc_shipping_info, stringsAsFactors = FALSE)
     
-    dmaqc_labels_temp <- dmaqc_shipping_df$vial_label[which(dmaqc_shipping_df$bic_tissue_code == tissue_code &
-                                                              dmaqc_shipping_df$site_code == tolower(cas) &
-                                                              dmaqc_shipping_df$phase == pass &
-                                                              dmaqc_shipping_df$animal_age == month)]
+    if(tolower(pass) == "human"){
+      dmaqc_labels_temp <- dmaqc_shipping_df$vial_label[which(dmaqc_shipping_df$bic_tissue_code == tissue_code &
+                                                                dmaqc_shipping_df$site_code == tolower(cas) &
+                                                                dmaqc_shipping_df$phase == pass)]
+    }else{
+      dmaqc_labels_temp <- dmaqc_shipping_df$vial_label[which(dmaqc_shipping_df$bic_tissue_code == tissue_code &
+                                                                dmaqc_shipping_df$site_code == tolower(cas) &
+                                                                dmaqc_shipping_df$phase == pass &
+                                                                dmaqc_shipping_df$animal_age == month)]
+    }
+    
     if(i == 1){
       dmaqc_labels <- as.character(dmaqc_labels_temp)
     }else{
