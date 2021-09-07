@@ -1,3 +1,7 @@
+# MotrpacBicQC 0.6.0 (2021-09-06)
+
+* Support DMAQC validation of human submissions
+
 # MotrpacBicQC 0.5.9 (2021-08-10)
 
 * Adjustments for PASS1C-06
