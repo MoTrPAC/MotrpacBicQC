@@ -60,7 +60,9 @@ check_metadata_metabolites <- function(df,
   }
 
   # Metabolomics data dictionary
+  message("   - Downloading the latest version of the RefMet database to validate the refmet_names. It might take about a minute (depending on your internet connection), starting now: ", appendLF = FALSE)
   mdd <- get_and_validate_mdd()
+  message("done!")
 
   # refmet_name only expected on named metabolites
   if(name_id == "named"){
