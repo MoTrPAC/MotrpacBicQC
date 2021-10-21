@@ -27,7 +27,7 @@
 
 get_and_validate_mdd <- function(remove_duplications = FALSE){
 
-  .id = NULL
+  .id = name = NULL
 
   # REST metabolomics workbench data dictionary
   # Previous REST version (motrpac only)
