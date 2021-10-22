@@ -1,3 +1,10 @@
+# MotrpacBicQC 0.6.1 (2021-09-06)
+
+* Refactor the validation of refmet_name. It now checks on at the time 
+using the RefMet API. It also validates multipeak isoforms
+* The function `get_and_validate_mdd()` donwload the entire RefMet database (warning, >15MB)
+* The `metabolomics_data_dictionary` data object will be soon deprecated. 
+
 # MotrpacBicQC 0.6.0 (2021-09-06)
 
 * Support DMAQC validation of human submissions

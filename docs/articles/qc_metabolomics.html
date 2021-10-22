@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="generator" content="pandoc">
-<meta name="date" content="2021-09-06">
+<meta name="date" content="2021-10-21">
 <title>MotrpacBicQC: Metabolomics QC</title>
-<script src="qc_metabolomics_files/header-attrs-2.10/header-attrs.js"></script><script src="qc_metabolomics_files/jquery-1.11.3/jquery.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="qc_metabolomics_files/header-attrs-2.11/header-attrs.js"></script><script src="qc_metabolomics_files/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="qc_metabolomics_files/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
 <script src="qc_metabolomics_files/bootstrap-3.3.7/js/bootstrap.min.js"></script><script src="qc_metabolomics_files/jqueryui-1.11.4/jquery-ui.min.js"></script><script src="qc_metabolomics_files/navigation-1.1/tabsets.js"></script><script src="qc_metabolomics_files/navigation-1.1/codefolding.js"></script><link href="qc_metabolomics_files/magnific-popup-1.1.0/magnific-popup.css" rel="stylesheet">
 <script src="qc_metabolomics_files/magnific-popup-1.1.0/jquery.magnific-popup.min.js"></script><link href="qc_metabolomics_files/downcute-0.1/downcute.css" rel="stylesheet">
@@ -191,7 +191,7 @@
       
       <p class="authors">
          </p>
-<p class="date"><span class="glyphicon glyphicon-calendar"></span> 2021-09-06</p>
+<p class="date"><span class="glyphicon glyphicon-calendar"></span> 2021-10-21</p>
            
 
    
@@ -235,19 +235,20 @@
 <pre><code>##    + (+) All required columns present</code></pre>
 <pre><code>##    + (+) {metabolite_name} OK</code></pre>
 <pre><code>##    + (+) {refmet_name} unique values: OK</code></pre>
-<pre><code>##    + (+) {refmet_name} ids found in refmet: OK</code></pre>
+<pre><code>##    + Validating {refmet_name}</code></pre>
+<pre><code>##       + (+) {refmet_name} ids found in refmet: OK</code></pre>
 <pre><code>##    + (+) {rt} all numeric: OK</code></pre>
 <pre><code>##    + (+) {mz} all numeric: OK</code></pre>
 <pre><code>##    + (+) {neutral_mass} all numeric values OK</code></pre>
 <pre><code>##    + (+) {formula} available: OK</code></pre>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/check_metadata_samples.html">check_metadata_samples</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">metadata_sample_named</span>, cas <span class="op">=</span> <span class="st">"umichigan"</span><span class="op">)</span></code></pre></div>
 <pre><code>##    + (+) {sample_id} seems OK</code></pre>
 <pre><code>##    + (+) {sample_type} seems OK</code></pre>
 <pre><code>##    + (+) {sample_order} is numeric</code></pre>
 <pre><code>##    + (+) {sample_order} unique values OK</code></pre>
 <pre><code>##    + (+) {raw_file} unique values OK</code></pre>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/check_results.html">check_results</a></span><span class="op">(</span>r_m <span class="op">=</span> <span class="va">results_named</span>, m_s <span class="op">=</span> <span class="va">metadata_sample_named</span>, m_m <span class="op">=</span> <span class="va">metadata_metabolites_named</span><span class="op">)</span></code></pre></div>
 <pre><code>##    + (+) All samples from [results_metabolite] are available in [metadata_sample]</code></pre>
 <pre><code>##    + (+) {metabolite_name} is identical in both [results] and [metadata_metabolites] files: OK</code></pre>
@@ -261,7 +262,7 @@
 <h3 class="hasAnchor">
 <a href="#check-full-processed_yyyymmdd-folder-recommended" class="anchor"></a>Check full <code>PROCESSED_YYYYMMDD</code> folder (recommended)</h3>
 <p>Run test on the full submission. For that, run the following command:</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/validate_metabolomics.html">validate_metabolomics</a></span><span class="op">(</span>input_results_folder <span class="op">=</span> <span class="st">"/full/path/to/PROCESSED_YYYYMMDD"</span>, 
                       cas <span class="op">=</span> <span class="st">"your_site_code"</span><span class="op">)</span></code></pre></div>
 <p><strong>cas</strong> is one of the followings:</p>
@@ -280,7 +281,7 @@
 <ul>
 <li>Check metadata metabolites:</li>
 </ul>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Open the metadata_metabolites file(s)</span>
 
 <span class="va">metadata_metabolites_named</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"/path/to/your/file"</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
@@ -291,7 +292,7 @@
 <ul>
 <li>Check metadata samples:</li>
 </ul>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Open your files</span>
 <span class="va">metadata_sample_named</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"/path/to/your/file"</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="va">metadata_sample_unnamed</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"/path/to/your/file"</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
@@ -301,7 +302,7 @@
 <ul>
 <li>Check results, which needs both both metadata metabolites and samples</li>
 </ul>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Open your files</span>
 <span class="va">metadata_metabolites_named</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"/path/to/your/file"</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="va">metadata_sample_named</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"/path/to/your/file"</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
@@ -340,11 +341,11 @@
 <p>With the following file relations…</p>
 <p><img src="BIC_Metabolomics_DataProcessing_Summary_20200303.png"></p>
 <p>To merge all data available in a <code>PROCESSED_YYYYMMDD</code> folder, run the following command:</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">t31_ionpneg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/combine_metabolomics_batch.html">combine_metabolomics_batch</a></span><span class="op">(</span>input_results_folder <span class="op">=</span> <span class="st">"/full/path/to/PROCESSED_YYYYMMDD/"</span>, 
                                           cas <span class="op">=</span> <span class="st">"umichigan"</span><span class="op">)</span></code></pre></div>
 <p>Alternatively, each individual dataset can also be provided. For example:</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">plasma.untargeted.merged</span> <span class="op">&lt;-</span> 
   <span class="fu"><a href="../reference/merge_all_metabolomics.html">merge_all_metabolomics</a></span><span class="op">(</span>m_m_n <span class="op">=</span> <span class="va">metadata_metabolites_named</span>,
                          m_m_u <span class="op">=</span> <span class="va">metadata_metabolites_unnamed</span>,
@@ -359,7 +360,7 @@
 <h2 class="hasAnchor">
 <a href="#help" class="anchor"></a>Help</h2>
 <p>Additional details for each function can be found by typing, for example:</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="op">?</span><span class="va">merge_all_metabolomics</span></code></pre></div>
 <p>Need extra help? Please, <a href="https://github.com/MoTrPAC/MotrpacBicQC/issues">submit an issue here</a> providing as many details as possible.</p>
 </div>

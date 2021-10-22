@@ -1,9 +1,9 @@
-pandoc: 2.11.4
+pandoc: 2.14.0.3
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   other_functions: other_functions.html
   qc_metabolomics: qc_metabolomics.html
   qc_proteomics: qc_proteomics.html
-last_built: 2021-09-07T03:40Z
+last_built: 2021-10-22T05:37Z
 
