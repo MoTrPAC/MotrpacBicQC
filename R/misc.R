@@ -10,6 +10,7 @@
 #' @importFrom jsonlite fromJSON
 #' @import knitr
 #' @import naniar
+#' @import progress
 #' @import purrr
 #' @importFrom scales percent
 #' @importFrom stats median reorder

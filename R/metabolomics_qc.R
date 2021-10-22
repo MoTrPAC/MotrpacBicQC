@@ -59,11 +59,6 @@ check_metadata_metabolites <- function(df,
     ic <- ic + 1
   }
 
-  # Metabolomics data dictionary
-  message("   - Downloading the latest version of the RefMet database to validate the refmet_names. It might take about a minute (depending on your internet connection), starting now: ", appendLF = FALSE)
-  mdd <- get_and_validate_mdd()
-  message("done!")
-
   # refmet_name only expected on named metabolites
   if(name_id == "named"){
     if("refmet_name" %in% colnames(df)){
@@ -76,15 +71,15 @@ check_metadata_metabolites <- function(df,
       }else{
         if(verbose) message("   + (+) {refmet_name} unique values: OK")
       }
-
-      if(!all(df$refmet_name %in% mdd$refmet_name)){
-        if(verbose) message("      - (-) {refmet_name}: ids not found in RefMet Metabolomics Data Dictionary: FAIL")
-        if(verbose) message("\n\t\t - ", paste(setdiff(df$refmet_name, mdd$refmet_name), collapse = "\n\t\t - "))
+      
+      if(verbose) message("   + Validating {refmet_name}")
+      nrnna <- validate_refmetname(dataf = df, verbose = verbose)
+      if(nrnna > 0){
+        if(verbose) message(paste0("      SUMMARY: ", nrnna, " {refmet_name} not found in RefMet Metabolomics Data Dictionary: FAIL"))
         ic <- ic + 1
       }else{
-        if(verbose) message("   + (+) {refmet_name} ids found in refmet: OK")
+        if(verbose) message("      + (+) {refmet_name} ids found in refmet: OK")
       }
-
     }else{
       if(verbose) message("      - (-) {refmet_name} column missed: FAIL")
       ic <- ic + 1
@@ -786,7 +781,8 @@ validate_metabolomics <- function(input_results_folder,
                                  m_s_n = m_s_n, 
                                  out_qc_folder = out_qc_folder, 
                                  output_prefix = output_prefix,
-                                 printPDF = printPDF)
+                                 printPDF = printPDF,
+                                 verbose = verbose)
   
     }else{
       message("\n- (-) QC plots are not possible: critical datasets are missed")
