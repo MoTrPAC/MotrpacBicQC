@@ -31,6 +31,7 @@ Imports:
     jsonlite,
     knitr,
     naniar,
+    progress,
     purrr,
     scales,
     stats,
@@ -39,7 +40,7 @@ Imports:
     utils
 NeedsCompilation: no
 VignetteBuilder: knitr
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Roxygen: list(markdown = TRUE)
 Suggests: 
     testthat,

@@ -2,7 +2,7 @@
 % Please edit documentation in R/metabolomics_data_dictionary.R
 \name{get_and_validate_mdd}
 \alias{get_and_validate_mdd}
-\title{Get and validate Metabolomics Data Dictionary from Metabolomics Workbench}
+\title{Get and validate the entire RefMet database from Metabolomics Workbench}
 \usage{
 get_and_validate_mdd(remove_duplications = FALSE)
 }
