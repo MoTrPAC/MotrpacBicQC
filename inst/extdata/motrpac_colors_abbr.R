@@ -23,20 +23,22 @@ assay_abbr = c(atac='ATAC',
                'prot-pr'='PROT',
                'prot-ac'='ACETYL',
                'prot-ph'='PHOSPHO',
-               'prot-ub'='UBIQ')
+               'prot-ub'='UBIQ',
+               'immunoassay'='IMMUNO')
 
 use_data(assay_abbr, overwrite = TRUE)
 
 assay_order = c('METHYL',
                 'ATAC',
-                'SPLICE',
                 'TRNSCRPT',
                 'PROT',
                 'PHOSPHO',
                 'ACETYL',
                 'UBIQ',
+                'IMMUNO',
                 'N-METAB',
-                'U-METAB')
+                'U-METAB',
+                'METAB')
 
 use_data(assay_order, overwrite = TRUE)
 
