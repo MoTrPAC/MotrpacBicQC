@@ -72,10 +72,10 @@ check_metadata_metabolites <- function(df,
         if(verbose) message("   + (+) {refmet_name} unique values: OK")
       }
       
-      if(verbose) message("   + Validating {refmet_name}")
+      if(verbose) message("   + Validating {refmet_name}\n")
       nrnna <- validate_refmetname(dataf = df, verbose = verbose)
       if(nrnna > 0){
-        if(verbose) message(paste0("      SUMMARY: ", nrnna, " {refmet_name} not found in RefMet Metabolomics Data Dictionary: FAIL"))
+        if(verbose) message(paste0("\n      SUMMARY: ", nrnna, " {refmet_name} not found in RefMet Metabolomics Data Dictionary: FAIL"))
         ic <- ic + 1
       }else{
         if(verbose) message("      + (+) {refmet_name} ids found in refmet: OK")
