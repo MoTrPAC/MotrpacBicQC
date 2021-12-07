@@ -4,80 +4,14 @@
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="generator" content="pandoc">
-<meta name="date" content="2021-10-21">
+<meta name="date" content="2021-12-07">
 <title>MotrpacBicQC: Metabolomics QC</title>
 <script src="qc_metabolomics_files/header-attrs-2.11/header-attrs.js"></script><script src="qc_metabolomics_files/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="qc_metabolomics_files/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
 <script src="qc_metabolomics_files/bootstrap-3.3.7/js/bootstrap.min.js"></script><script src="qc_metabolomics_files/jqueryui-1.11.4/jquery-ui.min.js"></script><script src="qc_metabolomics_files/navigation-1.1/tabsets.js"></script><script src="qc_metabolomics_files/navigation-1.1/codefolding.js"></script><link href="qc_metabolomics_files/magnific-popup-1.1.0/magnific-popup.css" rel="stylesheet">
 <script src="qc_metabolomics_files/magnific-popup-1.1.0/jquery.magnific-popup.min.js"></script><link href="qc_metabolomics_files/downcute-0.1/downcute.css" rel="stylesheet">
 <link href="qc_metabolomics_files/downcute-0.1/downcute_fonts_embed.css" rel="stylesheet">
-<script src="qc_metabolomics_files/downcute-0.1/downcute.js"></script><script src="qc_metabolomics_files/prism-1.22/prism.js"></script><style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-      pre > code.sourceCode { white-space: pre; position: relative; }
-      pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-      pre > code.sourceCode > span:empty { height: 1.2em; }
-      .sourceCode { overflow: visible; }
-      code.sourceCode > span { color: inherit; text-decoration: inherit; }
-      div.sourceCode { margin: 1em 0; }
-      pre.sourceCode { margin: 0; }
-      @media screen {
-      div.sourceCode { overflow: auto; }
-      }
-      @media print {
-      pre > code.sourceCode { white-space: pre-wrap; }
-      pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-      }
-      pre.numberSource code
-        { counter-reset: source-line 0; }
-      pre.numberSource code > span
-        { position: relative; left: -4em; counter-increment: source-line; }
-      pre.numberSource code > span > a:first-child::before
-        { content: counter(source-line);
-          position: relative; left: -1em; text-align: right; vertical-align: baseline;
-          border: none; display: inline-block;
-          -webkit-touch-callout: none; -webkit-user-select: none;
-          -khtml-user-select: none; -moz-user-select: none;
-          -ms-user-select: none; user-select: none;
-          padding: 0 4px; width: 4em;
-          color: #aaaaaa;
-        }
-      pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-      div.sourceCode
-        {   }
-      @media screen {
-      pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-      }
-      code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-      code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-      code span.at { color: #7d9029; } /* Attribute */
-      code span.bn { color: #40a070; } /* BaseN */
-      code span.bu { } /* BuiltIn */
-      code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-      code span.ch { color: #4070a0; } /* Char */
-      code span.cn { color: #880000; } /* Constant */
-      code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-      code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-      code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-      code span.dt { color: #902000; } /* DataType */
-      code span.dv { color: #40a070; } /* DecVal */
-      code span.er { color: #ff0000; font-weight: bold; } /* Error */
-      code span.ex { } /* Extension */
-      code span.fl { color: #40a070; } /* Float */
-      code span.fu { color: #06287e; } /* Function */
-      code span.im { } /* Import */
-      code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-      code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-      code span.op { color: #666666; } /* Operator */
-      code span.ot { color: #007020; } /* Other */
-      code span.pp { color: #bc7a00; } /* Preprocessor */
-      code span.sc { color: #4070a0; } /* SpecialChar */
-      code span.ss { color: #bb6688; } /* SpecialString */
-      code span.st { color: #4070a0; } /* String */
-      code span.va { color: #19177c; } /* Variable */
-      code span.vs { color: #4070a0; } /* VerbatimString */
-      code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-    </style>
-<!-- tabsets --><script>
+<script src="qc_metabolomics_files/downcute-0.1/downcute_styles.js"></script><script src="qc_metabolomics_files/downcute-0.1/downcute.js"></script><script src="qc_metabolomics_files/prism-1.22/prism.js"></script><!-- tabsets --><script>
       $(document).ready(function () {
 	  window.buildTabsets("toc");
       });
@@ -154,7 +88,7 @@
 
    	
                <!-- downcute start -->   
-   <div id="docute" class="Root">
+   <div id="docute" class="Root theme-default">
      <div class="Page layout-narrow">
       <div class="Wrap">
         <div class="Sidebar">
@@ -167,7 +101,7 @@
             </ul>
 </div>
           <div data-position="sidebar:post-end" class="InjectedComponents"><div class="dark-theme-toggler">
-<div class="toggle">
+<div class="toggle ">
 <div class="toggle-track">
 <div class="toggle-track-check"><img src="data:image/png;base64,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" role="presentation" style="pointer-events: none;" width="16" height="16"></div> <div class="toggle-track-x"><img src="data:image/png;base64,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" role="presentation" style="pointer-events: none;" width="16" height="16"></div>
 </div> <div class="toggle-thumb"></div>
@@ -191,7 +125,7 @@
       
       <p class="authors">
          </p>
-<p class="date"><span class="glyphicon glyphicon-calendar"></span> 2021-10-21</p>
+<p class="date"><span class="glyphicon glyphicon-calendar"></span> 2021-12-07</p>
            
 
    
@@ -209,29 +143,24 @@
 <a href="https://rstudio.com/products/rstudio/download/">RStudio</a> (free version)</li>
 </ul>
 <p>Then, open RStudio and install the <code>devtools</code> package</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></code></pre></div>
+<pre class="r"><code><a href="https://rdrr.io/r/utils/install.packages.html">install.packages("devtools")</a></code></pre>
 <p>Finally, install the <code>MotrpacBicQC</code> package</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/">devtools</a></span><span class="op">)</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"MoTrPAC/MotrpacBicQC"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<pre class="r"><code><a href="https://devtools.r-lib.org/">library(devtools)
+devtools::install_github("MoTrPAC/MotrpacBicQC", build_vignettes = TRUE)</a></code></pre>
 </div>
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
 <p>Load the library</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/MoTrPAC/MotrpacBicQC">MotrpacBicQC</a></span><span class="op">)</span></code></pre></div>
+<pre class="r"><code><a href="https://github.com/MoTrPAC/MotrpacBicQC">library(MotrpacBicQC)</a></code></pre>
 <p>And run any of the following tests to check that the package is correctly installed and it works. For example:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Just copy and paste in the RStudio terminal</span>
+<pre class="r"><code><a href="../reference/check_metadata_metabolites.html"># Just copy and paste in the RStudio terminal
 
-<span class="fu"><a href="../reference/check_metadata_metabolites.html">check_metadata_metabolites</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">metadata_metabolites_named</span>, name_id <span class="op">=</span> <span class="st">"named"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/check_metadata_samples.html">check_metadata_samples</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">metadata_sample_named</span>, cas <span class="op">=</span> <span class="st">"umichigan"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/check_results.html">check_results</a></span><span class="op">(</span>r_m <span class="op">=</span> <span class="va">results_named</span>, m_s <span class="op">=</span> <span class="va">metadata_sample_named</span>, m_m <span class="op">=</span> <span class="va">metadata_metabolites_named</span><span class="op">)</span></code></pre></div>
+check_metadata_metabolites(df = metadata_metabolites_named, name_id = "named")
+check_metadata_samples(df = metadata_sample_named, cas = "umichigan")
+check_results(r_m = results_named, m_s = metadata_sample_named, m_m = metadata_metabolites_named)</a></code></pre>
 <p>which should generate the following output:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/check_metadata_metabolites.html">check_metadata_metabolites</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">metadata_metabolites_named</span>, name_id <span class="op">=</span> <span class="st">"named"</span><span class="op">)</span></code></pre></div>
+<pre class="r"><code><a href="../reference/check_metadata_metabolites.html">check_metadata_metabolites(df = metadata_metabolites_named, name_id = "named")</a></code></pre>
 <pre><code>##    + (+) All required columns present</code></pre>
 <pre><code>##    + (+) {metabolite_name} OK</code></pre>
 <pre><code>##    + (+) {refmet_name} unique values: OK</code></pre>
@@ -241,15 +170,13 @@
 <pre><code>##    + (+) {mz} all numeric: OK</code></pre>
 <pre><code>##    + (+) {neutral_mass} all numeric values OK</code></pre>
 <pre><code>##    + (+) {formula} available: OK</code></pre>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/check_metadata_samples.html">check_metadata_samples</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">metadata_sample_named</span>, cas <span class="op">=</span> <span class="st">"umichigan"</span><span class="op">)</span></code></pre></div>
+<pre class="r"><code><a href="../reference/check_metadata_samples.html">check_metadata_samples(df = metadata_sample_named, cas = "umichigan")</a></code></pre>
 <pre><code>##    + (+) {sample_id} seems OK</code></pre>
 <pre><code>##    + (+) {sample_type} seems OK</code></pre>
 <pre><code>##    + (+) {sample_order} is numeric</code></pre>
 <pre><code>##    + (+) {sample_order} unique values OK</code></pre>
 <pre><code>##    + (+) {raw_file} unique values OK</code></pre>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/check_results.html">check_results</a></span><span class="op">(</span>r_m <span class="op">=</span> <span class="va">results_named</span>, m_s <span class="op">=</span> <span class="va">metadata_sample_named</span>, m_m <span class="op">=</span> <span class="va">metadata_metabolites_named</span><span class="op">)</span></code></pre></div>
+<pre class="r"><code><a href="../reference/check_results.html">check_results(r_m = results_named, m_s = metadata_sample_named, m_m = metadata_metabolites_named)</a></code></pre>
 <pre><code>##    + (+) All samples from [results_metabolite] are available in [metadata_sample]</code></pre>
 <pre><code>##    + (+) {metabolite_name} is identical in both [results] and [metadata_metabolites] files: OK</code></pre>
 <pre><code>##    + (+) {sample_id} columns are numeric: OK</code></pre>
@@ -262,9 +189,8 @@
 <h3 class="hasAnchor">
 <a href="#check-full-processed_yyyymmdd-folder-recommended" class="anchor"></a>Check full <code>PROCESSED_YYYYMMDD</code> folder (recommended)</h3>
 <p>Run test on the full submission. For that, run the following command:</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/validate_metabolomics.html">validate_metabolomics</a></span><span class="op">(</span>input_results_folder <span class="op">=</span> <span class="st">"/full/path/to/PROCESSED_YYYYMMDD"</span>, 
-                      cas <span class="op">=</span> <span class="st">"your_site_code"</span><span class="op">)</span></code></pre></div>
+<pre class="r"><code><a href="../reference/validate_metabolomics.html">validate_metabolomics(input_results_folder = "/full/path/to/PROCESSED_YYYYMMDD", 
+                      cas = "your_site_code")</a></code></pre>
 <p><strong>cas</strong> is one of the followings:</p>
 <ul>
 <li>“broad_met” = Broad Metabolomics</li>
@@ -281,36 +207,33 @@
 <ul>
 <li>Check metadata metabolites:</li>
 </ul>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Open the metadata_metabolites file(s)</span>
+<pre class="r"><code># Open the metadata_metabolites file(s)
 
-<span class="va">metadata_metabolites_named</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"/path/to/your/file"</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">metadata_metabolites_unnamed</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"/path/to/your/file"</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+metadata_metabolites_named &lt;- read.delim(file = "/path/to/your/file", stringsAsFactors = FALSE)
+metadata_metabolites_unnamed &lt;- read.delim(file = "/path/to/your/file", stringsAsFactors = FALSE)
 
-<span class="fu"><a href="../reference/check_metadata_metabolites.html">check_metadata_metabolites</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">metadata_metabolites_named</span>, name_id <span class="op">=</span> <span class="st">"named"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/check_metadata_metabolites.html">check_metadata_metabolites</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">metadata_metabolites_unnamed</span>, name_id <span class="op">=</span> <span class="st">"unnamed"</span><span class="op">)</span></code></pre></div>
+check_metadata_metabolites(df = metadata_metabolites_named, name_id = "named")
+check_metadata_metabolites(df = metadata_metabolites_unnamed, name_id = "unnamed")</code></pre>
 <ul>
 <li>Check metadata samples:</li>
 </ul>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Open your files</span>
-<span class="va">metadata_sample_named</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"/path/to/your/file"</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">metadata_sample_unnamed</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"/path/to/your/file"</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<pre class="r"><code># Open your files
+metadata_sample_named &lt;- read.delim(file = "/path/to/your/file", stringsAsFactors = FALSE)
+metadata_sample_unnamed &lt;- read.delim(file = "/path/to/your/file", stringsAsFactors = FALSE)
 
-<span class="fu"><a href="../reference/check_metadata_samples.html">check_metadata_samples</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">metadata_sample_named</span>, cas <span class="op">=</span> <span class="st">"your_side_id"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/check_metadata_samples.html">check_metadata_samples</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">metadata_sample_unnamed</span>, cas <span class="op">=</span> <span class="st">"your_side_id"</span><span class="op">)</span></code></pre></div>
+check_metadata_samples(df = metadata_sample_named, cas = "your_side_id")
+check_metadata_samples(df = metadata_sample_unnamed, cas = "your_side_id")</code></pre>
 <ul>
 <li>Check results, which needs both both metadata metabolites and samples</li>
 </ul>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Open your files</span>
-<span class="va">metadata_metabolites_named</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"/path/to/your/file"</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">metadata_sample_named</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"/path/to/your/file"</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">results_named</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"/path/to/your/file"</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<pre class="r"><code># Open your files
+metadata_metabolites_named &lt;- read.delim(file = "/path/to/your/file", stringsAsFactors = FALSE)
+metadata_sample_named &lt;- read.delim(file = "/path/to/your/file", stringsAsFactors = FALSE)
+results_named &lt;- read.delim(file = "/path/to/your/file", stringsAsFactors = FALSE)
 
-<span class="fu"><a href="../reference/check_results.html">check_results</a></span><span class="op">(</span>r_m <span class="op">=</span> <span class="va">results_named</span>, 
-              m_s <span class="op">=</span> <span class="va">metadata_sample_named</span>, 
-              m_m <span class="op">=</span> <span class="va">metadata_metabolites_named</span><span class="op">)</span></code></pre></div>
+check_results(r_m = results_named, 
+              m_s = metadata_sample_named, 
+              m_m = metadata_metabolites_named)</code></pre>
 </div>
 <div id="merge-metabolomics-data-only-pass1a-supported" class="section level3">
 <h3 class="hasAnchor">
@@ -341,18 +264,16 @@
 <p>With the following file relations…</p>
 <p><img src="BIC_Metabolomics_DataProcessing_Summary_20200303.png"></p>
 <p>To merge all data available in a <code>PROCESSED_YYYYMMDD</code> folder, run the following command:</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">t31_ionpneg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/combine_metabolomics_batch.html">combine_metabolomics_batch</a></span><span class="op">(</span>input_results_folder <span class="op">=</span> <span class="st">"/full/path/to/PROCESSED_YYYYMMDD/"</span>, 
-                                          cas <span class="op">=</span> <span class="st">"umichigan"</span><span class="op">)</span></code></pre></div>
+<pre class="r"><code>t31_ionpneg &lt;- combine_metabolomics_batch(input_results_folder = "/full/path/to/PROCESSED_YYYYMMDD/", 
+                                          cas = "umichigan")</code></pre>
 <p>Alternatively, each individual dataset can also be provided. For example:</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">plasma.untargeted.merged</span> <span class="op">&lt;-</span> 
-  <span class="fu"><a href="../reference/merge_all_metabolomics.html">merge_all_metabolomics</a></span><span class="op">(</span>m_m_n <span class="op">=</span> <span class="va">metadata_metabolites_named</span>,
-                         m_m_u <span class="op">=</span> <span class="va">metadata_metabolites_unnamed</span>,
-                         m_s_n <span class="op">=</span> <span class="va">metadata_sample_named</span>,
-                         r_n <span class="op">=</span> <span class="va">results_named</span>,
-                         r_u <span class="op">=</span> <span class="va">results_unnamed</span>,
-                         phase <span class="op">=</span> <span class="st">"PASS1A-06"</span><span class="op">)</span></code></pre></div>
+<pre class="r"><code>plasma.untargeted.merged &lt;- 
+  merge_all_metabolomics(m_m_n = metadata_metabolites_named,
+                         m_m_u = metadata_metabolites_unnamed,
+                         m_s_n = metadata_sample_named,
+                         r_n = results_named,
+                         r_u = results_unnamed,
+                         phase = "PASS1A-06")</code></pre>
 <p>Check the function help for details</p>
 </div>
 </div>
@@ -360,8 +281,7 @@
 <h2 class="hasAnchor">
 <a href="#help" class="anchor"></a>Help</h2>
 <p>Additional details for each function can be found by typing, for example:</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="op">?</span><span class="va">merge_all_metabolomics</span></code></pre></div>
+<pre class="r"><code><a href="../reference/merge_all_metabolomics.html">?merge_all_metabolomics</a></code></pre>
 <p>Need extra help? Please, <a href="https://github.com/MoTrPAC/MotrpacBicQC/issues">submit an issue here</a> providing as many details as possible.</p>
 </div>
 </div>
