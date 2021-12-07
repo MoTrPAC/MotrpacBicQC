@@ -1,3 +1,8 @@
+# MotrpacBicQC 0.6.2 (2021-12-07)
+
+* Fix bug affecting the validation of refmet_names
+* Update data objects (immunoassay added)
+
 # MotrpacBicQC 0.6.1 (2021-09-06)
 
 * Refactor the validation of refmet_name. It now checks on at the time 
