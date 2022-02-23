@@ -889,7 +889,7 @@ validate_metabolomics <- function(input_results_folder,
           if(verbose) message("   + (+) experimentalDetails_file exists: OK")
         }else{
           if(verbose) message("      - (-) experimentalDetails_file cannot be found: FAIL")
-          if(verbose) message("       File searched and not found: ", paste(full_path_edf))
+          if(verbose) message("       File searched and not found: ", paste("`",full_path_edf,"`"))
           ic_man <- ic_man + 1
         }
       }else{
@@ -957,7 +957,7 @@ validate_metabolomics <- function(input_results_folder,
             if(verbose) message("   + (+) experimentalDetails_file exists: OK")
           }else{
             if(verbose) message("      - (-) experimentalDetails_file cannot be found: FAIL")
-            if(verbose) message("       File searched and not found: ", paste(full_path_edf))
+            if(verbose) message("       File searched and not found: ", paste("`", full_path_edf, "`"))
             ic_man <- ic_man + 1
           }
         }else{

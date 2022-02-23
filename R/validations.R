@@ -57,7 +57,9 @@ check_viallabel_dmaqc <- function(vl_submitted,
   }
   
   if( length(dmaqc_labels) == 0){
-    if(verbose) message("   + (+) DMAQC CHECK POINT: sample IDs not available in DMAQC dataset. Needs to be revised by BIC")
+    if(verbose) message("   + (+) DMAQC CHECK POINT: sample IDs not available in DMAQC dataset. Most frequent cause of the error: 
+                        Does the tissue code for this folder structure contain the right tissue code? 
+                        Otherwise, it needs to be revised with DMAQC")
     ic <- "NOT_AVAILABLE"
   }else{
     if( setequal(vl_submitted, dmaqc_labels) ){
