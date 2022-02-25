@@ -518,6 +518,10 @@ check_vial_metadata_proteomics <- function(df_vm,
   }else if("tmt16_channel" %in% colnames(df_vm)){
     required_columns <- c("vial_label", "tmt_plex", "tmt16_channel") 
     tmt_channel <- "tmt16_channel"
+  }else{
+    if(verbose) message("      - (-) `tmt[11|16]_channel` column not found")
+    ic_vm <- 3
+    return(ic_vm)
   }
   
   if(!all( required_columns %in% colnames(df_vm))){
