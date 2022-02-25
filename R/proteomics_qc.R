@@ -510,35 +510,50 @@ check_vial_metadata_proteomics <- function(df_vm,
                                            verbose = TRUE){
 
   ic_vm <- NULL
+  tmt_channel <- NULL
 
-  required_columns <- c("vial_label", "tmt_plex", "tmt11_channel")
-
-  if(!all( required_columns %in% colnames(df_vm) )){
+  if("tmt11_channel" %in% colnames(df_vm)){
+    required_columns <- c("vial_label", "tmt_plex", "tmt11_channel") 
+    tmt_channel <- "tmt11_channel"
+  }else if("tmt16_channel" %in% colnames(df_vm)){
+    required_columns <- c("vial_label", "tmt_plex", "tmt16_channel") 
+    tmt_channel <- "tmt16_channel"
+  }
+  
+  if(!all( required_columns %in% colnames(df_vm))){
     if(verbose) message("      - (-) CRITICAL column(s) missed: ", appendLF = FALSE)
     if(verbose) message(paste(required_columns[!required_columns %in% colnames(df_vm)], collapse = ", "))
     ic_vm <- 3
     return(ic_vm)
   }
+  
+  if("tmt11_channel" %in% colnames(df_vm)){
+    df_vm$vial_label <- gsub(" ", "", df_vm$vial_label)
+    valid_channels <- c("126C", "127N", "127C", "128N", "128C", "129N", "129C", "130N", "130C", "131N", "131C")
+  }else if("tmt16_channel" %in% colnames(df_vm)){
+    df_vm$vial_label <- gsub(" ", "", df_vm$vial_label)
+    valid_channels <- c("126C", "127N", "127C", "128N", "128C", "129N", "129C", "130N", "130C", "131N", "131C", "132N", "132C", "133N", "133C", "134N")
+  }
 
   ic_vm <- 0
 
-  df_vm$vial_label <- gsub(" ", "", df_vm$vial_label)
-  valid_channels <- c("126C", "127N", "127C", "128N", "128C", "129N", "129C", "130N", "130C", "131N", "131C")
   plexes <- unique(df_vm$tmt_plex)
 
   for(p in plexes){
     temp_plex <- df_vm[which(df_vm$tmt_plex == p),]
-    if(all(valid_channels %in% temp_plex$tmt11_channel)){
-      if(verbose) message("   + (+) All tmt channels are valid in plex ", paste(p))
+    if(all(valid_channels %in% temp_plex[[tmt_channel]])){
+      if(verbose) message("   + (+) All ", tmt_channel," channels are valid in plex ", paste(p))
     }else{
-      # Broad exception
-      valid_channels <- c("126C", "127N", "127C", "128N", "128C", "129N", "129C", "130N", "131N", "131C")
-      if(all(valid_channels %in% temp_plex$tmt11_channel)){
-        if(verbose) message("   + ( ) Channel 130C missed in ", paste(p))
-        ic_vm <- ic_vm + 1
-      }else{
-        if(verbose) message("      - (-) TMT Channels are missed in ", paste(p))
-        ic_vm <- ic_vm + 1
+      if(tmt_channel == "tmt11_channel"){
+        # Broad exception: they removed one plexed due to some issues. This is an exception to handle it
+        valid_channels <- c("126C", "127N", "127C", "128N", "128C", "129N", "129C", "130N", "131N", "131C")
+        if(all(valid_channels %in% temp_plex$tmt11_channel)){
+          if(verbose) message("   + ( ) Channel 130C missed in ", paste(p))
+          ic_vm <- ic_vm + 1
+        }else{
+          if(verbose) message("      - (-) TMT Channels are missed in ", paste(p))
+          ic_vm <- ic_vm + 1
+        }
       }
     }
   }

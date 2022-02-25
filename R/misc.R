@@ -73,10 +73,20 @@ filter_required_columns <- function(df,
     }
     return(df)
   } else if (type == "v_m"){
-    emeta_sample_coln <- c("vial_label", "tmt11_channel", "tmt_plex")
+    emeta_sample_coln <- c("vial_label", "tmt_plex")
     if( all(emeta_sample_coln %in% colnames(df)) ){
-      if(verbose) message("   + (+) All required columns present")
-      df <- subset(df, select = emeta_sample_coln)
+      # deal with tmt11 or tmt16
+      if("tmt11_channel" %in% colnames(df)){
+        emeta_sample_coln <- append(emeta_sample_coln, "tmt11_channel")
+        if(verbose) message("   + (+) All required columns present (tmt11 experiment)")
+        df <- subset(df, select = emeta_sample_coln)
+      }else if("tmt16_channel" %in% colnames(df)){
+        emeta_sample_coln <- append(emeta_sample_coln, "tmt16_channel")
+        if(verbose) message("   + (+) All required columns present (tmt16 experiment)")
+        df <- subset(df, select = emeta_sample_coln)
+      }else{
+        if(verbose) message("      - (-) Expected COLUMN NAMES are missed: FAIL")
+      }
     }else{
       if(verbose) message("      - (-) Expected COLUMN NAMES are missed: FAIL")
     }
