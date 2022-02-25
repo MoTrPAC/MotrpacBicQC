@@ -1,3 +1,8 @@
+# MotrpacBicQC 0.6.3 (2022-02-25)
+
+* Proteomics: support for tmt16
+* Metabolomics: Improve verbosity for wrong tissue code
+
 # MotrpacBicQC 0.6.2 (2021-12-07)
 
 * Fix bug affecting the validation of refmet_names
