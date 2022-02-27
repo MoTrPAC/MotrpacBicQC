@@ -1,6 +1,6 @@
 ---
 title: "MotrpacBicQC: Metabolomics QC"
-date: "2021-07-08"
+date: "2022-02-27"
 output:
   rmdformats::downcute:
     code_folding: show
@@ -80,7 +80,11 @@ check_metadata_metabolites(df = metadata_metabolites_named, name_id = "named")
 ```
 
 ```
-##    + (+) {refmet_name} ids found in refmet: OK
+##    + Validating {refmet_name}
+```
+
+```
+##       + (+) {refmet_name} ids found in refmet: OK
 ```
 
 ```
@@ -161,6 +165,27 @@ validate_metabolomics(input_results_folder = "/full/path/to/PROCESSED_YYYYMMDD",
 - "umichigan" = Umichigan
 - "gtech"     = Georgia Tech
 - "duke"      = Duke
+
+This function can also print out a number of QC plots, including:
+
+- the sum of intensity/concentration per sample
+- Number of identifications
+- Sample Intensity/concentration distribution (boxplots)
+- Total number of samples
+- Total number of identifications (named/unnamed)
+
+For that, run it like this:
+
+
+```r
+validate_metabolomics(input_results_folder = "/full/path/to/PROCESSED_YYYYMMDD", 
+                      cas = "your_site_code",
+                      f_proof = TRUE,
+                      out_qc_folder = "/path/to/the/folder/to/save/plots/",
+                      printPDF = TRUE)
+```
+
+It is recommended to provide the path to the folder where the pdf files should be saved (argument: `out_qc_folder`)
 
 ### Check individual files
 

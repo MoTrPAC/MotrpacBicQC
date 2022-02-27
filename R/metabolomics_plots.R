@@ -9,6 +9,7 @@
 #' @param m_s_n (df) metadata samples named
 #' @param out_qc_folder (char) output qc folder (it creates the folder if it doesn't exist)
 #' @param output_prefix (char) prefix for the file name output (pdf file)
+#' @param untargeted (logical) `TRUE` if the dataset is untargeted (named + unnamed metabolites)
 #' @param printPDF (logical) `TRUE` (default) prints pdf file
 #' @param verbose (logical) `TRUE` (default) shows messages
 #' @export
@@ -21,7 +22,7 @@ plot_basic_metabolomics_qc <- function(results,
                                        untargeted = TRUE,
                                        verbose = TRUE){
 
-  metabolite_name = id_type = sample_id = sample_order = intensity = sample_type = NULL
+  metabolite_name = id_type = sample_id = sample_order = intensity = sample_type = sum_quant = NULL
   
   if(verbose) message("   + (+) QC PLOTS ------------------")
   

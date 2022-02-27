@@ -252,7 +252,10 @@ check_results(r_m = results_named, m_s = metadata_sample_named, m_m = metadata_m
 <pre><code>##    + (+) {refmet_name} unique values: OK
 </code></pre>
 
-<pre><code>##    + (+) {refmet_name} ids found in refmet: OK
+<pre><code>##    + Validating {refmet_name}
+</code></pre>
+
+<pre><code>##       + (+) {refmet_name} ids found in refmet: OK
 </code></pre>
 
 <pre><code>##    + (+) {rt} all numeric: OK
@@ -319,6 +322,27 @@ check_results(r_m = results_named, m_s = metadata_sample_named, m_m = metadata_m
 <li>&ldquo;gtech&rdquo;     = Georgia Tech</li>
 <li>&ldquo;duke&rdquo;      = Duke</li>
 </ul>
+
+<p>This function can also print out a number of QC plots, including:</p>
+
+<ul>
+<li>the sum of intensity/concentration per sample</li>
+<li>Number of identifications</li>
+<li>Sample Intensity/concentration distribution (boxplots)</li>
+<li>Total number of samples</li>
+<li>Total number of identifications (named/unnamed)</li>
+</ul>
+
+<p>For that, run it like this:</p>
+
+<pre><code class="r">validate_metabolomics(input_results_folder = &quot;/full/path/to/PROCESSED_YYYYMMDD&quot;, 
+                      cas = &quot;your_site_code&quot;,
+                      f_proof = TRUE,
+                      out_qc_folder = &quot;/path/to/the/folder/to/save/plots/&quot;,
+                      printPDF = TRUE)
+</code></pre>
+
+<p>It is recommended to provide the path to the folder where the pdf files should be saved (argument: <code>out_qc_folder</code>)</p>
 
 <h3>Check individual files</h3>
 

@@ -543,6 +543,8 @@ validate_metabolomics <- function(input_results_folder,
                                   out_qc_folder = NULL,
                                   printPDF = TRUE){
 
+  metabolite_name = id_type = NULL
+  
   # validate folder structure -----
   validate_cas(cas = cas)
   processfolder <- validate_processFolder(input_results_folder)

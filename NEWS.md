@@ -1,3 +1,10 @@
+# MotrpacBicQC 0.6.4 (2022-02-27)
+
+* Metabolomics: adjust metabolomic plots to deal with a large number of samples
+* Metabolomics new plot: sum of intensity/concentration
+* Metabolomics: detects negative values
+* Metabolomics: update vignette
+
 # MotrpacBicQC 0.6.3 (2022-02-25)
 
 * Proteomics: support for tmt16

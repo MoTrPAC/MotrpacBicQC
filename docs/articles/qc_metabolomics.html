@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="generator" content="pandoc">
-<meta name="date" content="2022-02-25">
+<meta name="date" content="2022-02-27">
 <title>MotrpacBicQC: Metabolomics QC</title>
 <script src="qc_metabolomics_files/header-attrs-2.11/header-attrs.js"></script><script src="qc_metabolomics_files/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="qc_metabolomics_files/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
@@ -124,7 +124,7 @@
       
       <p class="authors">
          </p>
-<p class="date"><span class="glyphicon glyphicon-calendar"></span> 2022-02-25</p>
+<p class="date"><span class="glyphicon glyphicon-calendar"></span> 2022-02-27</p>
            
 
    
@@ -199,6 +199,21 @@
 <li>“gtech” = Georgia Tech</li>
 <li>“duke” = Duke</li>
 </ul>
+<p>This function can also print out a number of QC plots, including:</p>
+<ul>
+<li>the sum of intensity/concentration per sample</li>
+<li>Number of identifications</li>
+<li>Sample Intensity/concentration distribution (boxplots)</li>
+<li>Total number of samples</li>
+<li>Total number of identifications (named/unnamed)</li>
+</ul>
+<p>For that, run it like this:</p>
+<pre class="r"><code><span class="fu"><a href="../reference/validate_metabolomics.html">validate_metabolomics</a></span><span class="op">(</span>input_results_folder <span class="op">=</span> <span class="st">"/full/path/to/PROCESSED_YYYYMMDD"</span>, 
+                      cas <span class="op">=</span> <span class="st">"your_site_code"</span>,
+                      f_proof <span class="op">=</span> <span class="cn">TRUE</span>,
+                      out_qc_folder <span class="op">=</span> <span class="st">"/path/to/the/folder/to/save/plots/"</span>,
+                      printPDF <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre>
+<p>It is recommended to provide the path to the folder where the pdf files should be saved (argument: <code>out_qc_folder</code>)</p>
 </div>
 <div class="section level3">
 <h3 id="check-individual-files">Check individual files<a class="anchor" aria-label="anchor" href="#check-individual-files"></a>

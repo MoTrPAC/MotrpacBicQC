@@ -6,15 +6,19 @@
 \usage{
 plot_basic_metabolomics_qc(
   results,
+  results_long,
   m_s_n,
   out_qc_folder = NULL,
   output_prefix,
   printPDF = TRUE,
+  untargeted = TRUE,
   verbose = TRUE
 )
 }
 \arguments{
 \item{results}{(df) metabolomics results (both named and unnamed already merged, if untargeted)}
+
+\item{results_long}{(df) metabolomics results (both named and unnamed already merged, if untargeted, in long format)}
 
 \item{m_s_n}{(df) metadata samples named}
 
@@ -23,6 +27,8 @@ plot_basic_metabolomics_qc(
 \item{output_prefix}{(char) prefix for the file name output (pdf file)}
 
 \item{printPDF}{(logical) \code{TRUE} (default) prints pdf file}
+
+\item{untargeted}{(logical) \code{TRUE} if the dataset is untargeted (named + unnamed metabolites)}
 
 \item{verbose}{(logical) \code{TRUE} (default) shows messages}
 }
