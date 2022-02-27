@@ -18,7 +18,7 @@ per sample"><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MotrpacBicQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.4</span>
       </span>
     </div>
 
@@ -73,10 +73,12 @@ per sample</p>
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">plot_basic_metabolomics_qc</span><span class="op">(</span>
   <span class="va">results</span>,
+  <span class="va">results_long</span>,
   <span class="va">m_s_n</span>,
   out_qc_folder <span class="op">=</span> <span class="cn">NULL</span>,
   <span class="va">output_prefix</span>,
   printPDF <span class="op">=</span> <span class="cn">TRUE</span>,
+  untargeted <span class="op">=</span> <span class="cn">TRUE</span>,
   verbose <span class="op">=</span> <span class="cn">TRUE</span>
 <span class="op">)</span></code></pre></div>
     </div>
@@ -85,6 +87,8 @@ per sample</p>
     <h2>Arguments</h2>
     <dl><dt>results</dt>
 <dd><p>(df) metabolomics results (both named and unnamed already merged, if untargeted)</p></dd>
+<dt>results_long</dt>
+<dd><p>(df) metabolomics results (both named and unnamed already merged, if untargeted, in long format)</p></dd>
 <dt>m_s_n</dt>
 <dd><p>(df) metadata samples named</p></dd>
 <dt>out_qc_folder</dt>
@@ -93,6 +97,8 @@ per sample</p>
 <dd><p>(char) prefix for the file name output (pdf file)</p></dd>
 <dt>printPDF</dt>
 <dd><p>(logical) <code>TRUE</code> (default) prints pdf file</p></dd>
+<dt>untargeted</dt>
+<dd><p>(logical) <code>TRUE</code> if the dataset is untargeted (named + unnamed metabolites)</p></dd>
 <dt>verbose</dt>
 <dd><p>(logical) <code>TRUE</code> (default) shows messages</p></dd>
 </dl></div>

@@ -25,6 +25,13 @@ check_results(r_m = results_named, m_s = metadata_sample_named, m_m = metadata_m
 #                        cas = "your_site_code")
 
 ## ----eval = FALSE-------------------------------------------------------------
+#  validate_metabolomics(input_results_folder = "/full/path/to/PROCESSED_YYYYMMDD",
+#                        cas = "your_site_code",
+#                        f_proof = TRUE,
+#                        out_qc_folder = "/path/to/the/folder/to/save/plots/",
+#                        printPDF = TRUE)
+
+## ----eval = FALSE-------------------------------------------------------------
 #  # Open the metadata_metabolites file(s)
 #  
 #  metadata_metabolites_named <- read.delim(file = "/path/to/your/file", stringsAsFactors = FALSE)

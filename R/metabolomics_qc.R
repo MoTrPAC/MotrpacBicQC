@@ -72,7 +72,7 @@ check_metadata_metabolites <- function(df,
         if(verbose) message("   + (+) {refmet_name} unique values: OK")
       }
       
-      if(verbose) message("   + Validating {refmet_name}\n")
+      if(verbose) message("   + Validating {refmet_name}")
       nrnna <- validate_refmetname(dataf = df, verbose = verbose)
       if(nrnna > 0){
         if(verbose) message(paste0("\n      SUMMARY: ", nrnna, " {refmet_name} not found in RefMet Metabolomics Data Dictionary: FAIL"))
@@ -543,6 +543,8 @@ validate_metabolomics <- function(input_results_folder,
                                   out_qc_folder = NULL,
                                   printPDF = TRUE){
 
+  metabolite_name = id_type = NULL
+  
   # validate folder structure -----
   validate_cas(cas = cas)
   processfolder <- validate_processFolder(input_results_folder)
@@ -777,11 +779,32 @@ validate_metabolomics <- function(input_results_folder,
         results <- r_m_n[eresults_coln]
       }
       
+      # results: check for negative values
+      results_long <- results %>% tidyr::pivot_longer(cols = -c(metabolite_name, id_type),
+                                                      names_to = "sample_id",
+                                                      values_to = "intensity")
+      
+      results_long <- merge(m_s_n, results_long, by = c("sample_id"))
+      results_long$sample_id <- as.character(results_long$sample_id)
+      results_long$sample_id <- as.factor(results_long$sample_id)
+      results_long$sample_type <- as.factor(results_long$sample_type)
+      results_long <- results_long[which(results_long$intensity != 0),]
+      results_long <- results_long[!is.na(results_long$intensity),]
+      if(any(results_long$intensity < 0)){
+        message("   - (-) !!!!!!!!!!!!!!!!!!!!!!!!!!")
+        message("   - (-) NEGATIVE VALUES DETECTED!! ")
+        message("   - (-) !!!!!!!!!!!!!!!!!!!!!!!!!!")
+        results_long <- results_long[which(results_long$intensity > 0),]
+        ic <- ic + 1
+      }
+      
       plot_basic_metabolomics_qc(results = results, 
+                                 results_long = results_long,
                                  m_s_n = m_s_n, 
                                  out_qc_folder = out_qc_folder, 
                                  output_prefix = output_prefix,
                                  printPDF = printPDF,
+                                 untargeted = untargeted,
                                  verbose = verbose)
   
     }else{
@@ -790,9 +813,10 @@ validate_metabolomics <- function(input_results_folder,
     
     if(f_rmn & f_mmn){
       m_m_n <- filter_required_columns(df = m_m_n,
-                                    type = "m_m",
-                                    name_id = "named",
-                                    verbose = FALSE)
+                                       type = "m_m",
+                                       name_id = "named",
+                                       verbose = FALSE)
+                                    
       r_m_merge <- merge(r_m_n, m_m_n, by = "metabolite_name")
     }
   }
