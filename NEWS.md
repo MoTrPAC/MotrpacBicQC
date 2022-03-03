@@ -1,3 +1,7 @@
+# MotrpacBicQC 0.6.5 (2022-02-28)
+
+* Metabolomics: fix manifest checks.
+
 # MotrpacBicQC 0.6.4 (2022-02-27)
 
 * Metabolomics: adjust metabolomic plots to deal with a large number of samples
