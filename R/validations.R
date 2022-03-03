@@ -57,30 +57,30 @@ check_viallabel_dmaqc <- function(vl_submitted,
   }
   
   if( length(dmaqc_labels) == 0){
-    if(verbose) message("   + (+) DMAQC CHECK POINT: sample IDs not available in DMAQC dataset. Most frequent cause of the error: 
+    if(verbose) message("  + (+) DMAQC CHECK POINT: sample IDs not available in DMAQC dataset. Most frequent cause of the error: 
                         Does the tissue code for this folder structure contain the right tissue code? 
                         Otherwise, it needs to be revised with DMAQC")
     ic <- "NOT_AVAILABLE"
   }else{
     if( setequal(vl_submitted, dmaqc_labels) ){
-      if(verbose) message("   + (+) DMAQC CHECK POINT: samples sent to CAS have been processed: OK")
+      if(verbose) message("  + (+) DMAQC CHECK POINT: samples sent to CAS have been processed: OK")
       ic <- "OK"
     }else{
       samples_missed <- setdiff(dmaqc_labels, vl_submitted)
       if(!is.null(failed_samples)){
         if(setequal(failed_samples, samples_missed)){
-          if(verbose) message("   + (+) DMAQC CHECK POINT: samples sent to CAS have been processed (with known issues for some samples): OK")
+          if(verbose) message("  + (+) DMAQC CHECK POINT: samples sent to CAS have been processed (with known issues for some samples): OK")
           ic <- "OK"
         }else{
           if(verbose){
-            message("      - (-) DMAQC CHECK POINT: samples not found in metadata_results: FAIL")
+            message("   - (-) DMAQC CHECK POINT: samples not found in `metadata_results`: FAIL")
             message("\t - ", paste(samples_missed, collapse = "\n\t - "))
             ic <- "FAIL"
           }
         }
       }else{
         if(verbose){
-          message("      - (-) DMAQC CHECK POINT: samples not found in metadata_results: FAIL")
+          message("   - (-) DMAQC CHECK POINT: samples not found in `metadata_results`: FAIL")
           message("\t - ", paste(samples_missed, collapse = "\n\t - "))
         }
         ic <- "FAIL"
@@ -130,7 +130,7 @@ validate_processFolder <- function(input_results_folder){
   }
 
   if(is.na(processfolder)){
-    stop("PROCESS_YYYYMMDD or RESULTS_YYYYMMDD folder is not recognize in the folder structure")
+    stop("`PROCESS_YYYYMMDD` or `RESULTS_YYYYMMDD` folder is not recognize in the folder structure")
   }else{
     return(processfolder)
   }
@@ -149,7 +149,7 @@ validate_batch <- function(input_results_folder){
                                        pattern = "(.*/BATCH\\d{1,2}\\_\\d{8})/")
   
   if(is.na(batch_folder)){
-    stop("BATCH#_YYYYMMDD folder is not recognized in the folder structure.")
+    stop("`BATCH#_YYYYMMDD` folder is not recognized in the folder structure.")
   }else{
     return(batch_folder)
   }
@@ -185,7 +185,7 @@ validate_phase <- function(input_results_folder){
   phase <- stringr::str_extract(string = input_results_folder,
                                 pattern = "(PASS1A-06|PASS1A-18|PASS1B-06|PASS1B-18|HUMAN)")
   if(is.na(phase)){
-    stop("<project phase (e.g. PASS1A-06)> is not found in the folder structure, please, check guidelines")
+    stop("project phase (e.g. PASS1A-06) is not found in the folder structure, please, check guidelines")
   }else{
     return(phase)
   }
@@ -203,7 +203,7 @@ validate_tissue <- function(input_results_folder){
   tissue_code <- gsub("(.*)(T[0-9]{2,3})(.*)", "\\2", input_results_folder)
 
   if(!tissue_code %in% bic_animal_tissue_code$bic_tissue_code){
-    stop("tissue_code: <", tissue_code, "> is not valid. Must be one of the following codes (check data object MotrpacBicQC::bic_animal_tissue_code):\n- ", paste(bic_animal_tissue_code$bic_tissue_code, collapse = ", "))
+    stop("tissue_code: `", tissue_code, "` is not valid. Must be one of the following codes (check data object `MotrpacBicQC::bic_animal_tissue_code`):\n- ", paste(bic_animal_tissue_code$bic_tissue_code, collapse = ", "))
   }else{
     return(tissue_code)
   }

@@ -292,6 +292,7 @@ plot_basic_metabolomics_qc <- function(results,
   print(puid1)
   print(piseio)
   gridExtra::grid.arrange(piseso, puid2, ncol = 1, heights = c(2, 1))
+  print(p_na_peprii)
   if(printPDF) garbage <- dev.off()
   
   if(printPDF) pdf(out_plot_summary, width = 12, height = 6)
