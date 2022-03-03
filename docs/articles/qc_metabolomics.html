@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="generator" content="pandoc">
-<meta name="date" content="2022-02-28">
+<meta name="date" content="2022-03-03">
 <title>MotrpacBicQC: Metabolomics QC</title>
 <script src="qc_metabolomics_files/header-attrs-2.11/header-attrs.js"></script><script src="qc_metabolomics_files/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="qc_metabolomics_files/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
@@ -124,7 +124,7 @@
       
       <p class="authors">
          </p>
-<p class="date"><span class="glyphicon glyphicon-calendar"></span> 2022-02-28</p>
+<p class="date"><span class="glyphicon glyphicon-calendar"></span> 2022-03-03</p>
            
 
    
@@ -160,25 +160,25 @@
 <span class="fu"><a href="../reference/check_results.html">check_results</a></span><span class="op">(</span>r_m <span class="op">=</span> <span class="va">results_named</span>, m_s <span class="op">=</span> <span class="va">metadata_sample_named</span>, m_m <span class="op">=</span> <span class="va">metadata_metabolites_named</span><span class="op">)</span></code></pre>
 <p>which should generate the following output:</p>
 <pre class="r"><code><span class="fu"><a href="../reference/check_metadata_metabolites.html">check_metadata_metabolites</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">metadata_metabolites_named</span>, name_id <span class="op">=</span> <span class="st">"named"</span><span class="op">)</span></code></pre>
-<pre><code><span class="co">##    + (+) All required columns present</span></code></pre>
-<pre><code><span class="co">##    + (+) {metabolite_name} OK</span></code></pre>
-<pre><code><span class="co">##    + (+) {refmet_name} unique values: OK</span></code></pre>
-<pre><code><span class="co">##    + Validating {refmet_name}</span></code></pre>
-<pre><code><span class="co">##       + (+) {refmet_name} ids found in refmet: OK</span></code></pre>
-<pre><code><span class="co">##    + (+) {rt} all numeric: OK</span></code></pre>
-<pre><code><span class="co">##    + (+) {mz} all numeric: OK</span></code></pre>
-<pre><code><span class="co">##    + (+) {neutral_mass} all numeric values OK</span></code></pre>
-<pre><code><span class="co">##    + (+) {formula} available: OK</span></code></pre>
+<pre><code><span class="co">##   + (+) All required columns present</span></code></pre>
+<pre><code><span class="co">##   + (+) `metabolite_name` OK</span></code></pre>
+<pre><code><span class="co">##   + (+) `refmet_name` unique values: OK</span></code></pre>
+<pre><code><span class="co">##   + Validating `refmet_name`</span></code></pre>
+<pre><code><span class="co">##   + (+) `refmet_name` ids found in refmet: OK</span></code></pre>
+<pre><code><span class="co">##   + (+) {rt} all numeric: OK</span></code></pre>
+<pre><code><span class="co">##   + (+) {mz} all numeric: OK</span></code></pre>
+<pre><code><span class="co">##   + (+) {`neutral_mass`} all numeric values OK</span></code></pre>
+<pre><code><span class="co">##   + (+) {formula} available: OK</span></code></pre>
 <pre class="r"><code><span class="fu"><a href="../reference/check_metadata_samples.html">check_metadata_samples</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">metadata_sample_named</span>, cas <span class="op">=</span> <span class="st">"umichigan"</span><span class="op">)</span></code></pre>
-<pre><code><span class="co">##    + (+) {sample_id} seems OK</span></code></pre>
-<pre><code><span class="co">##    + (+) {sample_type} seems OK</span></code></pre>
-<pre><code><span class="co">##    + (+) {sample_order} is numeric</span></code></pre>
-<pre><code><span class="co">##    + (+) {sample_order} unique values OK</span></code></pre>
-<pre><code><span class="co">##    + (+) {raw_file} unique values OK</span></code></pre>
+<pre><code><span class="co">##   + (+) `sample_id` seems OK</span></code></pre>
+<pre><code><span class="co">##   + (+) `sample_type` seems OK</span></code></pre>
+<pre><code><span class="co">##   + (+) `sample_order` is numeric</span></code></pre>
+<pre><code><span class="co">##   + (+) `sample_order` unique values OK</span></code></pre>
+<pre><code><span class="co">##   + (+) `raw_file` unique values OK</span></code></pre>
 <pre class="r"><code><span class="fu"><a href="../reference/check_results.html">check_results</a></span><span class="op">(</span>r_m <span class="op">=</span> <span class="va">results_named</span>, m_s <span class="op">=</span> <span class="va">metadata_sample_named</span>, m_m <span class="op">=</span> <span class="va">metadata_metabolites_named</span><span class="op">)</span></code></pre>
-<pre><code><span class="co">##    + (+) All samples from [results_metabolite] are available in [metadata_sample]</span></code></pre>
-<pre><code><span class="co">##    + (+) {metabolite_name} is identical in both [results] and [metadata_metabolites] files: OK</span></code></pre>
-<pre><code><span class="co">##    + (+) {sample_id} columns are numeric: OK</span></code></pre>
+<pre><code><span class="co">##   + (+) All samples from `results_metabolite` are available in `metadata_sample`</span></code></pre>
+<pre><code><span class="co">##   + (+) `metabolite_name` is identical in both [results] and `metadata_metabolites` files: OK</span></code></pre>
+<pre><code><span class="co">##   + (+) `sample_id` columns are numeric: OK</span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="how-to-test-your-datasets">How to test your datasets<a class="anchor" aria-label="anchor" href="#how-to-test-your-datasets"></a>

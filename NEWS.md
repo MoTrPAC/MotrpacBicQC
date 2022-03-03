@@ -1,3 +1,8 @@
+# MotrpacBicQC 0.6.6 (2022-03-03)
+
+* Improve reporting and handling of required files
+* Fix minor bugs 
+
 # MotrpacBicQC 0.6.5 (2022-02-28)
 
 * Metabolomics: fix manifest checks.

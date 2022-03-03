@@ -41,7 +41,7 @@ get_and_validate_mdd <- function(remove_duplications = FALSE){
   colnames(df) <- tolower(colnames(df))
 
   if( !("name" %in% colnames(df)) ){
-    stop("<refmet_name> column not found in the Metabolomics Workbench data dictionary")
+    stop("`refmet_name` column not found in the Metabolomics Workbench data dictionary")
   }else{
     df <- rename(df, refmet_name = name)
   }
@@ -98,7 +98,7 @@ validate_refmetname <- function(dataf, verbose){
     search_api <- paste0("https://www.metabolomicsworkbench.org/rest/refmet/match/",URLencode(rn),"/name/")
     here <- jsonlite::fromJSON(search_api)
     if(length(here) == 0){
-      if(verbose) message(paste0("      (-) refmet_name [", rn, "] not available in RefMet. Please, contact MW/BIC (Error RN1)\n"))
+      if(verbose) message(paste0("      (-) `refmet_name` [`", rn, "`] not available in RefMet. Please, contact MW/BIC (Error RN1)"))
       irm <- irm + 1
       idna <- idna + 1
     }
