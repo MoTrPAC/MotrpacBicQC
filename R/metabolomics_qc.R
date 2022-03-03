@@ -580,7 +580,7 @@ validate_metabolomics <- function(input_results_folder,
   input_results_folder <- normalizePath(input_results_folder)
 
   input_folder_short <- regmatches(input_results_folder, regexpr("(HUMAN|PASS).*PROCESSED_[0-9]{8}", input_results_folder))
-  if(is_empty(input_folder_short)){
+  if(purrr::is_empty(input_folder_short)){
     if(verbose) message("\nThe PROCESSED_YYYYMMDD folder full path is not correct. Example:")
     if(verbose) message("/full/path/to/folder/PASS1A-06/T66/RPNEG/BATCH1_20190822/PROCESSED_20200302")
     stop("Input folder not according to guidelines")
@@ -682,7 +682,8 @@ validate_metabolomics <- function(input_results_folder,
         ic <- ic + 1
       }
     }else{
-      stop("there is no metadata samples unnamed")
+      if(verbose) message("      - (-) Cannot validate whether the sample metadata is identical for NAMED and UNNAMED")
+      ic <- ic + 1
     }
   }
 
@@ -772,8 +773,14 @@ validate_metabolomics <- function(input_results_folder,
       eresults_coln <- c("metabolite_name", "id_type", unique(m_s_n$sample_id))
       if(untargeted){
         # This means that this dataset is untargeted
-        r_m_u$id_type <- "unnamed"  
-        results <- rbind(r_m_n[eresults_coln], r_m_u[eresults_coln])
+        if(f_rmu){
+          r_m_u$id_type <- "unnamed"  
+          results <- rbind(r_m_n[eresults_coln], r_m_u[eresults_coln])
+        }else{
+          results <- r_m_n[eresults_coln]
+          if(verbose) message("      - (-) Cannot provide plots for UNNAMED metabolites")
+        }
+
       }else{
         # This is targeted (no unnamed metabolites)
         results <- r_m_n[eresults_coln]
@@ -827,7 +834,7 @@ validate_metabolomics <- function(input_results_folder,
 
   batch <- gsub("(.*)(PROCESSED.*)", "\\1", input_results_folder)
 
-  file_manifest <- list.files(normalizePath(batch_folder),
+  file_manifest <- list.files(normalizePath(batch),
                               pattern="file_manifest",
                               ignore.case = TRUE,
                               full.names=TRUE,
@@ -838,7 +845,7 @@ validate_metabolomics <- function(input_results_folder,
     f_man <- FALSE
     ic_man <- 1
   }else if(length(file_manifest) >= 1){
-    file_manifest <- file_manifest[length(file_manifest)]
+    file_manifest <- file_manifest[1]
     f_man <- TRUE
   }
 
@@ -855,6 +862,10 @@ validate_metabolomics <- function(input_results_folder,
     if( all( mani_columns %in% colnames(manifest)) ){
       if(verbose) message("   + (+) <file_name, md5> columns available in manifest file")
       
+      # Replace windows based backlash
+      if(any(grepl("\\\\", manifest$file_name))){
+        manifest$file_name <- gsub("\\\\", "/", manifest$file_name)
+      }
       manifest$file_base <- basename(manifest$file_name)
       
       if(f_mmn){
@@ -918,7 +929,7 @@ validate_metabolomics <- function(input_results_folder,
 
       experimentalDetails_file <- manifest$file_name[grepl(".*xperimental.*_named", manifest$file_name)]
 
-      if(length(experimentalDetails_file) != 0){
+      if(!purrr::is_empty(experimentalDetails_file)){
         if( any(grepl(processfolder, experimentalDetails_file)) ){
           if(verbose) message("   + (+) experimentalDetails_file included in manifest: OK")
           full_path_edf <- file.path(normalizePath(batch_folder) , experimentalDetails_file )
@@ -1005,7 +1016,7 @@ validate_metabolomics <- function(input_results_folder,
         }
 
         experimentalDetails_file <- manifest$file_name[grepl(".*xperimental.*_unnamed", manifest$file_name)]
-        if(!is.na(experimentalDetails_file)){
+        if(!is_empty(experimentalDetails_file)){
           if( any(grepl(processfolder, experimentalDetails_file)) ){
             if(verbose) message("   + (+) experimentalDetails_file included in manifest: OK")
             full_path_edf <- file.path(normalizePath(batch_folder) , experimentalDetails_file )
