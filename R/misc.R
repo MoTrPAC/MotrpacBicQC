@@ -17,7 +17,37 @@
 #' @import stringr
 #' @import tidyr
 #' @import utils
+#' @import viridis
 #____________________________________________________________________________
+
+#' @title Create folder
+#'
+#' @description Create a directory if it doesn't exist. If no argument is provided, 
+#' it returns the current working directory
+#' @param folder_name (chr) folder name
+#' @param verbose (logical) `TRUE` shows messages (default `FALSE`)
+#' @examples {
+#' create_folder(folder_name = NULL)
+#' # Or use this one for a real folder:
+#' # create_folder(folder_name = "testing")
+#' }
+#' @export
+create_folder <- function(folder_name = NULL, 
+                          verbose = FALSE){
+  if(!is.null(folder_name)){
+    if(!dir.exists(file.path(folder_name))){
+      dir.create(file.path(folder_name), recursive = TRUE)
+      if(verbose) message("+ Folder `", folder_name,"`created")
+      return(folder_name)
+    }else{
+      return(folder_name)
+    }
+  }else{
+    folder_name <- getwd()
+    return(folder_name)
+  }
+}
+
 
 #' @title filter required columns only
 #'
