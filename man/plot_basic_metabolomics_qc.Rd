@@ -7,7 +7,7 @@
 plot_basic_metabolomics_qc(
   results,
   results_long,
-  m_s_n,
+  metametab = NULL,
   out_qc_folder = NULL,
   output_prefix,
   printPDF = TRUE,
@@ -20,7 +20,7 @@ plot_basic_metabolomics_qc(
 
 \item{results_long}{(df) metabolomics results (both named and unnamed already merged, if untargeted, in long format)}
 
-\item{m_s_n}{(df) metadata samples named}
+\item{metametab}{(df) metadata samples metadata (only untargeted sites)}
 
 \item{out_qc_folder}{(char) output qc folder (it creates the folder if it doesn't exist)}
 
@@ -34,5 +34,5 @@ plot_basic_metabolomics_qc(
 }
 \description{
 Plot intensity distributions, number of unique ids, NA values
-per sample
+and RT/MZ density maps (only untargeted)
 }

@@ -767,22 +767,28 @@ validate_metabolomics <- function(input_results_folder,
     if(verbose) message("\n\n## QC Plots\n")
     
     output_prefix <- paste0(cas, ".", tolower(phase2check), ".", tissue_code, ".",tolower(assay), ".", tolower(processfolder))
-    
-    if(f_rmn & f_msn ){
+    output_prefix <- gsub("\\|", "_", output_prefix)
+    metametab <- NULL
+    if(f_rmn & f_msn & f_mmn){
       r_m_n$id_type <- "named"
+      m_m_n$id_type <- "named"
       eresults_coln <- c("metabolite_name", "id_type", unique(m_s_n$sample_id))
+      dm_m <- c("metabolite_name", "id_type", "rt", "mz")
       if(untargeted){
         # This means that this dataset is untargeted
-        if(f_rmu){
+        if(f_rmu & f_mmu){
+          # Bind results
           r_m_u$id_type <- "unnamed"  
           results <- rbind(r_m_n[eresults_coln], r_m_u[eresults_coln])
+          # Bind metabolite metadata
+          m_m_u$id_type <- "unnamed"
+          metametab <- rbind(m_m_n[dm_m], m_m_u[dm_m])
         }else{
           results <- r_m_n[eresults_coln]
-          if(verbose) message("   - (-) Cannot provide plots for UNNAMED metabolites")
+          if(verbose) message("   - ( ) Cannot provide plots for UNNAMED metabolites")
         }
-
       }else{
-        # This is targeted (no unnamed metabolites)
+        # This is targeted (no unnamed metabolites, no mz/rt plots)
         results <- r_m_n[eresults_coln]
       }
       
@@ -807,7 +813,7 @@ validate_metabolomics <- function(input_results_folder,
       
       plot_basic_metabolomics_qc(results = results, 
                                  results_long = results_long,
-                                 m_s_n = m_s_n, 
+                                 metametab = metametab, 
                                  out_qc_folder = out_qc_folder, 
                                  output_prefix = output_prefix,
                                  printPDF = printPDF,
@@ -1072,12 +1078,16 @@ validate_metabolomics <- function(input_results_folder,
   if( is.na(ic_vl) ){
     if(f_msn){
       vl_results <- m_s_n$sample_id[which(m_s_n$sample_type == "Sample")]
+      outfile_missed_viallabels <- paste0(cas, ".", tolower(phase2check), ".", tissue_code, ".",tolower(assay), ".", tolower(processfolder))
+      outfile_missed_viallabels <- gsub("\\|", "_", outfile_missed_viallabels)
       ic_vl <- check_viallabel_dmaqc(vl_submitted = vl_results,
                                      tissue_code = tissue_code,
                                      cas = cas,
                                      phase = phase2check,
                                      failed_samples = failed_samples,
                                      dmaqc_shipping_info = dmaqc_shipping_info,
+                                     out_qc_folder = out_qc_folder,
+                                     outfile_missed_viallabels = outfile_missed_viallabels,
                                      return_n_issues = TRUE,
                                      verbose = verbose)
     }

@@ -37,7 +37,8 @@ Imports:
     stats,
     stringr,
     tidyr,
-    utils
+    utils,
+    viridis
 NeedsCompilation: no
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2

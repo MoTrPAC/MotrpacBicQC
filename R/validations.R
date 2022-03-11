@@ -11,6 +11,8 @@
 #' @param phase (char) phase code
 #' @param failed_samples (char) metadata_metabolites df
 #' @param return_n_issues (logical) if `TRUE` returns the number of issues
+#' @param out_qc_folder (char) output qc folder (it creates the folder if it doesn't exist)
+#' @param outfile_missed_viallabels (char) file name for missed vial labels
 #' @param verbose (logical) `TRUE` (default) shows messages
 #' @return (int) number of issues identified
 #' @export
@@ -20,11 +22,14 @@ check_viallabel_dmaqc <- function(vl_submitted,
                                   cas,
                                   phase,
                                   failed_samples,
+                                  out_qc_folder = NULL,
+                                  outfile_missed_viallabels,
                                   return_n_issues = FALSE,
                                   verbose = TRUE){
   
   # issue_count
   ic <- NA
+  
   # There might be multiple phases to check: load both
   ph <- unlist(strsplit(phase, split = "\\|"))
   dmaqc_labels <- vector()
@@ -66,16 +71,25 @@ check_viallabel_dmaqc <- function(vl_submitted,
       if(verbose) message("  + (+) DMAQC CHECK POINT: samples sent to CAS have been processed: OK")
       ic <- "OK"
     }else{
+      # CHECK 
       samples_missed <- setdiff(dmaqc_labels, vl_submitted)
       if(!is.null(failed_samples)){
         if(setequal(failed_samples, samples_missed)){
           if(verbose) message("  + (+) DMAQC CHECK POINT: samples sent to CAS have been processed (with known issues for some samples): OK")
           ic <- "OK"
         }else{
-          if(verbose){
-            message("   - (-) DMAQC CHECK POINT: samples not found in `metadata_results`: FAIL")
-            message("\t - ", paste(samples_missed, collapse = "\n\t - "))
-            ic <- "FAIL"
+          # Only if it is not empty: if it is empty means that there are extra samples in the CAS site (checked below)
+          if(!purrr::is_empty(samples_missed)){
+            if(verbose){
+              message("   - (-) DMAQC CHECK POINT: samples not found in `metadata_results`: FAIL")
+              message("\t - ", paste(samples_missed, collapse = "\n\t - "))
+            }
+            missed_out <- data.frame(vial_label = samples_missed)
+            missed_out$cas <- cas
+            out_plot_large <- file.path(normalizePath(out_qc_folder), paste0(outfile_missed_viallabels,"-missed_viallabels-in-cas.txt"))
+            write.table(missed_out, out_plot_large, row.names = FALSE, sep = "\t", quote = FALSE)
+            if(verbose) message("   - ( ) File ", paste0(outfile_missed_viallabels,"-missed_viallabels-in-cas.txt"), " available with missed vial labels")
+            ic <- "FAIL"  
           }
         }
       }else{
@@ -83,10 +97,22 @@ check_viallabel_dmaqc <- function(vl_submitted,
           message("   - (-) DMAQC CHECK POINT: samples not found in `metadata_results`: FAIL")
           message("\t - ", paste(samples_missed, collapse = "\n\t - "))
         }
+        missed_out <- data.frame(vial_label = samples_missed)
+        missed_out$cas <- cas
+        out_plot_large <- file.path(normalizePath(out_qc_folder), paste0(outfile_missed_viallabels,"-missed_viallabels-in-cas.txt"))
+        write.table(missed_out, out_plot_large, row.names = FALSE, sep = "\t", quote = FALSE)
+        if(verbose) message("   - ( ) File ", paste0(outfile_missed_viallabels,"-missed_viallabels-in-cas.txt"), " available with missed vial labels")
         ic <- "FAIL"
       }
+      # CHECK: extra samples coming in a submission (not available in DMAQC)
+      samples_extra <- setdiff(vl_submitted, dmaqc_labels)
+      if(!purrr::is_empty(samples_extra)){
+        if(verbose){
+          message("   - (-) DMAQC CHECK POINT: CAS SITE IS PROVIDING SAMPLES IDS THAT ARE NOT IN DMAQC: REVISED!")
+          message("\t - ", paste(samples_extra, collapse = "\n\t - "))
+        }        
+      }
     }
-    
   }
   
   if(return_n_issues) return(ic)

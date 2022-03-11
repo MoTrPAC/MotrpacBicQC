@@ -3,10 +3,10 @@
 #' @title Plot Basic Metabolomics QC charts
 #'
 #' @description Plot intensity distributions, number of unique ids, NA values 
-#' per sample
+#' and RT/MZ density maps (only untargeted)
 #' @param results (df) metabolomics results (both named and unnamed already merged, if untargeted)
 #' @param results_long (df) metabolomics results (both named and unnamed already merged, if untargeted, in long format)
-#' @param m_s_n (df) metadata samples named
+#' @param metametab (df) metadata samples metadata (only untargeted sites)
 #' @param out_qc_folder (char) output qc folder (it creates the folder if it doesn't exist)
 #' @param output_prefix (char) prefix for the file name output (pdf file)
 #' @param untargeted (logical) `TRUE` if the dataset is untargeted (named + unnamed metabolites)
@@ -15,14 +15,14 @@
 #' @export
 plot_basic_metabolomics_qc <- function(results, 
                                        results_long,
-                                       m_s_n,
+                                       metametab = NULL,
                                        out_qc_folder = NULL,
                                        output_prefix,
                                        printPDF = TRUE,
                                        untargeted = TRUE,
                                        verbose = TRUE){
 
-  metabolite_name = id_type = sample_id = sample_order = intensity = sample_type = sum_quant = NULL
+  metabolite_name = id_type = sample_id = sample_order = intensity = sample_type = sum_quant = mz = rt = ..density.. = NULL
   
   if(verbose) message("   + (+) QC PLOTS ------------------")
   
@@ -34,6 +34,21 @@ plot_basic_metabolomics_qc <- function(results,
   sn <- length(unique(results_long$sample_id))
   # Set a limit for which remove labels 
   sn_limit <- 200
+  
+  if(!is.null(metametab)){
+    pmzrt <- ggplot(metametab, aes(x=mz, y=rt) ) +
+      stat_density_2d(aes(fill = ..density..), geom = "raster", contour = FALSE) +
+      scale_x_continuous(expand = c(0, 0)) +
+      scale_y_continuous(expand = c(0, 0)) +
+      viridis::scale_fill_viridis() +
+      facet_wrap(~id_type) +
+      theme(
+        legend.position='none'
+      ) +
+      labs(title = "MZ/RT density map", 
+           subtitle = paste(output_prefix))
+  }
+
   
   # Plot: sum of intensities------
   sum_int <- results_long %>%
@@ -266,16 +281,9 @@ plot_basic_metabolomics_qc <- function(results,
                                          vjust = 0.5,
                                          size = 8))
     }
-   
-  # Print out plots-----
-  if(!is.null(out_qc_folder)){
-    if(!dir.exists(file.path(out_qc_folder))){
-      dir.create(file.path(out_qc_folder), recursive = TRUE)
-    }
-  }else{
-    out_qc_folder <- getwd()
-  }
-
+  
+  # Print out zone-----
+  out_qc_folder <- create_folder(out_qc_folder)
   out_plot_large <- file.path(normalizePath(out_qc_folder), paste0(output_prefix,"-qc-basic-large-plots.pdf"))
   out_plot_summary <- file.path(normalizePath(out_qc_folder), paste0(output_prefix,"-qc-basic-summary-plots.pdf"))
   
@@ -298,6 +306,7 @@ plot_basic_metabolomics_qc <- function(results,
   if(printPDF) pdf(out_plot_summary, width = 12, height = 6)
   print(ptns)
   gridExtra::grid.arrange(ppids, pnids, ncol = 2)
+  if(!is.null(metametab)){print(pmzrt)}
   if(printPDF) garbage <- dev.off()
 }
 
