@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MotrpacBicQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.7</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -76,6 +76,8 @@
   <span class="va">cas</span>,
   <span class="va">phase</span>,
   <span class="va">failed_samples</span>,
+  out_qc_folder <span class="op">=</span> <span class="cn">NULL</span>,
+  <span class="va">outfile_missed_viallabels</span>,
   return_n_issues <span class="op">=</span> <span class="cn">FALSE</span>,
   verbose <span class="op">=</span> <span class="cn">TRUE</span>
 <span class="op">)</span></code></pre></div>
@@ -95,6 +97,10 @@
 <dd><p>(char) phase code</p></dd>
 <dt>failed_samples</dt>
 <dd><p>(char) metadata_metabolites df</p></dd>
+<dt>out_qc_folder</dt>
+<dd><p>(char) output qc folder (it creates the folder if it doesn't exist)</p></dd>
+<dt>outfile_missed_viallabels</dt>
+<dd><p>(char) file name for missed vial labels</p></dd>
 <dt>return_n_issues</dt>
 <dd><p>(logical) if <code>TRUE</code> returns the number of issues</p></dd>
 <dt>verbose</dt>
