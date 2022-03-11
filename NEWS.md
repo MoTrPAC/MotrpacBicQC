@@ -1,3 +1,8 @@
+# MotrpacBicQC 0.6.7 (2022-03-11)
+
+* DMAQC validation: print out missing vial labels
+* Metabolomics QC: add mz/rt density plots
+
 # MotrpacBicQC 0.6.6 (2022-03-03)
 
 * Improve reporting and handling of required files

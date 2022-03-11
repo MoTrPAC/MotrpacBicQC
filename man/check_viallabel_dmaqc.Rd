@@ -11,6 +11,8 @@ check_viallabel_dmaqc(
   cas,
   phase,
   failed_samples,
+  out_qc_folder = NULL,
+  outfile_missed_viallabels,
   return_n_issues = FALSE,
   verbose = TRUE
 )
@@ -27,6 +29,10 @@ check_viallabel_dmaqc(
 \item{phase}{(char) phase code}
 
 \item{failed_samples}{(char) metadata_metabolites df}
+
+\item{out_qc_folder}{(char) output qc folder (it creates the folder if it doesn't exist)}
+
+\item{outfile_missed_viallabels}{(char) file name for missed vial labels}
 
 \item{return_n_issues}{(logical) if \code{TRUE} returns the number of issues}
 
