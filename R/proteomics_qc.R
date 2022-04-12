@@ -749,10 +749,14 @@ load_proteomics <- function(input_results_folder,
 #' @param isPTM (logical) `TRUE` if it is Post-Translational-Modification proteomics assay
 #' @param cas (char) CAS code
 #' @param dmaqc_shipping_info (char) phase code
-#' @param dmaqc_phase2validate (char) Provide phase to validate. Examples of submissions:
-#' - Only PASS1A-06: type either "PASS1A-06" or leave it `NULL`
-#' - Both PASS1A-06 and PASS1C-06: type "PASS1A-06|PASS1C-06"
-#' - Only PASS1C-06: type "PASS1C-06"
+#' @param dmaqc_phase2validate (char) Provide phase to validate. This argument
+#' is not required since it should be extracted from the input folder or from the 
+#' new required file `metadata_phase.txt`. However, if this argument is provided,
+#' it will take priority (and the phase from the input folder and the 
+#' `metadata_phase.txt` will be ignored). Examples
+#' - Folder with `PASS1A-06`: type either `PASS1A-06` or leave it `NULL`
+#' - Both `PASS1A-06` and `PASS1C-06`: type `PASS1A-06|PASS1C-06`
+#' - Only `PASS1C-06`: type `PASS1C-06`
 #' @param f_proof (char) print out pdf with charts including:
 #' - Reported Ion Intensity boxplot distribution and percentage of NA values per sample
 #' - Ratio: ratio boxplot distribution and percentage of NA values per samples
@@ -791,11 +795,20 @@ validate_proteomics <- function(input_results_folder,
   input_results_folder <- normalizePath(input_results_folder, winslash = "/")
 
   # Validate folder structure-----
+  validate_cas(cas = cas)
   processfolder <- validate_processFolder(input_results_folder)
   assay <- validate_assay(input_results_folder)
   phase <- validate_phase(input_results_folder)
   tissue_code <- validate_tissue(input_results_folder)
   batch_folder <- validate_batch(input_results_folder)
+  
+  if(verbose) message("# PROTEOMICS QC report\n\n")
+  
+  # Set phase-----
+  dmaqc_phase2validate <- set_phase(input_results_folder = input_results_folder, 
+                                     dmaqc_phase2validate = dmaqc_phase2validate)
+  
+  phase2file <- gsub("\\|", "_", dmaqc_phase2validate)
 
   # Print out proofs----
   if(f_proof){
@@ -807,17 +820,16 @@ validate_proteomics <- function(input_results_folder,
       out_qc_folder <- getwd()
     }
 
-    output_prefix <- paste0(cas, ".", tolower(phase), ".", tissue_code, ".",tolower(assay), ".", tolower(processfolder))
+    output_prefix <- paste0(cas, ".", tolower(phase2file), ".", tissue_code, ".",tolower(assay), ".", tolower(processfolder))
   }
 
   input_folder_short <- regmatches(input_results_folder, regexpr("PASS.*RESULTS_[0-9]{8}", input_results_folder))
   if( purrr::is_empty(input_folder_short) ){
     if(verbose) message("\nThe RESULTS_YYYYMMDD folder full path is not correct. Example:")
-    if(verbose) message("/full/path/to/folder/PASS1A-06/T66/RPNEG/BATCH1_20190822/RESULTS_202003")
+    if(verbose) message("/full/path/to/folder/PASS1A-06/T66/RPNEG/BATCH1_20190822/RESULTS_20200308")
     stop("Input folder not according to guidelines")
   }
 
-  if(verbose) message("# PROTEOMICS QC report\n\n")
   if(verbose) message("+ Site: ", toupper(cas))
   if(verbose) message("+ Folder: `",paste0(input_folder_short),"`")
 
@@ -1387,17 +1399,17 @@ validate_proteomics <- function(input_results_folder,
   if(f_vm & f_rii & f_rr){
 
     if( all(all_vial_labels %in% colnames(peprii)) ){
-      if(verbose) message("   + (+) All all_vial_labels samples available in RII file")
+      if(verbose) message("   + (+) All vial labels samples available in RII file")
     }else{
       ic <- ic + 1
-      if(verbose) message("      - (-) CRITICAL: Some all_vial_labels not available in RII file: FAIL")
+      if(verbose) message("      - (-) CRITICAL: Some vial labels are not available in RII file: FAIL")
     }
 
     if( all(all_vial_labels %in% colnames(ratior)) ){
-      if(verbose) message("   + (+) All all_vial_labels in RATIO results file")
+      if(verbose) message("   + (+) All vial labels available in RATIO results file")
     }else{
       ic <- ic + 1
-      if(verbose) message("      - (-) CRITICAL: Some all_vial_labels not available in RATIO results file: FAIL")
+      if(verbose) message("      - (-) CRITICAL: Some vial labels not available in RATIO results file: FAIL")
     }
 
   }else{
@@ -1415,19 +1427,16 @@ validate_proteomics <- function(input_results_folder,
 
   if( is.na(ic_vl) ){
     if(f_vm){
-      # Take care of PASS1C
-      if( !is.null(dmaqc_phase2validate) ){
-        phase2check <- dmaqc_phase2validate
-      }else{
-        phase2check <- phase
-      }
-
+      outfile_missed_viallabels <- paste0(cas, ".", tolower(phase2file), ".", tissue_code, ".",tolower(assay), ".", tolower(processfolder))
+      
       ic_vl <- check_viallabel_dmaqc(vl_submitted = all_vial_labels,
+                                     dmaqc_shipping_info = dmaqc_shipping_info,
                                      tissue_code = tissue_code,
                                      cas = cas,
-                                     phase = phase2check,
+                                     phase = dmaqc_phase2validate, 
                                      failed_samples = failed_samples,
-                                     dmaqc_shipping_info = dmaqc_shipping_info,
+                                     out_qc_folder = out_qc_folder,
+                                     outfile_missed_viallabels = outfile_missed_viallabels,
                                      return_n_issues = TRUE,
                                      verbose = verbose)
     }else{
@@ -1451,7 +1460,7 @@ validate_proteomics <- function(input_results_folder,
     if(verbose) message("\nTOTAL NUMBER OF ISSUES: ", total_issues,"\n")
     if(full_report){
       reports <- data.frame(cas = cas,
-                            phase= phase,
+                            phase= dmaqc_phase2validate,
                             tissue = tissue_code,
                             t_name = t_name,
                             assay = assay,
