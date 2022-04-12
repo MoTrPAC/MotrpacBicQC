@@ -1,5 +1,58 @@
 # VALIDATIONS
 
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' @title check failed samples file for reported missing vial label ids
+#'
+#' @description check failed samples file for reported missing vial label ids
+#' @param input_results_folder (char) input path folder
+#' @param verbose (logical) `TRUE` (default) shows messages
+#' @return (vector) failed reported ids
+#' @export
+check_failedsamples <- function(input_results_folder,
+                                verbose = TRUE){
+  
+  filepattern <- "metadata_failedsamples.*.txt"
+  
+  # Get file matching pattern
+  file_metametabolites <- list.files(input_results_folder,
+                                     pattern=filepattern,
+                                     full.names=TRUE,
+                                     recursive = TRUE,
+                                     ignore.case = TRUE)
+  
+  # Check if file is found and deal with many files
+  if(length(file_metametabolites) != 1){
+    if(length(file_metametabolites) >= 1){
+      if(verbose) message("   - (-) `open_file`: more than one file detected: FAIL")
+      if(verbose) message("\n\t\t - ", paste(file_metametabolites, collapse = "\n\t\t - "))
+    }else{
+      if(verbose) message("   + ( ) File [`", filepattern, "`] not found")
+      if(verbose) message("   + ( ) NO FAILED SAMPLES reported")
+    }
+    flag <- FALSE
+    return(NULL)
+  }else{
+    flag <- TRUE
+    ofile <- read.delim(file_metametabolites[1], stringsAsFactors = FALSE, check.names = FALSE)
+  }
+  
+  if(flag){
+    if(nrow(ofile) == 0){
+      if(verbose) message("   + ( ) NO FAILED SAMPLES reported")
+      return(NULL)
+    }else{
+      if("sample_id" %in% colnames(ofile)){
+        if(verbose) message("   + ( ) Failed samples reported:\n\t - ", paste(ofile$sample_id, collapse = "\n\t - ") )
+        return(ofile$sample_id)
+      }else{
+        if(verbose) message("   - (-) `sample_id` column not found: FAIL")
+        return(NULL)
+      }
+    }
+  }
+}
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' @title Validate vial labels from DMAQC
 #'
