@@ -1,3 +1,10 @@
+# MotrpacBicQC 0.6.8 (2022-04-11)
+
+* Refactor the DMAQC validation. A new file will be required when:
+   + Two phases are combined in the same batch (e.g., `PASS1A-06|PASS1C-06`)
+   + The phase content is different from the input folder name (e.g., `PASS1C-06` might 
+   be submitted but the input folder name is `PASS1A-06`)
+
 # MotrpacBicQC 0.6.7 (2022-03-11)
 
 * DMAQC validation: print out missing vial labels

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MotrpacBicQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
       </span>
     </div>
 
@@ -96,9 +96,13 @@
 <dt>dmaqc_shipping_info</dt>
 <dd><p>(char) phase code</p></dd>
 <dt>dmaqc_phase2validate</dt>
-<dd><p>(char) Provide phase to validate. Examples of submissions:</p><ul><li><p>Only PASS1A-06: type either "PASS1A-06" or leave it <code>NULL</code></p></li>
-<li><p>Both PASS1A-06 and PASS1C-06: type "PASS1A-06|PASS1C-06"</p></li>
-<li><p>Only PASS1C-06: type "PASS1C-06"</p></li>
+<dd><p>(char) Provide phase to validate. This argument
+is not required since it should be extracted from the input folder or from the
+new required file <code>metadata_phase.txt</code>. However, if this argument is provided,
+it will take priority (and the phase from the input folder and the
+<code>metadata_phase.txt</code> will be ignored). Examples</p><ul><li><p>Folder with <code>PASS1A-06</code>: type either <code>PASS1A-06</code> or leave it <code>NULL</code></p></li>
+<li><p>Both <code>PASS1A-06</code> and <code>PASS1C-06</code>: type <code>PASS1A-06|PASS1C-06</code></p></li>
+<li><p>Only <code>PASS1C-06</code>: type <code>PASS1C-06</code></p></li>
 </ul></dd>
 <dt>f_proof</dt>
 <dd><p>(char) print out pdf with charts including:</p><ul><li><p>Reported Ion Intensity boxplot distribution and percentage of NA values per sample</p></li>
