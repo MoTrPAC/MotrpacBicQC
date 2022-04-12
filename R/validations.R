@@ -53,6 +53,70 @@ check_failedsamples <- function(input_results_folder,
   }
 }
 
+
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' @title Set the phase to be validated.
+#' 
+#' @description A group might choose to combine two different phases, due to 
+#' the complications associated with PASS1A/1C. If they choose to combine
+#' two phases, the CAS must provide a new file `metadata_phase.txt` with a single
+#' line, as for example: `PASS1A-06|PASS1C-06`. This function checks if the 
+#' file is available, and set that phase as the phases to validate. In summary,
+#' the order of preference is:
+#' 1. function's argument: dmaqc_phase2validate (if provided in the validation functions)
+#' 2. `metadata_phase.txt` file if available in the batch folder.
+#' 3. Phase in folder structure
+#' @param input_results_folder (char) path to the PROCESSED/RESULTS folder to check
+#' @param dmaqc_phase2validate (data.frame) dmaqc shipping information
+#' @param verbose (logical) `TRUE` (default) shows messages
+#' @return (int) the phase to be validated. 
+#' @export
+set_phase <- function(input_results_folder,
+                      dmaqc_phase2validate,
+                      verbose = TRUE){
+  
+  phase <- validate_phase(input_results_folder)
+  
+  # Check metadata_phase.txt file
+  batch <- NULL
+  if( grepl("RESULTS", input_results_folder) ){
+    batch <- gsub("(.*)(RESULTS.*)", "\\1", input_results_folder)  
+  }else if( grepl("PROCESSED", input_results_folder)){
+    batch <- gsub("(.*)(PROCESSED.*)", "\\1", input_results_folder)  
+  }else{
+    stop("   - (-) ERROR: the input results folder missed the PROCESSED or RESULTS folder!")
+  }
+  
+  file_phase <- list.files(normalizePath(batch),
+                           pattern="metadata_phase.txt",
+                           ignore.case = TRUE,
+                           full.names=TRUE,
+                           recursive = TRUE)
+  
+  # To be adjusted if two different batches are provided:
+  phase_check <- phase
+  if ( !(purrr::is_empty(file_phase)) ){
+    con <- file(file_phase,"r")
+    batch_info <- readLines(con, n=1)
+    close(con)
+    if ( !(is.na(batch_info) || batch_info == '') ){
+      if(verbose) message("+ Motrpac phase reported: ", batch_info, " (info from metadata_phase.txt available)")
+      if( is.null(dmaqc_phase2validate) ){
+        dmaqc_phase2validate <- batch_info
+      }
+    }
+  }else{
+    if(verbose) message("+ Motrpac phase: ", phase_check, " (metadata_phase.txt file NOT available)")
+    if( is.null(dmaqc_phase2validate) ){
+      dmaqc_phase2validate <- phase
+    }
+  }
+  
+  return(dmaqc_phase2validate)
+}
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' @title Validate vial labels from DMAQC
 #'
