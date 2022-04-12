@@ -63,7 +63,9 @@ check_viallabel_dmaqc <- function(vl_submitted,
   
   if( length(dmaqc_labels) == 0){
     if(verbose) message("  + (+) DMAQC CHECK POINT: sample IDs not available in DMAQC dataset. Most frequent cause of the error: 
-                        Does the tissue code for this folder structure contain the right tissue code? 
+                        - Does the tissue code for this folder structure contain the right tissue code?
+                        - Did you provide the right code for the cas site? (for example, `broad`, instead of `broad_prot`)
+                        
                         Otherwise, it needs to be revised with DMAQC")
     ic <- "NOT_AVAILABLE"
   }else{
@@ -73,7 +75,7 @@ check_viallabel_dmaqc <- function(vl_submitted,
     }else{
       # CHECK 
       samples_missed <- setdiff(dmaqc_labels, vl_submitted)
-      if(!is.null(failed_samples)){
+      if( !(is.null(failed_samples) & purrr::is_empty(samples_missed)) ) {
         if(setequal(failed_samples, samples_missed)){
           if(verbose) message("  + (+) DMAQC CHECK POINT: samples sent to CAS have been processed (with known issues for some samples): OK")
           ic <- "OK"
@@ -93,22 +95,24 @@ check_viallabel_dmaqc <- function(vl_submitted,
           }
         }
       }else{
-        if(verbose){
-          message("   - (-) DMAQC CHECK POINT: samples not found in `metadata_results`: FAIL")
-          message("\t - ", paste(samples_missed, collapse = "\n\t - "))
+        if( !purrr::is_empty(samples_missed) ){
+          if(verbose){
+            message("   - (-) DMAQC CHECK POINT: samples not found in `metadata_results`: FAIL")
+            message("\t - ", paste(samples_missed, collapse = "\n\t - "))
+          }
+          missed_out <- data.frame(vial_label = samples_missed)
+          missed_out$cas <- cas
+          out_plot_large <- file.path(normalizePath(out_qc_folder), paste0(outfile_missed_viallabels,"-missed_viallabels-in-cas.txt"))
+          write.table(missed_out, out_plot_large, row.names = FALSE, sep = "\t", quote = FALSE)
+          if(verbose) message("   - ( ) File ", paste0(outfile_missed_viallabels,"-missed_viallabels-in-cas.txt"), " available with missed vial labels")
+          ic <- "FAIL"
         }
-        missed_out <- data.frame(vial_label = samples_missed)
-        missed_out$cas <- cas
-        out_plot_large <- file.path(normalizePath(out_qc_folder), paste0(outfile_missed_viallabels,"-missed_viallabels-in-cas.txt"))
-        write.table(missed_out, out_plot_large, row.names = FALSE, sep = "\t", quote = FALSE)
-        if(verbose) message("   - ( ) File ", paste0(outfile_missed_viallabels,"-missed_viallabels-in-cas.txt"), " available with missed vial labels")
-        ic <- "FAIL"
       }
       # CHECK: extra samples coming in a submission (not available in DMAQC)
       samples_extra <- setdiff(vl_submitted, dmaqc_labels)
       if(!purrr::is_empty(samples_extra)){
         if(verbose){
-          message("   - (-) DMAQC CHECK POINT: CAS SITE IS PROVIDING SAMPLES IDS THAT ARE NOT IN DMAQC: REVISED!")
+          message("   - (-) DMAQC CHECK POINT: CAS SITE IS PROVIDING SAMPLES IDS THAT ARE NOT IN DMAQC: REVISE!")
           message("\t - ", paste(samples_extra, collapse = "\n\t - "))
         }        
       }
