@@ -457,68 +457,20 @@ check_manifest_rawdata <- function(input_results_folder,
 }
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' @title check failed samples file for reported missing vial label ids
-#'
-#' @description check failed samples file for reported missing vial label ids
-#' @param input_results_folder (char) input path folder
-#' @param verbose (logical) `TRUE` (default) shows messages
-#' @return (vector) failed reported ids
-#' @export
-check_failedsamples <- function(input_results_folder,
-                                verbose = TRUE){
-
-  filepattern <- "metadata_failedsamples.*.txt"
-
-  # Get file matching pattern
-  file_metametabolites <- list.files(input_results_folder,
-                                     pattern=filepattern,
-                                     full.names=TRUE,
-                                     recursive = TRUE,
-                                     ignore.case = TRUE)
-
-  # Check if file is found and deal with many files
-  if(length(file_metametabolites) != 1){
-    if(length(file_metametabolites) >= 1){
-      if(verbose) message("   - (-) `open_file`: more than one file detected: FAIL")
-      if(verbose) message("\n\t\t - ", paste(file_metametabolites, collapse = "\n\t\t - "))
-    }else{
-      if(verbose) message("   + ( ) File [`", filepattern, "`] not found")
-      if(verbose) message("   + ( ) NO FAILED SAMPLES reported")
-    }
-    flag <- FALSE
-    return(NULL)
-  }else{
-    flag <- TRUE
-    ofile <- read.delim(file_metametabolites[1], stringsAsFactors = FALSE, check.names = FALSE)
-  }
-
-  if(flag){
-    if(nrow(ofile) == 0){
-      if(verbose) message("   + ( ) NO FAILED SAMPLES reported")
-      return(NULL)
-    }else{
-      if("sample_id" %in% colnames(ofile)){
-        if(verbose) message("   + ( ) Failed samples reported:\n\t - ", paste(ofile$sample_id, collapse = "\n\t - ") )
-        return(ofile$sample_id)
-      }else{
-        if(verbose) message("   - (-) `sample_id` column not found: FAIL")
-        return(NULL)
-      }
-    }
-  }
-}
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' @title Validate a Metabolomics submission
 #'
 #' @description Validate a Metabolomics submission
 #' @param input_results_folder (char) path to the PROCESSED folder to check
 #' @param cas (char) CAS code
 #' @param dmaqc_shipping_info (char) File path to the DMAQC file
-#' @param dmaqc_phase2validate (char) Provide phase to validate. Examples of submissions:
-#' - Only PASS1A-06: type either "PASS1A-06" or leave it `NULL`
-#' - Both PASS1A-06 and PASS1C-06: type "PASS1A-06|PASS1C-06"
-#' - Only PASS1C-06: type "PASS1C-06"
+#' @param dmaqc_phase2validate (char) Provide phase to validate. This argument
+#' is not required since it should be extracted from the input folder or from the 
+#' new required file `metadata_phase.txt`. However, if this argument is provided,
+#' it will take priority (and the phase from the input folder and the 
+#' `metadata_phase.txt` will be ignored). Examples
+#' - Folder with `PASS1A-06`: type either `PASS1A-06` or leave it `NULL`
+#' - Both `PASS1A-06` and `PASS1C-06`: type `PASS1A-06|PASS1C-06`
+#' - Only `PASS1C-06`: type `PASS1C-06`
 #' @param return_n_issues (logical) if `TRUE` returns the number of issues
 #' @param full_report (logical) if `FALSE` (default) it returns only the
 #' total number of issues. If `TRUE` returns the details of the number of issues (by
@@ -552,12 +504,6 @@ validate_metabolomics <- function(input_results_folder,
   phase <- validate_phase(input_results_folder)
   tissue_code <- validate_tissue(input_results_folder)
   batch_folder <- validate_batch(input_results_folder)
-  
-  if( !is.null(dmaqc_phase2validate) ){
-    phase2check <- dmaqc_phase2validate
-  }else{
-    phase2check <- phase
-  }
 
   # issue_count-----
   ic <- 0
@@ -589,6 +535,12 @@ validate_metabolomics <- function(input_results_folder,
   if(verbose) message("# METABOLOMICS QC report\n\n")
   if(verbose) message("+ Site: ", cas)
   if(verbose) message("+ Folder: `",paste0(input_folder_short),"`")
+  
+  # Set phase-----
+  dmaqc_phase2validate <- set_phase(input_results_folder = input_results_folder, 
+                                    dmaqc_phase2validate = dmaqc_phase2validate)
+  
+  phase2file <- gsub("\\|", "_", dmaqc_phase2validate)
 
   # Is a targeted site? Unnamed compounds not checked
   untargeted <- TRUE
@@ -766,7 +718,7 @@ validate_metabolomics <- function(input_results_folder,
     
     if(verbose) message("\n\n## QC Plots\n")
     
-    output_prefix <- paste0(cas, ".", tolower(phase2check), ".", tissue_code, ".",tolower(assay), ".", tolower(processfolder))
+    output_prefix <- paste0(cas, ".", tolower(phase2file), ".", tissue_code, ".",tolower(assay), ".", tolower(processfolder))
     output_prefix <- gsub("\\|", "_", output_prefix)
     metametab <- NULL
     if(f_rmn & f_msn & f_mmn){
@@ -1078,12 +1030,12 @@ validate_metabolomics <- function(input_results_folder,
   if( is.na(ic_vl) ){
     if(f_msn){
       vl_results <- m_s_n$sample_id[which(m_s_n$sample_type == "Sample")]
-      outfile_missed_viallabels <- paste0(cas, ".", tolower(phase2check), ".", tissue_code, ".",tolower(assay), ".", tolower(processfolder))
+      outfile_missed_viallabels <- paste0(cas, ".", tolower(phase2file), ".", tissue_code, ".",tolower(assay), ".", tolower(processfolder))
       outfile_missed_viallabels <- gsub("\\|", "_", outfile_missed_viallabels)
       ic_vl <- check_viallabel_dmaqc(vl_submitted = vl_results,
                                      tissue_code = tissue_code,
                                      cas = cas,
-                                     phase = phase2check,
+                                     phase = dmaqc_phase2validate,
                                      failed_samples = failed_samples,
                                      dmaqc_shipping_info = dmaqc_shipping_info,
                                      out_qc_folder = out_qc_folder,
@@ -1111,7 +1063,7 @@ validate_metabolomics <- function(input_results_folder,
     if(verbose) message("\nTOTAL NUMBER OF ISSUES: ", total_issues,"\n")
     if(full_report){
       reports <- data.frame(cas = cas,
-                            phase= phase2check,
+                            phase = dmaqc_phase2validate,
                             tissue = tissue_code,
                             t_name = t_name,
                             assay = assay,
