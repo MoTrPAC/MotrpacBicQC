@@ -1,3 +1,10 @@
+# MotrpacBicQC 0.6.9 (2022-07-09)
+
+* Metabolomics: new density plots
+* Code optimizations
+* Bug fixes affecting file manifest checks
+   
+   
 # MotrpacBicQC 0.6.8 (2022-04-11)
 
 * Refactor the DMAQC validation. A new file will be required when:

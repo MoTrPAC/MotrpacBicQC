@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MotrpacBicQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.9</span>
       </span>
     </div>
 
@@ -69,30 +69,39 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">check_metadata_samples</span><span class="op">(</span><span class="va">df</span>, <span class="va">cas</span>, return_n_issues <span class="op">=</span> <span class="cn">FALSE</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">check_metadata_samples</span><span class="op">(</span><span class="va">df</span>, <span class="va">cas</span>, return_n_issues <span class="op">=</span> <span class="cn">FALSE</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>df</dt>
 <dd><p>(data.frame) metadata_metabolites</p></dd>
+
+
 <dt>cas</dt>
 <dd><p>(char) CAS site code</p></dd>
+
+
 <dt>return_n_issues</dt>
 <dd><p>(logical) if <code>TRUE</code> returns the number of issues.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>(logical) <code>TRUE</code> (default) shows messages</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>(int) number of issues identified</p>
+    
+
+<p>(int) number of issues identified</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="op">{</span></span>
-<span class="r-in"><span class="fu">check_metadata_samples</span><span class="op">(</span>df <span class="op">=</span> <span class="va">metadata_sample_named</span>, cas <span class="op">=</span> <span class="st">"umichigan"</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="op">{</span></span></span>
+<span class="r-in"><span><span class="fu">check_metadata_samples</span><span class="op">(</span>df <span class="op">=</span> <span class="va">metadata_sample_named</span>, cas <span class="op">=</span> <span class="st">"umichigan"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   + (+) `sample_id` seems OK</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   + (+) `sample_type` seems OK</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   + (+) `sample_order` is numeric</span>
@@ -112,7 +121,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

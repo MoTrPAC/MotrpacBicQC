@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MotrpacBicQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.9</span>
       </span>
     </div>
 
@@ -69,46 +69,67 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">check_viallabel_dmaqc</span><span class="op">(</span>
-  <span class="va">vl_submitted</span>,
-  <span class="va">dmaqc_shipping_info</span>,
-  <span class="va">tissue_code</span>,
-  <span class="va">cas</span>,
-  <span class="va">phase</span>,
-  <span class="va">failed_samples</span>,
-  out_qc_folder <span class="op">=</span> <span class="cn">NULL</span>,
-  <span class="va">outfile_missed_viallabels</span>,
-  return_n_issues <span class="op">=</span> <span class="cn">FALSE</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">check_viallabel_dmaqc</span><span class="op">(</span></span>
+<span>  <span class="va">vl_submitted</span>,</span>
+<span>  <span class="va">dmaqc_shipping_info</span>,</span>
+<span>  <span class="va">tissue_code</span>,</span>
+<span>  <span class="va">cas</span>,</span>
+<span>  <span class="va">phase</span>,</span>
+<span>  <span class="va">failed_samples</span>,</span>
+<span>  out_qc_folder <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">outfile_missed_viallabels</span>,</span>
+<span>  return_n_issues <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>vl_submitted</dt>
 <dd><p>(vector) results df</p></dd>
+
+
 <dt>dmaqc_shipping_info</dt>
 <dd><p>(data.frame) dmaqc shipping information</p></dd>
+
+
 <dt>tissue_code</dt>
 <dd><p>(char) tissue code</p></dd>
+
+
 <dt>cas</dt>
 <dd><p>(char) CAS code</p></dd>
+
+
 <dt>phase</dt>
 <dd><p>(char) phase code</p></dd>
+
+
 <dt>failed_samples</dt>
 <dd><p>(char) metadata_metabolites df</p></dd>
+
+
 <dt>out_qc_folder</dt>
 <dd><p>(char) output qc folder (it creates the folder if it doesn't exist)</p></dd>
+
+
 <dt>outfile_missed_viallabels</dt>
 <dd><p>(char) file name for missed vial labels</p></dd>
+
+
 <dt>return_n_issues</dt>
 <dd><p>(logical) if <code>TRUE</code> returns the number of issues</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>(logical) <code>TRUE</code> (default) shows messages</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>(int) number of issues identified</p>
+    
+
+<p>(int) number of issues identified</p>
     </div>
 
   </div>
@@ -123,7 +144,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>
