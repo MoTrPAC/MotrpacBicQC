@@ -48,9 +48,37 @@ plot_basic_metabolomics_qc <- function(results,
       labs(title = "MZ/RT density map", 
            subtitle = paste(output_prefix))
   }
-
+  
+  # Density plots------ 
+  
+  if(verbose) message("       - (p) Density distributions")
+  mu <- results_long %>% group_by(sample_id) %>% summarise(grp.mean=mean(intensity))
+  
+  den1 <- ggplot(data = results_long, aes(x = log2(intensity), color = sample_type)) + 
+    geom_density(na.rm = TRUE) + 
+    theme_light() +
+    labs(title = "Density distribution by sample type", 
+         subtitle = paste(output_prefix)) 
+  
+  den2 <- ggplot(data = results_long, aes(x = log2(intensity), 
+                                          color = sample_id)) +
+    geom_density(na.rm = TRUE) + 
+    theme_light() +
+    theme(legend.position="none") +
+    labs(title = "Density distribution by sample id", 
+         subtitle = paste(output_prefix))
+  
+  den3 <- ggplot(data = results_long, aes(x = log2(intensity), 
+                                          color = sample_id)) +
+    geom_density(na.rm = TRUE) + 
+    theme_minimal() +
+    theme(legend.position="none") + 
+    facet_wrap(~sample_type) +
+    labs(title = "Density distributions", 
+         subtitle = paste(output_prefix)) 
   
   # Plot: sum of intensities------
+  if(verbose) message("       - (p) Plot sum of intensity/concentration values")
   sum_int <- results_long %>%
     group_by(sample_id, sample_type, sample_order) %>%
     summarise(sum_quant = sum(intensity))
@@ -143,7 +171,6 @@ plot_basic_metabolomics_qc <- function(results,
       piseio <- piseio + labs(title = "Sample Concentration distribution",
                               y = "log2(Concentration)") 
     }
-
   
   # Plot number fo IDs by identification------
   if(verbose) message("       - (p) Plot ID counts")
@@ -221,7 +248,9 @@ plot_basic_metabolomics_qc <- function(results,
   tns <- unique(uid2[c("sample_id", "sample_type")]) %>% group_by(sample_type) %>% count(sample_type)
   ptns <- ggplot(tns, aes(x = sample_type, y = n, fill = sample_type)) +
     geom_bar(stat = "identity") +
-    labs(title = "Number of samples by sample type", y = "", x = "") +
+    labs(title = "Number of samples by sample type", 
+         subtitle = paste(output_prefix), 
+         y = "", x = "") +
     theme_minimal() +
     theme(legend.position = "none",
           axis.text.x = element_text(size = 14),
@@ -242,7 +271,9 @@ plot_basic_metabolomics_qc <- function(results,
                   label = scales::percent((..count..)/sum(..count..))), 
               stat = "count", vjust = -0.25) +
     scale_y_continuous(labels = percent) +
-    labs(title = "Proportion of Features Identified (named/unnamed)", y = "", x = "") +
+    labs(title = "Proportion of Features Identified (named/unnamed)", 
+         subtitle = paste(output_prefix), 
+         y = "", x = "") +
     theme_light() +
     theme(legend.position = "none",
           axis.text.x = element_text(size = 18)) + 
@@ -251,7 +282,8 @@ plot_basic_metabolomics_qc <- function(results,
   pnids <- ggplot(results, aes(x = id_type, fill = id_type)) +
     geom_bar() +
     geom_text(stat = 'count',aes(label =..count.., vjust = -0.2)) +
-    labs(title = "Total Number of Features Identified (named/unnamed)", y = "", x = "") +
+    labs(title = "Total Number of Features Identified (named/unnamed)", 
+         subtitle = paste(output_prefix), y = "", x = "") +
     theme_light() +
     theme(legend.position = "none",
           axis.text.x = element_text(size = 18)) + 
@@ -306,6 +338,9 @@ plot_basic_metabolomics_qc <- function(results,
   if(printPDF) pdf(out_plot_summary, width = 12, height = 6)
   print(ptns)
   gridExtra::grid.arrange(ppids, pnids, ncol = 2)
+  print(den1)
+  print(den2)
+  print(den3)
   if(!is.null(metametab)){print(pmzrt)}
   if(printPDF) garbage <- dev.off()
 }
