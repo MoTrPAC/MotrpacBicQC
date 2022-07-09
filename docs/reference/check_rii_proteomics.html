@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MotrpacBicQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.9</span>
       </span>
     </div>
 
@@ -69,50 +69,67 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">check_rii_proteomics</span><span class="op">(</span>
-  <span class="va">df_rri</span>,
-  <span class="va">isPTM</span>,
-  f_proof <span class="op">=</span> <span class="cn">TRUE</span>,
-  output_prefix <span class="op">=</span> <span class="st">"rii-file"</span>,
-  out_qc_folder <span class="op">=</span> <span class="cn">NULL</span>,
-  return_n_issues <span class="op">=</span> <span class="cn">FALSE</span>,
-  printPDF <span class="op">=</span> <span class="cn">TRUE</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">check_rii_proteomics</span><span class="op">(</span></span>
+<span>  <span class="va">df_rri</span>,</span>
+<span>  <span class="va">isPTM</span>,</span>
+<span>  f_proof <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  output_prefix <span class="op">=</span> <span class="st">"rii-file"</span>,</span>
+<span>  out_qc_folder <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  return_n_issues <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  printPDF <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>df_rri</dt>
 <dd><p>(data.frame) proteomics rri data frame (required)</p></dd>
+
+
 <dt>isPTM</dt>
 <dd><p>(logical) <code>TRUE</code> if a PTM results file</p></dd>
+
+
 <dt>f_proof</dt>
 <dd><p>(logical) <code>TRUE</code> (default) to print out distribution and NA plots</p></dd>
+
+
 <dt>output_prefix</dt>
 <dd><p>(char) if <code>f_proof = TRUE</code>, provide a prefix for the output name</p></dd>
+
+
 <dt>out_qc_folder</dt>
 <dd><p>(char) if <code>f_proof is TRUE</code>, a folder path can be provided
 (otherwise print in current working directory)</p></dd>
+
+
 <dt>return_n_issues</dt>
 <dd><p>(logical) if <code>TRUE</code> returns the number of issues.</p></dd>
+
+
 <dt>printPDF</dt>
 <dd><p>(logical) if <code>TRUE</code> (default print plots to pdf)</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>(logical) <code>TRUE</code> (default) shows messages</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>(int) number of issues identified</p>
+    
+
+<p>(int) number of issues identified</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="op">{</span></span>
-<span class="r-in"><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu">check_rii_proteomics</span><span class="op">(</span>df_rri <span class="op">=</span> <span class="va">metadata_metabolites_named</span>,</span>
-<span class="r-in">isPTM <span class="op">=</span>  <span class="cn">TRUE</span>, return_n_issues <span class="op">=</span> <span class="cn">TRUE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-in"><span class="co"># "test" should be NULL</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="op">{</span></span></span>
+<span class="r-in"><span><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu">check_rii_proteomics</span><span class="op">(</span>df_rri <span class="op">=</span> <span class="va">metadata_metabolites_named</span>,</span></span>
+<span class="r-in"><span>isPTM <span class="op">=</span>  <span class="cn">TRUE</span>, return_n_issues <span class="op">=</span> <span class="cn">TRUE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># "test" should be NULL</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -127,7 +144,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

@@ -18,7 +18,7 @@ and RT/MZ density maps (only untargeted)"><!-- mathjax --><script src="https://c
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MotrpacBicQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.9</span>
       </span>
     </div>
 
@@ -71,36 +71,51 @@ and RT/MZ density maps (only untargeted)</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">plot_basic_metabolomics_qc</span><span class="op">(</span>
-  <span class="va">results</span>,
-  <span class="va">results_long</span>,
-  metametab <span class="op">=</span> <span class="cn">NULL</span>,
-  out_qc_folder <span class="op">=</span> <span class="cn">NULL</span>,
-  <span class="va">output_prefix</span>,
-  printPDF <span class="op">=</span> <span class="cn">TRUE</span>,
-  untargeted <span class="op">=</span> <span class="cn">TRUE</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plot_basic_metabolomics_qc</span><span class="op">(</span></span>
+<span>  <span class="va">results</span>,</span>
+<span>  <span class="va">results_long</span>,</span>
+<span>  metametab <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  out_qc_folder <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">output_prefix</span>,</span>
+<span>  printPDF <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  untargeted <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>results</dt>
 <dd><p>(df) metabolomics results (both named and unnamed already merged, if untargeted)</p></dd>
+
+
 <dt>results_long</dt>
 <dd><p>(df) metabolomics results (both named and unnamed already merged, if untargeted, in long format)</p></dd>
+
+
 <dt>metametab</dt>
 <dd><p>(df) metadata samples metadata (only untargeted sites)</p></dd>
+
+
 <dt>out_qc_folder</dt>
 <dd><p>(char) output qc folder (it creates the folder if it doesn't exist)</p></dd>
+
+
 <dt>output_prefix</dt>
 <dd><p>(char) prefix for the file name output (pdf file)</p></dd>
+
+
 <dt>printPDF</dt>
 <dd><p>(logical) <code>TRUE</code> (default) prints pdf file</p></dd>
+
+
 <dt>untargeted</dt>
 <dd><p>(logical) <code>TRUE</code> if the dataset is untargeted (named + unnamed metabolites)</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>(logical) <code>TRUE</code> (default) shows messages</p></dd>
+
 </dl></div>
 
   </div>
@@ -115,7 +130,7 @@ and RT/MZ density maps (only untargeted)</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

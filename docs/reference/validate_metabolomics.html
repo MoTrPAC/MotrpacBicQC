@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MotrpacBicQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.9</span>
       </span>
     </div>
 
@@ -69,28 +69,34 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">validate_metabolomics</span><span class="op">(</span>
-  <span class="va">input_results_folder</span>,
-  <span class="va">cas</span>,
-  dmaqc_shipping_info <span class="op">=</span> <span class="cn">NULL</span>,
-  dmaqc_phase2validate <span class="op">=</span> <span class="cn">NULL</span>,
-  return_n_issues <span class="op">=</span> <span class="cn">FALSE</span>,
-  full_report <span class="op">=</span> <span class="cn">FALSE</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>,
-  f_proof <span class="op">=</span> <span class="cn">FALSE</span>,
-  out_qc_folder <span class="op">=</span> <span class="cn">NULL</span>,
-  printPDF <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">validate_metabolomics</span><span class="op">(</span></span>
+<span>  <span class="va">input_results_folder</span>,</span>
+<span>  <span class="va">cas</span>,</span>
+<span>  dmaqc_shipping_info <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  dmaqc_phase2validate <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  return_n_issues <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  full_report <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  f_proof <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  out_qc_folder <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  printPDF <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>input_results_folder</dt>
 <dd><p>(char) path to the PROCESSED folder to check</p></dd>
+
+
 <dt>cas</dt>
 <dd><p>(char) CAS code</p></dd>
+
+
 <dt>dmaqc_shipping_info</dt>
 <dd><p>(char) File path to the DMAQC file</p></dd>
+
+
 <dt>dmaqc_phase2validate</dt>
 <dd><p>(char) Provide phase to validate. This argument
 is not required since it should be extracted from the input folder or from the
@@ -100,27 +106,42 @@ it will take priority (and the phase from the input folder and the
 <li><p>Both <code>PASS1A-06</code> and <code>PASS1C-06</code>: type <code>PASS1A-06|PASS1C-06</code></p></li>
 <li><p>Only <code>PASS1C-06</code>: type <code>PASS1C-06</code></p></li>
 </ul></dd>
+
+
 <dt>return_n_issues</dt>
 <dd><p>(logical) if <code>TRUE</code> returns the number of issues</p></dd>
+
+
 <dt>full_report</dt>
 <dd><p>(logical) if <code>FALSE</code> (default) it returns only the
 total number of issues. If <code>TRUE</code> returns the details of the number of issues (by
 group of files, e.g., results, metadata_metabolites, etc)</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>(logical) <code>TRUE</code> (default) shows messages</p></dd>
+
+
 <dt>f_proof</dt>
 <dd><p>(char) print out pdf with charts including:</p><ul><li><p>Sample intensity distribution</p></li>
 <li><p>Unique ID counts</p></li>
 <li><p>NA values</p></li>
 </ul></dd>
+
+
 <dt>out_qc_folder</dt>
 <dd><p>(char) output qc folder (it creates the folder if it doesn't exist)</p></dd>
+
+
 <dt>printPDF</dt>
 <dd><p>(logical) if <code>TRUE</code> (default print plots to pdf)</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>(data.frame) Summary of issues</p>
+    
+
+<p>(data.frame) Summary of issues</p>
     </div>
 
   </div>
@@ -135,7 +156,7 @@ group of files, e.g., results, metadata_metabolites, etc)</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

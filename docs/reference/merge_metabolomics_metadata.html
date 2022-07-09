@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MotrpacBicQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.9</span>
       </span>
     </div>
 
@@ -69,27 +69,32 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">merge_metabolomics_metadata</span><span class="op">(</span><span class="va">m_m_n</span>, <span class="va">m_m_u</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">merge_metabolomics_metadata</span><span class="op">(</span><span class="va">m_m_n</span>, <span class="va">m_m_u</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>m_m_n</dt>
 <dd><p>(df) metabolomics metadata named</p></dd>
+
+
 <dt>m_m_u</dt>
 <dd><p>(char) metabolomics metadata unnamed</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>(data.frame) merged metadata metabolites</p>
+    
+
+<p>(data.frame) merged metadata metabolites</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="op">{</span></span>
-<span class="r-in"><span class="va">m_m</span> <span class="op">&lt;-</span> <span class="fu">merge_metabolomics_metadata</span><span class="op">(</span>m_m_n <span class="op">=</span> <span class="va">metadata_metabolites_named</span>,</span>
-<span class="r-in">                                   m_m_u <span class="op">=</span> <span class="va">metadata_metabolites_unnamed</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="op">{</span></span></span>
+<span class="r-in"><span><span class="va">m_m</span> <span class="op">&lt;-</span> <span class="fu">merge_metabolomics_metadata</span><span class="op">(</span>m_m_n <span class="op">=</span> <span class="va">metadata_metabolites_named</span>,</span></span>
+<span class="r-in"><span>                                   m_m_u <span class="op">=</span> <span class="va">metadata_metabolites_unnamed</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -104,7 +109,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>
