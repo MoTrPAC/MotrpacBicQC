@@ -1,5 +1,122 @@
 # VALIDATIONS
 
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' @title check failed samples file for reported missing vial label ids
+#'
+#' @description check failed samples file for reported missing vial label ids
+#' @param input_results_folder (char) input path folder
+#' @param verbose (logical) `TRUE` (default) shows messages
+#' @return (vector) failed reported ids
+#' @export
+check_failedsamples <- function(input_results_folder,
+                                verbose = TRUE){
+  
+  filepattern <- "metadata_failedsamples.*.txt"
+  
+  # Get file matching pattern
+  file_metametabolites <- list.files(input_results_folder,
+                                     pattern=filepattern,
+                                     full.names=TRUE,
+                                     recursive = TRUE,
+                                     ignore.case = TRUE)
+  
+  # Check if file is found and deal with many files
+  if(length(file_metametabolites) != 1){
+    if(length(file_metametabolites) >= 1){
+      if(verbose) message("   - (-) `open_file`: more than one file detected: FAIL")
+      if(verbose) message("\n\t\t - ", paste(file_metametabolites, collapse = "\n\t\t - "))
+    }else{
+      if(verbose) message("   + ( ) File [`", filepattern, "`] not found")
+      if(verbose) message("   + ( ) NO FAILED SAMPLES reported")
+    }
+    flag <- FALSE
+    return(NULL)
+  }else{
+    flag <- TRUE
+    ofile <- read.delim(file_metametabolites[1], stringsAsFactors = FALSE, check.names = FALSE)
+  }
+  
+  if(flag){
+    if(nrow(ofile) == 0){
+      if(verbose) message("   + ( ) NO FAILED SAMPLES reported")
+      return(NULL)
+    }else{
+      if("sample_id" %in% colnames(ofile)){
+        if(verbose) message("   + ( ) Failed samples reported:\n\t - ", paste(ofile$sample_id, collapse = "\n\t - ") )
+        return(ofile$sample_id)
+      }else{
+        if(verbose) message("   - (-) `sample_id` column not found: FAIL")
+        return(NULL)
+      }
+    }
+  }
+}
+
+
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' @title Set the phase to be validated.
+#' 
+#' @description A group might choose to combine two different phases, due to 
+#' the complications associated with PASS1A/1C. If they choose to combine
+#' two phases, the CAS must provide a new file `metadata_phase.txt` with a single
+#' line, as for example: `PASS1A-06|PASS1C-06`. This function checks if the 
+#' file is available, and set that phase as the phases to validate. In summary,
+#' the order of preference is:
+#' 1. function's argument: dmaqc_phase2validate (if provided in the validation functions)
+#' 2. `metadata_phase.txt` file if available in the batch folder.
+#' 3. Phase in folder structure
+#' @param input_results_folder (char) path to the PROCESSED/RESULTS folder to check
+#' @param dmaqc_phase2validate (data.frame) dmaqc shipping information
+#' @param verbose (logical) `TRUE` (default) shows messages
+#' @return (int) the phase to be validated. 
+#' @export
+set_phase <- function(input_results_folder,
+                      dmaqc_phase2validate,
+                      verbose = TRUE){
+  
+  phase <- validate_phase(input_results_folder)
+  
+  # Check metadata_phase.txt file
+  batch <- NULL
+  if( grepl("RESULTS", input_results_folder) ){
+    batch <- gsub("(.*)(RESULTS.*)", "\\1", input_results_folder)  
+  }else if( grepl("PROCESSED", input_results_folder)){
+    batch <- gsub("(.*)(PROCESSED.*)", "\\1", input_results_folder)  
+  }else{
+    stop("   - (-) ERROR: the input results folder missed the PROCESSED or RESULTS folder!")
+  }
+  
+  file_phase <- list.files(normalizePath(batch),
+                           pattern="metadata_phase.txt",
+                           ignore.case = TRUE,
+                           full.names=TRUE,
+                           recursive = TRUE)
+  
+  # To be adjusted if two different batches are provided:
+  phase_check <- phase
+  if ( !(purrr::is_empty(file_phase)) ){
+    con <- file(file_phase,"r")
+    batch_info <- readLines(con, n=1)
+    close(con)
+    if ( !(is.na(batch_info) || batch_info == '') ){
+      if(verbose) message("+ Motrpac phase reported: ", batch_info, " (info from metadata_phase.txt available)")
+      if( is.null(dmaqc_phase2validate) ){
+        dmaqc_phase2validate <- batch_info
+      }
+    }
+  }else{
+    if(verbose) message("+ Motrpac phase: ", phase_check, " (metadata_phase.txt file NOT available)")
+    if( is.null(dmaqc_phase2validate) ){
+      dmaqc_phase2validate <- phase
+    }
+  }
+  
+  return(dmaqc_phase2validate)
+}
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' @title Validate vial labels from DMAQC
 #'
@@ -11,6 +128,8 @@
 #' @param phase (char) phase code
 #' @param failed_samples (char) metadata_metabolites df
 #' @param return_n_issues (logical) if `TRUE` returns the number of issues
+#' @param out_qc_folder (char) output qc folder (it creates the folder if it doesn't exist)
+#' @param outfile_missed_viallabels (char) file name for missed vial labels
 #' @param verbose (logical) `TRUE` (default) shows messages
 #' @return (int) number of issues identified
 #' @export
@@ -20,11 +139,14 @@ check_viallabel_dmaqc <- function(vl_submitted,
                                   cas,
                                   phase,
                                   failed_samples,
+                                  out_qc_folder = NULL,
+                                  outfile_missed_viallabels,
                                   return_n_issues = FALSE,
                                   verbose = TRUE){
   
   # issue_count
   ic <- NA
+  
   # There might be multiple phases to check: load both
   ph <- unlist(strsplit(phase, split = "\\|"))
   dmaqc_labels <- vector()
@@ -57,34 +179,61 @@ check_viallabel_dmaqc <- function(vl_submitted,
   }
   
   if( length(dmaqc_labels) == 0){
-    if(verbose) message("   + (+) DMAQC CHECK POINT: sample IDs not available in DMAQC dataset. Needs to be revised by BIC")
+    if(verbose) message("  + (+) DMAQC CHECK POINT: sample IDs not available in DMAQC dataset. Most frequent cause of the error: 
+                        - Does the tissue code for this folder structure contain the right tissue code?
+                        - Did you provide the right code for the cas site? (for example, `broad`, instead of `broad_prot`)
+                        
+                        Otherwise, it needs to be revised with DMAQC")
     ic <- "NOT_AVAILABLE"
   }else{
     if( setequal(vl_submitted, dmaqc_labels) ){
-      if(verbose) message("   + (+) DMAQC CHECK POINT: samples sent to CAS have been processed: OK")
+      if(verbose) message("  + (+) DMAQC CHECK POINT: samples sent to CAS have been processed: OK")
       ic <- "OK"
     }else{
+      # CHECK 
       samples_missed <- setdiff(dmaqc_labels, vl_submitted)
-      if(!is.null(failed_samples)){
+      if( !(is.null(failed_samples) & purrr::is_empty(samples_missed)) ) {
         if(setequal(failed_samples, samples_missed)){
-          if(verbose) message("   + (+) DMAQC CHECK POINT: samples sent to CAS have been processed (with known issues for some samples): OK")
+          if(verbose) message("  + (+) DMAQC CHECK POINT: samples sent to CAS have been processed (with known issues for some samples): OK")
           ic <- "OK"
         }else{
-          if(verbose){
-            message("      - (-) DMAQC CHECK POINT: samples not found in metadata_results: FAIL")
-            message("\t - ", paste(samples_missed, collapse = "\n\t - "))
-            ic <- "FAIL"
+          # Only if it is not empty: if it is empty means that there are extra samples in the CAS site (checked below)
+          if(!purrr::is_empty(samples_missed)){
+            if(verbose){
+              message("   - (-) DMAQC CHECK POINT: samples not found in `metadata_results`: FAIL")
+              message("\t - ", paste(samples_missed, collapse = "\n\t - "))
+            }
+            missed_out <- data.frame(vial_label = samples_missed)
+            missed_out$cas <- cas
+            out_plot_large <- file.path(normalizePath(out_qc_folder), paste0(outfile_missed_viallabels,"-missed_viallabels-in-cas.txt"))
+            write.table(missed_out, out_plot_large, row.names = FALSE, sep = "\t", quote = FALSE)
+            if(verbose) message("   - ( ) File ", paste0(outfile_missed_viallabels,"-missed_viallabels-in-cas.txt"), " available with missed vial labels")
+            ic <- "FAIL"  
           }
         }
       }else{
-        if(verbose){
-          message("      - (-) DMAQC CHECK POINT: samples not found in metadata_results: FAIL")
-          message("\t - ", paste(samples_missed, collapse = "\n\t - "))
+        if( !purrr::is_empty(samples_missed) ){
+          if(verbose){
+            message("   - (-) DMAQC CHECK POINT: samples not found in `metadata_results`: FAIL")
+            message("\t - ", paste(samples_missed, collapse = "\n\t - "))
+          }
+          missed_out <- data.frame(vial_label = samples_missed)
+          missed_out$cas <- cas
+          out_plot_large <- file.path(normalizePath(out_qc_folder), paste0(outfile_missed_viallabels,"-missed_viallabels-in-cas.txt"))
+          write.table(missed_out, out_plot_large, row.names = FALSE, sep = "\t", quote = FALSE)
+          if(verbose) message("   - ( ) File ", paste0(outfile_missed_viallabels,"-missed_viallabels-in-cas.txt"), " available with missed vial labels")
+          ic <- "FAIL"
         }
-        ic <- "FAIL"
+      }
+      # CHECK: extra samples coming in a submission (not available in DMAQC)
+      samples_extra <- setdiff(vl_submitted, dmaqc_labels)
+      if(!purrr::is_empty(samples_extra)){
+        if(verbose){
+          message("   - (-) DMAQC CHECK POINT: CAS SITE IS PROVIDING SAMPLES IDS THAT ARE NOT IN DMAQC: REVISE!")
+          message("\t - ", paste(samples_extra, collapse = "\n\t - "))
+        }        
       }
     }
-    
   }
   
   if(return_n_issues) return(ic)
@@ -128,7 +277,7 @@ validate_processFolder <- function(input_results_folder){
   }
 
   if(is.na(processfolder)){
-    stop("PROCESS_YYYYMMDD or RESULTS_YYYYMMDD folder is not recognize in the folder structure")
+    stop("`PROCESS_YYYYMMDD` or `RESULTS_YYYYMMDD` folder is not recognize in the folder structure")
   }else{
     return(processfolder)
   }
@@ -147,7 +296,7 @@ validate_batch <- function(input_results_folder){
                                        pattern = "(.*/BATCH\\d{1,2}\\_\\d{8})/")
   
   if(is.na(batch_folder)){
-    stop("BATCH#_YYYYMMDD folder is not recognized in the folder structure.")
+    stop("`BATCH#_YYYYMMDD` folder is not recognized in the folder structure.")
   }else{
     return(batch_folder)
   }
@@ -183,7 +332,7 @@ validate_phase <- function(input_results_folder){
   phase <- stringr::str_extract(string = input_results_folder,
                                 pattern = "(PASS1A-06|PASS1A-18|PASS1B-06|PASS1B-18|HUMAN)")
   if(is.na(phase)){
-    stop("<project phase (e.g. PASS1A-06)> is not found in the folder structure, please, check guidelines")
+    stop("project phase (e.g. PASS1A-06) is not found in the folder structure, please, check guidelines")
   }else{
     return(phase)
   }
@@ -201,7 +350,7 @@ validate_tissue <- function(input_results_folder){
   tissue_code <- gsub("(.*)(T[0-9]{2,3})(.*)", "\\2", input_results_folder)
 
   if(!tissue_code %in% bic_animal_tissue_code$bic_tissue_code){
-    stop("tissue_code: <", tissue_code, "> is not valid. Must be one of the following codes (check data object MotrpacBicQC::bic_animal_tissue_code):\n- ", paste(bic_animal_tissue_code$bic_tissue_code, collapse = ", "))
+    stop("tissue_code: `", tissue_code, "` is not valid. Must be one of the following codes (check data object `MotrpacBicQC::bic_animal_tissue_code`):\n- ", paste(bic_animal_tissue_code$bic_tissue_code, collapse = ", "))
   }else{
     return(tissue_code)
   }

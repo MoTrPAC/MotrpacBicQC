@@ -24,11 +24,15 @@ validate_metabolomics(
 
 \item{dmaqc_shipping_info}{(char) File path to the DMAQC file}
 
-\item{dmaqc_phase2validate}{(char) Provide phase to validate. Examples of submissions:
+\item{dmaqc_phase2validate}{(char) Provide phase to validate. This argument
+is not required since it should be extracted from the input folder or from the
+new required file \code{metadata_phase.txt}. However, if this argument is provided,
+it will take priority (and the phase from the input folder and the
+\code{metadata_phase.txt} will be ignored). Examples
 \itemize{
-\item Only PASS1A-06: type either "PASS1A-06" or leave it \code{NULL}
-\item Both PASS1A-06 and PASS1C-06: type "PASS1A-06|PASS1C-06"
-\item Only PASS1C-06: type "PASS1C-06"
+\item Folder with \code{PASS1A-06}: type either \code{PASS1A-06} or leave it \code{NULL}
+\item Both \code{PASS1A-06} and \code{PASS1C-06}: type \code{PASS1A-06|PASS1C-06}
+\item Only \code{PASS1C-06}: type \code{PASS1C-06}
 }}
 
 \item{return_n_issues}{(logical) if \code{TRUE} returns the number of issues}

@@ -10,13 +10,44 @@
 #' @importFrom jsonlite fromJSON
 #' @import knitr
 #' @import naniar
+#' @import progress
 #' @import purrr
 #' @importFrom scales percent
 #' @importFrom stats median reorder
 #' @import stringr
 #' @import tidyr
 #' @import utils
+#' @import viridis
 #____________________________________________________________________________
+
+#' @title Create folder
+#'
+#' @description Create a directory if it doesn't exist. If no argument is provided, 
+#' it returns the current working directory
+#' @param folder_name (chr) folder name
+#' @param verbose (logical) `TRUE` shows messages (default `FALSE`)
+#' @examples {
+#' create_folder(folder_name = NULL)
+#' # Or use this one for a real folder:
+#' # create_folder(folder_name = "testing")
+#' }
+#' @export
+create_folder <- function(folder_name = NULL, 
+                          verbose = FALSE){
+  if(!is.null(folder_name)){
+    if(!dir.exists(file.path(folder_name))){
+      dir.create(file.path(folder_name), recursive = TRUE)
+      if(verbose) message("+ Folder `", folder_name,"`created")
+      return(folder_name)
+    }else{
+      return(folder_name)
+    }
+  }else{
+    folder_name <- getwd()
+    return(folder_name)
+  }
+}
+
 
 #' @title filter required columns only
 #'
@@ -50,34 +81,44 @@ filter_required_columns <- function(df,
         emeta_metabo_coln_named <- c("metabolite_name", "rt", "mz")
       }
     }else{
-      stop("{name_id} option not valid. Options: named/unnamed")
+      stop("{`name_id`} option not valid. Options: named/unnamed")
     }
 
     colnames(df) <- tolower(colnames(df))
 
     if(all(emeta_metabo_coln_named %in% colnames(df))){
-      if(verbose) message("   + (+) All required columns present")
+      if(verbose) message("  + (+) All required columns present")
       df <- subset(df, select = emeta_metabo_coln_named)
     }else{
-      if(verbose) message("      - (-) Expected COLUMN NAMES are missed: FAIL")
+      if(verbose) message("   - (-) Expected COLUMN NAMES are missed: FAIL")
     }
     return(df)
   } else if (type == "m_s"){
     emeta_sample_coln <- c("sample_id", "sample_type", "sample_order", "raw_file")
     if( all(emeta_sample_coln %in% colnames(df)) ){
-      if(verbose) message("   + (+) All required columns present")
+      if(verbose) message("  + (+) All required columns present")
       df <- subset(df, select = emeta_sample_coln)
     }else{
-      if(verbose) message("      - (-) Expected COLUMN NAMES are missed: FAIL")
+      if(verbose) message("   - (-) Expected COLUMN NAMES are missed: FAIL")
     }
     return(df)
   } else if (type == "v_m"){
-    emeta_sample_coln <- c("vial_label", "tmt11_channel", "tmt_plex")
+    emeta_sample_coln <- c("vial_label", "tmt_plex")
     if( all(emeta_sample_coln %in% colnames(df)) ){
-      if(verbose) message("   + (+) All required columns present")
-      df <- subset(df, select = emeta_sample_coln)
+      # deal with tmt11 or tmt16
+      if("tmt11_channel" %in% colnames(df)){
+        emeta_sample_coln <- append(emeta_sample_coln, "tmt11_channel")
+        if(verbose) message("  + (+) All required columns present (tmt11 experiment)")
+        df <- subset(df, select = emeta_sample_coln)
+      }else if("tmt16_channel" %in% colnames(df)){
+        emeta_sample_coln <- append(emeta_sample_coln, "tmt16_channel")
+        if(verbose) message("  + (+) All required columns present (tmt16 experiment)")
+        df <- subset(df, select = emeta_sample_coln)
+      }else{
+        if(verbose) message("   - (-) Expected COLUMN NAMES are missed: FAIL")
+      }
     }else{
-      if(verbose) message("      - (-) Expected COLUMN NAMES are missed: FAIL")
+      if(verbose) message("   - (-) Expected COLUMN NAMES are missed: FAIL")
     }
     return(df)
   }
@@ -106,10 +147,10 @@ open_file <- function(input_results_folder,
   # Check if file is found and deal with many files
   if(length(file_metametabolites) != 1){
     if(length(file_metametabolites) >= 1){
-      if(verbose) message("      - (-) PROBLEM: more than one file detected: FAIL")
+      if(verbose) message("   - (-) More than one file detected: FAIL")
       if(verbose) message("\t\t - ", paste(file_metametabolites, collapse = "\n\t\t - "))
     }else{
-      if(verbose) message("      - (-) PROBLEM file [", filepattern, "] not found: FAIL")
+      if(verbose) message("   - (-) File [`", filepattern, "`] not found: FAIL")
     }
     flag <- FALSE
     ofile <- NULL
@@ -120,12 +161,12 @@ open_file <- function(input_results_folder,
     ofile <- read.delim(filename, stringsAsFactors = FALSE, check.names = FALSE)
     ofile <- remove_empty_columns(ofile, verbose = verbose)
     ofile <- remove_empty_rows(ofile, verbose = verbose)
-    if(verbose) message("   + (+) File successfully opened")
+    if(verbose) message("  + (+) File successfully opened")
   }
 
   if(flag){
     if(nrow(ofile) == 0){
-      if(verbose) message("      - (-) File is empty: FAIL")
+      if(verbose) message("   - (-) File is empty: FAIL")
       flag <- FALSE
       ofile <- NULL
     }else{
@@ -154,7 +195,7 @@ remove_empty_columns <- function(df,
   after <- dim(df)[2]
   if(before != after){
     n_removed <- before - after
-    if(verbose) message("      - (-) ", n_removed, " empty columns found and removed")
+    if(verbose) message("   - (-) ", n_removed, " empty columns found and removed")
     if(verbose) message("\t\t+ Before: ", before, " ->  After: ", after)
   }
   return(df)
@@ -179,7 +220,7 @@ remove_empty_rows <- function(df,
   after <- dim(df)[1]
   if(before != after){
     n_removed <- before - after
-    if(verbose) message("      - (-) ", n_removed, " empty ROWS found and remove")
+    if(verbose) message("   - (-) ", n_removed, " empty ROWS found and remove")
     if(verbose) message("\t\t+ Before: ", before, " ->  After: ", after)
   }
   return(df)

@@ -37,6 +37,8 @@ assay_order = c('METHYL',
                 'ACETYL',
                 'UBIQ',
                 'IMMUNO',
+                'N-METAB',
+                'U-METAB',
                 'METAB')
 
 use_data(assay_order, overwrite = TRUE)

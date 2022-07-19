@@ -6,17 +6,21 @@
 \usage{
 plot_basic_metabolomics_qc(
   results,
-  m_s_n,
+  results_long,
+  metametab = NULL,
   out_qc_folder = NULL,
   output_prefix,
   printPDF = TRUE,
+  untargeted = TRUE,
   verbose = TRUE
 )
 }
 \arguments{
 \item{results}{(df) metabolomics results (both named and unnamed already merged, if untargeted)}
 
-\item{m_s_n}{(df) metadata samples named}
+\item{results_long}{(df) metabolomics results (both named and unnamed already merged, if untargeted, in long format)}
+
+\item{metametab}{(df) metadata samples metadata (only untargeted sites)}
 
 \item{out_qc_folder}{(char) output qc folder (it creates the folder if it doesn't exist)}
 
@@ -24,9 +28,11 @@ plot_basic_metabolomics_qc(
 
 \item{printPDF}{(logical) \code{TRUE} (default) prints pdf file}
 
+\item{untargeted}{(logical) \code{TRUE} if the dataset is untargeted (named + unnamed metabolites)}
+
 \item{verbose}{(logical) \code{TRUE} (default) shows messages}
 }
 \description{
 Plot intensity distributions, number of unique ids, NA values
-per sample
+and RT/MZ density maps (only untargeted)
 }

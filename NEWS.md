@@ -1,3 +1,55 @@
+# MotrpacBicQC 0.6.9 (2022-07-09)
+
+* Metabolomics: new density plots
+* Code optimizations
+* Bug fixes affecting file manifest checks
+   
+   
+# MotrpacBicQC 0.6.8 (2022-04-11)
+
+* Refactor the DMAQC validation. A new file will be required when:
+   + Two phases are combined in the same batch (e.g., `PASS1A-06|PASS1C-06`)
+   + The phase content is different from the input folder name (e.g., `PASS1C-06` might 
+   be submitted but the input folder name is `PASS1A-06`)
+
+# MotrpacBicQC 0.6.7 (2022-03-11)
+
+* DMAQC validation: print out missing vial labels
+* Metabolomics QC: add mz/rt density plots
+
+# MotrpacBicQC 0.6.6 (2022-03-03)
+
+* Improve reporting and handling of required files
+* Fix minor bugs 
+
+# MotrpacBicQC 0.6.5 (2022-02-28)
+
+* Metabolomics: fix manifest checks.
+
+# MotrpacBicQC 0.6.4 (2022-02-27)
+
+* Metabolomics: adjust metabolomic plots to deal with a large number of samples
+* Metabolomics new plot: sum of intensity/concentration
+* Metabolomics: detects negative values
+* Metabolomics: update vignette
+
+# MotrpacBicQC 0.6.3 (2022-02-25)
+
+* Proteomics: support for tmt16
+* Metabolomics: Improve verbosity for wrong tissue code
+
+# MotrpacBicQC 0.6.2 (2021-12-07)
+
+* Fix bug affecting the validation of refmet_names
+* Update data objects (immunoassay added)
+
+# MotrpacBicQC 0.6.1 (2021-09-06)
+
+* Refactor the validation of refmet_name. It now checks on at the time 
+using the RefMet API. It also validates multipeak isoforms
+* The function `get_and_validate_mdd()` donwload the entire RefMet database (warning, >15MB)
+* The `metabolomics_data_dictionary` data object will be soon deprecated. 
+
 # MotrpacBicQC 0.6.0 (2021-09-06)
 
 * Support DMAQC validation of human submissions
