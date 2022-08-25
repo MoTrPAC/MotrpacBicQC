@@ -1,3 +1,7 @@
+# MotrpacBicQC 0.7.0 (2022-08-25)
+
+* Update motrpac color abbreviations
+
 # MotrpacBicQC 0.6.9 (2022-07-09)
 
 * Metabolomics: new density plots

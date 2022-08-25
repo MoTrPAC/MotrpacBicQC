@@ -5,7 +5,7 @@
 \alias{group_cols}
 \title{group colors}
 \format{
-An object of class \code{function} of length 1.
+An object of class \code{character} of length 12.
 }
 \usage{
 group_cols

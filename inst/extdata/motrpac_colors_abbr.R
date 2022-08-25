@@ -24,6 +24,7 @@ assay_abbr = c(atac='ATAC',
                'prot-ac'='ACETYL',
                'prot-ph'='PHOSPHO',
                'prot-ub'='UBIQ',
+               'prot-ub-protein-corrected'='UBIQ',
                'immunoassay'='IMMUNO')
 
 use_data(assay_abbr, overwrite = TRUE)
@@ -90,6 +91,7 @@ tissue_abbr = c(adrenals='ADRNL',
                 'vena-cava'='VENACV',
                 'vena cava'='VENACV',
                 "t65-aorta"='VENACV',
+                "t65-vena-cava"='VENACV',
                 'brown-adipose'='BAT',
                 'brown adipose'='BAT',
                 "t69-brown-adipose"='BAT',
@@ -164,6 +166,7 @@ tissue_cols = c('paxgene rna'='#d92c04', # blood and paxgene rna are the same (R
                 'vena_cava'="#a5415b",
                 VENACV="#a5415b",
                 "t65-aorta"="#a5415b",
+                "t65-vena-cava"="#a5415b",
                 spleen="#f3c288",
                 SPLEEN="#f3c288",
                 "t62-spleen"="#f3c288",
