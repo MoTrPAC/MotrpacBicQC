@@ -81,8 +81,8 @@ set_phase <- function(input_results_folder,
   
   # Check metadata_phase.txt file
   batch <- NULL
-  if( grepl("RESULTS", input_results_folder) ){
-    batch <- gsub("(.*)(RESULTS.*)", "\\1", input_results_folder)  
+  if( grepl("(BIC){0,1}RESULTS", input_results_folder) ){
+    batch <- gsub("(.*/)((BIC){0,1}RESULTS.*)", "\\1", input_results_folder)  
   }else if( grepl("PROCESSED", input_results_folder)){
     batch <- gsub("(.*)(PROCESSED.*)", "\\1", input_results_folder)  
   }else{
@@ -273,7 +273,7 @@ validate_processFolder <- function(input_results_folder){
   processfolder <- stringr::str_extract(string = input_results_folder, pattern = "PROCESSED_[0-9]+")
 
   if(is.na(processfolder)){
-    processfolder <- stringr::str_extract(string = input_results_folder, pattern = "RESULTS_[0-9]+")
+    processfolder <- stringr::str_extract(string = input_results_folder, pattern = "(BIC){0,1}RESULTS_[0-9]+")
   }
 
   if(is.na(processfolder)){

@@ -30,6 +30,13 @@ proteomics_plots_rii <- function(all_vial_labels,
                              
   if(verbose) message("   + (+) PLOTS RII------------------")
   
+  # Get the total number of samples to customize the plots. If larger than 200, 
+  # prepare for large plots
+  sn <- length(unique(all_samples))
+  # Set a limit for which remove labels 
+  sn_limit <- 200
+  
+  
   if( !is.null(all_vial_labels) ){
     required_columns <- get_required_columns(isPTM = isPTM,
                                              prot_file = "rii")
@@ -156,7 +163,15 @@ proteomics_plots_rii <- function(all_vial_labels,
         out_plot_dist <- file.path(normalizePath(out_qc_folder), paste0(output_prefix,"-qc-rii-distribution.pdf"))
       }
       
-      if(printPDF) pdf(out_plot_dist, width = 12, height = 8)
+      if(printPDF){
+        if(sn > 800){
+          pdf(out_plot_dist, width = 40, height = 8)
+        }else if(sn <= 800 & sn > 200){
+          pdf(out_plot_dist, width = 22, height = 8)
+        }else{
+          pdf(out_plot_dist, width = 14, height = 8)
+        }
+      }
       print(pise)
       print(puid1)
       print(puid2)
