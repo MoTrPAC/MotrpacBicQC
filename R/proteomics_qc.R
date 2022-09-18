@@ -210,18 +210,20 @@ check_ratio_proteomics <- function(df_ratio,
 
   if( any( is.na( df_ratio$gene_symbol[which(df_ratio$is_contaminant == FALSE)] ) ) ){
     # ic_rii <- ic_rii + 1
-    if(verbose) message("      - ( ) Some GENE_SYMBOL values are missed for some protein ids:", 
-                        paste(df_ratio$protein_id[which(is.na( df_ratio$gene_symbol[which(df_ratio$is_contaminant == FALSE)] ))], 
-                              collapse = ", "))
+    
+    if(verbose) message(paste("      - (!) GENE_SYMBOL values are missed for", 
+                              length( df_ratio$protein_id[which(is.na( df_ratio$gene_symbol[which(df_ratio$is_contaminant == FALSE)] ))] ), 
+                              "protein ids"))
+    
   }else{
     if(verbose) message("   + (+) All GENE_SYMBOL available")
   }
 
   if( any( is.na( df_ratio$entrez_id[which(df_ratio$is_contaminant == FALSE)] ) ) ){
     # ic_rii <- ic_rii + 1
-    if(verbose) message("      - ( ) Some ENTREZ_ID values are missed for some protein ids:", 
-                        paste(df_ratio$protein_id[which(is.na( df_ratio$entrez_id[which(df_ratio$is_contaminant == FALSE)] ))], 
-                              collapse = ", "))
+    if(verbose) message(paste("      - (!) ENTREZ_ID values are missed for", 
+                              length(df_ratio$protein_id[which(is.na( df_ratio$entrez_id[which(df_ratio$is_contaminant == FALSE)] ))]), 
+                              "protein ids"))
   }else{
     if(verbose) message("   + (+) All ENTREZ_ID available")
   }
@@ -411,25 +413,25 @@ check_rii_proteomics <- function(df_rri,
 
   if( any( is.na( df_rri$gene_symbol[which(df_rri$is_contaminant == FALSE)] ) ) ){
     # ic_rii <- ic_rii + 1
-    if(verbose) message("      - ( ) Some GENE_SYMBOL values are missed for some protein ids:", 
-                        paste(df_rri$protein_id[which(is.na( df_rri$gene_symbol[which(df_rri$is_contaminant == FALSE)] ))], 
-                              collapse = ", "))
+    if(verbose) message(paste("      - (!) GENE_SYMBOL values are missed for", 
+                              length(df_rri$protein_id[which(is.na( df_rri$gene_symbol[which(df_rri$is_contaminant == FALSE)] ))]), 
+                              "protein ids"))
   }else{
     if(verbose) message("   + (+) All GENE_SYMBOL ids available")
   }
 
   if( any( is.na( df_rri$entrez_id[which(df_rri$is_contaminant == FALSE)] ) ) ){
     # ic_rii <- ic_rii + 1
-    if(verbose) message("      - ( ) Some ENTREZ_ID values are missed for some protein ids:", 
-                        paste(df_rri$protein_id[which(is.na( df_rri$entrez_id[which(df_rri$is_contaminant == FALSE)] ))], 
-                              collapse = ", "))
+    if(verbose) message(paste("      - (!) ENTREZ_ID values are missed for", 
+                  length(df_rri$protein_id[which(is.na( df_rri$entrez_id[which(df_rri$is_contaminant == FALSE)] ))]), 
+                  "protein ids"))
   }else{
     if(verbose) message("   + (+) All ENTREZ_ID ids available")
   }
   
   if( any(is.na(df_rri$redundant_ids)) ){
     # ic_rii <- ic_rii + 1
-    if(verbose) message("      - ( ) Some REDUNDANT_IDS values are missed (it should be fine)")
+    if(verbose) message("      - (!) Some REDUNDANT_IDS values are missed (it should be fine)")
   }else{
     if(verbose) message("   + (+) All REDUNDANT_IDS values available")
   }
@@ -748,7 +750,8 @@ load_proteomics <- function(input_results_folder,
 #' @param input_results_folder (char) path to the PROCESSED folder to check
 #' @param isPTM (logical) `TRUE` if it is Post-Translational-Modification proteomics assay
 #' @param cas (char) CAS code
-#' @param dmaqc_shipping_info (char) phase code
+#' @param dmaqc_shipping_info (char) DMAQC file with shipping information. If not provided
+#' (default), then DMQAC validation is not peformed (only done at the BIC)
 #' @param dmaqc_phase2validate (char) Provide phase to validate. This argument
 #' is not required since it should be extracted from the input folder or from the 
 #' new required file `metadata_phase.txt`. However, if this argument is provided,
@@ -766,8 +769,7 @@ load_proteomics <- function(input_results_folder,
 #' total number of issues. If `TRUE` returns the details of the number of issues (by
 #' group of files, e.g., results, metadata_metabolites, etc)
 #' @param printPDF (logical) if `TRUE` (default print plots to pdf)
-#' @param run_by_bic (logical) `TRUE` if the dataset was generated running the 
-#' BIC proteomics pipeline (default `FALSE`)
+#' @param check_only_results (logical) if `TRUE`, only validates results (default `FALSE`)
 #' @param verbose (logical) `TRUE` (default) prints QC details.
 #' @return (data.frame) Summary of issues
 #' @export
@@ -782,7 +784,7 @@ validate_proteomics <- function(input_results_folder,
                                 full_report = FALSE,
                                 printPDF = TRUE,
                                 verbose = TRUE,
-                                run_by_bic = FALSE){
+                                check_only_results = FALSE){
   
   percent_coverage <- NULL
 
@@ -823,7 +825,7 @@ validate_proteomics <- function(input_results_folder,
     output_prefix <- paste0(cas, ".", tolower(phase2file), ".", tissue_code, ".",tolower(assay), ".", tolower(processfolder))
   }
 
-  input_folder_short <- regmatches(input_results_folder, regexpr("PASS.*RESULTS_[0-9]{8}", input_results_folder))
+  input_folder_short <- regmatches(input_results_folder, regexpr("(PASS|HUMAN).*RESULTS_[0-9]{8}", input_results_folder))
   if( purrr::is_empty(input_folder_short) ){
     if(verbose) message("\nThe RESULTS_YYYYMMDD folder full path is not correct. Example:")
     if(verbose) message("/full/path/to/folder/PASS1A-06/T66/RPNEG/BATCH1_20190822/RESULTS_20200308")
@@ -975,6 +977,12 @@ validate_proteomics <- function(input_results_folder,
       if(f_proof){
 
         if(verbose) message("   + (+) PLOTS RATIO------------------")
+        
+        # Get the total number of samples to customize the plots. If larger than 200, 
+        # prepare for large plots
+        sn <- length(unique(all_samples))
+        # Set a limit for which remove labels 
+        sn_limit <- 200
 
         if( !is.null(all_vial_labels) ){
           required_columns <- get_required_columns(isPTM = isPTM,
@@ -1119,7 +1127,15 @@ validate_proteomics <- function(input_results_folder,
                 out_plot_ratdist <- file.path(normalizePath(out_qc_folder), paste0(output_prefix,"-qc-ratio-distribution.pdf"))
               }
 
-              if(printPDF) pdf(out_plot_ratdist, width = 12, height = 8)
+              if(printPDF){
+                if(sn > 800){
+                  pdf(out_plot_ratdist, width = 40, height = 8)
+                }else if(sn <= 800 & sn > 200){
+                  pdf(out_plot_ratdist, width = 22, height = 8)
+                }else{
+                  pdf(out_plot_ratdist, width = 14, height = 8)
+                }
+              }
                 print(pisr)
                 print(puid1)
                 print(puid2)
@@ -1143,17 +1159,14 @@ validate_proteomics <- function(input_results_folder,
   }
 
   # MANIFEST----
-
-  if(verbose) message("\n## MANIFEST\n")
-  
-  if(run_by_bic){
-    if(verbose) message("   + (+) Pipeline run by the BIC")
+  if(check_only_results){
     f_man <- FALSE
     ic_man <- 0
   }else{
-    batch <- gsub("(.*)(RESULTS.*)", "\\1", input_results_folder)
     
-    file_manifest <- list.files(normalizePath(batch),
+    if(verbose) message("\n## MANIFEST\n")
+    
+    file_manifest <- list.files(normalizePath(batch_folder),
                                 pattern="file_manifest",
                                 ignore.case = TRUE,
                                 full.names=TRUE,
@@ -1254,7 +1267,7 @@ validate_proteomics <- function(input_results_folder,
       message("      - (-) ERROR: manifest file not found")
       ic_man = 6
     }
-  } #run_by_bic?
+  } #check_only_results?
   
   if(ic_man > 0){
     ic <- ic + ic_man

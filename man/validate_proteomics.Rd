@@ -16,7 +16,7 @@ validate_proteomics(
   full_report = FALSE,
   printPDF = TRUE,
   verbose = TRUE,
-  run_by_bic = FALSE
+  check_only_results = FALSE
 )
 }
 \arguments{
@@ -26,7 +26,8 @@ validate_proteomics(
 
 \item{cas}{(char) CAS code}
 
-\item{dmaqc_shipping_info}{(char) phase code}
+\item{dmaqc_shipping_info}{(char) DMAQC file with shipping information. If not provided
+(default), then DMQAC validation is not peformed (only done at the BIC)}
 
 \item{dmaqc_phase2validate}{(char) Provide phase to validate. This argument
 is not required since it should be extracted from the input folder or from the
@@ -57,8 +58,7 @@ group of files, e.g., results, metadata_metabolites, etc)}
 
 \item{verbose}{(logical) \code{TRUE} (default) prints QC details.}
 
-\item{run_by_bic}{(logical) \code{TRUE} if the dataset was generated running the
-BIC proteomics pipeline (default \code{FALSE})}
+\item{check_only_results}{(logical) if \code{TRUE}, only validates results (default \code{FALSE})}
 }
 \value{
 (data.frame) Summary of issues
