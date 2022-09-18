@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MotrpacBicQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.7.1</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@
 <span>  full_report <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  printPDF <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  run_by_bic <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  check_only_results <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -100,7 +100,8 @@
 
 
 <dt>dmaqc_shipping_info</dt>
-<dd><p>(char) phase code</p></dd>
+<dd><p>(char) DMAQC file with shipping information. If not provided
+(default), then DMQAC validation is not peformed (only done at the BIC)</p></dd>
 
 
 <dt>dmaqc_phase2validate</dt>
@@ -142,9 +143,8 @@ group of files, e.g., results, metadata_metabolites, etc)</p></dd>
 <dd><p>(logical) <code>TRUE</code> (default) prints QC details.</p></dd>
 
 
-<dt>run_by_bic</dt>
-<dd><p>(logical) <code>TRUE</code> if the dataset was generated running the
-BIC proteomics pipeline (default <code>FALSE</code>)</p></dd>
+<dt>check_only_results</dt>
+<dd><p>(logical) if <code>TRUE</code>, only validates results (default <code>FALSE</code>)</p></dd>
 
 </dl></div>
     <div id="value">

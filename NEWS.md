@@ -1,3 +1,11 @@
+# MotrpacBicQC 0.7.1 (2022-09-17)
+
+Updates affecting the proteomics validation:
+
+* `validate_proteomics`: rename argument `run_by_bic` to `check_only_results`. Default is still `FALSE` (it does not affect CAS)
+* Adjust size of pdf output depending on the number of samples
+* Support `BICRESULTS_YYYYMMDD` folder validation (similar to the currently supported `RESULTS_YYYYMMDD` and `PROCESSED_YYYYMMDD` folders). This folder is the output of the proteomics pipeline run by the BIC
+
 # MotrpacBicQC 0.7.0 (2022-08-25)
 
 * Update motrpac color abbreviations
