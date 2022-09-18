@@ -18,7 +18,7 @@ test_that("All validations works", {
   expect_equal(validate_batch(j), "HUMAN/T10/IONPNEG/BATCH1_20190909/")
   expect_equal(validate_processFolder(h), "RESULTS_20220101")
   expect_equal(validate_processFolder(j), "BICRESULTS_20220101")
-  expect_no_match(validate_processFolder(k), "TOPRESULTS_20220101")
+  expect_error(expect_match(validate_processFolder(k), "TOPRESULTS_20220101"))
   expect_error(validate_tissue(z))
   expect_equal(validate_batch(x), "PASS1A-06/T31/IONPNEG/BATCH1_20190909/")
   expect_error(validate_batch(b))
