@@ -98,9 +98,7 @@ set_phase <- function(input_results_folder,
   # To be adjusted if two different batches are provided:
   phase_check <- phase
   if ( !(purrr::is_empty(file_phase)) ){
-    con <- file(file_phase,"r")
-    batch_info <- readLines(con, n=1)
-    close(con)
+    batch_info <- readr::read_lines(file_phase, n_max = 1)
     if ( !(is.na(batch_info) || batch_info == '') ){
       if(verbose) message("+ Motrpac phase reported: ", batch_info, " (info from metadata_phase.txt available)")
       if( is.null(dmaqc_phase2validate) ){
