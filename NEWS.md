@@ -1,3 +1,7 @@
+# MotrpacBicQC 0.7.2 (2022-09-22)
+
+* Update a package's dependendy
+
 # MotrpacBicQC 0.7.1 (2022-09-17)
 
 Updates affecting the proteomics validation:
