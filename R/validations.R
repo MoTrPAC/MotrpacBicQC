@@ -25,7 +25,7 @@ check_failedsamples <- function(input_results_folder,
   if(length(file_metametabolites) != 1){
     if(length(file_metametabolites) >= 1){
       if(verbose) message("   - (-) `open_file`: more than one file detected: FAIL")
-      if(verbose) message("\n\t\t - ", paste(file_metametabolites, collapse = "\n\t\t - "))
+      if(verbose) message("\n     - ", paste0("`",file_metametabolites,"`", collapse = "\n     - "))
     }else{
       if(verbose) message("   + ( ) File [`", filepattern, "`] not found")
       if(verbose) message("   + ( ) NO FAILED SAMPLES reported")
@@ -53,6 +53,30 @@ check_failedsamples <- function(input_results_folder,
   }
 }
 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' @title Generate the phase detail for submissions
+#' 
+#' @description The phase details is as simple as creating a lower case version
+#' of the phase. However, in case of PASS1A/1C a new version has to be generated:
+#' pass1ac-06
+#' This function detects whether there are two phases, and if so, 
+#' generate the expected version: either pass1ac-06 or pass1ac-18
+#' @param phase_metadata (char) expected output of `set_phase`
+#' @param verbose (logical) `TRUE` (default) shows messages
+#' @return (char) the expected phase_details function
+#' @export
+generate_phase_details <- function(phase_metadata,
+                                   verbose = TRUE){
+  
+  if( grepl("\\|", phase_metadata) ){
+    pass1st <- gsub("(.*)(\\|.*)", "\\1", phase_metadata)
+    animalage <- gsub("(PASS1A\\-)(\\d+)", "\\2", pass1st)
+    phase_details <- paste0("pass1ac-", animalage)
+  }else{
+    phase_details <- tolower(phase_metadata)
+  }
+  return(phase_details)
+}
 
 
 
@@ -96,17 +120,27 @@ set_phase <- function(input_results_folder,
                            recursive = TRUE)
   
   # To be adjusted if two different batches are provided:
-  phase_check <- phase
   if ( !(purrr::is_empty(file_phase)) ){
-    batch_info <- readr::read_lines(file_phase, n_max = 1)
-    if ( !(is.na(batch_info) || batch_info == '') ){
-      if(verbose) message("+ Motrpac phase reported: ", batch_info, " (info from metadata_phase.txt available)")
+    phase_details <- readr::read_lines(file_phase, n_max = 1)
+    if ( !(is.na(phase_details) || phase_details == '') ){
+      if(verbose) message("+ Motrpac phase reported: ", phase_details, " (info from metadata_phase.txt available)")
+      
+      if( grepl("\\|", phase_details) ){
+        validate_two_phases(phase_details = phase_details, verbose = FALSE)
+      }
+      
+      # And once is checked, proceed...
       if( is.null(dmaqc_phase2validate) ){
-        dmaqc_phase2validate <- batch_info
+        dmaqc_phase2validate <- phase_details
+      }
+    }else{
+      if(verbose) message("+ Motrpac phase: ", phase, " (metadata_phase.txt available but EMPTY)")
+      if( is.null(dmaqc_phase2validate) ){
+        dmaqc_phase2validate <- phase
       }
     }
   }else{
-    if(verbose) message("+ Motrpac phase: ", phase_check, " (metadata_phase.txt file NOT available)")
+    if(verbose) message("+ Motrpac phase: ", phase, " (metadata_phase.txt file NOT available)")
     if( is.null(dmaqc_phase2validate) ){
       dmaqc_phase2validate <- phase
     }
@@ -114,6 +148,44 @@ set_phase <- function(input_results_folder,
   
   return(dmaqc_phase2validate)
 }
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' @title validate a phase with two phases (pass1a and 1c)
+#' 
+#' @description This function only works to validate two phases reported
+#' as for example, 'PASS1A-06|PASS1C-06' using the separator '|'
+#' @param phase_details (char) expected output of `set_phase`
+#' @param verbose (logical) `TRUE` (default) shows messages
+#' @return (char) the expected phase_details function
+#' @export
+validate_two_phases <- function(phase_details,
+                                verbose = TRUE){
+  
+  if( !grepl("\\|", phase_details) ) 
+    stop("This function only validate two phases submitted (e.g PASS1A-06|PASS1C-06), i.e., the variable does not contain the separator '|' required to report two phases")
+  
+  phase1 <- gsub("(PASS1[A|C]\\-\\d{2})(|.*)", "\\1", phase_details)
+  validate_phase(phase1, return_phase = FALSE)
+  phase2 <- gsub("(.*|)(PASS1[A|C]\\-\\d{2})", "\\2", phase_details)
+  validate_phase(phase2, return_phase = FALSE)
+  # only pass1a and 1c expected for this case]
+  pass1st <- gsub("(PASS1[A|C])(\\-\\d{2}|.*)", "\\1", phase_details)
+  age1st <- gsub("(PASS1[A|C]\\-)(\\d{2})(|.*)", "\\2", phase_details)
+  pass2nd <- gsub("(.*|)(PASS1[A|C])(\\-\\d{2})", "\\2", phase_details)
+  age2nd <- gsub("(.*|)(PASS1[A|C]\\-)(\\d{2})", "\\3", phase_details)
+  
+  if(age1st != age2nd){
+    stop(paste(phase_details), ": the phase ages reported in `metadata_phase.txt` don't match for these 2 phases: MUST BE CORRECTED")
+  }
+  if(pass1st == pass2nd){
+    stop(paste(phase_details), ": the two reported phases in `metadata_phase.txt` are the same: MUST BE CORRECTED")
+  }
+  if(verbose) return("Two phases reported and they are ok")
+}
+
+
+
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' @title Validate vial labels from DMAQC
@@ -205,7 +277,7 @@ check_viallabel_dmaqc <- function(vl_submitted,
             missed_out$cas <- cas
             out_plot_large <- file.path(normalizePath(out_qc_folder), paste0(outfile_missed_viallabels,"-missed_viallabels-in-cas.txt"))
             write.table(missed_out, out_plot_large, row.names = FALSE, sep = "\t", quote = FALSE)
-            if(verbose) message("   - ( ) File ", paste0(outfile_missed_viallabels,"-missed_viallabels-in-cas.txt"), " available with missed vial labels")
+            if(verbose) message("   - ( ) File `", paste0(outfile_missed_viallabels,"-missed_viallabels-in-cas.txt"), "` available with missed vial labels")
             ic <- "FAIL"  
           }
         }
@@ -320,19 +392,20 @@ validate_assay <- function(input_results_folder){
 
 
 
-#' @title extract PHASE from input folder path
+#' @title Extract PHASE from input folder path
 #'
 #' @description extract ASSAY from input folder path
 #' @param input_results_folder (char) input_results_folder path
+#' @param return_phase (char) return the phase only if `TRUE` (default)
 #' @return (vector) PHASE code
 #' @export
-validate_phase <- function(input_results_folder){
+validate_phase <- function(input_results_folder, return_phase = TRUE){
   phase <- stringr::str_extract(string = input_results_folder,
-                                pattern = "(PASS1A-06|PASS1A-18|PASS1B-06|PASS1B-18|HUMAN)")
+                                pattern = "(PASS1A-06|PASS1A-18|PASS1B-06|PASS1B-18|PASS1C-06|PASS1C-18|HUMAN|HUMAN-PRECOVID|HUMAN-MAIN)")
   if(is.na(phase)){
-    stop("project phase (e.g. PASS1A-06) is not found in the folder structure, please, check guidelines")
+    stop("Project phase (e.g. PASS1A-06) is not found in the folder structure, please, check guidelines")
   }else{
-    return(phase)
+    if(return_phase) return(phase)
   }
 }
 
