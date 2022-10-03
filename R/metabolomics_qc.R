@@ -538,7 +538,8 @@ validate_metabolomics <- function(input_results_folder,
   
   # Set phase-----
   dmaqc_phase2validate <- set_phase(input_results_folder = input_results_folder, 
-                                    dmaqc_phase2validate = dmaqc_phase2validate)
+                                    dmaqc_phase2validate = dmaqc_phase2validate,
+                                    verbose = verbose)
   
   phase2file <- gsub("\\|", "_", dmaqc_phase2validate)
 
@@ -1117,7 +1118,12 @@ load_metabolomics_batch <- function(input_results_folder,
   # Output name----
   output_name <- paste0(cas, ".", tissue_code, ".", tolower(phase), ".",tolower(assay), ".", tolower(processfolder))
 
-  total_issues <- validate_metabolomics(input_results_folder = input_results_folder, cas = cas, return_n_issues = TRUE, full_report = FALSE, verbose = FALSE)
+  total_issues <- validate_metabolomics(input_results_folder = input_results_folder, 
+                                        cas = cas, 
+                                        return_n_issues = TRUE, 
+                                        full_report = FALSE, 
+                                        f_proof = FALSE, 
+                                        verbose = FALSE)
 
   if(total_issues > 0){
     message("\n\tWARNING!!! Too many issues identified (", total_issues,"). This batch should not be processed until the issues are solved")
@@ -1533,6 +1539,7 @@ merge_all_metabolomics <- function(m_m_n,
 #' @param cas (char) Chemical Analytical Site code (e.g "umichigan")
 #' @param folder_name (char) output files name. Must have a `.yaml` extension.
 #' @param folder_root (char) absolute path to write the output files. Default: current directory
+#' @param version_file (char) file version number (v#.#)
 #' @param verbose (logical) `TRUE` (default) shows messages
 #' @return bic release folder/file structure `PHASE/OMICS/TCODE_NAME/ASSAY/` and file names, including:
 #' `motrpac_YYYYMMDD_phasecode_tissuecode_omics_assay_file-details.txt` where files-details can be:
@@ -1548,15 +1555,24 @@ write_metabolomics_releases <- function(input_results_folder,
                                         cas,
                                         folder_name = "motrpac_release",
                                         folder_root = NULL,
+                                        version_file = "v1.0",
                                         verbose = TRUE){
 
   # Get names from input_results_folder------
   assay <- validate_assay(input_results_folder)
+  
   phase <- validate_phase(input_results_folder)
-  tissue_code <- validate_tissue(input_results_folder)
   folder_phase <- tolower(phase)
+  
+  phase_metadata <- set_phase(input_results_folder = input_results_folder, 
+                              dmaqc_phase2validate = NULL, 
+                              verbose = FALSE)
+  phase_details <- generate_phase_details(phase_metadata)
+  
+  tissue_code <- validate_tissue(input_results_folder)
+  
   folder_tissue <- bic_animal_tissue_code$tissue_name_release[which(bic_animal_tissue_code$bic_tissue_code == tissue_code)]
-  if(length(assay_codes$assay_code[which(assay_codes$submission_code == assay)]) == 1){
+  if(  length(assay_codes$assay_code[which(assay_codes$submission_code == assay)]) == 1 ){
     folder_assay <- assay_codes$assay_code[which(assay_codes$submission_code == assay)]
   }else{
     stop("ASSAY code ", assay, " not available in `assay_codes`")
@@ -1587,21 +1603,21 @@ write_metabolomics_releases <- function(input_results_folder,
   }
 
   file_name_shared <- paste0("motrpac_",
-                             folder_phase, "_",
+                             phase_details, "_",
                              folder_tissue, "_",
                              folder_assay)
 
 
   # Create and write FILES-----
-  named_metadata_metabolites <- file.path(output_folder, paste0(file_name_shared,"_named-metadata-metabolites.txt"))
-  named_metadata_samples <- file.path(output_folder, paste0(file_name_shared,"_named-metadata-samples.txt"))
-  named_results <- file.path(output_folder, paste0(file_name_shared,"_named-results.txt"))
+  named_metadata_metabolites <- file.path(output_folder, paste0(file_name_shared,"_named-metadata-metabolites_", version_file, ".txt"))
+  named_metadata_samples <- file.path(output_folder, paste0(file_name_shared,"_named-metadata-samples_", version_file, ".txt"))
+  named_results <- file.path(output_folder, paste0(file_name_shared,"_named-results_", version_file, ".txt"))
 
   write.table(metab_dfs$m_m_n, named_metadata_metabolites, row.names = FALSE, sep = "\t", quote = FALSE)
   write.table(metab_dfs$m_s_n, named_metadata_samples, row.names = FALSE, sep = "\t", quote = FALSE)
   write.table(metab_dfs$r_m_n, named_results, row.names = FALSE, sep = "\t", quote = FALSE)
 
-  named_experimentalDetails <- file.path(output_folder, paste0(file_name_shared,"_named-experimentalDetails.txt"))
+  named_experimentalDetails <- file.path(output_folder, paste0(file_name_shared,"_named-experimentalDetails_", version_file, ".txt"))
   submitted_named_experimentalDetails <- list.files(file.path(normalizePath(input_results_folder), "NAMED"),
                                                     pattern="metadata_experimentalDetails.*",
                                                     full.names= TRUE,
@@ -1614,15 +1630,15 @@ write_metabolomics_releases <- function(input_results_folder,
   }
 
   if(cas %in% c("umichigan", "broad_met", "gtech")){
-    unnamed_metadata_metabolites <- file.path(output_folder, paste0(file_name_shared,"_unnamed-metadata-metabolites.txt"))
-    unnamed_metadata_samples <- file.path(output_folder, paste0(file_name_shared,"_unnamed-metadata-samples.txt"))
-    unnamed_results <- file.path(output_folder, paste0(file_name_shared,"_unnamed-results.txt"))
+    unnamed_metadata_metabolites <- file.path(output_folder, paste0(file_name_shared,"_unnamed-metadata-metabolites_", version_file, ".txt"))
+    unnamed_metadata_samples <- file.path(output_folder, paste0(file_name_shared,"_unnamed-metadata-samples_", version_file, ".txt"))
+    unnamed_results <- file.path(output_folder, paste0(file_name_shared,"_unnamed-results_", version_file, ".txt"))
 
     write.table(metab_dfs$m_m_u, unnamed_metadata_metabolites, row.names = FALSE, sep = "\t", quote = FALSE)
     write.table(metab_dfs$m_s_n, unnamed_metadata_samples, row.names = FALSE, sep = "\t", quote = FALSE)
     write.table(metab_dfs$r_m_u, unnamed_results, row.names = FALSE, sep = "\t", quote = FALSE)
 
-    unnamed_experimentalDetails <- file.path(output_folder, paste0(file_name_shared,"_unnamed-experimentalDetails.txt"))
+    unnamed_experimentalDetails <- file.path(output_folder, paste0(file_name_shared,"_unnamed-experimentalDetails_", version_file, ".txt"))
     submitted_named_experimentalDetails <- list.files(file.path(normalizePath(input_results_folder), "UNNAMED"),
                                                       pattern="metadata_experimentalDetails.*",
                                                       full.names= TRUE,
