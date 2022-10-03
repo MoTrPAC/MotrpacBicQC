@@ -91,6 +91,9 @@
     <loc>/reference/filter_required_columns.html</loc>
   </url>
   <url>
+    <loc>/reference/generate_phase_details.html</loc>
+  </url>
+  <url>
     <loc>/reference/get_and_validate_mdd.html</loc>
   </url>
   <url>
@@ -200,6 +203,9 @@
   </url>
   <url>
     <loc>/reference/validate_tissue.html</loc>
+  </url>
+  <url>
+    <loc>/reference/validate_two_phases.html</loc>
   </url>
   <url>
     <loc>/reference/write_metabolomics_releases.html</loc>

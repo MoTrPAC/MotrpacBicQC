@@ -8,6 +8,8 @@ test_that("All validations works", {
   h <- "HUMAN/T10/IONPNEG/BATCH1_20190909/RESULTS_20220101"
   j <- "HUMAN/T10/IONPNEG/BATCH1_20190909/BICRESULTS_20220101"
   k <- "HUMAN/T10/IONPNEG/BATCH1_20190909/TOPRESULTS_20220101"
+  l <- "HUMAN/PRECOVID/T10/PROT_PR/BATCH1_20220919/PROCESSED_20200205"
+  m <- "PASS1A-06|PASS1C-06"
   expect_equal(validate_processFolder(x), "PROCESSED_20200205")
   expect_equal(validate_processFolder(y), "PROCESSED_20200205")
   expect_equal(validate_assay(x), "IONPNEG")
@@ -22,6 +24,10 @@ test_that("All validations works", {
   expect_error(validate_tissue(z))
   expect_equal(validate_batch(x), "PASS1A-06/T31/IONPNEG/BATCH1_20190909/")
   expect_error(validate_batch(b))
+  expect_equal(generate_phase_details(phase_metadata = m), "pass1ac-06")
+  expect_error(set_phase(m))
+  expect_equal(validate_two_phases(m, verbose = TRUE), "Two phases reported and they are ok")
+  expect_error(validate_two_phases(phase_details = "PASS1A-06"))
 })
 
 

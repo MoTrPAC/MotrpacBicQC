@@ -9,6 +9,7 @@ write_metabolomics_releases(
   cas,
   folder_name = "motrpac_release",
   folder_root = NULL,
+  version_file = "v1.0",
   verbose = TRUE
 )
 }
@@ -20,6 +21,8 @@ write_metabolomics_releases(
 \item{folder_name}{(char) output files name. Must have a \code{.yaml} extension.}
 
 \item{folder_root}{(char) absolute path to write the output files. Default: current directory}
+
+\item{version_file}{(char) file version number (v#.#)}
 
 \item{verbose}{(logical) \code{TRUE} (default) shows messages}
 }
