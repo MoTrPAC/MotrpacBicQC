@@ -6,20 +6,20 @@
 \usage{
 write_proteomics_releases(
   input_results_folder,
-  isPTM,
   folder_name = "motrpac_release",
   folder_root = NULL,
+  version_file = "v1.0",
   verbose = TRUE
 )
 }
 \arguments{
 \item{input_results_folder}{(char) Path to the PROCESSED_YYYYMMDD folder}
 
-\item{isPTM}{(logical) is a proteomics PTM experiment?}
-
 \item{folder_name}{(char) output folder name.}
 
 \item{folder_root}{(char) absolute path to write the output folder. Default: current directory}
+
+\item{version_file}{(char) file version number (v#.#)}
 
 \item{verbose}{(logical) \code{TRUE} (default) shows messages}
 }

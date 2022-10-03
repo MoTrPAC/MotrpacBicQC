@@ -833,7 +833,7 @@ validate_proteomics <- function(input_results_folder,
   }
 
   if(verbose) message("+ Site: ", toupper(cas))
-  if(verbose) message("+ Folder: `",paste0(input_folder_short),"`")
+  if(verbose) message("+ Folder: `", paste0(input_folder_short),"`")
 
   # COUNTS----
   ic <- 0 # Critical issues
@@ -1368,9 +1368,9 @@ validate_proteomics <- function(input_results_folder,
 #' @description Write out proteomics data releases. Doesn't check whether
 #' data has been submited according to guidelines
 #' @param input_results_folder (char) Path to the PROCESSED_YYYYMMDD folder
-#' @param isPTM (logical) is a proteomics PTM experiment?
 #' @param folder_name (char) output folder name.
 #' @param folder_root (char) absolute path to write the output folder. Default: current directory
+#' @param version_file (char) file version number (v#.#)
 #' @param verbose (logical) `TRUE` (default) shows messages
 #' @return bic release folder/file structure `PHASE/OMICS/TCODE_NAME/ASSAY/` and file names, including:
 #' `motrpac_YYYYMMDD_phasecode_tissuecode_omics_assay_file-details.txt` where files-details can be:
@@ -1382,11 +1382,10 @@ validate_proteomics <- function(input_results_folder,
 #' }
 #' @export
 write_proteomics_releases <- function(input_results_folder,
-                                      isPTM,
                                       folder_name = "motrpac_release",
                                       folder_root = NULL,
+                                      version_file = "v1.0",
                                       verbose = TRUE){
-
 
   # Get names from input_results_folder------
   assay <- validate_assay(input_results_folder)
@@ -1394,6 +1393,11 @@ write_proteomics_releases <- function(input_results_folder,
   tissue_code <- validate_tissue(input_results_folder)
   folder_phase <- tolower(phase)
   folder_tissue <- bic_animal_tissue_code$tissue_name_release[which(bic_animal_tissue_code$bic_tissue_code == tissue_code)]
+  
+  phase_metadata <- set_phase(input_results_folder = input_results_folder, 
+                              dmaqc_phase2validate = NULL, 
+                              verbose = FALSE)
+  phase_details <- generate_phase_details(phase_metadata)
 
   assay_codes$cas_code <- NULL
   assay_codes <- unique(assay_codes)
@@ -1402,9 +1406,16 @@ write_proteomics_releases <- function(input_results_folder,
   }else{
     stop("ASSAY code ", assay, " not available in < assay_codes >")
   }
+  
 
   if(verbose) message("+ Writing out ", phase, " ", tissue_code, " ", assay, " files", appendLF = FALSE)
 
+  if( grepl("PH", assay) | grepl("AC", assay) | grepl("UB", assay)){
+    isPTM = TRUE
+  }else{
+    isPTM = FALSE
+  }
+  
   # Load all datasets----
   prot_dfs <- load_proteomics(input_results_folder = input_results_folder,
                               isPTM = isPTM,
@@ -1424,15 +1435,15 @@ write_proteomics_releases <- function(input_results_folder,
   }
 
   file_name_shared <- paste0("motrpac_",
-                             folder_phase, "_",
+                             phase_details, "_",
                              folder_tissue, "_",
                              folder_assay)
 
 
   # Create and write FILES-----
-  prot_rii <- file.path(output_folder, paste0(file_name_shared,"_rii-results.txt"))
-  prot_ratio <- file.path(output_folder, paste0(file_name_shared,"_ratio-results.txt"))
-  vial_metadata <- file.path(output_folder, paste0(file_name_shared,"_vial-metadata.txt"))
+  prot_rii <- file.path(output_folder, paste0(file_name_shared,"_rii-results_", version_file, ".txt"))
+  prot_ratio <- file.path(output_folder, paste0(file_name_shared,"_ratio-results_", version_file, ".txt"))
+  vial_metadata <- file.path(output_folder, paste0(file_name_shared,"_vial-metadata_", version_file, ".txt"))
 
   write.table(prot_dfs$peprii, prot_rii, row.names = FALSE, sep = "\t", quote = FALSE)
   write.table(prot_dfs$ratior, prot_ratio, row.names = FALSE, sep = "\t", quote = FALSE)
