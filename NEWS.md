@@ -1,6 +1,11 @@
+# MotrpacBicQC 0.7.3 (2022-10-02)
+
+* Adjustments to generate data releases (deal with pass1a/1c)
+* Version number will be added to upcoming releases
+
 # MotrpacBicQC 0.7.2 (2022-09-22)
 
-* Update a package's dependendy
+* Update a package's dependency
 
 # MotrpacBicQC 0.7.1 (2022-09-17)
 
