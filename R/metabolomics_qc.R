@@ -744,37 +744,42 @@ validate_metabolomics <- function(input_results_folder,
         # This is targeted (no unnamed metabolites, no mz/rt plots)
         results <- r_m_n[eresults_coln]
       }
-      
-      # results: check for negative values
-      results_long <- results %>% tidyr::pivot_longer(cols = -c(metabolite_name, id_type),
-                                                      names_to = "sample_id",
-                                                      values_to = "intensity")
-      
-      results_long <- merge(m_s_n, results_long, by = c("sample_id"))
-      results_long$sample_id <- as.character(results_long$sample_id)
-      results_long$sample_id <- as.factor(results_long$sample_id)
-      results_long$sample_type <- as.factor(results_long$sample_type)
-      results_long <- results_long[which(results_long$intensity != 0),]
-      results_long <- results_long[!is.na(results_long$intensity),]
-      if(any(results_long$intensity < 0)){
-        message("   - (-) !!!!!!!!!!!!!!!!!!!!!!!!!!")
-        message("   - (-) NEGATIVE VALUES DETECTED!! ")
-        message("   - (-) !!!!!!!!!!!!!!!!!!!!!!!!!!")
-        results_long <- results_long[which(results_long$intensity > 0),]
-        ic <- ic + 1
+      # Ensure there are enough compounds to generate plots
+      if(dim(results)[1] > 1){
+        # results: check for negative values
+        results_long <- results %>% tidyr::pivot_longer(cols = -c(metabolite_name, id_type),
+                                                        names_to = "sample_id",
+                                                        values_to = "intensity")
+        
+        results_long <- merge(m_s_n, results_long, by = c("sample_id"))
+        results_long$sample_id <- as.character(results_long$sample_id)
+        results_long$sample_id <- as.factor(results_long$sample_id)
+        results_long$sample_type <- as.factor(results_long$sample_type)
+        results_long <- results_long[which(results_long$intensity != 0),]
+        results_long <- results_long[!is.na(results_long$intensity),]
+        if(any(results_long$intensity < 0)){
+          message("   - (-) !!!!!!!!!!!!!!!!!!!!!!!!!!")
+          message("   - (-) NEGATIVE VALUES DETECTED!! ")
+          message("   - (-) !!!!!!!!!!!!!!!!!!!!!!!!!!")
+          results_long <- results_long[which(results_long$intensity > 0),]
+          ic <- ic + 1
+        }
+        
+        plot_basic_metabolomics_qc(results = results, 
+                                   results_long = results_long,
+                                   metametab = metametab, 
+                                   out_qc_folder = out_qc_folder, 
+                                   output_prefix = output_prefix,
+                                   printPDF = printPDF,
+                                   untargeted = untargeted,
+                                   verbose = verbose)
+        
+      }else{
+        message("  (-) QC plots are not possible: not enough compounds")
       }
-      
-      plot_basic_metabolomics_qc(results = results, 
-                                 results_long = results_long,
-                                 metametab = metametab, 
-                                 out_qc_folder = out_qc_folder, 
-                                 output_prefix = output_prefix,
-                                 printPDF = printPDF,
-                                 untargeted = untargeted,
-                                 verbose = verbose)
   
     }else{
-      message("\n- (-) QC plots are not possible: critical datasets are missed")
+      if(verbose) message("\n- (-) QC plots are not possible: critical datasets are missed")
     }
     
     if(f_rmn & f_mmn){

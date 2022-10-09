@@ -1,3 +1,8 @@
+# MotrpacBicQC 0.7.4 (2022-10-09)
+
+* Metabolomics plots: check if enough compounds to generate plots
+* Update `assay_codes`: conventional assays code added (CONV)
+
 # MotrpacBicQC 0.7.3 (2022-10-02)
 
 * Adjustments to generate data releases (deal with pass1a/1c)

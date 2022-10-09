@@ -52,7 +52,7 @@ plot_basic_metabolomics_qc <- function(results,
   # Density plots------ 
   
   if(verbose) message("       - (p) Density distributions")
-  mu <- results_long %>% group_by(sample_id) %>% summarise(grp.mean=mean(intensity))
+  mu <- results_long %>% group_by(sample_id) %>% dplyr::summarise(grp.mean=mean(intensity))
   
   den1 <- ggplot(data = results_long, aes(x = log2(intensity), color = sample_type)) + 
     geom_density(na.rm = TRUE) + 
@@ -319,6 +319,20 @@ plot_basic_metabolomics_qc <- function(results,
   out_plot_large <- file.path(normalizePath(out_qc_folder), paste0(output_prefix,"-qc-basic-large-plots.pdf"))
   out_plot_summary <- file.path(normalizePath(out_qc_folder), paste0(output_prefix,"-qc-basic-summary-plots.pdf"))
   
+  .plotThePlots <- function(theplot, verbose = TRUE) {
+    tryCatch(
+      {
+        print(theplot)
+      },
+      error=function(cond) {
+        if(verbose) message("       - Plot cannot be printed")
+        
+      },
+      warning=function(cond) {
+        if(verbose) message(paste("       - Print density plots cause warnings"))
+      })
+  }
+  
   if(printPDF){
     if(sn > 800){
       pdf(out_plot_large, width = 40, height = 8)
@@ -328,20 +342,20 @@ plot_basic_metabolomics_qc <- function(results,
       pdf(out_plot_large, width = 14, height = 8)
     }
   }
-  print(psumint)
-  print(puid1)
-  print(piseio)
+  .plotThePlots(psumint)
+  .plotThePlots(puid1)
+  .plotThePlots(piseio)
   gridExtra::grid.arrange(piseso, puid2, ncol = 1, heights = c(2, 1))
-  print(p_na_peprii)
+  .plotThePlots(p_na_peprii)
   if(printPDF) garbage <- dev.off()
   
   if(printPDF) pdf(out_plot_summary, width = 12, height = 6)
-  print(ptns)
+  .plotThePlots(ptns)
   gridExtra::grid.arrange(ppids, pnids, ncol = 2)
-  print(den1)
-  print(den2)
-  print(den3)
-  if(!is.null(metametab)){print(pmzrt)}
+  .plotThePlots(den1)
+  .plotThePlots(den2)
+  .plotThePlots(den3)
+  if(!is.null(metametab)){.plotThePlots(pmzrt)}
   if(printPDF) garbage <- dev.off()
 }
 

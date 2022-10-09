@@ -17,7 +17,7 @@ metabolomics-targeted	AC_DUKE	metab-t-ac-duke	Targeted Acylcarnitines (Duke)	duk
 metabolomics-targeted	ACOA	metab-t-acoa	Targeted Acyl-CoA	duke
 metabolomics-targeted	BAIBA	metab-t-baiba	Targeted Beta-Aminoisobutyric acid	duke
 metabolomics-targeted	CER_DUKE	metab-t-cer-duke	Targeted Ceramide (Duke)	duke
-metabolomics-targeted	CON	metab-t-con	Targeted Conventional	duke
+metabolomics-targeted	CONV	metab-t-conv	Targeted Conventional	duke
 metabolomics-targeted	KA	metab-t-ka	Targeted Keto Acids	duke
 metabolomics-targeted	NUC	metab-t-nuc	Targeted Nucleotides	duke
 metabolomics-targeted	OA	metab-t-oa	Targeted Organic Acids	duke
@@ -29,8 +29,8 @@ metabolomics-targeted	AMINES	metab-t-amines	Targeted Amines	mayo
 metabolomics-targeted	CER_MAYO	metab-t-cer-mayo	Targeted Ceramides (Mayo)	mayo
 metabolomics-targeted	TCA	metab-t-tca	Targeted Tricarboxylic Acid Cycle 	mayo
 metabolomics-untargeted	HILICPOS	metab-u-hilicpos	Untargeted HILIC-Positive	broad_met
-metabolomics-untargeted	LRPNEG	metab-u-lrpneg	Untargeted Lipidomics, Reversed-Phase Negative	gtech
-metabolomics-untargeted	LRPPOS	metab-u-lrppos	Untargeted Lipidomics, Reversed-Phase Positive	gtech
+metabolomics-untargeted	LRPNEG	metab-u-lrpneg	"Untargeted Lipidomics, Reversed-Phase Negative"	gtech
+metabolomics-untargeted	LRPPOS	metab-u-lrppos	"Untargeted Lipidomics, Reversed-Phase Positive"	gtech
 metabolomics-untargeted	RPPOS	metab-u-rppos	Untargeted Reversed-Phase Positive	umichigan
 metabolomics-untargeted	RPNEG	metab-u-rpneg	Untargeted Reversed-Phase Negative	umichigan
 metabolomics-untargeted	IONPNEG	metab-u-ionpneg	Untargeted Ion-Pair Negative	umichigan
