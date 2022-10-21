@@ -36,7 +36,7 @@ Finally, install the `MotrpacBicQC` package
 
 ```
 library(devtools)
-devtools::install_github("MoTrPAC/MotrpacBicQC", build_vignettes = TRUE)
+devtools::install_github("MoTrPAC/MotrpacBicQC")
 ```
 
 ## Usage

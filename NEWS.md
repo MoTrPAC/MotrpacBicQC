@@ -1,3 +1,8 @@
+# MotrpacBicQC 0.7.5 (2022-10-21)
+
+* Update `write_proteomics` according to latest updates on data/file structure
+* Fix bugs affecting `metabolomics_qc` and checks on `file_manifest`
+
 # MotrpacBicQC 0.7.4 (2022-10-09)
 
 * Metabolomics plots: check if enough compounds to generate plots
