@@ -44,7 +44,7 @@ check_failedsamples <- function(input_results_folder,
     }else{
       if("sample_id" %in% colnames(ofile)){
         if(verbose) message("   + ( ) Failed samples reported:\n\t - ", paste(ofile$sample_id, collapse = "\n\t - ") )
-        return(ofile$sample_id)
+        return(as.character(ofile$sample_id))
       }else{
         if(verbose) message("   - (-) `sample_id` column not found: FAIL")
         return(NULL)
@@ -240,7 +240,7 @@ check_viallabel_dmaqc <- function(vl_submitted,
                                                                 dmaqc_shipping_df$phase == pass &
                                                                 dmaqc_shipping_df$animal_age == month)]
     }
-    
+
     if(i == 1){
       dmaqc_labels <- as.character(dmaqc_labels_temp)
     }else{
@@ -268,12 +268,13 @@ check_viallabel_dmaqc <- function(vl_submitted,
           ic <- "OK"
         }else{
           # Only if it is not empty: if it is empty means that there are extra samples in the CAS site (checked below)
-          if(!purrr::is_empty(samples_missed)){
+          if( !purrr::is_empty(samples_missed) ){
+            samplesmissedonly <- samples_missed[!(samples_missed %in% failed_samples)]
             if(verbose){
               message("   - (-) DMAQC CHECK POINT: samples not found in `metadata_results`: FAIL")
-              message("\t - ", paste(samples_missed, collapse = "\n\t - "))
+              message("\t - ", paste(samplesmissedonly, collapse = "\n\t - "))
             }
-            missed_out <- data.frame(vial_label = samples_missed)
+            missed_out <- data.frame(vial_label = samplesmissedonly)
             missed_out$cas <- cas
             out_plot_large <- file.path(normalizePath(out_qc_folder), paste0(outfile_missed_viallabels,"-missed_viallabels-in-cas.txt"))
             write.table(missed_out, out_plot_large, row.names = FALSE, sep = "\t", quote = FALSE)
