@@ -541,8 +541,8 @@ validate_metabolomics <- function(input_results_folder,
                                     dmaqc_phase2validate = dmaqc_phase2validate,
                                     verbose = verbose)
   
-  phase2file <- gsub("\\|", "_", dmaqc_phase2validate)
-
+  phase2file <- generate_phase_details(phase_metadata = dmaqc_phase2validate)
+  
   # Is a targeted site? Unnamed compounds not checked
   untargeted <- TRUE
 
@@ -809,7 +809,7 @@ validate_metabolomics <- function(input_results_folder,
     f_man <- FALSE
     ic_man <- 1
   }else if(length(file_manifest) >= 1){
-    file_manifest <- file_manifest[1]
+    file_manifest <- sort(file_manifest, decreasing = TRUE)[1]
     f_man <- TRUE
   }
 
@@ -980,7 +980,7 @@ validate_metabolomics <- function(input_results_folder,
         }
 
         experimentalDetails_file <- manifest$file_name[grepl(".*xperimental.*_unnamed", manifest$file_name)]
-        if(!is_empty(experimentalDetails_file)){
+        if(!purrr::is_empty(experimentalDetails_file)){
           if( any(grepl(processfolder, experimentalDetails_file)) ){
             if(verbose) message("  + (+) `experimentalDetails_file` included in manifest: OK")
             full_path_edf <- file.path(normalizePath(batch_folder) , experimentalDetails_file )
