@@ -1408,7 +1408,7 @@ write_proteomics_releases <- function(input_results_folder,
   }
   
 
-  if(verbose) message("+ Writing out ", phase, " ", tissue_code, " ", assay, " files", appendLF = FALSE)
+  if(verbose) message("+ Writing out ", phase, " (phase-details: ", phase_details, ") ", tissue_code, " ", assay, " files", appendLF = FALSE)
 
   if( grepl("PH", assay) | grepl("AC", assay) | grepl("UB", assay)){
     isPTM = TRUE
@@ -1428,7 +1428,7 @@ write_proteomics_releases <- function(input_results_folder,
     folder_root <- normalizePath(folder_root)
   }
 
-  output_folder <- file.path(folder_root, folder_name, folder_phase, "proteomics", folder_tissue, folder_assay)
+  output_folder <- file.path(folder_root, folder_name, folder_phase, "proteomics-untargeted", folder_tissue, folder_assay)
 
   if(!dir.exists(file.path(output_folder))){
     dir.create(file.path(output_folder), recursive = TRUE)
