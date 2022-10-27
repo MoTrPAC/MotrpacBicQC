@@ -1,3 +1,7 @@
+# MotrpacBicQC 0.7.6 (2022-10-27)
+
+* Improve DMAQC validation
+
 # MotrpacBicQC 0.7.5 (2022-10-21)
 
 * Update `write_proteomics` according to latest updates on data/file structure
