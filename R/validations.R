@@ -263,24 +263,21 @@ check_viallabel_dmaqc <- function(vl_submitted,
       # CHECK 
       samples_missed <- setdiff(dmaqc_labels, vl_submitted)
       if( !(is.null(failed_samples) & purrr::is_empty(samples_missed)) ) {
-        if(setequal(failed_samples, samples_missed)){
+        if( all(samples_missed %in% failed_samples) ){
           if(verbose) message("  + (+) DMAQC CHECK POINT: samples sent to CAS have been processed (with known issues for some samples): OK")
           ic <- "OK"
         }else{
-          # Only if it is not empty: if it is empty means that there are extra samples in the CAS site (checked below)
-          if( !purrr::is_empty(samples_missed) ){
-            samplesmissedonly <- samples_missed[!(samples_missed %in% failed_samples)]
-            if(verbose){
-              message("   - (-) DMAQC CHECK POINT: samples not found in `metadata_results`: FAIL")
-              message("\t - ", paste(samplesmissedonly, collapse = "\n\t - "))
-            }
-            missed_out <- data.frame(vial_label = samplesmissedonly)
-            missed_out$cas <- cas
-            out_plot_large <- file.path(normalizePath(out_qc_folder), paste0(outfile_missed_viallabels,"-missed_viallabels-in-cas.txt"))
-            write.table(missed_out, out_plot_large, row.names = FALSE, sep = "\t", quote = FALSE)
-            if(verbose) message("   - ( ) File `", paste0(outfile_missed_viallabels,"-missed_viallabels-in-cas.txt"), "` available with missed vial labels")
-            ic <- "FAIL"  
+          samplesmissedonly <- samples_missed[!(samples_missed %in% failed_samples)]
+          if(verbose){
+            message("   - (-) DMAQC CHECK POINT: samples not found in `metadata_results`: FAIL")
+            message("\t - ", paste(samplesmissedonly, collapse = "\n\t - "))
           }
+          missed_out <- data.frame(vial_label = samplesmissedonly)
+          missed_out$cas <- cas
+          out_plot_large <- file.path(normalizePath(out_qc_folder), paste0(outfile_missed_viallabels,"-missed_viallabels-in-cas.txt"))
+          write.table(missed_out, out_plot_large, row.names = FALSE, sep = "\t", quote = FALSE)
+          if(verbose) message("   - ( ) File `", paste0(outfile_missed_viallabels,"-missed_viallabels-in-cas.txt"), "` available with missed vial labels")
+          ic <- "FAIL"  
         }
       }else{
         if( !purrr::is_empty(samples_missed) ){
