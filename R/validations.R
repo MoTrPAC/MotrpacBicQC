@@ -217,6 +217,11 @@ check_viallabel_dmaqc <- function(vl_submitted,
   # issue_count
   ic <- NA
   
+  # Remove redundant samples
+  vl_submitted <- vl_submitted[!grepl("\\.", all_vial_labels)]
+  
+  
+  
   # There might be multiple phases to check: load both
   ph <- unlist(strsplit(phase, split = "\\|"))
   dmaqc_labels <- vector()
