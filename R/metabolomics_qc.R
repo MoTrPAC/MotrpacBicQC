@@ -487,7 +487,7 @@ check_manifest_rawdata <- function(input_results_folder,
 validate_metabolomics <- function(input_results_folder,
                                   cas,
                                   dmaqc_shipping_info = NULL,
-                                  dmaqc_phase2validate = NULL,
+                                  dmaqc_phase2validate = FALSE,
                                   return_n_issues = FALSE,
                                   full_report = FALSE,
                                   verbose = TRUE,
@@ -535,6 +535,12 @@ validate_metabolomics <- function(input_results_folder,
   if(verbose) message("# METABOLOMICS QC report\n\n")
   if(verbose) message("+ Site: ", cas)
   if(verbose) message("+ Folder: `",paste0(input_folder_short),"`")
+  
+  is_mp <- check_metadata_phase_file(input_results_folder = input_results_folder, 
+                                     verbose = verbose)
+  if(!is_mp){
+    ic <- ic + 1
+  }
   
   # Set phase-----
   dmaqc_phase2validate <- set_phase(input_results_folder = input_results_folder, 
@@ -794,12 +800,12 @@ validate_metabolomics <- function(input_results_folder,
 
   # MANIFEST all files-----
 
-  if(verbose) message("\n## QC `file_manifest_DATE.txt` (required)\n")
+  if(verbose) message("\n## QC `file_manifest_YYYYMMDD.csv` (required)\n")
 
   batch <- gsub("(.*)(PROCESSED.*)", "\\1", input_results_folder)
 
   file_manifest <- list.files(normalizePath(batch),
-                              pattern="file_manifest",
+                              pattern="file_manifest.*csv",
                               ignore.case = TRUE,
                               full.names=TRUE,
                               recursive = TRUE)
@@ -807,9 +813,11 @@ validate_metabolomics <- function(input_results_folder,
 
   if(length(file_manifest) == 0){
     f_man <- FALSE
-    ic_man <- 1
+    if(verbose) message("   - (-) `file_manifest_YYYYMMDD.csv` file not available")
+    ic <- ic + 1
   }else if(length(file_manifest) >= 1){
-    file_manifest <- sort(file_manifest, decreasing = TRUE)[1]
+    first_manifest <- sort(basename(file_manifest), decreasing = TRUE)[1]
+    file_manifest <- file_manifest[grep(first_manifest, file_manifest)]
     f_man <- TRUE
   }
 
@@ -1570,7 +1578,7 @@ write_metabolomics_releases <- function(input_results_folder,
   folder_phase <- tolower(phase)
   
   phase_metadata <- set_phase(input_results_folder = input_results_folder, 
-                              dmaqc_phase2validate = NULL, 
+                              dmaqc_phase2validate = FALSE, 
                               verbose = FALSE)
   phase_details <- generate_phase_details(phase_metadata)
   

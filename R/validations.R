@@ -54,64 +54,18 @@ check_failedsamples <- function(input_results_folder,
 }
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' @title Generate the phase detail for submissions
-#' 
-#' @description The phase details is as simple as creating a lower case version
-#' of the phase. However, in case of PASS1A/1C a new version has to be generated:
-#' pass1ac-06
-#' This function detects whether there are two phases, and if so, 
-#' generate the expected version: either pass1ac-06 or pass1ac-18
-#' @param phase_metadata (char) expected output of `set_phase`
+#' @title check metadata phase file
+#'
+#' @description check the existence of the metadata phase file
+#' @param input_results_folder (char) input path folder
 #' @param verbose (logical) `TRUE` (default) shows messages
-#' @return (char) the expected phase_details function
+#' @return (logical) `TRUE` exist, `FALSE` does not
 #' @export
-generate_phase_details <- function(phase_metadata,
-                                   verbose = TRUE){
-  
-  if( grepl("\\|", phase_metadata) ){
-    pass1st <- gsub("(.*)(\\|.*)", "\\1", phase_metadata)
-    animalage <- gsub("(PASS1A\\-)(\\d+)", "\\2", pass1st)
-    phase_details <- paste0("pass1ac-", animalage)
-  }else{
-    phase_details <- tolower(phase_metadata)
-  }
-  return(phase_details)
-}
-
-
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' @title Set the phase to be validated.
 #' 
-#' @description A group might choose to combine two different phases, due to 
-#' the complications associated with PASS1A/1C. If they choose to combine
-#' two phases, the CAS must provide a new file `metadata_phase.txt` with a single
-#' line, as for example: `PASS1A-06|PASS1C-06`. This function checks if the 
-#' file is available, and set that phase as the phases to validate. In summary,
-#' the order of preference is:
-#' 1. function's argument: dmaqc_phase2validate (if provided in the validation functions)
-#' 2. `metadata_phase.txt` file if available in the batch folder.
-#' 3. Phase in folder structure
-#' @param input_results_folder (char) path to the PROCESSED/RESULTS folder to check
-#' @param dmaqc_phase2validate (data.frame) dmaqc shipping information
-#' @param verbose (logical) `TRUE` (default) shows messages
-#' @return (int) the phase to be validated. 
-#' @export
-set_phase <- function(input_results_folder,
-                      dmaqc_phase2validate,
-                      verbose = TRUE){
+check_metadata_phase_file <- function(input_results_folder, 
+                                      verbose){
   
-  phase <- validate_phase(input_results_folder)
-  
-  # Check metadata_phase.txt file
-  batch <- NULL
-  if( grepl("(BIC){0,1}RESULTS", input_results_folder) ){
-    batch <- gsub("(.*/)((BIC){0,1}RESULTS.*)", "\\1", input_results_folder)  
-  }else if( grepl("PROCESSED", input_results_folder)){
-    batch <- gsub("(.*)(PROCESSED.*)", "\\1", input_results_folder)  
-  }else{
-    stop("   - (-) ERROR: the input results folder missed the PROCESSED or RESULTS folder!")
-  }
+  batch <- get_full_path2batch(input_results_folder)
   
   file_phase <- list.files(normalizePath(batch),
                            pattern="metadata_phase.txt",
@@ -120,71 +74,14 @@ set_phase <- function(input_results_folder,
                            recursive = TRUE)
   
   # To be adjusted if two different batches are provided:
-  if ( !(purrr::is_empty(file_phase)) ){
-    phase_details <- readr::read_lines(file_phase, n_max = 1)
-    if ( !(is.na(phase_details) || phase_details == '') ){
-      if(verbose) message("+ Motrpac phase reported: ", phase_details, " (info from metadata_phase.txt available)")
-      
-      if( grepl("\\|", phase_details) ){
-        validate_two_phases(phase_details = phase_details, verbose = FALSE)
-      }
-      
-      # And once is checked, proceed...
-      if( is.null(dmaqc_phase2validate) ){
-        dmaqc_phase2validate <- phase_details
-      }
-    }else{
-      if(verbose) message("+ Motrpac phase: ", phase, " (metadata_phase.txt available but EMPTY)")
-      if( is.null(dmaqc_phase2validate) ){
-        dmaqc_phase2validate <- phase
-      }
-    }
+  if ( (purrr::is_empty(file_phase)) ){
+    if(verbose) message("- (-) `BATCH#_YYYYMMDD/metadata_phase.txt` file does not exist: FAIL")
+    return(FALSE)
   }else{
-    if(verbose) message("+ Motrpac phase: ", phase, " (metadata_phase.txt file NOT available)")
-    if( is.null(dmaqc_phase2validate) ){
-      dmaqc_phase2validate <- phase
-    }
+    return(TRUE)
   }
   
-  return(dmaqc_phase2validate)
 }
-
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' @title validate a phase with two phases (pass1a and 1c)
-#' 
-#' @description This function only works to validate two phases reported
-#' as for example, 'PASS1A-06|PASS1C-06' using the separator '|'
-#' @param phase_details (char) expected output of `set_phase`
-#' @param verbose (logical) `TRUE` (default) shows messages
-#' @return (char) the expected phase_details function
-#' @export
-validate_two_phases <- function(phase_details,
-                                verbose = TRUE){
-  
-  if( !grepl("\\|", phase_details) ) 
-    stop("This function only validate two phases submitted (e.g PASS1A-06|PASS1C-06), i.e., the variable does not contain the separator '|' required to report two phases")
-  
-  phase1 <- gsub("(PASS1[A|C]\\-\\d{2})(|.*)", "\\1", phase_details)
-  validate_phase(phase1, return_phase = FALSE)
-  phase2 <- gsub("(.*|)(PASS1[A|C]\\-\\d{2})", "\\2", phase_details)
-  validate_phase(phase2, return_phase = FALSE)
-  # only pass1a and 1c expected for this case]
-  pass1st <- gsub("(PASS1[A|C])(\\-\\d{2}|.*)", "\\1", phase_details)
-  age1st <- gsub("(PASS1[A|C]\\-)(\\d{2})(|.*)", "\\2", phase_details)
-  pass2nd <- gsub("(.*|)(PASS1[A|C])(\\-\\d{2})", "\\2", phase_details)
-  age2nd <- gsub("(.*|)(PASS1[A|C]\\-)(\\d{2})", "\\3", phase_details)
-  
-  if(age1st != age2nd){
-    stop(paste(phase_details), ": the phase ages reported in `metadata_phase.txt` don't match for these 2 phases: MUST BE CORRECTED")
-  }
-  if(pass1st == pass2nd){
-    stop(paste(phase_details), ": the two reported phases in `metadata_phase.txt` are the same: MUST BE CORRECTED")
-  }
-  if(verbose) return("Two phases reported and they are ok")
-}
-
-
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -216,6 +113,11 @@ check_viallabel_dmaqc <- function(vl_submitted,
   
   # issue_count
   ic <- NA
+  
+  # Remove redundant samples
+  vl_submitted <- vl_submitted[!grepl("\\.", all_vial_labels)]
+  
+  
   
   # There might be multiple phases to check: load both
   ph <- unlist(strsplit(phase, split = "\\|"))
@@ -423,6 +325,40 @@ validate_tissue <- function(input_results_folder){
   }else{
     return(tissue_code)
   }
+}
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' @title validate a phase with two phases (pass1a and 1c)
+#' 
+#' @description This function only works to validate two phases reported
+#' as for example, 'PASS1A-06|PASS1C-06' using the separator '|'
+#' @param phase_details (char) expected output of `set_phase`
+#' @param verbose (logical) `TRUE` (default) shows messages
+#' @return (char) the expected phase_details function
+#' @export
+validate_two_phases <- function(phase_details,
+                                verbose = TRUE){
+  
+  if( !grepl("\\|", phase_details) ) 
+    stop("This function only validate two phases submitted (e.g PASS1A-06|PASS1C-06), i.e., the variable does not contain the separator '|' required to report two phases")
+  
+  phase1 <- gsub("(PASS1[A|C]\\-\\d{2})(|.*)", "\\1", phase_details)
+  validate_phase(phase1, return_phase = FALSE)
+  phase2 <- gsub("(.*|)(PASS1[A|C]\\-\\d{2})", "\\2", phase_details)
+  validate_phase(phase2, return_phase = FALSE)
+  # only pass1a and 1c expected for this case]
+  pass1st <- gsub("(PASS1[A|C])(\\-\\d{2}|.*)", "\\1", phase_details)
+  age1st <- gsub("(PASS1[A|C]\\-)(\\d{2})(|.*)", "\\2", phase_details)
+  pass2nd <- gsub("(.*|)(PASS1[A|C])(\\-\\d{2})", "\\2", phase_details)
+  age2nd <- gsub("(.*|)(PASS1[A|C]\\-)(\\d{2})", "\\3", phase_details)
+  
+  if(age1st != age2nd){
+    stop(paste(phase_details), ": the phase ages reported in `metadata_phase.txt` don't match for these 2 phases: MUST BE CORRECTED")
+  }
+  if(pass1st == pass2nd){
+    stop(paste(phase_details), ": the two reported phases in `metadata_phase.txt` are the same: MUST BE CORRECTED")
+  }
+  if(verbose) return("Two phases reported and they are ok")
 }
 
 

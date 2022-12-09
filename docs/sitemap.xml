@@ -64,6 +64,9 @@
     <loc>/reference/check_metadata_metabolites.html</loc>
   </url>
   <url>
+    <loc>/reference/check_metadata_phase_file.html</loc>
+  </url>
+  <url>
     <loc>/reference/check_metadata_samples.html</loc>
   </url>
   <url>
@@ -95,6 +98,9 @@
   </url>
   <url>
     <loc>/reference/get_and_validate_mdd.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_full_path2batch.html</loc>
   </url>
   <url>
     <loc>/reference/group_abbr.html</loc>
