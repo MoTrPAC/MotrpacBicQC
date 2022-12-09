@@ -1,3 +1,10 @@
+# MotrpacBicQC 0.7.7 (2022-12-08)
+
+* Better handling of large proteomics datasets:
+   * Proteomics RII plots are skipped if the dataset is too large
+   * Larger pdf size for proteomics ratio plots
+* Several improvements and enhancements
+
 # MotrpacBicQC 0.7.6 (2022-10-27)
 
 * Improve DMAQC validation
