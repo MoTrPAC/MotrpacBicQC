@@ -8,7 +8,7 @@ validate_metabolomics(
   input_results_folder,
   cas,
   dmaqc_shipping_info = NULL,
-  dmaqc_phase2validate = NULL,
+  dmaqc_phase2validate = FALSE,
   return_n_issues = FALSE,
   full_report = FALSE,
   verbose = TRUE,
