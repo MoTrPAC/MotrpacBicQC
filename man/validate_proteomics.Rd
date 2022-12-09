@@ -9,7 +9,7 @@ validate_proteomics(
   isPTM,
   cas,
   dmaqc_shipping_info = NULL,
-  dmaqc_phase2validate = NULL,
+  dmaqc_phase2validate = FALSE,
   f_proof = FALSE,
   out_qc_folder = NULL,
   return_n_issues = TRUE,

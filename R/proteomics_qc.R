@@ -63,7 +63,6 @@ check_ratio_proteomics <- function(df_ratio,
     if( any(duplicated(df_ratio$ptm_id)) ){
       ic_rr <- ic_rr + 1
       if(verbose) message("      - (-) NON UNIQUE ptm_id values ")
-      ic <- ic + 1
       if(f_proof){
         # Print out redundancies
         # red_ids <- df_ratio$ptm_id[duplicated(df_ratio$ptm_id)]
@@ -263,7 +262,6 @@ check_ratio_proteomics <- function(df_ratio,
   }else{
     if(verbose) message("   + (+) All organism_name available")
   }
-  
 
   if(is.null(ic_rr) ){
     ic_rr <- 0
@@ -311,6 +309,10 @@ check_rii_proteomics <- function(df_rri,
     if(verbose) message("      - (-) Error! Critical Required column(s) not found: ", appendLF = FALSE)
     if(verbose) message(paste(required_columns[!required_columns %in% colnames(df_rri)], collapse = ", "))
     return(ic_rii)
+  }
+  
+  if(dim(df_rri)[2] > 400){
+    f_proof <- FALSE
   }
 
   if(isPTM){
@@ -394,9 +396,8 @@ check_rii_proteomics <- function(df_rri,
     # isPTM == TRUE
   }else{
     df_rri$protein_sequence <- paste0(df_rri$protein_id,"-", df_rri$sequence)
-    if(any(duplicated(df_rri$protein_sequence))){
+    if( any( duplicated(df_rri$protein_sequence) ) ){
       ic_rii <- ic_rii + 1
-      ic <- ic + 1
       if(verbose) message("      - (-) ERROR: Duplicated Protein + Sequence identified")
     }else{
       if(verbose) message("   + (+) All Protein + Sequence are unique")
@@ -777,7 +778,7 @@ validate_proteomics <- function(input_results_folder,
                                 isPTM,
                                 cas,
                                 dmaqc_shipping_info = NULL,
-                                dmaqc_phase2validate = NULL,
+                                dmaqc_phase2validate = FALSE,
                                 f_proof = FALSE,
                                 out_qc_folder = NULL,
                                 return_n_issues = TRUE,
@@ -794,7 +795,9 @@ validate_proteomics <- function(input_results_folder,
     stop("One (or many) of the required arguments missed.
         Please, check the help for this function to find out more")
 
-  input_results_folder <- normalizePath(input_results_folder, winslash = "/")
+  if(dir.exists(input_results_folder)){
+    input_results_folder <- normalizePath(input_results_folder, winslash = "/")
+  }
 
   # Validate folder structure-----
   validate_cas(cas = cas)
@@ -821,7 +824,6 @@ validate_proteomics <- function(input_results_folder,
     }else{
       out_qc_folder <- getwd()
     }
-
     output_prefix <- paste0(cas, ".", tolower(phase2file), ".", tissue_code, ".",tolower(assay), ".", tolower(processfolder))
   }
 
@@ -850,6 +852,12 @@ validate_proteomics <- function(input_results_folder,
     ic_vl <- "missed"
   } else{
     ic_vl <- NA
+  }
+  
+  is_mp <- check_metadata_phase_file(input_results_folder = input_results_folder, 
+                                     verbose = verbose)
+  if(!is_mp){
+    ic <- ic + 1
   }
 
   # VIAL METADATA-----
@@ -904,17 +912,6 @@ validate_proteomics <- function(input_results_folder,
   if(f_rii){
     peprii <- lista$df
     
-    # # PlexedPiper temporal error
-    # if( all(c("Ref_S1", "Ref_S2", "Ref_S3", "Ref_S4", "Ref_S5", "Ref_S6") %in% colnames(peprii)) ){
-    #   Ref_S1=Ref_S2=Ref_S3=Ref_S4=Ref_S5=Ref_S6=NULL
-    #   peprii <- rename(peprii, Ref_A=Ref_S1)
-    #   peprii <- rename(peprii, Ref_B=Ref_S2)
-    #   peprii <- rename(peprii, Ref_C=Ref_S3)
-    #   peprii <- rename(peprii, Ref_D=Ref_S4)
-    #   peprii <- rename(peprii, Ref_E=Ref_S5)
-    #   peprii <- rename(peprii, Ref_F=Ref_S6)
-    # }
-    
     ic_rii <- check_rii_proteomics(df_rri = peprii,
                                    isPTM = isPTM,
                                    f_proof = f_proof,
@@ -932,15 +929,21 @@ validate_proteomics <- function(input_results_folder,
       if(f_proof & f_vm){
         # print proof function here
         # Only if vial_label metadata is available
-        proteomics_plots_rii(all_vial_labels = all_vial_labels,
-                             all_samples = all_samples,
-                             peprii = peprii,
-                             isPTM = isPTM,
-                             v_m = v_m,
-                             out_qc_folder = out_qc_folder,
-                             output_prefix = output_prefix,
-                             printPDF = printPDF,
-                             verbose = verbose)
+        
+        if(dim(peprii)[2] < 400){
+          proteomics_plots_rii(all_vial_labels = all_vial_labels,
+                               all_samples = all_samples,
+                               peprii = peprii,
+                               isPTM = isPTM,
+                               v_m = v_m,
+                               out_qc_folder = out_qc_folder,
+                               output_prefix = output_prefix,
+                               printPDF = printPDF,
+                               verbose = verbose)
+
+        }else{
+          if(verbose) message ("   - ( ) The file is too large to generate plots")
+        }
       } # print plots
     }
   }else{
@@ -1129,9 +1132,9 @@ validate_proteomics <- function(input_results_folder,
 
               if(printPDF){
                 if(sn > 800){
-                  pdf(out_plot_ratdist, width = 40, height = 8)
+                  pdf(out_plot_ratdist, width = 40, height = 12)
                 }else if(sn <= 800 & sn > 200){
-                  pdf(out_plot_ratdist, width = 22, height = 8)
+                  pdf(out_plot_ratdist, width = 32, height = 10)
                 }else{
                   pdf(out_plot_ratdist, width = 14, height = 8)
                 }
@@ -1298,7 +1301,7 @@ validate_proteomics <- function(input_results_folder,
     ic <- ic + 3
   }
 
-  # CHECK DMAQC----
+  # DMAQC validation----
 
   # Validate vial labels from DMAQC
 
@@ -1395,7 +1398,7 @@ write_proteomics_releases <- function(input_results_folder,
   folder_tissue <- bic_animal_tissue_code$tissue_name_release[which(bic_animal_tissue_code$bic_tissue_code == tissue_code)]
   
   phase_metadata <- set_phase(input_results_folder = input_results_folder, 
-                              dmaqc_phase2validate = NULL, 
+                              dmaqc_phase2validate = FALSE, 
                               verbose = FALSE)
   phase_details <- generate_phase_details(phase_metadata)
 
