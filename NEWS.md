@@ -1,3 +1,7 @@
+# MotrpacBicQC 0.7.8 (2022-12-13)
+
+* Bug fix
+
 # MotrpacBicQC 0.7.7 (2022-12-08)
 
 * Better handling of large proteomics datasets:
