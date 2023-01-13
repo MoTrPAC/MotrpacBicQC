@@ -12,6 +12,8 @@ A data frame with assay codes
 \item{assay_code}{Assay release code}
 \item{assay_name}{Assay long name}
 \item{cas_code}{MoTrPAC chemical analysis site}
+\item{assay_abbreviation}{Assay abbreviation}
+\item{assay_hex_colour}{Assay hex colour}
 }
 }
 \usage{
