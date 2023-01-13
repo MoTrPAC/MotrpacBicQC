@@ -1,3 +1,8 @@
+# MotrpacBicQC 0.7.9 (2023-01-12)
+
+* Add exception: unique raw files are now not required for metabolomics CONV assay
+* Update `assay_codes`: immunoassay/IMMUNO added. The table now also includes assay hex colours and assay abbreviation
+
 # MotrpacBicQC 0.7.8 (2022-12-13)
 
 * Bug fix

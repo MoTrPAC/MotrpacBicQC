@@ -9,6 +9,31 @@ library(devtools)
 assay_codes <- read.delim("inst/extdata/assay_codes.tsv", stringsAsFactors = FALSE)
 use_data(assay_codes, overwrite = TRUE)
 
+## update assay codes (code by Nicole 2023-01-12)-----
+
+library(MotrpacBicQC)
+library(MotrpacRatTraining6moData)
+library(data.table)
+
+assay_key = data.table(MotrpacBicQC::assay_codes)
+
+# add a row for immuno 
+assay_key = rbindlist(list(assay_key, 
+                           data.table(omics_code="proteomics-targeted",
+                                      submission_code="",
+                                      assay_code="immunoassay",
+                                      assay_name="Multiplexed immunoassays",
+                                      cas_code="stanford")))
+
+# add assay abbreviations
+assay_key[,assay_abbreviation := ASSAY_CODE_TO_ABBREV[assay_code]]
+assay_key[grepl("metab",omics_code), assay_abbreviation := "METAB"]
+
+# add colors
+assay_key[,assay_hex_colour := ASSAY_COLORS[assay_abbreviation]]
+
+assay_codes = as.data.frame(assay_key)
+use_data(assay_codes, overwrite = TRUE)
 
 # Phenotypic data-----
 

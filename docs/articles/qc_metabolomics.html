@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="generator" content="pandoc">
-<meta name="date" content="2022-12-13">
+<meta name="date" content="2023-01-12">
 <title>MotrpacBicQC: Metabolomics QC</title>
 <script src="qc_metabolomics_files/header-attrs-2.16/header-attrs.js"></script><script src="qc_metabolomics_files/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="qc_metabolomics_files/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
@@ -125,7 +125,7 @@
       
       <p class="authors">
          </p>
-<p class="date"><span class="glyphicon glyphicon-calendar"></span> 2022-12-13</p>
+<p class="date"><span class="glyphicon glyphicon-calendar"></span> 2023-01-12</p>
            
 
    
@@ -177,7 +177,7 @@ correctly installed and it works. For example:</p>
 <pre><code><span><span class="co">##   + (+) `sample_type` seems OK</span></span></code></pre>
 <pre><code><span><span class="co">##   + (+) `sample_order` is numeric</span></span></code></pre>
 <pre><code><span><span class="co">##   + (+) `sample_order` unique values OK</span></span></code></pre>
-<pre><code><span><span class="co">##   + (+) `raw_file` unique values OK</span></span></code></pre>
+<pre><code><span><span class="co">##   + (+) `raw_file` unique values: OK</span></span></code></pre>
 <pre class="r"><code><span><span class="fu"><a href="../reference/check_results.html">check_results</a></span><span class="op">(</span>r_m <span class="op">=</span> <span class="va">results_named</span>, m_s <span class="op">=</span> <span class="va">metadata_sample_named</span>, m_m <span class="op">=</span> <span class="va">metadata_metabolites_named</span><span class="op">)</span></span></code></pre>
 <pre><code><span><span class="co">##   + (+) All samples from `results_metabolite` are available in `metadata_sample`</span></span></code></pre>
 <pre><code><span><span class="co">##   + (+) `metabolite_name` is identical in both [results] and `metadata_metabolites` files: OK</span></span></code></pre>

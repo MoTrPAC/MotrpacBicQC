@@ -4,12 +4,24 @@
 \alias{check_metadata_samples}
 \title{check metadata samples}
 \usage{
-check_metadata_samples(df, cas, return_n_issues = FALSE, verbose = TRUE)
+check_metadata_samples(
+  df,
+  cas,
+  assay = "OTHER",
+  return_n_issues = FALSE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{df}{(data.frame) metadata_metabolites}
 
 \item{cas}{(char) CAS site code}
+
+\item{assay}{(char) Assay code. Options:
+\itemize{
+\item \code{CONV}: for Duke's conventional metabolites
+\item \code{OTHER} (default): all the other assays.
+}}
 
 \item{return_n_issues}{(logical) if \code{TRUE} returns the number of issues.}
 

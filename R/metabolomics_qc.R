@@ -162,6 +162,9 @@ check_metadata_metabolites <- function(df,
 #' @description check whether metadata_sample is following guidelines
 #' @param df (data.frame) metadata_metabolites
 #' @param cas (char) CAS site code
+#' @param assay (char) Assay code. Options:
+#' - `CONV`: for Duke's conventional metabolites
+#' - `OTHER` (default): all the other assays.
 #' @param return_n_issues (logical) if `TRUE` returns the number of issues.
 #' @param verbose (logical) `TRUE` (default) shows messages
 #' @return (int) number of issues identified
@@ -171,6 +174,7 @@ check_metadata_metabolites <- function(df,
 #' @export
 check_metadata_samples <- function(df,
                                    cas,
+                                   assay = "OTHER",
                                    return_n_issues = FALSE,
                                    verbose = TRUE){
 
@@ -242,13 +246,19 @@ check_metadata_samples <- function(df,
 
   if("raw_file" %in% colnames(df)){
     if( cas != "emory"){
-      if(length(unique(df$raw_file)) != dim(df)[1]){
-        if(verbose) message("   - (-) `raw_file`: Non-unique values detected or missed -> ", appendLF = FALSE)
-        if(verbose) message(paste( unique(df$raw_file[unique(duplicated(df$raw_file))]) ) )
-        ic <- ic + 1
+      if( assay != "CONV" ){
+        if(length(unique(df$raw_file)) != dim(df)[1]){
+          if(verbose) message("   - (-) `raw_file`: Non-unique values detected or missed -> ", appendLF = FALSE)
+          if(verbose) message(paste( unique(df$raw_file[unique(duplicated(df$raw_file))]) ) )
+          ic <- ic + 1
+        }else{
+          if(verbose) message("  + (+) `raw_file` unique values: OK")
+        } 
       }else{
-        if(verbose) message("  + (+) `raw_file` unique values OK")
+        if(verbose) message("  + (+) `raw_file` might contain non-unique raw files for this CONV assay: OK")
       }
+    }else{
+      if(verbose) message("  + (+) `raw_file` might contain unique values for this site: OK")
     }
   }else{
     if(verbose) message("   - (-) `raw_file` column missed: FAIL")
@@ -603,7 +613,11 @@ validate_metabolomics <- function(input_results_folder,
   if(f_msn){
     m_s_n_f <- lista$filename
     m_s_n <- lista$df
-    ic_m_s_n <- check_metadata_samples(df = m_s_n, cas = cas, return_n_issues = TRUE, verbose = verbose)
+    ic_m_s_n <- check_metadata_samples(df = m_s_n, 
+                                       cas = cas, 
+                                       assay = assay,
+                                       return_n_issues = TRUE, 
+                                       verbose = verbose)
     # Extract the number of samples
     if(!is.null(m_s_n)){
       #Double check that the columns are there
@@ -626,7 +640,10 @@ validate_metabolomics <- function(input_results_folder,
     if(f_msu){
       m_s_u_f <- lista$filename
       m_s_u <- lista$df
-      ic_m_s_u <- check_metadata_samples(m_s_u, cas, return_n_issues = TRUE, verbose = verbose)
+      ic_m_s_u <- check_metadata_samples(df = m_s_u, 
+                                         cas = cas, assay = assay,
+                                         return_n_issues = TRUE, 
+                                         verbose = verbose)
     }else{
       if(verbose) message("   - (-) `metadata_samples_unname` not available")
       ic <- ic + 1
