@@ -5,12 +5,41 @@ library(devtools)
 
 # FILES IN PACKAGE--------------------------------------------------------------
 
-# ASSAY codes-----
-assay_codes <- read.delim("inst/extdata/assay_codes.tsv", stringsAsFactors = FALSE)
+
+## update assay codes (2023-01-12)-----
+
+IMM_GLC <- data.frame(omics_code = "metabolomics-targeted",
+                        submission_code = "IMM_GLC",
+                        assay_code = "metab-t-imm-glc",
+                        assay_name = "Immunoassay for glucagon and related metabolic hormones",
+                        cas_code = "duke",
+                        assay_abbreviation = "METAB",
+                        assay_hex_colour = "#E41A1C")
+
+IMM_INS <- data.frame(omics_code = "metabolomics-targeted",
+                      submission_code = "IMM_INS",
+                      assay_code = "metab-t-imm-ins",
+                      assay_name = "Immunoassay for insulin and related metabolic hormones",
+                      cas_code = "duke",
+                      assay_abbreviation = "METAB",
+                      assay_hex_colour = "#E41A1C")
+
+IMM_CTR <- data.frame(omics_code = "metabolomics-targeted",
+                      submission_code = "IMM_CTR",
+                      assay_code = "metab-t-imm-ctr",
+                      assay_name = "Immunoassay for corticosteroids",
+                      cas_code = "duke",
+                      assay_abbreviation = "METAB",
+                      assay_hex_colour = "#E41A1C")
+
+assay_codes <- rbind(assay_codes, IMM_CTR, IMM_GLC, IMM_INS)
+
+assay_codes$assay_name[which(assay_codes$submission_code == "CONV")] <- "Clinical chemistry assays for conventional metabolites"
+
 use_data(assay_codes, overwrite = TRUE)
 
-## update assay codes (code by Nicole 2023-01-12)-----
 
+## update assay codes (code by Nicole 2023-01-12)-----
 library(MotrpacBicQC)
 library(MotrpacRatTraining6moData)
 library(data.table)
