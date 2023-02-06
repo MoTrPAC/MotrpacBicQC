@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="generator" content="pandoc">
-<meta name="date" content="2023-01-12">
+<meta name="date" content="2023-02-05">
 <title>MotrpacBicQC: Metabolomics QC</title>
-<script src="qc_metabolomics_files/header-attrs-2.16/header-attrs.js"></script><script src="qc_metabolomics_files/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="qc_metabolomics_files/header-attrs-2.20/header-attrs.js"></script><script src="qc_metabolomics_files/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="qc_metabolomics_files/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
 <script src="qc_metabolomics_files/bootstrap-3.3.7/js/bootstrap.min.js"></script><script src="qc_metabolomics_files/navigation-1.1/tabsets.js"></script><script src="qc_metabolomics_files/navigation-1.1/codefolding.js"></script><link href="qc_metabolomics_files/magnific-popup-1.1.0/magnific-popup.css" rel="stylesheet">
 <script src="qc_metabolomics_files/magnific-popup-1.1.0/jquery.magnific-popup.min.js"></script><link href="qc_metabolomics_files/downcute-0.1/downcute.css" rel="stylesheet">
@@ -94,10 +94,11 @@
         <div class="Sidebar">
           <div class="SidebarItems" id="toc">
             <ul>
-<li><a href="#installation" id="toc-installation">Installation</a></li>
+<li><a href="#expected-submission" id="toc-expected-submission">Expected submission</a></li>
+            <li><a href="#install-motrpacbicqc" id="toc-install-motrpacbicqc">Install MotrpacBicQC</a></li>
             <li><a href="#usage" id="toc-usage">Usage</a></li>
-            <li><a href="#how-to-test-your-datasets" id="toc-how-to-test-your-datasets">How to test your
-            datasets</a></li>
+            <li><a href="#how-to-process-a-metabolomics-dataset" id="toc-how-to-process-a-metabolomics-dataset">How to
+            process a metabolomics dataset</a></li>
             <li><a href="#help" id="toc-help">Help</a></li>
             </ul>
 </div>
@@ -125,7 +126,7 @@
       
       <p class="authors">
          </p>
-<p class="date"><span class="glyphicon glyphicon-calendar"></span> 2023-01-12</p>
+<p class="date"><span class="glyphicon glyphicon-calendar"></span> 2023-02-05</p>
            
 
    
@@ -134,7 +135,40 @@
 <!-- Don't indent these lines or it will mess pre blocks indentation --> 
 <div class="page-content has-page-title">
 <div class="section level2">
-<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+<h2 id="expected-submission">Expected submission<a class="anchor" aria-label="anchor" href="#expected-submission"></a>
+</h2>
+<p>The folder/file structure of a required metabolomics submission is as
+follows:</p>
+<pre><code>Example:
+
+PASS1A-06/
+  T55/
+   HILICPOS/ 
+    metadata-phase.txt  ## Note: "new" required file
+    file_manifest_YYYYMMDD.txt
+    BATCH1_20190725/ 
+     RAW/
+      Manifest.txt
+      file1.raw
+      file2.raw
+      etc
+    PROCESSED_20190725/
+     metadata_failedsamples_[cas_specific_labeling].txt
+     NAMED/
+        results_metabolites_named_[cas_specific_labeling].txt 
+        metadata_metabolites_named_[cas_specific_labeling].txt
+        metadata_sample_named_[cas_specific_labeling].txt
+        metadata_experimentalDetails_named_[cas_specific_labeling].txt
+     UNNAMED/ ## Note: Only required for untargeted assays
+        results_metabolites_unnamed_[cas_specific_labeling].txt
+        metadata_metabolites_unnamed_[cas_specific_labeling].txt
+        metadata_sample_unnamed_[cas_specific_labeling].txt
+        metadata_experimentalDetails_unnamed_[cas_specific_labeling].txt</code></pre>
+<p>With the following file relations…</p>
+<p><img src="BIC_Metabolomics_DataProcessing_Summary_20200303.png"></p>
+</div>
+<div class="section level2">
+<h2 id="install-motrpacbicqc">Install MotrpacBicQC<a class="anchor" aria-label="anchor" href="#install-motrpacbicqc"></a>
 </h2>
 <p>First, download and install R and RStudio:</p>
 <ul>
@@ -145,9 +179,11 @@
 </ul>
 <p>Then, open RStudio and install the <code>devtools</code> package</p>
 <pre class="r"><code><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span></code></pre>
-<p>Finally, install the <code>MotrpacBicQC</code> package</p>
+<p>Finally, install the <code>MotrpacBicQC</code> package.
+<strong>Important</strong>: install it every time that you run the QCs
+to ensure that the latest version is used.</p>
 <pre class="r"><code><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"MoTrPAC/MotrpacBicQC"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"MoTrPAC/MotrpacBicQC"</span>, build_vignettes <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
@@ -184,7 +220,7 @@ correctly installed and it works. For example:</p>
 <pre><code><span><span class="co">##   + (+) `sample_id` columns are numeric: OK</span></span></code></pre>
 </div>
 <div class="section level2">
-<h2 id="how-to-test-your-datasets">How to test your datasets<a class="anchor" aria-label="anchor" href="#how-to-test-your-datasets"></a>
+<h2 id="how-to-process-a-metabolomics-dataset">How to process a metabolomics dataset<a class="anchor" aria-label="anchor" href="#how-to-process-a-metabolomics-dataset"></a>
 </h2>
 <p>Two approaches available:</p>
 <div class="section level3">
@@ -194,7 +230,7 @@ correctly installed and it works. For example:</p>
 command:</p>
 <pre class="r"><code><span><span class="fu"><a href="../reference/validate_metabolomics.html">validate_metabolomics</a></span><span class="op">(</span>input_results_folder <span class="op">=</span> <span class="st">"/full/path/to/PROCESSED_YYYYMMDD"</span>, </span>
 <span>                      cas <span class="op">=</span> <span class="st">"your_site_code"</span><span class="op">)</span></span></code></pre>
-<p><strong>cas</strong> is one of the followings:</p>
+<p><strong>cas</strong> can be one of the followings:</p>
 <ul>
 <li>“broad_met” = Broad Metabolomics</li>
 <li>“emory” = Emory</li>
@@ -218,14 +254,15 @@ command:</p>
 <span>                      out_qc_folder <span class="op">=</span> <span class="st">"/path/to/the/folder/to/save/plots/"</span>,</span>
 <span>                      printPDF <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre>
 <p>It is recommended to provide the path to the folder where the pdf
-files should be saved (argument: <code>out_qc_folder</code>)</p>
+files should be saved (argument: <code>out_qc_folder</code>). If it
+doesn’t exist, it will be created.</p>
 </div>
 <div class="section level3">
 <h3 id="check-individual-files">Check individual files<a class="anchor" aria-label="anchor" href="#check-individual-files"></a>
 </h3>
-<ul>
-<li>Check metadata metabolites:</li>
-</ul>
+<p>In the rare case that you need to process individual files, that also
+can be done. Cases:</p>
+<p>Check metadata metabolites:</p>
 <pre class="r"><code><span><span class="co"># Open the metadata_metabolites file(s)</span></span>
 <span></span>
 <span><span class="va">metadata_metabolites_named</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"/path/to/your/file"</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
@@ -233,19 +270,15 @@ files should be saved (argument: <code>out_qc_folder</code>)</p>
 <span></span>
 <span><span class="fu"><a href="../reference/check_metadata_metabolites.html">check_metadata_metabolites</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">metadata_metabolites_named</span>, name_id <span class="op">=</span> <span class="st">"named"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/check_metadata_metabolites.html">check_metadata_metabolites</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">metadata_metabolites_unnamed</span>, name_id <span class="op">=</span> <span class="st">"unnamed"</span><span class="op">)</span></span></code></pre>
-<ul>
-<li>Check metadata samples:</li>
-</ul>
+<p>Check metadata samples:</p>
 <pre class="r"><code><span><span class="co"># Open your files</span></span>
 <span><span class="va">metadata_sample_named</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"/path/to/your/file"</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">metadata_sample_unnamed</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"/path/to/your/file"</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/check_metadata_samples.html">check_metadata_samples</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">metadata_sample_named</span>, cas <span class="op">=</span> <span class="st">"your_side_id"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/check_metadata_samples.html">check_metadata_samples</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">metadata_sample_unnamed</span>, cas <span class="op">=</span> <span class="st">"your_side_id"</span><span class="op">)</span></span></code></pre>
-<ul>
-<li>Check results, which needs both both metadata metabolites and
-samples</li>
-</ul>
+<p>Check results, which needs both both metadata metabolites and
+samples</p>
 <pre class="r"><code><span><span class="co"># Open your files</span></span>
 <span><span class="va">metadata_metabolites_named</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"/path/to/your/file"</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">metadata_sample_named</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"/path/to/your/file"</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
@@ -255,60 +288,16 @@ samples</li>
 <span>              m_s <span class="op">=</span> <span class="va">metadata_sample_named</span>, </span>
 <span>              m_m <span class="op">=</span> <span class="va">metadata_metabolites_named</span><span class="op">)</span></span></code></pre>
 </div>
-<div class="section level3">
-<h3 id="merge-metabolomics-data-only-pass1a-supported">Merge metabolomics data (only PASS1A supported)<a class="anchor" aria-label="anchor" href="#merge-metabolomics-data-only-pass1a-supported"></a>
-</h3>
-<p>The following functions enable merging all results and metadata files
-into a single data frame.</p>
-<p>The folder/file structure of a required untargeted metabolomics
-submission is as follows:</p>
-<pre><code>PASS1A-06/
-  T55/
-   HILICPOS/ 
-    BATCH1_20190725/ 
-     RAW/
-      Manifest.txt
-      file1.raw
-      file2.raw
-      etc
-    PROCESSED_20190725/
-     metadata_failedsamples_[cas_specific_labeling]. txt
-     NAMED/
-        results_metabolites_named_[cas_specific_labeling].txt 
-        metadata_metabolites_named_[cas_specific_labeling].txt
-        metadata_sample_named_[cas_specific_labeling].txt
-        metadata_experimentalDetails_named_[cas_specific_labeling].txt
-     UNNAMED/
-        results_metabolites_unnamed_[cas_specific_labeling].txt
-        metadata_metabolites_unnamed_[cas_specific_labeling].txt
-        metadata_sample_unnamed_[cas_specific_labeling].txt
-        metadata_experimentalDetails_unnamed_[cas_specific_labeling].txt</code></pre>
-<p>With the following file relations…</p>
-<p><img src="BIC_Metabolomics_DataProcessing_Summary_20200303.png"></p>
-<p>To merge all data available in a <code>PROCESSED_YYYYMMDD</code>
-folder, run the following command:</p>
-<pre class="r"><code><span><span class="va">t31_ionpneg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/combine_metabolomics_batch.html">combine_metabolomics_batch</a></span><span class="op">(</span>input_results_folder <span class="op">=</span> <span class="st">"/full/path/to/PROCESSED_YYYYMMDD/"</span>, </span>
-<span>                                          cas <span class="op">=</span> <span class="st">"umichigan"</span><span class="op">)</span></span></code></pre>
-<p>Alternatively, each individual dataset can also be provided. For
-example:</p>
-<pre class="r"><code><span><span class="va">plasma.untargeted.merged</span> <span class="op">&lt;-</span> </span>
-<span>  <span class="fu"><a href="../reference/merge_all_metabolomics.html">merge_all_metabolomics</a></span><span class="op">(</span>m_m_n <span class="op">=</span> <span class="va">metadata_metabolites_named</span>,</span>
-<span>                         m_m_u <span class="op">=</span> <span class="va">metadata_metabolites_unnamed</span>,</span>
-<span>                         m_s_n <span class="op">=</span> <span class="va">metadata_sample_named</span>,</span>
-<span>                         r_n <span class="op">=</span> <span class="va">results_named</span>,</span>
-<span>                         r_u <span class="op">=</span> <span class="va">results_unnamed</span>,</span>
-<span>                         phase <span class="op">=</span> <span class="st">"PASS1A-06"</span><span class="op">)</span></span></code></pre>
-<p>Check the function help for details</p>
-</div>
 </div>
 <div class="section level2">
 <h2 id="help">Help<a class="anchor" aria-label="anchor" href="#help"></a>
 </h2>
 <p>Additional details for each function can be found by typing, for
 example:</p>
-<pre class="r"><code><span><span class="op">?</span><span class="va">merge_all_metabolomics</span></span></code></pre>
-<p>Need extra help? Please, <a href="https://github.com/MoTrPAC/MotrpacBicQC/issues" class="external-link">submit an issue
-here</a> providing as many details as possible.</p>
+<pre class="r"><code><span><span class="op">?</span><span class="va">validate_metabolomics</span></span></code></pre>
+<p>Need extra help? Please, either contact the BIC at <a href="mailto:motrpac-helpdesk@lists.stanford.edu">motrpac-helpdesk@lists.stanford.edu</a>
+and/or <a href="https://github.com/MoTrPAC/MotrpacBicQC/issues" class="external-link">submit
+an issue here</a> providing as many details as possible</p>
 </div>
 </div>
 

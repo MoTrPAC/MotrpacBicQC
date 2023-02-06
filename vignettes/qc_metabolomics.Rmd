@@ -190,7 +190,7 @@ check_results(r_m = results_named,
 
 Additional details for each function can be found by typing, for example:
 
-```{r eval=TRUE}
+```{r eval=FALSE}
 ?validate_metabolomics
 ```
 

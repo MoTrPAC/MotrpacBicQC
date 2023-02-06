@@ -1,3 +1,10 @@
+# MotrpacBicQC 0.8.0 (2023-02-05)
+
+* New metabolomics targeted assays (IMM_GLC, IMM_INS, IMM_CTR)
+* Remove exception of non-unique raw files allowed for CONV assays, and added to IMM assays
+* Improve metabolomics documentation
+
+
 # MotrpacBicQC 0.7.9 (2023-01-12)
 
 * Add exception: unique raw files are now not required for metabolomics CONV assay

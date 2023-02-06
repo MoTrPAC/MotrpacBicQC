@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MotrpacBicQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.7.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.8.0</span>
       </span>
     </div>
 
@@ -72,14 +72,14 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">validate_metabolomics</span><span class="op">(</span></span>
 <span>  <span class="va">input_results_folder</span>,</span>
 <span>  <span class="va">cas</span>,</span>
-<span>  dmaqc_shipping_info <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  dmaqc_phase2validate <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  return_n_issues <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  full_report <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  f_proof <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  printPDF <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  out_qc_folder <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  printPDF <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  dmaqc_shipping_info <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  dmaqc_phase2validate <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -93,21 +93,6 @@
 <dd><p>(char) CAS code</p></dd>
 
 
-<dt>dmaqc_shipping_info</dt>
-<dd><p>(char) File path to the DMAQC file</p></dd>
-
-
-<dt>dmaqc_phase2validate</dt>
-<dd><p>(char) Provide phase to validate. This argument
-is not required since it should be extracted from the input folder or from the
-new required file <code>metadata_phase.txt</code>. However, if this argument is provided,
-it will take priority (and the phase from the input folder and the
-<code>metadata_phase.txt</code> will be ignored). Examples</p><ul><li><p>Folder with <code>PASS1A-06</code>: type either <code>PASS1A-06</code> or leave it <code>NULL</code></p></li>
-<li><p>Both <code>PASS1A-06</code> and <code>PASS1C-06</code>: type <code>PASS1A-06|PASS1C-06</code></p></li>
-<li><p>Only <code>PASS1C-06</code>: type <code>PASS1C-06</code></p></li>
-</ul></dd>
-
-
 <dt>return_n_issues</dt>
 <dd><p>(logical) if <code>TRUE</code> returns the number of issues</p></dd>
 
@@ -118,23 +103,42 @@ total number of issues. If <code>TRUE</code> returns the details of the number o
 group of files, e.g., results, metadata_metabolites, etc)</p></dd>
 
 
-<dt>verbose</dt>
-<dd><p>(logical) <code>TRUE</code> (default) shows messages</p></dd>
-
-
 <dt>f_proof</dt>
-<dd><p>(char) print out pdf with charts including:</p><ul><li><p>Sample intensity distribution</p></li>
+<dd><p>(logical) generate charts including:</p><ul><li><p>Sample intensity distribution</p></li>
 <li><p>Unique ID counts</p></li>
 <li><p>NA values</p></li>
 </ul></dd>
 
 
-<dt>out_qc_folder</dt>
-<dd><p>(char) output qc folder (it creates the folder if it doesn't exist)</p></dd>
-
-
 <dt>printPDF</dt>
-<dd><p>(logical) if <code>TRUE</code> (default print plots to pdf)</p></dd>
+<dd><p>(logical) if <code>f_proof = TRUE</code>, then <code> printPDF = TRUE</code> (default)
+prints plots to pdf file and argument <code>out_qc_folder</code> should be provided.</p></dd>
+
+
+<dt>out_qc_folder</dt>
+<dd><p>(char) Folder to save the pdfs (if <code>printPDF = TRUE</code>).
+It will create the folder if it doesn't exist. If this argument is not provided,
+the files will be written to the working directory</p></dd>
+
+
+<dt>dmaqc_shipping_info</dt>
+<dd><p>(char) File path to the DMAQC file. Only the BIC can use this argument</p></dd>
+
+
+<dt>dmaqc_phase2validate</dt>
+<dd><p>(char) Provide phase to validate. This argument
+is not required since it should be extracted from the input folder or from the
+new required file <code>metadata_phase.txt</code>. Please, ignore.
+However, if this argument is provided,
+it will take priority (and the phase from the input folder and the
+<code>metadata_phase.txt</code> will be ignored). Examples</p><ul><li><p>Folder with <code>PASS1A-06</code>: type either <code>PASS1A-06</code> or leave it <code>NULL</code></p></li>
+<li><p>Both <code>PASS1A-06</code> and <code>PASS1C-06</code>: type <code>PASS1A-06|PASS1C-06</code></p></li>
+<li><p>Only <code>PASS1C-06</code>: type <code>PASS1C-06</code></p></li>
+</ul></dd>
+
+
+<dt>verbose</dt>
+<dd><p>(logical) <code>TRUE</code> (default) shows messages</p></dd>
 
 </dl></div>
     <div id="value">
@@ -156,7 +160,7 @@ group of files, e.g., results, metadata_metabolites, etc)</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>
