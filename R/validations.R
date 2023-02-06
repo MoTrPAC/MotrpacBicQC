@@ -151,6 +151,7 @@ check_viallabel_dmaqc <- function(vl_submitted,
   if( length(dmaqc_labels) == 0){
     if(verbose) message("  + (+) DMAQC CHECK POINT: sample IDs not available in DMAQC dataset. Most frequent cause of the error: 
                         - Does the tissue code for this folder structure contain the right tissue code?
+                        - Are you using the right phase code? E.g., 'human', or 'pass1a-06'
                         - Did you provide the right code for the cas site? (for example, `broad`, instead of `broad_prot`)
                         
                         Otherwise, it needs to be revised with DMAQC")

@@ -3,7 +3,7 @@
 
 ## ----eval = FALSE-------------------------------------------------------------
 #  library(devtools)
-#  devtools::install_github("MoTrPAC/MotrpacBicQC", build_vignettes = TRUE)
+#  devtools::install_github("MoTrPAC/MotrpacBicQC", build_vignettes = FALSE)
 
 ## ----setup--------------------------------------------------------------------
 library(MotrpacBicQC)
@@ -59,19 +59,6 @@ check_results(r_m = results_named, m_s = metadata_sample_named, m_m = metadata_m
 #                m_s = metadata_sample_named,
 #                m_m = metadata_metabolites_named)
 
-## ---- eval=FALSE--------------------------------------------------------------
-#  t31_ionpneg <- combine_metabolomics_batch(input_results_folder = "/full/path/to/PROCESSED_YYYYMMDD/",
-#                                            cas = "umichigan")
-
-## ---- eval=FALSE--------------------------------------------------------------
-#  plasma.untargeted.merged <-
-#    merge_all_metabolomics(m_m_n = metadata_metabolites_named,
-#                           m_m_u = metadata_metabolites_unnamed,
-#                           m_s_n = metadata_sample_named,
-#                           r_n = results_named,
-#                           r_u = results_unnamed,
-#                           phase = "PASS1A-06")
-
-## ----eval=FALSE---------------------------------------------------------------
-#  ?merge_all_metabolomics
+## ----eval=TRUE----------------------------------------------------------------
+?validate_metabolomics
 

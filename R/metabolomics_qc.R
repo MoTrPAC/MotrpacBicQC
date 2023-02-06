@@ -246,7 +246,7 @@ check_metadata_samples <- function(df,
 
   if("raw_file" %in% colnames(df)){
     if( cas != "emory"){
-      if( assay != "CONV" ){
+      if( !grepl("IMM", assay) ){
         if(length(unique(df$raw_file)) != dim(df)[1]){
           if(verbose) message("   - (-) `raw_file`: Non-unique values detected or missed -> ", appendLF = FALSE)
           if(verbose) message(paste( unique(df$raw_file[unique(duplicated(df$raw_file))]) ) )
@@ -472,38 +472,42 @@ check_manifest_rawdata <- function(input_results_folder,
 #' @description Validate a Metabolomics submission
 #' @param input_results_folder (char) path to the PROCESSED folder to check
 #' @param cas (char) CAS code
-#' @param dmaqc_shipping_info (char) File path to the DMAQC file
+#' @param return_n_issues (logical) if `TRUE` returns the number of issues
+#' @param full_report (logical) if `FALSE` (default) it returns only the
+#' total number of issues. If `TRUE` returns the details of the number of issues (by
+#' group of files, e.g., results, metadata_metabolites, etc)
+#' @param f_proof (logical) generate charts including:
+#' - Sample intensity distribution
+#' - Unique ID counts
+#' - NA values
+#' @param printPDF (logical) if `f_proof = TRUE`, then ` printPDF = TRUE` (default) 
+#' prints plots to pdf file and argument `out_qc_folder` should be provided.
+#' @param out_qc_folder (char) Folder to save the pdfs (if `printPDF = TRUE`). 
+#' It will create the folder if it doesn't exist. If this argument is not provided, 
+#' the files will be written to the working directory
+#' @param dmaqc_shipping_info (char) File path to the DMAQC file. Only the BIC can use this argument
 #' @param dmaqc_phase2validate (char) Provide phase to validate. This argument
 #' is not required since it should be extracted from the input folder or from the 
-#' new required file `metadata_phase.txt`. However, if this argument is provided,
+#' new required file `metadata_phase.txt`. Please, ignore. 
+#' However, if this argument is provided,
 #' it will take priority (and the phase from the input folder and the 
 #' `metadata_phase.txt` will be ignored). Examples
 #' - Folder with `PASS1A-06`: type either `PASS1A-06` or leave it `NULL`
 #' - Both `PASS1A-06` and `PASS1C-06`: type `PASS1A-06|PASS1C-06`
 #' - Only `PASS1C-06`: type `PASS1C-06`
-#' @param return_n_issues (logical) if `TRUE` returns the number of issues
-#' @param full_report (logical) if `FALSE` (default) it returns only the
-#' total number of issues. If `TRUE` returns the details of the number of issues (by
-#' group of files, e.g., results, metadata_metabolites, etc)
-#' @param f_proof (char) print out pdf with charts including:
-#' - Sample intensity distribution
-#' - Unique ID counts
-#' - NA values
-#' @param out_qc_folder (char) output qc folder (it creates the folder if it doesn't exist)
-#' @param printPDF (logical) if `TRUE` (default print plots to pdf)
 #' @param verbose (logical) `TRUE` (default) shows messages
 #' @return (data.frame) Summary of issues
 #' @export
 validate_metabolomics <- function(input_results_folder,
                                   cas,
-                                  dmaqc_shipping_info = NULL,
-                                  dmaqc_phase2validate = FALSE,
                                   return_n_issues = FALSE,
                                   full_report = FALSE,
-                                  verbose = TRUE,
                                   f_proof = FALSE,
+                                  printPDF = TRUE,
                                   out_qc_folder = NULL,
-                                  printPDF = TRUE){
+                                  dmaqc_shipping_info = NULL,
+                                  dmaqc_phase2validate = FALSE,
+                                  verbose = TRUE){
 
   metabolite_name = id_type = NULL
   

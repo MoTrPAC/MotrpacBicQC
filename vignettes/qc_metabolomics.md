@@ -1,6 +1,6 @@
 ---
 title: "MotrpacBicQC: Metabolomics QC"
-date: "2022-02-27"
+date: "2023-02-04"
 output:
   rmdformats::downcute:
     code_folding: show
@@ -16,7 +16,43 @@ vignette: >
   %\usepackage[UTF-8]{inputenc}  
 ---
 
-## Installation
+## Expected submission
+
+The folder/file structure of a required metabolomics submission is as follows:
+
+```
+Example:
+
+PASS1A-06/
+  T55/
+   HILICPOS/ 
+    metadata-phase.txt  ## Note: "new" required file
+    file_manifest_YYYYMMDD.txt
+    BATCH1_20190725/ 
+     RAW/
+      Manifest.txt
+      file1.raw
+      file2.raw
+      etc
+    PROCESSED_20190725/
+     metadata_failedsamples_[cas_specific_labeling].txt
+     NAMED/
+        results_metabolites_named_[cas_specific_labeling].txt 
+        metadata_metabolites_named_[cas_specific_labeling].txt
+        metadata_sample_named_[cas_specific_labeling].txt
+        metadata_experimentalDetails_named_[cas_specific_labeling].txt
+     UNNAMED/ ## Note: Only required for untargeted assays
+        results_metabolites_unnamed_[cas_specific_labeling].txt
+        metadata_metabolites_unnamed_[cas_specific_labeling].txt
+        metadata_sample_unnamed_[cas_specific_labeling].txt
+        metadata_experimentalDetails_unnamed_[cas_specific_labeling].txt
+```
+
+With the following file relations...
+
+![](BIC_Metabolomics_DataProcessing_Summary_20200303.png)
+
+## Install MotrpacBicQC
 
 First, download and install R and RStudio:
 
@@ -30,12 +66,13 @@ Then, open RStudio and install the `devtools` package
 install.packages("devtools")
 ```
 
-Finally, install the `MotrpacBicQC` package
+Finally, install the `MotrpacBicQC` package. 
+**Important**: install it every time that you run the QCs to ensure that the latest version is used.
 
 
 ```r
 library(devtools)
-devtools::install_github("MoTrPAC/MotrpacBicQC", build_vignettes = TRUE)
+devtools::install_github("MoTrPAC/MotrpacBicQC", build_vignettes = FALSE)
 ```
 
 
@@ -68,39 +105,39 @@ check_metadata_metabolites(df = metadata_metabolites_named, name_id = "named")
 ```
 
 ```
-##    + (+) All required columns present
+##   + (+) All required columns present
 ```
 
 ```
-##    + (+) {metabolite_name} OK
+##   + (+) `metabolite_name` OK
 ```
 
 ```
-##    + (+) {refmet_name} unique values: OK
+##   + (+) `refmet_name` unique values: OK
 ```
 
 ```
-##    + Validating {refmet_name}
+##   + Validating `refmet_name`
 ```
 
 ```
-##       + (+) {refmet_name} ids found in refmet: OK
+##   + (+) `refmet_name` ids found in refmet: OK
 ```
 
 ```
-##    + (+) {rt} all numeric: OK
+##   + (+) {rt} all numeric: OK
 ```
 
 ```
-##    + (+) {mz} all numeric: OK
+##   + (+) {mz} all numeric: OK
 ```
 
 ```
-##    + (+) {neutral_mass} all numeric values OK
+##   + (+) {`neutral_mass`} all numeric values OK
 ```
 
 ```
-##    + (+) {formula} available: OK
+##   + (+) {formula} available: OK
 ```
 
 ```r
@@ -108,23 +145,23 @@ check_metadata_samples(df = metadata_sample_named, cas = "umichigan")
 ```
 
 ```
-##    + (+) {sample_id} seems OK
+##   + (+) `sample_id` seems OK
 ```
 
 ```
-##    + (+) {sample_type} seems OK
+##   + (+) `sample_type` seems OK
 ```
 
 ```
-##    + (+) {sample_order} is numeric
+##   + (+) `sample_order` is numeric
 ```
 
 ```
-##    + (+) {sample_order} unique values OK
+##   + (+) `sample_order` unique values OK
 ```
 
 ```
-##    + (+) {raw_file} unique values OK
+##   + (+) `raw_file` unique values: OK
 ```
 
 ```r
@@ -132,18 +169,18 @@ check_results(r_m = results_named, m_s = metadata_sample_named, m_m = metadata_m
 ```
 
 ```
-##    + (+) All samples from [results_metabolite] are available in [metadata_sample]
+##   + (+) All samples from `results_metabolite` are available in `metadata_sample`
 ```
 
 ```
-##    + (+) {metabolite_name} is identical in both [results] and [metadata_metabolites] files: OK
+##   + (+) `metabolite_name` is identical in both [results] and `metadata_metabolites` files: OK
 ```
 
 ```
-##    + (+) {sample_id} columns are numeric: OK
+##   + (+) `sample_id` columns are numeric: OK
 ```
 
-## How to test your datasets
+## How to process a metabolomics dataset
 
 Two approaches available:
 
@@ -157,7 +194,7 @@ validate_metabolomics(input_results_folder = "/full/path/to/PROCESSED_YYYYMMDD",
                       cas = "your_site_code")
 ```
 
-**cas** is one of the followings:
+**cas** can be one of the followings:
 
 - "broad_met" = Broad Metabolomics
 - "emory"     = Emory
@@ -185,11 +222,13 @@ validate_metabolomics(input_results_folder = "/full/path/to/PROCESSED_YYYYMMDD",
                       printPDF = TRUE)
 ```
 
-It is recommended to provide the path to the folder where the pdf files should be saved (argument: `out_qc_folder`)
+It is recommended to provide the path to the folder where the pdf files should be saved (argument: `out_qc_folder`). If it doesn't exist, it will be created.
 
 ### Check individual files
 
-- Check metadata metabolites:
+In the rare case that you need to process individual files, that also can be done. Cases:
+
+Check metadata metabolites:
 
 
 ```r
@@ -202,7 +241,7 @@ check_metadata_metabolites(df = metadata_metabolites_named, name_id = "named")
 check_metadata_metabolites(df = metadata_metabolites_unnamed, name_id = "unnamed")
 ```
 
-- Check metadata samples:
+Check metadata samples:
 
 
 ```r
@@ -214,7 +253,7 @@ check_metadata_samples(df = metadata_sample_named, cas = "your_side_id")
 check_metadata_samples(df = metadata_sample_unnamed, cas = "your_side_id")
 ```
 
-- Check results, which needs both both metadata metabolites and samples
+Check results, which needs both both metadata metabolites and samples
 
 
 ```r
@@ -228,63 +267,7 @@ check_results(r_m = results_named,
               m_m = metadata_metabolites_named)
 ```
 
-### Merge metabolomics data (only PASS1A supported)
 
-The following functions enable merging all results and metadata files into a 
-single data frame. 
-
-The folder/file structure of a required untargeted metabolomics submission is as follows:
-
-```
-PASS1A-06/
-  T55/
-   HILICPOS/ 
-    BATCH1_20190725/ 
-     RAW/
-      Manifest.txt
-      file1.raw
-      file2.raw
-      etc
-    PROCESSED_20190725/
-     metadata_failedsamples_[cas_specific_labeling]. txt
-     NAMED/
-        results_metabolites_named_[cas_specific_labeling].txt 
-        metadata_metabolites_named_[cas_specific_labeling].txt
-        metadata_sample_named_[cas_specific_labeling].txt
-        metadata_experimentalDetails_named_[cas_specific_labeling].txt
-     UNNAMED/
-        results_metabolites_unnamed_[cas_specific_labeling].txt
-        metadata_metabolites_unnamed_[cas_specific_labeling].txt
-        metadata_sample_unnamed_[cas_specific_labeling].txt
-        metadata_experimentalDetails_unnamed_[cas_specific_labeling].txt
-```
-
-With the following file relations...
-
-![](BIC_Metabolomics_DataProcessing_Summary_20200303.png)
-
-To merge all data available in a `PROCESSED_YYYYMMDD` folder, run the following command:
-
-
-```r
-t31_ionpneg <- combine_metabolomics_batch(input_results_folder = "/full/path/to/PROCESSED_YYYYMMDD/", 
-                                          cas = "umichigan")
-```
-
-Alternatively, each individual dataset can also be provided. For example:
-
-
-```r
-plasma.untargeted.merged <- 
-  merge_all_metabolomics(m_m_n = metadata_metabolites_named,
-                         m_m_u = metadata_metabolites_unnamed,
-                         m_s_n = metadata_sample_named,
-                         r_n = results_named,
-                         r_u = results_unnamed,
-                         phase = "PASS1A-06")
-```
-
-Check the function help for details
 
 ## Help
 
@@ -292,9 +275,15 @@ Additional details for each function can be found by typing, for example:
 
 
 ```r
-?merge_all_metabolomics
+?validate_metabolomics
 ```
 
-Need extra help? Please, [submit an issue here](https://github.com/MoTrPAC/MotrpacBicQC/issues) 
-providing as many details as possible.
+```
+## ℹ Rendering development
+##   documentation for
+##   "validate_metabolomics"
+```
+
+Need extra help? Please, either contact the BIC at [motrpac-helpdesk@lists.stanford.edu](mailto:motrpac-helpdesk@lists.stanford.edu) and/or [submit an issue here](https://github.com/MoTrPAC/MotrpacBicQC/issues) 
+providing as many details as possible
 

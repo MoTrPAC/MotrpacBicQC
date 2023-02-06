@@ -7,14 +7,14 @@
 validate_metabolomics(
   input_results_folder,
   cas,
-  dmaqc_shipping_info = NULL,
-  dmaqc_phase2validate = FALSE,
   return_n_issues = FALSE,
   full_report = FALSE,
-  verbose = TRUE,
   f_proof = FALSE,
+  printPDF = TRUE,
   out_qc_folder = NULL,
-  printPDF = TRUE
+  dmaqc_shipping_info = NULL,
+  dmaqc_phase2validate = FALSE,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -22,11 +22,32 @@ validate_metabolomics(
 
 \item{cas}{(char) CAS code}
 
-\item{dmaqc_shipping_info}{(char) File path to the DMAQC file}
+\item{return_n_issues}{(logical) if \code{TRUE} returns the number of issues}
+
+\item{full_report}{(logical) if \code{FALSE} (default) it returns only the
+total number of issues. If \code{TRUE} returns the details of the number of issues (by
+group of files, e.g., results, metadata_metabolites, etc)}
+
+\item{f_proof}{(logical) generate charts including:
+\itemize{
+\item Sample intensity distribution
+\item Unique ID counts
+\item NA values
+}}
+
+\item{printPDF}{(logical) if \code{f_proof = TRUE}, then \code{ printPDF = TRUE} (default)
+prints plots to pdf file and argument \code{out_qc_folder} should be provided.}
+
+\item{out_qc_folder}{(char) Folder to save the pdfs (if \code{printPDF = TRUE}).
+It will create the folder if it doesn't exist. If this argument is not provided,
+the files will be written to the working directory}
+
+\item{dmaqc_shipping_info}{(char) File path to the DMAQC file. Only the BIC can use this argument}
 
 \item{dmaqc_phase2validate}{(char) Provide phase to validate. This argument
 is not required since it should be extracted from the input folder or from the
-new required file \code{metadata_phase.txt}. However, if this argument is provided,
+new required file \code{metadata_phase.txt}. Please, ignore.
+However, if this argument is provided,
 it will take priority (and the phase from the input folder and the
 \code{metadata_phase.txt} will be ignored). Examples
 \itemize{
@@ -35,24 +56,7 @@ it will take priority (and the phase from the input folder and the
 \item Only \code{PASS1C-06}: type \code{PASS1C-06}
 }}
 
-\item{return_n_issues}{(logical) if \code{TRUE} returns the number of issues}
-
-\item{full_report}{(logical) if \code{FALSE} (default) it returns only the
-total number of issues. If \code{TRUE} returns the details of the number of issues (by
-group of files, e.g., results, metadata_metabolites, etc)}
-
 \item{verbose}{(logical) \code{TRUE} (default) shows messages}
-
-\item{f_proof}{(char) print out pdf with charts including:
-\itemize{
-\item Sample intensity distribution
-\item Unique ID counts
-\item NA values
-}}
-
-\item{out_qc_folder}{(char) output qc folder (it creates the folder if it doesn't exist)}
-
-\item{printPDF}{(logical) if \code{TRUE} (default print plots to pdf)}
 }
 \value{
 (data.frame) Summary of issues
