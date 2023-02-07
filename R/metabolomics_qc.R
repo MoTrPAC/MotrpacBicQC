@@ -255,7 +255,7 @@ check_metadata_samples <- function(df,
           if(verbose) message("  + (+) `raw_file` unique values: OK")
         } 
       }else{
-        if(verbose) message("  + (+) `raw_file` might contain non-unique raw files for this CONV assay: OK")
+        if(verbose) message("  + (+) `raw_file` might contain non-unique raw files for this IMM assay: OK")
       }
     }else{
       if(verbose) message("  + (+) `raw_file` might contain unique values for this site: OK")
