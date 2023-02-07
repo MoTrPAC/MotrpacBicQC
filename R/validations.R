@@ -281,7 +281,7 @@ validate_batch <- function(input_results_folder){
 validate_assay <- function(input_results_folder){
 
   assay <- stringr::str_extract(string = input_results_folder,
-                                pattern = "(IONPNEG|RPNEG|RPPOS|HILICPOS|LRPPOS|LRPNEG|3HIB|AA|AC_DUKE|ACOA|BAIBA|CER_DUKE|CONV|KA|NUC|OA|SPHM|OXYLIPNEG|ETAMIDPOS|AC_MAYO|AMINES|CER_MAYO|TCA|PROT_PH|PROT_PR|PROT_AC|PROT_UB)")
+                                pattern = "(IONPNEG|RPNEG|RPPOS|HILICPOS|LRPPOS|LRPNEG|3HIB|AA|AC_DUKE|ACOA|BAIBA|CER_DUKE|CONV|KA|NUC|OA|SPHM|OXYLIPNEG|ETAMIDPOS|AC_MAYO|AMINES|CER_MAYO|TCA|IMM_CTR|IMM_GLC|IMM_INS|PROT_PH|PROT_PR|PROT_AC|PROT_UB)")
   if(is.na(assay)){
     stop("ASSAY not found in the folder structure")
   }else{
