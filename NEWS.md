@@ -1,3 +1,8 @@
+# MotrpacBicQC 0.8.1 (2023-02-08)
+
+* Fix bug affecting IMM assays
+
+
 # MotrpacBicQC 0.8.0 (2023-02-05)
 
 * New metabolomics targeted assays (IMM_GLC, IMM_INS, IMM_CTR)
