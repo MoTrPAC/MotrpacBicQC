@@ -59,6 +59,6 @@ check_results(r_m = results_named, m_s = metadata_sample_named, m_m = metadata_m
 #                m_s = metadata_sample_named,
 #                m_m = metadata_metabolites_named)
 
-## ----eval=TRUE----------------------------------------------------------------
-?validate_metabolomics
+## ----eval=FALSE---------------------------------------------------------------
+#  ?validate_metabolomics
 

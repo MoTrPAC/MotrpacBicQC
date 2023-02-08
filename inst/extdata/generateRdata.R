@@ -5,7 +5,6 @@ library(devtools)
 
 # FILES IN PACKAGE--------------------------------------------------------------
 
-
 ## update assay codes (2023-01-12)-----
 
 IMM_GLC <- data.frame(omics_code = "metabolomics-targeted",
