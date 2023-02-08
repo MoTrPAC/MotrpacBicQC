@@ -1,7 +1,10 @@
-# MotrpacBicQC 0.8.1 (2023-02-08)
+# MotrpacBicQC 0.8.3 (2023-02-08)
+
+* Fix typo
+
+# MotrpacBicQC 0.8.1 and 0.8.2 (2023-02-08)
 
 * Fix bug affecting IMM assays
-
 
 # MotrpacBicQC 0.8.0 (2023-02-05)
 

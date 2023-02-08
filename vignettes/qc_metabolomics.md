@@ -1,6 +1,6 @@
 ---
 title: "MotrpacBicQC: Metabolomics QC"
-date: "2023-02-04"
+date: "2023-02-08"
 output:
   rmdformats::downcute:
     code_folding: show
@@ -276,12 +276,6 @@ Additional details for each function can be found by typing, for example:
 
 ```r
 ?validate_metabolomics
-```
-
-```
-## ℹ Rendering development
-##   documentation for
-##   "validate_metabolomics"
 ```
 
 Need extra help? Please, either contact the BIC at [motrpac-helpdesk@lists.stanford.edu](mailto:motrpac-helpdesk@lists.stanford.edu) and/or [submit an issue here](https://github.com/MoTrPAC/MotrpacBicQC/issues) 
