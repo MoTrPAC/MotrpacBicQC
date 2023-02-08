@@ -24,15 +24,15 @@ IMM_INS <- data.frame(omics_code = "metabolomics-targeted",
                       assay_abbreviation = "METAB",
                       assay_hex_colour = "#E41A1C")
 
-IMM_CTR <- data.frame(omics_code = "metabolomics-targeted",
-                      submission_code = "IMM_CTR",
-                      assay_code = "metab-t-imm-ctr",
+IMM_CRT <- data.frame(omics_code = "metabolomics-targeted",
+                      submission_code = "IMM_CRT",
+                      assay_code = "metab-t-imm-crt",
                       assay_name = "Immunoassay for corticosteroids",
                       cas_code = "duke",
                       assay_abbreviation = "METAB",
                       assay_hex_colour = "#E41A1C")
-
-assay_codes <- rbind(assay_codes, IMM_CTR, IMM_GLC, IMM_INS)
+                     
+assay_codes <- rbind(assay_codes, IMM_CRT, IMM_GLC, IMM_INS)
 
 assay_codes$assay_name[which(assay_codes$submission_code == "CONV")] <- "Clinical chemistry assays for conventional metabolites"
 
