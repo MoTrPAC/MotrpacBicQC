@@ -69,8 +69,11 @@ check_ratio_proteomics <- function(df_ratio,
         # rii_redundant_ids <- df_ratio[which(df_ratio$ptm_id %in% red_ids),]
 
         # Plot redundancies
-        ya <- df_ratio %>% group_by(ptm_id) %>% summarise(id_repeats = n()) %>%
-          group_by(id_repeats) %>% summarise(n = n()) %>%
+        ya <- df_ratio %>%
+          group_by(ptm_id) %>%
+          reframe(id_repeats = n()) %>%
+          group_by(id_repeats) %>%
+          reframe(n = n()) %>%
           ggplot2::ggplot(aes(x = as.factor(id_repeats), y = n, fill = as.factor(id_repeats))) +
           geom_bar(stat = "identity") +
           theme_linedraw() +
@@ -141,7 +144,6 @@ check_ratio_proteomics <- function(df_ratio,
     if( any(duplicated(df_ratio$protein_id)) ){
       ic_rr <- ic_rr + 1
       if(verbose) message("      - (-) Duplicated PROTEIN_ID found: FAIL")
-      ic <- ic + 1
     }
     
     if("num_peptides" %in% colnames(df_ratio)){
@@ -327,10 +329,10 @@ check_rii_proteomics <- function(df_rri,
 
         # Plot redundancies
         df <- df_rri %>%
-          dplyr::group_by(ptm_peptide) %>%
-          dplyr::summarise(id_repeats = n()) %>%
-          dplyr::group_by(id_repeats) %>%
-          dplyr::summarise(n = n())
+          group_by(ptm_peptide) %>%
+          reframe(id_repeats = n()) %>%
+          group_by(id_repeats) %>%
+          reframe(n = n())
 
         xa <- ggplot2::ggplot(df, aes(x = as.factor(id_repeats), y = n, fill = as.factor(id_repeats))) +
           geom_bar(stat = "identity") +
@@ -951,7 +953,7 @@ validate_proteomics <- function(input_results_folder,
     ic <- ic + 10
   }
 
- # RATIO----
+  # RATIO----
 
   if(verbose) message("\n\n## RATIO results\n")
 
@@ -1048,12 +1050,9 @@ validate_proteomics <- function(input_results_folder,
                 key_id <- "protein_id"
               }
               
-              # uid <- ratior_long %>% 
-              #   group_by(across(all_of(c(key_id, "vial_label", "tmt_plex")))) %>% 
-              #   summarise(total_rii = sum(ratio_values, na.rm = FALSE), .groups = 'drop')
-              uid <- ratior_long %>% 
-                group_by(across(all_of(c(key_id, "vial_label", "tmt_plex")))) %>% 
-                summarise(total_rii = ratio_values, .groups = 'drop')
+              uid <- ratior_long %>%
+                group_by(across(all_of(c(key_id, "vial_label", "tmt_plex")))) %>%
+                reframe(total_rii = ratio_values)
               
               uid2 <- uid[which(!is.na(uid$total_rii)),]
               uid3 <- unique(uid2[c(key_id, "vial_label", "tmt_plex")]) %>% 
