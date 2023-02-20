@@ -217,6 +217,7 @@ check_viallabel_dmaqc <- function(vl_submitted,
 validate_cas <- function(cas){
   valid_cas_sites <- c("mssm",
                        "broad_met",
+                       "bic",
                        "emory",
                        "mayo",
                        "stanford",
