@@ -52,7 +52,9 @@ plot_basic_metabolomics_qc <- function(results,
   # Density plots------ 
   
   if(verbose) message("       - (p) Density distributions")
-  mu <- results_long %>% group_by(sample_id) %>% dplyr::summarise(grp.mean=mean(intensity))
+  mu <- results_long %>%
+    group_by(sample_id) %>%
+    reframe(grp.mean = mean(intensity))
   
   den1 <- ggplot(data = results_long, aes(x = log2(intensity), color = sample_type)) + 
     geom_density(na.rm = TRUE) + 
@@ -81,7 +83,7 @@ plot_basic_metabolomics_qc <- function(results,
   if(verbose) message("       - (p) Plot sum of intensity/concentration values")
   sum_int <- results_long %>%
     group_by(sample_id, sample_type, sample_order) %>%
-    summarise(sum_quant = sum(intensity))
+    reframe(sum_quant = sum(intensity))
   
   psumint <- ggplot(sum_int, aes(x = reorder(sample_id, sample_order), y = sum_quant, fill = sample_type)) +
     geom_bar(stat = "identity") + theme_classic() +
@@ -176,7 +178,7 @@ plot_basic_metabolomics_qc <- function(results,
   if(verbose) message("       - (p) Plot ID counts")
   uid <- results_long %>%
     group_by(across(all_of(c("metabolite_name", "sample_id", "sample_type", "sample_order", "id_type")))) %>%
-    summarise(total_intensity = intensity, .groups = 'drop')
+    reframe(total_intensity = intensity)
   uid2 <- uid[which(!is.na(uid$total_intensity)),]
   uid3 <- unique(uid2[c("metabolite_name", "sample_id", "sample_type", "sample_order", "id_type")]) %>%
     count(sample_id, sample_type, sample_order, id_type)

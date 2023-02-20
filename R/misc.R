@@ -1,6 +1,6 @@
 # Add package by alphabetical order
 
-#' @importFrom data.table rbindlist as.data.table
+#' @importFrom data.table rbindlist as.data.table fread
 #' @import dplyr
 #' @import forcats
 #' @import ggplot2
@@ -47,6 +47,64 @@ create_folder <- function(folder_name = NULL,
     folder_name <- getwd()
     return(folder_name)
   }
+}
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' @title dl_read_gcp: Data Load, Read file from Google Cloud
+#' 
+#' @description
+#' Read a single file from Google Cloud Storage (GSC) into a data table
+#'
+#' @param path (char) GCS path, i.e., starts with "gs://"
+#' @param sep (char) column separator to use with [data.table::fread]
+#' @param tmpdir (char) scratch directory to download files from GCS
+#' @param gsutil_path (char) path to \code{gsutil} on your computer. 
+#' Can be "gsutil" if \code{gsutil} is in your \code{$PATH}. 
+#' @param check_first (char) check if file exists in \code{tmpdir} before 
+#' downloading it. Read in existing file if it exists. 
+#' Should be set to \code{TRUE} if you are running this function in parallel.
+#' @param header (bool) whether input file has a header line 
+#' @param ... optional arguments for [data.table::fread] 
+#'
+#' @return a data table
+#' 
+#' @importFrom data.table fread
+#'
+#' @examples 
+#' \dontrun{
+#' pheno = dl_read_gcp(path = "gs://your-bucket/file.txt")
+#' }
+#' @export
+dl_read_gcp <- function(path,
+                        sep = '\t',
+                        header = TRUE,
+                        tmpdir = '/tmp',
+                        gsutil_path = 'gsutil',
+                        check_first = TRUE,
+                        ...){
+  system(sprintf('mkdir -p %s',tmpdir))
+  # download
+  new_path <- sprintf('%s/%s', tmpdir, basename(path))
+  # only download if it doesn't exist to avoid conflicts when running this script in parallel; clear scratch space when you're done
+  if(check_first){
+    if( !file.exists(new_path) ){
+      cmd <- sprintf('%s cp %s %s', gsutil_path, path, tmpdir)
+      system(cmd, ignore.stdout = TRUE, ignore.stderr = TRUE)
+    }else{
+      message(paste("The file", new_path, "already exists"))
+    }
+  }else{
+    message(paste("Downloading file from GCP: ", basename(path)))
+    cmd <- sprintf('%s cp %s %s', gsutil_path, path, tmpdir)
+    system(cmd, ignore.stdout = TRUE, ignore.stderr = TRUE)
+  }
+  # read in the data as a data.table
+  if(file.exists(new_path)){
+    dt <- data.table::fread(new_path, sep=sep, header=header,...)
+    return(dt)
+  }
+  warning(sprintf("gsutil file %s does not exist.\n", path))
+  return()
 }
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

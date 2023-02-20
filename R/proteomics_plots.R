@@ -107,7 +107,8 @@ proteomics_plots_rii <- function(all_vial_labels,
       
       uid <- peptides_long %>% 
         group_by(across(all_of(c(key_id, "vial_label", "tmt_plex")))) %>% 
-        summarise(total_rii = ri_intensity, .groups = 'drop')
+        reframe(total_rii = ri_intensity)
+      
       uid2 <- uid[which(!is.na(uid$total_rii)),]
       uid3 <- unique(uid2[c(key_id, "vial_label", "tmt_plex")]) %>%
         count(vial_label, tmt_plex)
