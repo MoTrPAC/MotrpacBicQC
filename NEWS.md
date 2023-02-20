@@ -1,3 +1,9 @@
+# MotrpacBicQC 0.8.4 (2023-02-20)
+
+* Add new `dl_read_gcp`
+* Replace dplyr `summarise` function (deprecated) by `reframe`
+* Fix bug affecting `proteomics_plots`
+
 # MotrpacBicQC 0.8.3 (2023-02-08)
 
 * Fix typo
