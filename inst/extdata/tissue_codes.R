@@ -2,7 +2,6 @@
 # R script to generate the tissue codes and colors
 library(data.table)
 library(devtools)
-library(MotrpacBicQC)
 
 # BIC tissue codes----
 bic_animal_tissue_code <- read.delim("inst/extdata/bic_animal_tissue_code.tsv", stringsAsFactors = FALSE)

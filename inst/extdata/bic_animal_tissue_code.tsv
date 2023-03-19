@@ -21,7 +21,7 @@ T19	Human Mycoplasma	T19 Human Mycoplasma	t19-mycoplasma
 T20	Human Muscle Histology	T20 Human Muscle Histology	t20-muscle-histology
 T21	Human Adipose Histology	T21 Human Adipose Histology	t21-adipose-histology
 T30	Blood RNA	T30 Rat PaxGene RNA	t30-blood-rna
-T31	EDTA Plasma	T31 Rat Plasma	
+T31	EDTA Plasma	T31 Rat Plasma	t31-plasma
 T32	Packed Cells	T32 Rat Packed Cells	
 T33	Hippocampus	T33 Rat Hippocampus	
 T34	Cortex	T34 Rat Cortex	
@@ -61,5 +61,5 @@ T67	Small Intestine Powder	T67 Rat Small Intestine Powder	t67-small-intestine
 T68	Liver Powder	T68 Rat Liver Powder	t68-liver
 T69	Brown Adipose Powder	T69 Rat Brown Adipose Powder	t69-brown-adipose
 T70	White Adipose Powder	T70 Rat White Adipose Powder	t70-white-adipose
-T77	Lateral Gastrocnemius	T77 Rat Lateral Gastrocnemius	t77-lateral-gastroc
-T99	Vena Cava	T99 Rat Vena Cava	t99-vena-cava
+T77	Lateral Gastrocnemius Powder	T77 Rat Lateral Gastrocnemius	t77-lateral-gastroc
+T99	Vena Cava Powder	T99 Rat Vena Cava	t99-vena-cava
