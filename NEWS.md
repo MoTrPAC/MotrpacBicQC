@@ -1,3 +1,7 @@
+# MotrpacBicQC 0.8.5 (2023-03-18)
+
+* New tissue codes, abbreviations, and colors available for lateral Gastrocnemius and vena cava
+
 # MotrpacBicQC 0.8.4 (2023-02-20)
 
 * Add new `dl_read_gcp`
