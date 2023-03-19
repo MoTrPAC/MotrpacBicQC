@@ -1,8 +1,8 @@
 bic_tissue_code	bic_tissue_name	motrpac_tissue_code	tissue_name_release
 T01	Human Serum	T01 Human Serum	t01-serum
 T02	Human EDTA Plasma	T02 Human EDTA Plasma	t02-plasma
-T03	Human EDTA Packed Cells	T03 Human EDTA Packed Cells	
-T04	Human PAXgene RNA	T04 Human PAXgene RNA	
+T03	Human EDTA Packed Cells	T03 Human EDTA Packed Cells	t03-edta-packed-cells
+T04	Human PAXgene RNA	T04 Human PAXgene RNA	t04-blood-rna
 T05	Human PBMC	T05 Human PBMC	t05-pbmc
 T06	Human Muscle	T06 Human Muscle	t06-muscle
 T07	Human Adipose	T07 Human Adipose	t07-adipose
@@ -61,3 +61,5 @@ T67	Small Intestine Powder	T67 Rat Small Intestine Powder	t67-small-intestine
 T68	Liver Powder	T68 Rat Liver Powder	t68-liver
 T69	Brown Adipose Powder	T69 Rat Brown Adipose Powder	t69-brown-adipose
 T70	White Adipose Powder	T70 Rat White Adipose Powder	t70-white-adipose
+T77	Lateral Gastrocnemius Powder	T77 Rat Lateral Gastrocnemius	t77-lateral-gastroc
+T99	Vena Cava Powder	T99 Rat Vena Cava	t99-vena-cava
