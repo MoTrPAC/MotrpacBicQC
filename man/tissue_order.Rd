@@ -5,7 +5,7 @@
 \alias{tissue_order}
 \title{tissue order}
 \format{
-An object of class \code{character} of length 20.
+An object of class \code{character} of length 21.
 }
 \usage{
 tissue_order
