@@ -8,7 +8,7 @@
 [![CircleCI](https://circleci.com/gh/MoTrPAC/MotrpacBicQC.svg?style=svg)](https://circleci.com/gh/MoTrPAC/MotrpacBicQC)
 ![R package version](https://img.shields.io/github/r-package/v/MoTrPAC/MotrpacBicQC?label=R%20package)
 ![Last commit](https://img.shields.io/github/last-commit/MoTrPAC/MotrpacBicQC/develop)
-
+[![DOI](https://zenodo.org/badge/256275809.svg)](https://zenodo.org/badge/latestdoi/256275809)
 <!-- badges: end -->
 
   
