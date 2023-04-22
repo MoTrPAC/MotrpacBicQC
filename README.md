@@ -4,7 +4,12 @@
 
 ---
 
+<!-- badges: start -->
 [![CircleCI](https://circleci.com/gh/MoTrPAC/MotrpacBicQC.svg?style=svg)](https://circleci.com/gh/MoTrPAC/MotrpacBicQC)
+![R package version](https://img.shields.io/github/r-package/v/MoTrPAC/MotrpacBicQC?label=R%20package)
+![Last commit](https://img.shields.io/github/last-commit/MoTrPAC/MotrpacBicQC/develop)
+
+<!-- badges: end -->
 
   
 ## Overview
