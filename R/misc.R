@@ -179,6 +179,7 @@ filter_required_columns <- function(df,
   type <- match.arg(type)
 
   if (type == "m_m"){
+    # Define required columns
     if(name_id == "named"){
       emeta_metabo_coln_named <- c("metabolite_name", "refmet_name", "rt", "mz", "neutral_mass", "formula")
     }else if(name_id == "unnamed"){
@@ -190,25 +191,32 @@ filter_required_columns <- function(df,
     }else{
       stop("{`name_id`} option not valid. Options: named/unnamed")
     }
-
+    
+    # Now check if present
     colnames(df) <- tolower(colnames(df))
-
-    if(all(emeta_metabo_coln_named %in% colnames(df))){
+    missing_cols <- setdiff(emeta_metabo_coln_named, colnames(df))
+    if (length(missing_cols) > 0) {
+      if(verbose) message("   - (-) `metadata_metabolite`: Expected COLUMN NAMES are missed: FAIL")
+      message(paste("\t The following required columns are not present:", paste(missing_cols, collapse = ", ")))
+    } else {
       if(verbose) message("  + (+) All required columns present")
       df <- subset(df, select = emeta_metabo_coln_named)
-    }else{
-      if(verbose) message("   - (-) Expected COLUMN NAMES are missed: FAIL")
     }
     return(df)
+    
   } else if (type == "m_s"){
-    emeta_sample_coln <- c("sample_id", "sample_type", "sample_order", "raw_file")
-    if( all(emeta_sample_coln %in% colnames(df)) ){
+    emeta_sample_coln <- c("sample_id", "sample_type", "sample_order", "raw_file", "extraction_date", "acquisition_date", "lc_column_id")
+    missing_cols <- setdiff(emeta_sample_coln, colnames(df))
+    
+    if (length(missing_cols) > 0) {
+      if(verbose) message("   - (-) `metadata_sample`: Expected COLUMN NAMES are missed: FAIL")
+      message(paste("\t The following required columns are not present:", paste(missing_cols, collapse = ", ")))
+    } else {
       if(verbose) message("  + (+) All required columns present")
       df <- subset(df, select = emeta_sample_coln)
-    }else{
-      if(verbose) message("   - (-) Expected COLUMN NAMES are missed: FAIL")
     }
     return(df)
+
   } else if (type == "v_m"){
     emeta_sample_coln <- c("vial_label", "tmt_plex")
     if( all(emeta_sample_coln %in% colnames(df)) ){
