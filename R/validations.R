@@ -382,6 +382,7 @@ validate_two_phases <- function(phase_details,
 #'   other_column = 1:3
 #' )
 #' validate_yyyymmdd_dates(df, "extraction_date")
+#' @export
 validate_yyyymmdd_dates <- function(df, date_column, verbose = TRUE) {
   
   # set issue count
@@ -399,7 +400,7 @@ validate_yyyymmdd_dates <- function(df, date_column, verbose = TRUE) {
   
   # Check for missing values
   if(any(is.na(date_vector))){
-    if(verbose) message("Missing values detected: FAIL")
+    if(verbose) message("   - (-) Missing values detected in column `", date_column, "` : FAIL")
     ic <- ic + 1
     return(ic)
   }
@@ -407,7 +408,7 @@ validate_yyyymmdd_dates <- function(df, date_column, verbose = TRUE) {
   # Check dash intead of -
   check_dash <- grepl("\\/", date_vector)
   if(any(check_dash)){
-    if(verbose) message("Invalid dates detected using `/` instead of `-`: ", paste(date_vector[check_dash], collapse = ", "))
+    if(verbose) message("   - (-)`", date_column, "`: Invalid dates detected using `/` instead of `-`: ", paste(date_vector[check_dash], collapse = ", "))
     ic <- ic + 1
     return(ic)
   }
@@ -433,7 +434,7 @@ validate_yyyymmdd_dates <- function(df, date_column, verbose = TRUE) {
   incorrect_dates <- incorrect_format | incorrect_components
   
   if(any(incorrect_dates)){
-    if(verbose) message("Invalid dates detected: ", paste(date_vector[incorrect_dates], collapse = ", "))
+    if(verbose) message("`", date_column, "`: Invalid dates detected: ", paste(date_vector[incorrect_dates], collapse = ", "))
     ic <- ic + 1
   } else {
     if(verbose) message("All dates are valid.")
