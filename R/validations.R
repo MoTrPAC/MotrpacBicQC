@@ -361,5 +361,83 @@ validate_two_phases <- function(phase_details,
   if(verbose) return("Two phases reported and they are ok")
 }
 
-
-
+#' Validate Dates in a Specified Column of a Data Frame
+#'
+#' This function checks for the validity of dates in a specified column of a given data frame. 
+#' Valid dates are in the format YYYY-MM-DD, with year values between 2018 and 2026, 
+#' month values between 1 and 12, and day values between 1 and 31. 
+#' The function prints a list of invalid dates and a success message if all dates are valid.
+#'
+#' @title Validate YYYY-MM-DD Dates in a Data Frame
+#'
+#' @param df A data frame that contains the date information to be validated.
+#' @param date_column A character string specifying the name of the column in `df` that contains the dates to be validated.
+#' @param verbose A logical value indicating whether or not to print messages (default: `TRUE`).
+#'
+#' @return number of issues found
+#'
+#' @examples
+#' df <- data.frame(
+#'   extraction_date = c("2022-01-31", "2023-12-01", "2027-11-30"),
+#'   other_column = 1:3
+#' )
+#' validate_yyyymmdd_dates(df, "extraction_date")
+validate_yyyymmdd_dates <- function(df, date_column, verbose = TRUE) {
+  
+  # set issue count
+  ic <- 0
+  
+  # Check if date_column exists in df
+  if(!(date_column %in% colnames(df))){
+    stop(paste0("Column ", date_column, " not found in the data frame."))
+    ic <- ic + 1
+    return(ic)
+  }
+  
+  # Extract the date column
+  date_vector <- df[[date_column]]
+  
+  # Check for missing values
+  if(any(is.na(date_vector))){
+    if(verbose) message("Missing values detected: FAIL")
+    ic <- ic + 1
+    return(ic)
+  }
+  
+  # Check dash intead of -
+  check_dash <- grepl("\\/", date_vector)
+  if(any(check_dash)){
+    if(verbose) message("Invalid dates detected using `/` instead of `-`: ", paste(date_vector[check_dash], collapse = ", "))
+    ic <- ic + 1
+    return(ic)
+  }
+  
+  # Check for invalid date format
+  incorrect_format <- !grepl("^\\d{4}-\\d{2}-\\d{2}$", date_vector)
+  
+  # Check for invalid year, month, or day
+  split_dates <- strsplit(date_vector, "-")
+  incorrect_components <- sapply(split_dates, function(date_parts) {
+    year <- as.integer(date_parts[1])
+    month <- as.integer(date_parts[2])
+    day <- as.integer(date_parts[3])
+    
+    year_out_of_range <- year < 2018 | year > 2026
+    month_out_of_range <- month < 1 | month > 12
+    day_out_of_range <- day < 1 | day > 31
+    
+    year_out_of_range | month_out_of_range | day_out_of_range
+  })
+  
+  # Combine results
+  incorrect_dates <- incorrect_format | incorrect_components
+  
+  if(any(incorrect_dates)){
+    if(verbose) message("Invalid dates detected: ", paste(date_vector[incorrect_dates], collapse = ", "))
+    ic <- ic + 1
+  } else {
+    if(verbose) message("All dates are valid.")
+  }
+  
+  return(ic)
+}
