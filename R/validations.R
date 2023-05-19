@@ -329,6 +329,51 @@ validate_dates_times <- function(df, column_name, verbose = TRUE) {
 }
 
 
+#' @title Validate 'lc_column_id' column
+#'
+#' @description
+#'  This function checks the 'lc_column_id' column of a provided data frame
+#' to ensure that it exists, contains no NA values, and contains no spaces
+#' in its entries. It also reports the number of unique values in the column.
+#'
+#' @param df A data frame that should contain the 'lc_column_id' column.
+#' @param verbose A logical indicating whether to print informative messages.
+#' Default is TRUE.
+#'
+#' @return An invisible NULL. The function is used mainly for its side effects
+#' (i.e., printing validation results).
+#'
+#' @examples
+#' df <- data.frame(lc_column_id = c("id1", "id2", "id3", "id1", "id 2", NA))
+#' validate_lc_column_id(df)
+#' 
+#' @export
+validate_lc_column_id <- function(df, column_name, verbose = TRUE) {
+  
+  # issue counter
+  ic <- 0
+  
+  # Check NA and empty values:
+  icna <- validate_na_empty(df = df, col_name = column_name, verbose = verbose)
+  ic <- ic + icna
+  
+  # check for spaces in values
+  if (any(grepl(" ", df[[column_name]]))) {
+    if(verbose) message("   - (-) Spaces detected in column `", column_name, "`: FAIL")
+    ic <- ic + 1
+  }
+  
+  # report number of unique values
+  num_unique <- length(unique(df[[column_name]]))
+  if(verbose) message(paste("   - ( ) Number of unique values in column `", column_name, "`: ", num_unique))
+  if(num_unique > 3){
+    if(verbose) message(paste("   - (!) Warning: the number of LC columns might be too high. Please, revise "))
+  }
+  
+  return(ic)
+}
+
+
 #' Validate Column for NA and Empty Values
 #'
 #' This function checks if a specified column in a data frame contains either NA or empty values.
