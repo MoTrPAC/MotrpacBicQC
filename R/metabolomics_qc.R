@@ -184,7 +184,7 @@ check_metadata_samples <- function(df,
   # filter only expected columns
   df <- filter_required_columns(df = df,
                                 type = "m_s",
-                                verbose = FALSE)
+                                verbose = TRUE)
 
   # Check every column
   # sample_id: si
@@ -262,6 +262,40 @@ check_metadata_samples <- function(df,
     }
   }else{
     if(verbose) message("   - (-) `raw_file` column missed: FAIL")
+    ic <- ic + 1
+  }
+  
+  if("extraction_date" %in% colnames(df)){
+    if(any(is.na(df$extraction_date))){
+      if(verbose) message("   - (-) `extraction_date` has NA values: FAIL")
+      ic <- ic + 1
+    }else{
+      icdate <- validate_yyyymmdd_dates(df = df, date_column = "extraction_date", verbose = verbose)
+      ic <- ic + icdate
+    }
+  }else{
+    if(verbose) message("   - (-) `extraction_date` column missed: FAIL")
+    ic <- ic + 1
+  }
+  
+  if("acquisition_date" %in% colnames(df)){
+    if( any(grepl(":", df$acquisition_date)) ){
+      if(verbose) message("  + (i) Assuming `acquisition_date` is in `MM/DD/YYYY HH:MM:SS AM/PM` format. Validating:")
+      icdt <- validate_dates_times(df = df, column_name = "acquisition_date", verbose = verbose)
+    }else{
+      icdate <- validate_yyyymmdd_dates(df = df, date_column = "extraction_date", verbose = verbose)
+      ic <- ic + icdate
+    }
+  }else{
+    if(verbose) message("   - (-) `extraction_date` column missed: FAIL")
+    ic <- ic + 1
+  }
+  
+  # check if lc_column_id is in column names
+  if ("lc_column_id" %in% colnames(df)) {
+    validate_lc_column_id(df, column_name = "lc_column_id", verbose = verbose)
+  }else{
+    if(verbose) message("   - (-) Column `lc_column_id` not found: FAIL")
     ic <- ic + 1
   }
 
@@ -658,7 +692,7 @@ validate_metabolomics <- function(input_results_folder,
       if(isTRUE(all.equal(m_s_n, m_s_u))){
         if(verbose) message("  + (+) Metadata samples: named and unnamed are identical: OK")
       }else{
-        if(verbose) message("   - (-) Metadata samples: named and unnamed files differ")
+        if(verbose) message("   - (-) Metadata samples: named and unnamed files differ: FAIL")
         ic <- ic + 1
       }
     }else{
