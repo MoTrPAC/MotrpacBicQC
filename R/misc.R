@@ -198,7 +198,7 @@ filter_required_columns <- function(df,
     missing_cols <- setdiff(emeta_metabo_coln_named, colnames(df))
     if (length(missing_cols) > 0) {
       if(verbose) message("   - (-) `metadata_metabolite`: Expected COLUMN NAMES are missed: FAIL")
-      message(paste("\t The following required columns are not present:", paste(missing_cols, collapse = ", ")))
+      message(paste0("\t The following required columns are not present: `", paste(missing_cols, collapse = ", "), "`"))
     } else {
       if(verbose) message("  + (+) All required columns present")
       df <- subset(df, select = emeta_metabo_coln_named)
@@ -211,7 +211,7 @@ filter_required_columns <- function(df,
     
     if (length(missing_cols) > 0) {
       if(verbose) message("   - (-) `metadata_sample`: Expected COLUMN NAMES are missed: FAIL")
-      message(paste("\t The following required columns are not present:", paste(missing_cols, collapse = ", ")))
+      message(paste0("\t The following required columns are not present: `", paste(missing_cols, collapse = ", "), "`"))
     } else {
       if(verbose) message("  + (+) All required columns present")
       df <- subset(df, select = emeta_sample_coln)
