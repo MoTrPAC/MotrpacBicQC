@@ -9,6 +9,7 @@
 #' @importFrom inspectdf inspect_na
 #' @importFrom jsonlite fromJSON
 #' @import knitr
+#' @importFrom lubridate parse_date_time
 #' @import naniar
 #' @import progress
 #' @import purrr

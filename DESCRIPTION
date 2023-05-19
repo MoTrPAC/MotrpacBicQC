@@ -30,6 +30,7 @@ Imports:
     inspectdf,
     jsonlite,
     knitr,
+    lubridate,
     naniar,
     progress,
     purrr,
