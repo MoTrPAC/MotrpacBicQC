@@ -1,6 +1,5 @@
 # VALIDATIONS
 
-
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' @title check failed samples file for reported missing vial label ids
 #'
@@ -52,6 +51,7 @@ check_failedsamples <- function(input_results_folder,
     }
   }
 }
+
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' @title check metadata phase file
@@ -209,6 +209,42 @@ check_viallabel_dmaqc <- function(vl_submitted,
 }
 
 
+#' @title extract ASSAY from input folder path
+#'
+#' @description extract ASSAY from input folder path
+#' @param input_results_folder (char) input_results_folder path
+#' @return (vector) ASSAY code
+#' @export
+validate_assay <- function(input_results_folder){
+  
+  assay <- stringr::str_extract(string = input_results_folder,
+                                pattern = "(IONPNEG|RPNEG|RPPOS|HILICPOS|LRPPOS|LRPNEG|3HIB|AA|AC_DUKE|ACOA|BAIBA|CER_DUKE|CONV|KA|NUC|OA|SPHM|OXYLIPNEG|ETAMIDPOS|AC_MAYO|AMINES|CER_MAYO|TCA|IMM_CRT|IMM_GLC|IMM_INS|PROT_PH|PROT_PR|PROT_AC|PROT_UB)")
+  if(is.na(assay)){
+    stop("ASSAY not found in the folder structure")
+  }else{
+    return(assay)
+  }
+}
+
+#' @title extract BATCH_YYYYMMDD folder
+#'
+#' @description extract BATCH_YYYYMMDD folder from input folder path
+#' @param input_results_folder (char) input_results_folder path
+#' @return (vector) BATCH_YYYYMMDD folder name
+#' @export
+validate_batch <- function(input_results_folder){
+  
+  batch_folder <- stringr::str_extract(string = input_results_folder, 
+                                       pattern = "(.*/BATCH\\d{1,2}\\_\\d{8})/")
+  
+  if(is.na(batch_folder)){
+    stop("`BATCH#_YYYYMMDD` folder is not recognized in the folder structure.")
+  }else{
+    return(batch_folder)
+  }
+}
+
+
 #' @title validate cas code
 #'
 #' @description validate CAS code
@@ -228,6 +264,24 @@ validate_cas <- function(cas){
                        "broad_prot")
   if(!(cas %in% valid_cas_sites)){
     stop("cas: <", cas, "> is not valid. Must be one of the following:\n - ", paste(valid_cas_sites, collapse = "\n - "))
+  }
+}
+
+
+#' @title Extract PHASE from input folder path
+#'
+#' @description extract ASSAY from input folder path
+#' @param input_results_folder (char) input_results_folder path
+#' @param return_phase (char) return the phase only if `TRUE` (default)
+#' @return (vector) PHASE code
+#' @export
+validate_phase <- function(input_results_folder, return_phase = TRUE){
+  phase <- stringr::str_extract(string = input_results_folder,
+                                pattern = "(PASS1A-06|PASS1A-18|PASS1B-06|PASS1B-18|PASS1C-06|PASS1C-18|PASS1AC-06|HUMAN|HUMAN-PRECOVID|HUMAN-MAIN)")
+  if(is.na(phase)){
+    stop("Project phase (e.g. PASS1A-06) is not found in the folder structure, please, check guidelines")
+  }else{
+    if(return_phase) return(phase)
   }
 }
 
@@ -254,63 +308,6 @@ validate_processFolder <- function(input_results_folder){
 }
 
 
-#' @title extract BATCH_YYYYMMDD folder
-#'
-#' @description extract BATCH_YYYYMMDD folder from input folder path
-#' @param input_results_folder (char) input_results_folder path
-#' @return (vector) BATCH_YYYYMMDD folder name
-#' @export
-validate_batch <- function(input_results_folder){
-  
-  batch_folder <- stringr::str_extract(string = input_results_folder, 
-                                       pattern = "(.*/BATCH\\d{1,2}\\_\\d{8})/")
-  
-  if(is.na(batch_folder)){
-    stop("`BATCH#_YYYYMMDD` folder is not recognized in the folder structure.")
-  }else{
-    return(batch_folder)
-  }
-}
-
-
-#' @title extract ASSAY from input folder path
-#'
-#' @description extract ASSAY from input folder path
-#' @param input_results_folder (char) input_results_folder path
-#' @return (vector) ASSAY code
-#' @export
-validate_assay <- function(input_results_folder){
-
-  assay <- stringr::str_extract(string = input_results_folder,
-                                pattern = "(IONPNEG|RPNEG|RPPOS|HILICPOS|LRPPOS|LRPNEG|3HIB|AA|AC_DUKE|ACOA|BAIBA|CER_DUKE|CONV|KA|NUC|OA|SPHM|OXYLIPNEG|ETAMIDPOS|AC_MAYO|AMINES|CER_MAYO|TCA|IMM_CRT|IMM_GLC|IMM_INS|PROT_PH|PROT_PR|PROT_AC|PROT_UB)")
-  if(is.na(assay)){
-    stop("ASSAY not found in the folder structure")
-  }else{
-    return(assay)
-  }
-}
-
-
-
-#' @title Extract PHASE from input folder path
-#'
-#' @description extract ASSAY from input folder path
-#' @param input_results_folder (char) input_results_folder path
-#' @param return_phase (char) return the phase only if `TRUE` (default)
-#' @return (vector) PHASE code
-#' @export
-validate_phase <- function(input_results_folder, return_phase = TRUE){
-  phase <- stringr::str_extract(string = input_results_folder,
-                                pattern = "(PASS1A-06|PASS1A-18|PASS1B-06|PASS1B-18|PASS1C-06|PASS1C-18|PASS1AC-06|HUMAN|HUMAN-PRECOVID|HUMAN-MAIN)")
-  if(is.na(phase)){
-    stop("Project phase (e.g. PASS1A-06) is not found in the folder structure, please, check guidelines")
-  }else{
-    if(return_phase) return(phase)
-  }
-}
-
-
-
 #' @title extract and validate TISSUE CODE from input folder path
 #'
 #' @description extract and validate TISSUE CODE from input folder path
@@ -326,6 +323,7 @@ validate_tissue <- function(input_results_folder){
     return(tissue_code)
   }
 }
+
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' @title validate a phase with two phases (pass1a and 1c)
@@ -360,6 +358,7 @@ validate_two_phases <- function(phase_details,
   }
   if(verbose) return("Two phases reported and they are ok")
 }
+
 
 #' Validate Dates in a Specified Column of a Data Frame
 #'
@@ -398,12 +397,9 @@ validate_yyyymmdd_dates <- function(df, date_column, verbose = TRUE) {
   # Extract the date column
   date_vector <- df[[date_column]]
   
-  # Check for missing values
-  if(any(is.na(date_vector))){
-    if(verbose) message("   - (-) Missing values detected in column `", date_column, "` : FAIL")
-    ic <- ic + 1
-    return(ic)
-  }
+  # Check NA and empty values:
+  icna <- validate_na_empty(df = df, col_name = date_column, verbose = verbose)
+  ic <- ic + icna
   
   # Check dash intead of -
   check_dash <- grepl("\\/", date_vector)
@@ -434,11 +430,12 @@ validate_yyyymmdd_dates <- function(df, date_column, verbose = TRUE) {
   incorrect_dates <- incorrect_format | incorrect_components
   
   if(any(incorrect_dates)){
-    if(verbose) message("`", date_column, "`: Invalid dates detected: ", paste(date_vector[incorrect_dates], collapse = ", "))
+    if(verbose) message("   - (-) `", date_column, "`: Invalid dates detected: ", paste(date_vector[incorrect_dates], collapse = ", "))
     ic <- ic + 1
   } else {
-    if(verbose) message("All dates are valid.")
+    if(verbose) message("  + (+) All dates are valid.")
   }
   
   return(ic)
 }
+
