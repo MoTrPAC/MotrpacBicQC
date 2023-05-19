@@ -268,6 +268,49 @@ validate_cas <- function(cas){
 }
 
 
+#' Validate Column for NA and Empty Values
+#'
+#' This function checks if a specified column in a data frame contains either NA or empty values.
+#'
+#' @param df A data frame.
+#' @param col_name A character string specifying the name of the column to check.
+#' @param verbose A logical indicating whether to print informative messages. Default is TRUE.
+#'
+#' @return Number of issues
+#'
+#' @examples
+#' df <- data.frame(A = c("a", "", NA, "d"), B = 1:4)
+#' validate_na_empty(df, "A")
+#'
+#' @export
+validate_na_empty <- function(df, col_name, verbose = TRUE) {
+  
+  # issue count
+  ic <- 0
+  
+  # check if col_name is in column names
+  if (!col_name %in% colnames(df)) {
+    if(verbose) message(paste("   - (-) Column `", col_name, "` not found in the data frame: FAIL"))
+    return(invisible())
+  }
+  
+  # check for NA values
+  if (any(is.na(df[[col_name]]))) {
+    if(verbose) message(paste("   - (-) NA values detected in column `", col_name, "`: FAIL"))
+    ic <- ic + 1
+  }
+  
+  # check for empty values
+  # check for empty values, ignoring NA
+  if (any(df[[col_name]][!is.na(df[[col_name]])] == "")) {
+    if(verbose) message(paste("   - (-) Empty values detected in column `", col_name, "`: FAIL"))
+    ic <- ic + 1
+  }
+  
+  return(ic)
+}
+
+
 #' @title Extract PHASE from input folder path
 #'
 #' @description extract ASSAY from input folder path
