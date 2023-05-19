@@ -9,6 +9,8 @@ validate_lc_column_id(df, column_name, verbose = TRUE)
 \arguments{
 \item{df}{A data frame that should contain the 'lc_column_id' column.}
 
+\item{column_name}{The name of the column in \code{df} which contains the date-time values.}
+
 \item{verbose}{A logical indicating whether to print informative messages.
 Default is TRUE.}
 }
@@ -23,6 +25,6 @@ in its entries. It also reports the number of unique values in the column.
 }
 \examples{
 df <- data.frame(lc_column_id = c("id1", "id2", "id3", "id1", "id 2", NA))
-validate_lc_column_id(df)
+validate_lc_column_id(df, column_name = "lc_column_id")
 
 }

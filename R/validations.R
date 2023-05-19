@@ -277,7 +277,7 @@ validate_cas <- function(cas){
 #' with this format, it prints out those values.
 #' 
 #' @param df A data frame containing the column to be validated.
-#' @param date_time_col The name of the column in `df` which contains the date-time values.
+#' @param column_name The name of the column in `df` which contains the date-time values.
 #' @param verbose Logical. If TRUE, messages are printed to the console.
 #' 
 #' @return 
@@ -337,6 +337,7 @@ validate_dates_times <- function(df, column_name, verbose = TRUE) {
 #' in its entries. It also reports the number of unique values in the column.
 #'
 #' @param df A data frame that should contain the 'lc_column_id' column.
+#' @param column_name The name of the column in `df` which contains the date-time values.
 #' @param verbose A logical indicating whether to print informative messages.
 #' Default is TRUE.
 #'
@@ -345,7 +346,7 @@ validate_dates_times <- function(df, column_name, verbose = TRUE) {
 #'
 #' @examples
 #' df <- data.frame(lc_column_id = c("id1", "id2", "id3", "id1", "id 2", NA))
-#' validate_lc_column_id(df)
+#' validate_lc_column_id(df, column_name = "lc_column_id")
 #' 
 #' @export
 validate_lc_column_id <- function(df, column_name, verbose = TRUE) {

@@ -9,9 +9,9 @@ validate_dates_times(df, column_name, verbose = TRUE)
 \arguments{
 \item{df}{A data frame containing the column to be validated.}
 
-\item{verbose}{Logical. If TRUE, messages are printed to the console.}
+\item{column_name}{The name of the column in \code{df} which contains the date-time values.}
 
-\item{date_time_col}{The name of the column in \code{df} which contains the date-time values.}
+\item{verbose}{Logical. If TRUE, messages are printed to the console.}
 }
 \value{
 This function returns the number of issues detected
