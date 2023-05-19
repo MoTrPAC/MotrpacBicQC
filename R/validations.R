@@ -308,20 +308,23 @@ validate_dates_times <- function(df, column_name, verbose = TRUE) {
   
   # Validate the dates with the specified format
   datetime_values <- df[[column_name]]
-  parsed_datetimes <- lubridate::parse_date_time(datetime_values, orders = c("mdy HM", "mdy HMp"), quiet = TRUE)
+  parsed_datetimes <- lubridate::parse_date_time(datetime_values, 
+                                                 orders = c("mdy HM", 
+                                                            "mdy HMp", 
+                                                            "m/d/y h:M:s a", 
+                                                            "m/d/y h:M a"), 
+                                                 quiet = TRUE)
   
   # Detect incorrect format
   incorrect_format <- is.na(parsed_datetimes)
   
-  if(verbose){
-    # Print the incorrect dates
-    incorrect_values <- datetime_values[incorrect_format]
-    if (length(incorrect_values) > 0) {
-      message("   - (-)`", column_name, "`: Values in incorrect format: `", paste(incorrect_values, collapse = ", "), "`")
+  # Print the incorrect dates
+  incorrect_values <- datetime_values[incorrect_format]
+  if (length(incorrect_values) > 0) {
+    if(verbose) message("   - (-)`", column_name, "`: Values in incorrect format: `", paste(incorrect_values, collapse = ", "), "`")
       ic <- ic + 1
-    }else{
-      message("  + (+) All dates are valid.")
-    }
+  }else{
+    if(verbose) message("  + (+) All dates are valid.")
   }
   
   # Return the result
@@ -353,6 +356,11 @@ validate_lc_column_id <- function(df, column_name, verbose = TRUE) {
   
   # issue counter
   ic <- 0
+  
+  # Check if the column exists in the dataframe
+  if (!column_name %in% names(df)) {
+    stop(paste("Column", column_name, "does not exist in the data frame."))
+  }
   
   # Check NA and empty values:
   icna <- validate_na_empty(df = df, col_name = column_name, verbose = verbose)
