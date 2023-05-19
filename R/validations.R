@@ -268,6 +268,67 @@ validate_cas <- function(cas){
 }
 
 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' @title Validate date-time format in a data frame column
+#' 
+#' @description
+#' This function validates that all the values in a specified column of a given data frame
+#' adhere to the date-time format: "MM/DD/YYYY HH:MM:SS AM/PM". If any value does not comply 
+#' with this format, it prints out those values.
+#' 
+#' @param df A data frame containing the column to be validated.
+#' @param date_time_col The name of the column in `df` which contains the date-time values.
+#' @param verbose Logical. If TRUE, messages are printed to the console.
+#' 
+#' @return 
+#' This function returns the number of issues detected
+#' 
+#' @examples 
+#' 
+#' df <- data.frame(id = 1:6,
+#'                  datetime = c("12/31/2023 11:59:59 PM", "01/01/2024 00:00:00 AM", 
+#'                                "02/29/2024 12:00:00 PM", "13/01/2024 01:00:00 PM", 
+#'                                "02/28/2024 24:00:00 PM", "02/30/2024 12:00:00 PM"))
+#' validate_dates_times(df, "datetime", TRUE)
+#' 
+#' @export
+validate_dates_times <- function(df, column_name, verbose = TRUE) {
+  
+  # issue count
+  ic <- 0
+  
+  # Check if the column exists in the dataframe
+  if (!column_name %in% names(df)) {
+    stop(paste("Column", column_name, "does not exist in the data frame."))
+  }
+  
+  # Check NA and empty values:
+  icna <- validate_na_empty(df = df, col_name = column_name, verbose = verbose)
+  ic <- ic + icna
+  
+  # Validate the dates with the specified format
+  datetime_values <- df[[column_name]]
+  parsed_datetimes <- lubridate::parse_date_time(datetime_values, orders = c("mdy HM", "mdy HMp"), quiet = TRUE)
+  
+  # Detect incorrect format
+  incorrect_format <- is.na(parsed_datetimes)
+  
+  if(verbose){
+    # Print the incorrect dates
+    incorrect_values <- datetime_values[incorrect_format]
+    if (length(incorrect_values) > 0) {
+      message("   - (-)`", column_name, "`: Values in incorrect format: `", paste(incorrect_values, collapse = ", "), "`")
+      ic <- ic + 1
+    }else{
+      message("  + (+) All dates are valid.")
+    }
+  }
+  
+  # Return the result
+  return(ic)
+}
+
+
 #' Validate Column for NA and Empty Values
 #'
 #' This function checks if a specified column in a data frame contains either NA or empty values.
