@@ -406,7 +406,7 @@ validate_na_empty <- function(df, col_name, verbose = TRUE) {
   # check if col_name is in column names
   if (!col_name %in% colnames(df)) {
     if(verbose) message(paste("   - (-) Column `", col_name, "` not found in the data frame: FAIL"))
-    return(invisible())
+    stop("This column ", col_name, " does not exist")
   }
   
   # check for NA values

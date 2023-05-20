@@ -72,7 +72,7 @@ check_metadata_metabolites <- function(df,
         if(verbose) message("  + (+) `refmet_name` unique values: OK")
       }
       
-      if(verbose) message("  + Validating `refmet_name`")
+      if(verbose) message("  + Validating `refmet_name` (it might take some time)")
       nrnna <- validate_refmetname(dataf = df, verbose = verbose)
       if(nrnna > 0){
         if(verbose) message(paste0("   - (-) SUMMARY: ", nrnna, " `refmet_name` not found in RefMet Metabolomics Data Dictionary: FAIL"))
@@ -283,11 +283,11 @@ check_metadata_samples <- function(df,
       if(verbose) message("  + (i) Assuming `acquisition_date` is in `MM/DD/YYYY HH:MM:SS AM/PM` format. Validating:")
       icdt <- validate_dates_times(df = df, column_name = "acquisition_date", verbose = verbose)
     }else{
-      icdate <- validate_yyyymmdd_dates(df = df, date_column = "extraction_date", verbose = verbose)
+      icdate <- validate_yyyymmdd_dates(df = df, date_column = "acquisition_date", verbose = verbose)
       ic <- ic + icdate
     }
   }else{
-    if(verbose) message("   - (-) `extraction_date` column missed: FAIL")
+    if(verbose) message("   - (-) `acquisition_date` column missed: FAIL")
     ic <- ic + 1
   }
   
@@ -295,7 +295,7 @@ check_metadata_samples <- function(df,
   if ("lc_column_id" %in% colnames(df)) {
     validate_lc_column_id(df, column_name = "lc_column_id", verbose = verbose)
   }else{
-    if(verbose) message("   - (-) Column `lc_column_id` not found: FAIL")
+    if(verbose) message("   - (-) `lc_column_id` column missed: FAIL")
     ic <- ic + 1
   }
 
