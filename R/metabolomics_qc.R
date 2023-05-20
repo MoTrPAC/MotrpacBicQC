@@ -3,8 +3,7 @@
 utils::globalVariables(
   c("assay_codes",
     "bic_animal_tissue_code",
-    "phenotypes_pass1a06_short",
-    "..count.."))
+    "phenotypes_pass1a06_short"))
 
 
 # METABOLOMICS DATASETS: PRIMARY QC

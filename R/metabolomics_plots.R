@@ -268,9 +268,9 @@ plot_basic_metabolomics_qc <- function(results,
   
   
   ppids <- ggplot(results, aes(x = as.factor(id_type), fill = as.factor(id_type))) +
-    geom_bar(aes(y = (..count..)/sum(..count..))) +
-    geom_text(aes(y = ((..count..)/sum(..count..)), 
-                  label = scales::percent((..count..)/sum(..count..))), 
+    geom_bar(aes(y = after_stat(count)/sum(after_stat(count)))) +
+    geom_text(aes(y = after_stat(count)/sum(after_stat(count)), 
+                  label = scales::percent(after_stat(count)/sum(after_stat(count)))), 
               stat = "count", vjust = -0.25) +
     scale_y_continuous(labels = percent) +
     labs(title = "Proportion of Features Identified (named/unnamed)", 
@@ -283,7 +283,7 @@ plot_basic_metabolomics_qc <- function(results,
   
   pnids <- ggplot(results, aes(x = id_type, fill = id_type)) +
     geom_bar() +
-    geom_text(stat = 'count',aes(label =..count.., vjust = -0.2)) +
+    geom_text(stat = 'count',aes(label = after_stat(count), vjust = -0.2)) +
     labs(title = "Total Number of Features Identified (named/unnamed)", 
          subtitle = paste(output_prefix), y = "", x = "") +
     theme_light() +
