@@ -6,6 +6,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Install LaTeX packages
+          command: tlmgr install amsmath
+      - run:
           name: Install package dependencies
           command: R -e "devtools::install_deps(dep = TRUE)"
       - run:
@@ -20,6 +23,9 @@ jobs:
       - image: rocker/verse:4.1.0
     steps:
       - checkout
+      - run:
+          name: Install LaTeX packages
+          command: tlmgr install amsmath
       - run:
           name: Install package dependencies
           command: R -e "devtools::install_deps(dep = TRUE)"
