@@ -8,9 +8,9 @@ jobs:
       - run:
           name: Install LaTeX packages
           command: |
-            tlmgr install amsmath
-            apt-get update
-            apt-get install -y cm-super
+            R -e "install.packages('tinytex')"
+            R -e "tinytex::install_tinytex()"
+            R -e "tinytex::tlmgr_install('cm-super')"
       - run:
           name: Install package dependencies
           command: R -e "devtools::install_deps(dep = TRUE)"
@@ -29,9 +29,9 @@ jobs:
       - run:
           name: Install LaTeX packages
           command: |
-            tlmgr install amsmath
-            apt-get update
-            apt-get install -y cm-super
+            R -e "install.packages('tinytex')"
+            R -e "tinytex::install_tinytex()"
+            R -e "tinytex::tlmgr_install('cm-super')"
       - run:
           name: Install package dependencies
           command: R -e "devtools::install_deps(dep = TRUE)"
