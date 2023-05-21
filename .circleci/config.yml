@@ -7,7 +7,10 @@ jobs:
       - checkout
       - run:
           name: Install LaTeX packages
-          command: tlmgr install amsmath
+          command: |
+            tlmgr install amsmath
+            apt-get update
+            apt-get install -y cm-super
       - run:
           name: Install package dependencies
           command: R -e "devtools::install_deps(dep = TRUE)"
@@ -25,7 +28,10 @@ jobs:
       - checkout
       - run:
           name: Install LaTeX packages
-          command: tlmgr install amsmath
+          command: |
+            tlmgr install amsmath
+            apt-get update
+            apt-get install -y cm-super
       - run:
           name: Install package dependencies
           command: R -e "devtools::install_deps(dep = TRUE)"
