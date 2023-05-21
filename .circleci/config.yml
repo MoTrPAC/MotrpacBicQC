@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  build_4.2.2:
+  build_4_2_2:
     docker:
       - image: rocker/verse:4.2.2
     steps:
@@ -15,7 +15,7 @@ jobs:
           name: Check package
           command: R CMD check *tar.gz
   
-  build_4.1.0:
+  build_4_1_0:
     docker:
       - image: rocker/verse:4.1.0
     steps:
@@ -34,5 +34,5 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-      - build_4.2.2
-      - build_4.1.0
+      - build_4_2_2
+      - build_4_1_0
