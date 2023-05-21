@@ -535,10 +535,10 @@ validate_two_phases <- function(phase_details,
 #'
 #' @examples
 #' df <- data.frame(
-#'   extraction_date = c("2022-01-31", "2023-12-01", "2027-11-30"),
+#'   extraction_date = c("2022-01-31", "2023-12-01", "2025-11-30"),
 #'   other_column = 1:3
 #' )
-#' validate_yyyymmdd_dates(df, "extraction_date")
+#' ic <- validate_yyyymmdd_dates(df, "extraction_date")
 #' @export
 validate_yyyymmdd_dates <- function(df, date_column, verbose = TRUE) {
   
