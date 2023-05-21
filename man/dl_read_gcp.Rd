@@ -8,9 +8,10 @@ dl_read_gcp(
   path,
   sep = "\\t",
   header = TRUE,
-  tmpdir = "/tmp",
+  tmpdir,
   gsutil_path = "gsutil",
   check_first = TRUE,
+  verbose = FALSE,
   ...
 )
 }
@@ -29,6 +30,8 @@ Can be "gsutil" if \code{gsutil} is in your \code{$PATH}.}
 \item{check_first}{(char) check if file exists in \code{tmpdir} before
 downloading it. Read in existing file if it exists.
 Should be set to \code{TRUE} if you are running this function in parallel.}
+
+\item{verbose}{(logical) \code{TRUE} shows messages (default \code{FALSE})}
 
 \item{...}{optional arguments for \link[data.table:fread]{data.table::fread}}
 }

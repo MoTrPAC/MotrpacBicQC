@@ -65,6 +65,7 @@ create_folder <- function(folder_name = NULL,
 #' downloading it. Read in existing file if it exists. 
 #' Should be set to \code{TRUE} if you are running this function in parallel.
 #' @param header (bool) whether input file has a header line 
+#' @param verbose (logical) `TRUE` shows messages (default `FALSE`)
 #' @param ... optional arguments for [data.table::fread] 
 #'
 #' @return a data table
@@ -77,35 +78,51 @@ create_folder <- function(folder_name = NULL,
 #' }
 #' @export
 dl_read_gcp <- function(path,
-                        sep = '\t',
+                        sep = "\t",
                         header = TRUE,
-                        tmpdir = '/tmp',
-                        gsutil_path = 'gsutil',
+                        tmpdir,
+                        gsutil_path = "gsutil",
                         check_first = TRUE,
+                        verbose = FALSE,
                         ...){
-  system(sprintf('mkdir -p %s',tmpdir))
-  # download
-  new_path <- sprintf('%s/%s', tmpdir, basename(path))
+  
+  if(!dir.exists(tmpdir)){
+    dir.create(tmpdir)
+    if(verbose) message(paste0("- New folder ", tmpdir, " created successfully"))
+  }
+  
+  tmpdir <- normalizePath(tmpdir)
+  
+  # Check path
+  if(!grepl("gs:\\/\\/", path)){
+    stop("The path to the bucket is wrong. Valid example: gs://bucket-name/file-name.csv")
+  }else{
+    new_path <- file.path(tmpdir, basename(path))
+  }
+
   # only download if it doesn't exist to avoid conflicts when running this script in parallel; clear scratch space when you're done
   if(check_first){
     if( !file.exists(new_path) ){
       cmd <- sprintf('%s cp %s %s', gsutil_path, path, tmpdir)
+      if(verbose) message(paste0("- Running command ", cmd))
       system(cmd, ignore.stdout = TRUE, ignore.stderr = TRUE)
+      message("- Downloaded file: ", new_path)
     }else{
-      message(paste("The file", new_path, "already exists"))
+      if(verbose) message(paste0("- The file <", new_path, "> already exists"))
     }
   }else{
-    message(paste("Downloading file from GCP: ", basename(path)))
+    if(verbose) message(paste("- Downloading file (from GCP) <", basename(path), ">"))
     cmd <- sprintf('%s cp %s %s', gsutil_path, path, tmpdir)
     system(cmd, ignore.stdout = TRUE, ignore.stderr = TRUE)
+    message("- Downloaded file: ", new_path)
   }
   # read in the data as a data.table
   if(file.exists(new_path)){
     dt <- data.table::fread(new_path, sep=sep, header=header,...)
     return(dt)
+  }else{
+    stop("- Problems loading the file")
   }
-  warning(sprintf("gsutil file %s does not exist.\n", path))
-  return()
 }
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
