@@ -1,8 +1,8 @@
-version: 1
+version: 2.1
 jobs:
-  build:
+  build_4.2.2:
     docker:
-      - image: rocker/verse:3.6.2
+      - image: rocker/verse:4.2.2
     steps:
       - checkout
       - run:
@@ -14,3 +14,25 @@ jobs:
       - run:
           name: Check package
           command: R CMD check *tar.gz
+  
+  build_4.1.0:
+    docker:
+      - image: rocker/verse:4.1.0
+    steps:
+      - checkout
+      - run:
+          name: Install package dependencies
+          command: R -e "devtools::install_deps(dep = TRUE)"
+      - run:
+          name: Build package
+          command: R CMD build .
+      - run:
+          name: Check package
+          command: R CMD check *tar.gz
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build_4.2.2
+      - build_4.1.0
