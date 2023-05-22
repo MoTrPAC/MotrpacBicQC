@@ -24,7 +24,7 @@
 
 #' @title Create folder
 #'
-#' @description Create a directory if it doesn't exist. If no argument is provided, 
+#' @description Create a directory if it doesn't exist. If no argument is provided,
 #' it returns the current working directory
 #' @param folder_name (chr) folder name
 #' @param verbose (logical) `TRUE` shows messages (default `FALSE`)
@@ -34,7 +34,7 @@
 #' # create_folder(folder_name = "testing")
 #' }
 #' @export
-create_folder <- function(folder_name = NULL, 
+create_folder <- function(folder_name = NULL,
                           verbose = FALSE){
   if(!is.null(folder_name)){
     if(!dir.exists(file.path(folder_name))){
@@ -52,27 +52,36 @@ create_folder <- function(folder_name = NULL,
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' @title dl_read_gcp: Data Load, Read file from Google Cloud
-#' 
+#'
 #' @description
 #' Read a single file from Google Cloud Storage (GSC) into a data table
 #'
 #' @param path (char) GCS path, i.e., starts with "gs://"
 #' @param sep (char) column separator to use with [data.table::fread]
 #' @param tmpdir (char) scratch directory to download files from GCS
-#' @param gsutil_path (char) path to \code{gsutil} on your computer. 
-#' Can be "gsutil" if \code{gsutil} is in your \code{$PATH}. 
-#' @param check_first (char) check if file exists in \code{tmpdir} before 
-#' downloading it. Read in existing file if it exists. 
+#' @param gsutil_path (char) path to \code{gsutil} on your computer.
+#' Can be "gsutil" if \code{gsutil} is in your \code{$PATH}.
+#' @param check_first (char) check if file exists in \code{tmpdir} before
+#' downloading it. Read in existing file if it exists.
 #' Should be set to \code{TRUE} if you are running this function in parallel.
-#' @param header (bool) whether input file has a header line 
+#' @param header (bool) whether input file has a header line
 #' @param verbose (logical) `TRUE` shows messages (default `FALSE`)
-#' @param ... optional arguments for [data.table::fread] 
+#' @param ignore_std_err (logical) corresponds to ignore.stderr in `cmd` (default `TRUE`)
+#' @param ignore_std_out (logical) corresponds to ignore.stdout in `cmd` (default `TRUE`)
+#' @param ... optional arguments for [data.table::fread]
 #'
 #' @return a data table
-#' 
+#'
+#' @details
+#' There is a known issue for Windows users that can occur when
+#'   `dl_read_gcp` is run in a local R session where `gsutils`
+#'   can not find files in the data hub. Setting either `ignore_std_err`
+#'   to `FALSE` of `ignore_std_out` to `FALSE` should fix this.
+#'
+#'
 #' @importFrom data.table fread
 #'
-#' @examples 
+#' @examples
 #' \dontrun{
 #' pheno = dl_read_gcp(path = "gs://your-bucket/file.txt")
 #' }
@@ -84,15 +93,17 @@ dl_read_gcp <- function(path,
                         gsutil_path = "gsutil",
                         check_first = TRUE,
                         verbose = FALSE,
+                        ignore_std_err = TRUE,
+                        ignore_std_out = TRUE,
                         ...){
-  
+
   if(!dir.exists(tmpdir)){
     dir.create(tmpdir)
     if(verbose) message(paste0("- New folder ", tmpdir, " created successfully"))
   }
-  
+
   tmpdir <- normalizePath(tmpdir)
-  
+
   # Check path
   if(!grepl("gs:\\/\\/", path)){
     stop("The path to the bucket is wrong. Valid example: gs://bucket-name/file-name.csv")
@@ -105,7 +116,9 @@ dl_read_gcp <- function(path,
     if( !file.exists(new_path) ){
       cmd <- sprintf('%s cp %s %s', gsutil_path, path, tmpdir)
       if(verbose) message(paste0("- Running command ", cmd))
-      system(cmd, ignore.stdout = TRUE, ignore.stderr = TRUE)
+      system(cmd,
+             ignore.stdout = ignore_std_out,
+             ignore.stderr = ignore_std_err)
       message("- Downloaded file: ", new_path)
     }else{
       if(verbose) message(paste0("- The file <", new_path, "> already exists"))
@@ -113,7 +126,9 @@ dl_read_gcp <- function(path,
   }else{
     if(verbose) message(paste("- Downloading file (from GCP) <", basename(path), ">"))
     cmd <- sprintf('%s cp %s %s', gsutil_path, path, tmpdir)
-    system(cmd, ignore.stdout = TRUE, ignore.stderr = TRUE)
+    system(cmd,
+           ignore.stdout = ignore_std_out,
+           ignore.stderr = ignore_std_err)
     message("- Downloaded file: ", new_path)
   }
   # read in the data as a data.table
@@ -127,11 +142,11 @@ dl_read_gcp <- function(path,
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' @title Generate the phase detail for submissions
-#' 
+#'
 #' @description The phase details is as simple as creating a lower case version
 #' of the phase. However, in case of PASS1A/1C a new version has to be generated:
 #' pass1ac-06
-#' This function detects whether there are two phases, and if so, 
+#' This function detects whether there are two phases, and if so,
 #' generate the expected version: either pass1ac-06 or pass1ac-18
 #' @param phase_metadata (char) expected output of `set_phase`
 #' @param verbose (logical) `TRUE` (default) shows messages
@@ -139,7 +154,7 @@ dl_read_gcp <- function(path,
 #' @export
 generate_phase_details <- function(phase_metadata,
                                    verbose = TRUE){
-  
+
   if( grepl("\\|", phase_metadata) ){
     pass1st <- gsub("(.*)(\\|.*)", "\\1", phase_metadata)
     animalage <- gsub("(PASS1A\\-)(\\d+)", "\\2", pass1st)
@@ -160,17 +175,17 @@ generate_phase_details <- function(phase_metadata,
 get_full_path2batch <- function(input_results_folder){
 
   batch <- NULL
-  
+
   if( grepl("(BIC){0,1}RESULTS", input_results_folder) ){
-    batch <- gsub("(.*/)((BIC){0,1}RESULTS.*)", "\\1", input_results_folder)  
+    batch <- gsub("(.*/)((BIC){0,1}RESULTS.*)", "\\1", input_results_folder)
   }else if( grepl("PROCESSED", input_results_folder)){
-    batch <- gsub("(.*)(PROCESSED.*)", "\\1", input_results_folder)  
+    batch <- gsub("(.*)(PROCESSED.*)", "\\1", input_results_folder)
   }else{
     stop("   - (-) ERROR: the input results folder missed the PROCESSED or RESULTS folder!")
   }
-  
+
   return(batch)
-  
+
 }
 
 
@@ -209,7 +224,7 @@ filter_required_columns <- function(df,
     }else{
       stop("{`name_id`} option not valid. Options: named/unnamed")
     }
-    
+
     # Now check if present
     colnames(df) <- tolower(colnames(df))
     missing_cols <- setdiff(emeta_metabo_coln_named, colnames(df))
@@ -221,11 +236,11 @@ filter_required_columns <- function(df,
       df <- subset(df, select = emeta_metabo_coln_named)
     }
     return(df)
-    
+
   } else if (type == "m_s"){
     emeta_sample_coln <- c("sample_id", "sample_type", "sample_order", "raw_file", "extraction_date", "acquisition_date", "lc_column_id")
     missing_cols <- setdiff(emeta_sample_coln, colnames(df))
-    
+
     if (length(missing_cols) > 0) {
       if(verbose) message("   - (-) `metadata_sample`: Expected COLUMN NAMES are missed: FAIL")
       message(paste0("\t The following required columns are not present: `", paste(missing_cols, collapse = ", "), "`"))
@@ -269,7 +284,7 @@ filter_required_columns <- function(df,
 open_file <- function(input_results_folder,
                       filepattern,
                       verbose = TRUE){
-  
+
   if( !dir.exists(input_results_folder) ){
     flag <- FALSE
     ofile <- NULL
@@ -371,11 +386,11 @@ remove_empty_rows <- function(df,
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' @title Set the phase to be validated.
-#' 
-#' @description A group might choose to combine two different phases, due to 
+#'
+#' @description A group might choose to combine two different phases, due to
 #' the complications associated with PASS1A/1C. If they choose to combine
 #' two phases, the CAS must provide a new file `metadata_phase.txt` with a single
-#' line, as for example: `PASS1A-06|PASS1C-06`. This function checks if the 
+#' line, as for example: `PASS1A-06|PASS1C-06`. This function checks if the
 #' file is available, and set that phase as the phases to validate. In summary,
 #' the order of preference is:
 #' 1. function's argument: dmaqc_phase2validate (if provided in the validation functions)
@@ -384,33 +399,33 @@ remove_empty_rows <- function(df,
 #' @param input_results_folder (char) path to the PROCESSED/RESULTS folder to check
 #' @param dmaqc_phase2validate (data.frame) dmaqc shipping information
 #' @param verbose (logical) `TRUE` (default) shows messages
-#' @return (int) the phase to be validated. 
+#' @return (int) the phase to be validated.
 #' @export
 set_phase <- function(input_results_folder,
                       dmaqc_phase2validate,
                       verbose = TRUE){
-  
+
   phase <- validate_phase(input_results_folder)
-  
+
   # Check metadata_phase.txt file
   batch <- get_full_path2batch(input_results_folder)
-  
+
   file_phase <- list.files(normalizePath(batch),
                            pattern="metadata_phase.txt",
                            ignore.case = TRUE,
                            full.names=TRUE,
                            recursive = TRUE)
-  
+
   # To be adjusted if two different batches are provided:
   if ( !(purrr::is_empty(file_phase)) ){
     phase_details <- readr::read_lines(file_phase, n_max = 1)
     if ( !(is.na(phase_details) || phase_details == '') ){
       if(verbose) message("+ Motrpac phase reported: ", phase_details, " (info from metadata_phase.txt available)")
-      
+
       if( grepl("\\|", phase_details) ){
         validate_two_phases(phase_details = phase_details, verbose = FALSE)
       }
-      
+
       # And once is checked, proceed...
       if( isFALSE(dmaqc_phase2validate) ){
         dmaqc_phase2validate <- phase_details
@@ -427,7 +442,7 @@ set_phase <- function(input_results_folder,
       dmaqc_phase2validate <- phase
     }
   }
-  
+
   return(dmaqc_phase2validate)
 }
 
