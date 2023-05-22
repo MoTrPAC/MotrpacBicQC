@@ -1,4 +1,11 @@
-# MotrpacBicQC 0.8.5 (2023-04-21)
+# MotrpacBicQC 0.8.7 (2023-05-22)
+
+* Add QC for the new required batching variables
+* Replace deprecated `ggplot` function
+* Fix issues with `dl_read_gcp`
+* Other adjustments
+
+# MotrpacBicQC 0.8.6 (2023-04-21)
 
 * Minor adjustments
 

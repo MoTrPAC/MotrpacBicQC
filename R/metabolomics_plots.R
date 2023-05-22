@@ -54,7 +54,7 @@ plot_basic_metabolomics_qc <- function(results,
   if(verbose) message("       - (p) Density distributions")
   mu <- results_long %>%
     group_by(sample_id) %>%
-    reframe(grp.mean = mean(intensity))
+    dplyr::reframe(grp.mean = mean(intensity))
   
   den1 <- ggplot(data = results_long, aes(x = log2(intensity), color = sample_type)) + 
     geom_density(na.rm = TRUE) + 
@@ -83,7 +83,7 @@ plot_basic_metabolomics_qc <- function(results,
   if(verbose) message("       - (p) Plot sum of intensity/concentration values")
   sum_int <- results_long %>%
     group_by(sample_id, sample_type, sample_order) %>%
-    reframe(sum_quant = sum(intensity))
+    dplyr::reframe(sum_quant = sum(intensity))
   
   psumint <- ggplot(sum_int, aes(x = reorder(sample_id, sample_order), y = sum_quant, fill = sample_type)) +
     geom_bar(stat = "identity") + theme_classic() +
@@ -178,7 +178,7 @@ plot_basic_metabolomics_qc <- function(results,
   if(verbose) message("       - (p) Plot ID counts")
   uid <- results_long %>%
     group_by(across(all_of(c("metabolite_name", "sample_id", "sample_type", "sample_order", "id_type")))) %>%
-    reframe(total_intensity = intensity)
+    dplyr::reframe(total_intensity = intensity)
   uid2 <- uid[which(!is.na(uid$total_intensity)),]
   uid3 <- unique(uid2[c("metabolite_name", "sample_id", "sample_type", "sample_order", "id_type")]) %>%
     count(sample_id, sample_type, sample_order, id_type)
@@ -268,9 +268,9 @@ plot_basic_metabolomics_qc <- function(results,
   
   
   ppids <- ggplot(results, aes(x = as.factor(id_type), fill = as.factor(id_type))) +
-    geom_bar(aes(y = (..count..)/sum(..count..))) +
-    geom_text(aes(y = ((..count..)/sum(..count..)), 
-                  label = scales::percent((..count..)/sum(..count..))), 
+    geom_bar(aes(y = after_stat(count)/sum(after_stat(count)))) +
+    geom_text(aes(y = after_stat(count)/sum(after_stat(count)), 
+                  label = scales::percent(after_stat(count)/sum(after_stat(count)))), 
               stat = "count", vjust = -0.25) +
     scale_y_continuous(labels = percent) +
     labs(title = "Proportion of Features Identified (named/unnamed)", 
@@ -283,7 +283,7 @@ plot_basic_metabolomics_qc <- function(results,
   
   pnids <- ggplot(results, aes(x = id_type, fill = id_type)) +
     geom_bar() +
-    geom_text(stat = 'count',aes(label =..count.., vjust = -0.2)) +
+    geom_text(stat = 'count',aes(label = after_stat(count), vjust = -0.2)) +
     labs(title = "Total Number of Features Identified (named/unnamed)", 
          subtitle = paste(output_prefix), y = "", x = "") +
     theme_light() +

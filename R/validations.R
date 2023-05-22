@@ -1,6 +1,5 @@
 # VALIDATIONS
 
-
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' @title check failed samples file for reported missing vial label ids
 #'
@@ -52,6 +51,7 @@ check_failedsamples <- function(input_results_folder,
     }
   }
 }
+
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' @title check metadata phase file
@@ -209,6 +209,42 @@ check_viallabel_dmaqc <- function(vl_submitted,
 }
 
 
+#' @title extract ASSAY from input folder path
+#'
+#' @description extract ASSAY from input folder path
+#' @param input_results_folder (char) input_results_folder path
+#' @return (vector) ASSAY code
+#' @export
+validate_assay <- function(input_results_folder){
+  
+  assay <- stringr::str_extract(string = input_results_folder,
+                                pattern = "(IONPNEG|RPNEG|RPPOS|HILICPOS|LRPPOS|LRPNEG|3HIB|AA|AC_DUKE|ACOA|BAIBA|CER_DUKE|CONV|KA|NUC|OA|SPHM|OXYLIPNEG|ETAMIDPOS|AC_MAYO|AMINES|CER_MAYO|TCA|IMM_CRT|IMM_GLC|IMM_INS|PROT_PH|PROT_PR|PROT_AC|PROT_UB)")
+  if(is.na(assay)){
+    stop("ASSAY not found in the folder structure")
+  }else{
+    return(assay)
+  }
+}
+
+#' @title extract BATCH_YYYYMMDD folder
+#'
+#' @description extract BATCH_YYYYMMDD folder from input folder path
+#' @param input_results_folder (char) input_results_folder path
+#' @return (vector) BATCH_YYYYMMDD folder name
+#' @export
+validate_batch <- function(input_results_folder){
+  
+  batch_folder <- stringr::str_extract(string = input_results_folder, 
+                                       pattern = "(.*/BATCH\\d{1,2}\\_\\d{8})/")
+  
+  if(is.na(batch_folder)){
+    stop("`BATCH#_YYYYMMDD` folder is not recognized in the folder structure.")
+  }else{
+    return(batch_folder)
+  }
+}
+
+
 #' @title validate cas code
 #'
 #' @description validate CAS code
@@ -228,6 +264,182 @@ validate_cas <- function(cas){
                        "broad_prot")
   if(!(cas %in% valid_cas_sites)){
     stop("cas: <", cas, "> is not valid. Must be one of the following:\n - ", paste(valid_cas_sites, collapse = "\n - "))
+  }
+}
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' @title Validate date-time format in a data frame column
+#' 
+#' @description
+#' This function validates that all the values in a specified column of a given data frame
+#' adhere to the date-time format: "MM/DD/YYYY HH:MM:SS AM/PM". If any value does not comply 
+#' with this format, it prints out those values.
+#' 
+#' @param df A data frame containing the column to be validated.
+#' @param column_name The name of the column in `df` which contains the date-time values.
+#' @param verbose Logical. If TRUE, messages are printed to the console.
+#' 
+#' @return 
+#' This function returns the number of issues detected
+#' 
+#' @examples 
+#' 
+#' df <- data.frame(id = 1:6,
+#'                  datetime = c("12/31/2023 11:59:59 PM", "01/01/2024 00:00:00 AM", 
+#'                                "02/29/2024 12:00:00 PM", "13/01/2024 01:00:00 PM", 
+#'                                "02/28/2024 24:00:00 PM", "02/30/2024 12:00:00 PM"))
+#' validate_dates_times(df, "datetime", TRUE)
+#' 
+#' @export
+validate_dates_times <- function(df, column_name, verbose = TRUE) {
+  
+  # issue count
+  ic <- 0
+  
+  # Check if the column exists in the dataframe
+  if (!column_name %in% names(df)) {
+    stop(paste("Column", column_name, "does not exist in the data frame."))
+  }
+  
+  # Check NA and empty values:
+  icna <- validate_na_empty(df = df, col_name = column_name, verbose = verbose)
+  ic <- ic + icna
+  
+  # Validate the dates with the specified format
+  datetime_values <- df[[column_name]]
+  parsed_datetimes <- lubridate::parse_date_time(datetime_values, 
+                                                 orders = c("mdy HM", 
+                                                            "mdy HMp", 
+                                                            "m/d/y h:M:s a", 
+                                                            "m/d/y h:M a"), 
+                                                 quiet = TRUE)
+  
+  # Detect incorrect format
+  incorrect_format <- is.na(parsed_datetimes)
+  
+  # Print the incorrect dates
+  incorrect_values <- datetime_values[incorrect_format]
+  if (length(incorrect_values) > 0) {
+    if(verbose) message("   - (-)`", column_name, "`: Values in incorrect format: `", paste(incorrect_values, collapse = ", "), "`")
+      ic <- ic + 1
+  }else{
+    if(verbose) message("  + (+) All dates are valid.")
+  }
+  
+  # Return the result
+  return(ic)
+}
+
+
+#' @title Validate 'lc_column_id' column
+#'
+#' @description
+#'  This function checks the 'lc_column_id' column of a provided data frame
+#' to ensure that it exists, contains no NA values, and contains no spaces
+#' in its entries. It also reports the number of unique values in the column.
+#'
+#' @param df A data frame that should contain the 'lc_column_id' column.
+#' @param column_name The name of the column in `df` which contains the date-time values.
+#' @param verbose A logical indicating whether to print informative messages.
+#' Default is TRUE.
+#'
+#' @return An invisible NULL. The function is used mainly for its side effects
+#' (i.e., printing validation results).
+#'
+#' @examples
+#' df <- data.frame(lc_column_id = c("id1", "id2", "id3", "id1", "id 2", NA))
+#' validate_lc_column_id(df, column_name = "lc_column_id")
+#' 
+#' @export
+validate_lc_column_id <- function(df, column_name, verbose = TRUE) {
+  
+  # issue counter
+  ic <- 0
+  
+  # Check if the column exists in the dataframe
+  if (!column_name %in% names(df)) {
+    stop(paste("Column", column_name, "does not exist in the data frame."))
+  }
+  
+  # Check NA and empty values:
+  icna <- validate_na_empty(df = df, col_name = column_name, verbose = verbose)
+  ic <- ic + icna
+  
+  # check for spaces in values
+  if (any(grepl(" ", df[[column_name]]))) {
+    if(verbose) message("   - (-) Spaces detected in column `", column_name, "`: FAIL")
+    ic <- ic + 1
+  }
+  
+  # report number of unique values
+  num_unique <- length(unique(df[[column_name]]))
+  if(verbose) message(paste("   - ( ) Number of unique values in column `", column_name, "`: ", num_unique))
+  if(num_unique > 3){
+    if(verbose) message(paste("   - (!) Warning: the number of LC columns might be too high. Please, revise "))
+  }
+  
+  return(ic)
+}
+
+
+#' Validate Column for NA and Empty Values
+#'
+#' This function checks if a specified column in a data frame contains either NA or empty values.
+#'
+#' @param df A data frame.
+#' @param col_name A character string specifying the name of the column to check.
+#' @param verbose A logical indicating whether to print informative messages. Default is TRUE.
+#'
+#' @return Number of issues
+#'
+#' @examples
+#' df <- data.frame(A = c("a", "", NA, "d"), B = 1:4)
+#' validate_na_empty(df, "A")
+#'
+#' @export
+validate_na_empty <- function(df, col_name, verbose = TRUE) {
+  
+  # issue count
+  ic <- 0
+  
+  # check if col_name is in column names
+  if (!col_name %in% colnames(df)) {
+    if(verbose) message(paste("   - (-) Column `", col_name, "` not found in the data frame: FAIL"))
+    stop("This column ", col_name, " does not exist")
+  }
+  
+  # check for NA values
+  if (any(is.na(df[[col_name]]))) {
+    if(verbose) message(paste("   - (-) NA values detected in column `", col_name, "`: FAIL"))
+    ic <- ic + 1
+  }
+  
+  # check for empty values
+  # check for empty values, ignoring NA
+  if (any(df[[col_name]][!is.na(df[[col_name]])] == "")) {
+    if(verbose) message(paste("   - (-) Empty values detected in column `", col_name, "`: FAIL"))
+    ic <- ic + 1
+  }
+  
+  return(ic)
+}
+
+
+#' @title Extract PHASE from input folder path
+#'
+#' @description extract ASSAY from input folder path
+#' @param input_results_folder (char) input_results_folder path
+#' @param return_phase (char) return the phase only if `TRUE` (default)
+#' @return (vector) PHASE code
+#' @export
+validate_phase <- function(input_results_folder, return_phase = TRUE){
+  phase <- stringr::str_extract(string = input_results_folder,
+                                pattern = "(PASS1A-06|PASS1A-18|PASS1B-06|PASS1B-18|PASS1C-06|PASS1C-18|PASS1AC-06|HUMAN|HUMAN-PRECOVID|HUMAN-MAIN)")
+  if(is.na(phase)){
+    stop("Project phase (e.g. PASS1A-06) is not found in the folder structure, please, check guidelines")
+  }else{
+    if(return_phase) return(phase)
   }
 }
 
@@ -254,63 +466,6 @@ validate_processFolder <- function(input_results_folder){
 }
 
 
-#' @title extract BATCH_YYYYMMDD folder
-#'
-#' @description extract BATCH_YYYYMMDD folder from input folder path
-#' @param input_results_folder (char) input_results_folder path
-#' @return (vector) BATCH_YYYYMMDD folder name
-#' @export
-validate_batch <- function(input_results_folder){
-  
-  batch_folder <- stringr::str_extract(string = input_results_folder, 
-                                       pattern = "(.*/BATCH\\d{1,2}\\_\\d{8})/")
-  
-  if(is.na(batch_folder)){
-    stop("`BATCH#_YYYYMMDD` folder is not recognized in the folder structure.")
-  }else{
-    return(batch_folder)
-  }
-}
-
-
-#' @title extract ASSAY from input folder path
-#'
-#' @description extract ASSAY from input folder path
-#' @param input_results_folder (char) input_results_folder path
-#' @return (vector) ASSAY code
-#' @export
-validate_assay <- function(input_results_folder){
-
-  assay <- stringr::str_extract(string = input_results_folder,
-                                pattern = "(IONPNEG|RPNEG|RPPOS|HILICPOS|LRPPOS|LRPNEG|3HIB|AA|AC_DUKE|ACOA|BAIBA|CER_DUKE|CONV|KA|NUC|OA|SPHM|OXYLIPNEG|ETAMIDPOS|AC_MAYO|AMINES|CER_MAYO|TCA|IMM_CRT|IMM_GLC|IMM_INS|PROT_PH|PROT_PR|PROT_AC|PROT_UB)")
-  if(is.na(assay)){
-    stop("ASSAY not found in the folder structure")
-  }else{
-    return(assay)
-  }
-}
-
-
-
-#' @title Extract PHASE from input folder path
-#'
-#' @description extract ASSAY from input folder path
-#' @param input_results_folder (char) input_results_folder path
-#' @param return_phase (char) return the phase only if `TRUE` (default)
-#' @return (vector) PHASE code
-#' @export
-validate_phase <- function(input_results_folder, return_phase = TRUE){
-  phase <- stringr::str_extract(string = input_results_folder,
-                                pattern = "(PASS1A-06|PASS1A-18|PASS1B-06|PASS1B-18|PASS1C-06|PASS1C-18|PASS1AC-06|HUMAN|HUMAN-PRECOVID|HUMAN-MAIN)")
-  if(is.na(phase)){
-    stop("Project phase (e.g. PASS1A-06) is not found in the folder structure, please, check guidelines")
-  }else{
-    if(return_phase) return(phase)
-  }
-}
-
-
-
 #' @title extract and validate TISSUE CODE from input folder path
 #'
 #' @description extract and validate TISSUE CODE from input folder path
@@ -326,6 +481,7 @@ validate_tissue <- function(input_results_folder){
     return(tissue_code)
   }
 }
+
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' @title validate a phase with two phases (pass1a and 1c)
@@ -362,4 +518,82 @@ validate_two_phases <- function(phase_details,
 }
 
 
+#' Validate Dates in a Specified Column of a Data Frame
+#'
+#' This function checks for the validity of dates in a specified column of a given data frame. 
+#' Valid dates are in the format YYYY-MM-DD, with year values between 2018 and 2026, 
+#' month values between 1 and 12, and day values between 1 and 31. 
+#' The function prints a list of invalid dates and a success message if all dates are valid.
+#'
+#' @title Validate YYYY-MM-DD Dates in a Data Frame
+#'
+#' @param df A data frame that contains the date information to be validated.
+#' @param date_column A character string specifying the name of the column in `df` that contains the dates to be validated.
+#' @param verbose A logical value indicating whether or not to print messages (default: `TRUE`).
+#'
+#' @return number of issues found
+#'
+#' @examples
+#' df <- data.frame(
+#'   extraction_date = c("2022-01-31", "2023-12-01", "2025-11-30"),
+#'   other_column = 1:3
+#' )
+#' ic <- validate_yyyymmdd_dates(df, "extraction_date")
+#' @export
+validate_yyyymmdd_dates <- function(df, date_column, verbose = TRUE) {
+  
+  # set issue count
+  ic <- 0
+  
+  # Check if date_column exists in df
+  if(!(date_column %in% colnames(df))){
+    stop(paste0("Column ", date_column, " not found in the data frame."))
+    ic <- ic + 1
+    return(ic)
+  }
+  
+  # Extract the date column
+  date_vector <- df[[date_column]]
+  
+  # Check NA and empty values:
+  icna <- validate_na_empty(df = df, col_name = date_column, verbose = verbose)
+  ic <- ic + icna
+  
+  # Check dash intead of -
+  check_dash <- grepl("\\/", date_vector)
+  if(any(check_dash)){
+    if(verbose) message("   - (-)`", date_column, "`: Invalid dates detected using `/` instead of `-`: ", paste(date_vector[check_dash], collapse = ", "))
+    ic <- ic + 1
+    return(ic)
+  }
+  
+  # Check for invalid date format
+  incorrect_format <- !grepl("^\\d{4}-\\d{2}-\\d{2}$", date_vector)
+  
+  # Check for invalid year, month, or day
+  split_dates <- strsplit(date_vector, "-")
+  incorrect_components <- sapply(split_dates, function(date_parts) {
+    year <- as.integer(date_parts[1])
+    month <- as.integer(date_parts[2])
+    day <- as.integer(date_parts[3])
+    
+    year_out_of_range <- year < 2018 | year > 2026
+    month_out_of_range <- month < 1 | month > 12
+    day_out_of_range <- day < 1 | day > 31
+    
+    year_out_of_range | month_out_of_range | day_out_of_range
+  })
+  
+  # Combine results
+  incorrect_dates <- incorrect_format | incorrect_components
+  
+  if(any(incorrect_dates)){
+    if(verbose) message("   - (-) `", date_column, "`: Invalid dates detected: ", paste(date_vector[incorrect_dates], collapse = ", "))
+    ic <- ic + 1
+  } else {
+    if(verbose) message("  + (+) All dates are valid.")
+  }
+  
+  return(ic)
+}
 
