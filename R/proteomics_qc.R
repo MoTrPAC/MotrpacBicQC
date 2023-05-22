@@ -71,9 +71,9 @@ check_ratio_proteomics <- function(df_ratio,
         # Plot redundancies
         ya <- df_ratio %>%
           group_by(ptm_id) %>%
-          reframe(id_repeats = n()) %>%
+          dplyr::reframe(id_repeats = n()) %>%
           group_by(id_repeats) %>%
-          reframe(n = n()) %>%
+          dplyr::reframe(n = n()) %>%
           ggplot2::ggplot(aes(x = as.factor(id_repeats), y = n, fill = as.factor(id_repeats))) +
           geom_bar(stat = "identity") +
           theme_linedraw() +
@@ -330,9 +330,9 @@ check_rii_proteomics <- function(df_rri,
         # Plot redundancies
         df <- df_rri %>%
           group_by(ptm_peptide) %>%
-          reframe(id_repeats = n()) %>%
+          dplyr::reframe(id_repeats = n()) %>%
           group_by(id_repeats) %>%
-          reframe(n = n())
+          dplyr::reframe(n = n())
 
         xa <- ggplot2::ggplot(df, aes(x = as.factor(id_repeats), y = n, fill = as.factor(id_repeats))) +
           geom_bar(stat = "identity") +
@@ -1052,7 +1052,7 @@ validate_proteomics <- function(input_results_folder,
               
               uid <- ratior_long %>%
                 group_by(across(all_of(c(key_id, "vial_label", "tmt_plex")))) %>%
-                reframe(total_rii = ratio_values)
+                dplyr::reframe(total_rii = ratio_values)
               
               uid2 <- uid[which(!is.na(uid$total_rii)),]
               uid3 <- unique(uid2[c(key_id, "vial_label", "tmt_plex")]) %>% 

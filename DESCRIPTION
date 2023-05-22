@@ -13,13 +13,13 @@ Description: R Package for the analysis of MoTrPAC datasets.
     in humans. 
     This package provides a set of functions for Primary and Secondary 
     QC/QA analysis of datasets generated and submitted 
-    by the consortium Chemical Analysis Sites.
+    by the consortium Chemical Analysis Sites
 License: MIT + file LICENSE
 URL: https://github.com/MoTrPAC/MotrpacBicQC
 Encoding: UTF-8
 LazyData: true
 BugReports: https://github.com/MoTrPAC/MotrpacBicQC/issues
-Depends: R (>= 3.6.0)
+Depends: R (>= 4.1.0)
 Imports:
     data.table,
     dplyr,
@@ -30,6 +30,7 @@ Imports:
     inspectdf,
     jsonlite,
     knitr,
+    lubridate,
     naniar,
     progress,
     purrr,

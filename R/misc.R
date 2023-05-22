@@ -9,6 +9,7 @@
 #' @importFrom inspectdf inspect_na
 #' @importFrom jsonlite fromJSON
 #' @import knitr
+#' @importFrom lubridate parse_date_time
 #' @import naniar
 #' @import progress
 #' @import purrr
@@ -64,6 +65,7 @@ create_folder <- function(folder_name = NULL,
 #' downloading it. Read in existing file if it exists. 
 #' Should be set to \code{TRUE} if you are running this function in parallel.
 #' @param header (bool) whether input file has a header line 
+#' @param verbose (logical) `TRUE` shows messages (default `FALSE`)
 #' @param ... optional arguments for [data.table::fread] 
 #'
 #' @return a data table
@@ -76,35 +78,51 @@ create_folder <- function(folder_name = NULL,
 #' }
 #' @export
 dl_read_gcp <- function(path,
-                        sep = '\t',
+                        sep = "\t",
                         header = TRUE,
-                        tmpdir = '/tmp',
-                        gsutil_path = 'gsutil',
+                        tmpdir,
+                        gsutil_path = "gsutil",
                         check_first = TRUE,
+                        verbose = FALSE,
                         ...){
-  system(sprintf('mkdir -p %s',tmpdir))
-  # download
-  new_path <- sprintf('%s/%s', tmpdir, basename(path))
+  
+  if(!dir.exists(tmpdir)){
+    dir.create(tmpdir)
+    if(verbose) message(paste0("- New folder ", tmpdir, " created successfully"))
+  }
+  
+  tmpdir <- normalizePath(tmpdir)
+  
+  # Check path
+  if(!grepl("gs:\\/\\/", path)){
+    stop("The path to the bucket is wrong. Valid example: gs://bucket-name/file-name.csv")
+  }else{
+    new_path <- file.path(tmpdir, basename(path))
+  }
+
   # only download if it doesn't exist to avoid conflicts when running this script in parallel; clear scratch space when you're done
   if(check_first){
     if( !file.exists(new_path) ){
       cmd <- sprintf('%s cp %s %s', gsutil_path, path, tmpdir)
+      if(verbose) message(paste0("- Running command ", cmd))
       system(cmd, ignore.stdout = TRUE, ignore.stderr = TRUE)
+      message("- Downloaded file: ", new_path)
     }else{
-      message(paste("The file", new_path, "already exists"))
+      if(verbose) message(paste0("- The file <", new_path, "> already exists"))
     }
   }else{
-    message(paste("Downloading file from GCP: ", basename(path)))
+    if(verbose) message(paste("- Downloading file (from GCP) <", basename(path), ">"))
     cmd <- sprintf('%s cp %s %s', gsutil_path, path, tmpdir)
     system(cmd, ignore.stdout = TRUE, ignore.stderr = TRUE)
+    message("- Downloaded file: ", new_path)
   }
   # read in the data as a data.table
   if(file.exists(new_path)){
     dt <- data.table::fread(new_path, sep=sep, header=header,...)
     return(dt)
+  }else{
+    stop("- Problems loading the file")
   }
-  warning(sprintf("gsutil file %s does not exist.\n", path))
-  return()
 }
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -179,6 +197,7 @@ filter_required_columns <- function(df,
   type <- match.arg(type)
 
   if (type == "m_m"){
+    # Define required columns
     if(name_id == "named"){
       emeta_metabo_coln_named <- c("metabolite_name", "refmet_name", "rt", "mz", "neutral_mass", "formula")
     }else if(name_id == "unnamed"){
@@ -190,25 +209,32 @@ filter_required_columns <- function(df,
     }else{
       stop("{`name_id`} option not valid. Options: named/unnamed")
     }
-
+    
+    # Now check if present
     colnames(df) <- tolower(colnames(df))
-
-    if(all(emeta_metabo_coln_named %in% colnames(df))){
+    missing_cols <- setdiff(emeta_metabo_coln_named, colnames(df))
+    if (length(missing_cols) > 0) {
+      if(verbose) message("   - (-) `metadata_metabolite`: Expected COLUMN NAMES are missed: FAIL")
+      message(paste0("\t The following required columns are not present: `", paste(missing_cols, collapse = ", "), "`"))
+    } else {
       if(verbose) message("  + (+) All required columns present")
       df <- subset(df, select = emeta_metabo_coln_named)
-    }else{
-      if(verbose) message("   - (-) Expected COLUMN NAMES are missed: FAIL")
     }
     return(df)
+    
   } else if (type == "m_s"){
-    emeta_sample_coln <- c("sample_id", "sample_type", "sample_order", "raw_file")
-    if( all(emeta_sample_coln %in% colnames(df)) ){
+    emeta_sample_coln <- c("sample_id", "sample_type", "sample_order", "raw_file", "extraction_date", "acquisition_date", "lc_column_id")
+    missing_cols <- setdiff(emeta_sample_coln, colnames(df))
+    
+    if (length(missing_cols) > 0) {
+      if(verbose) message("   - (-) `metadata_sample`: Expected COLUMN NAMES are missed: FAIL")
+      message(paste0("\t The following required columns are not present: `", paste(missing_cols, collapse = ", "), "`"))
+    } else {
       if(verbose) message("  + (+) All required columns present")
       df <- subset(df, select = emeta_sample_coln)
-    }else{
-      if(verbose) message("   - (-) Expected COLUMN NAMES are missed: FAIL")
     }
     return(df)
+
   } else if (type == "v_m"){
     emeta_sample_coln <- c("vial_label", "tmt_plex")
     if( all(emeta_sample_coln %in% colnames(df)) ){

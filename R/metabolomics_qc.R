@@ -3,8 +3,7 @@
 utils::globalVariables(
   c("assay_codes",
     "bic_animal_tissue_code",
-    "phenotypes_pass1a06_short",
-    "..count.."))
+    "phenotypes_pass1a06_short"))
 
 
 # METABOLOMICS DATASETS: PRIMARY QC
@@ -72,7 +71,7 @@ check_metadata_metabolites <- function(df,
         if(verbose) message("  + (+) `refmet_name` unique values: OK")
       }
       
-      if(verbose) message("  + Validating `refmet_name`")
+      if(verbose) message("  + Validating `refmet_name` (it might take some time)")
       nrnna <- validate_refmetname(dataf = df, verbose = verbose)
       if(nrnna > 0){
         if(verbose) message(paste0("   - (-) SUMMARY: ", nrnna, " `refmet_name` not found in RefMet Metabolomics Data Dictionary: FAIL"))
@@ -184,7 +183,7 @@ check_metadata_samples <- function(df,
   # filter only expected columns
   df <- filter_required_columns(df = df,
                                 type = "m_s",
-                                verbose = FALSE)
+                                verbose = TRUE)
 
   # Check every column
   # sample_id: si
@@ -262,6 +261,40 @@ check_metadata_samples <- function(df,
     }
   }else{
     if(verbose) message("   - (-) `raw_file` column missed: FAIL")
+    ic <- ic + 1
+  }
+  
+  if("extraction_date" %in% colnames(df)){
+    if(any(is.na(df$extraction_date))){
+      if(verbose) message("   - (-) `extraction_date` has NA values: FAIL")
+      ic <- ic + 1
+    }else{
+      icdate <- validate_yyyymmdd_dates(df = df, date_column = "extraction_date", verbose = verbose)
+      ic <- ic + icdate
+    }
+  }else{
+    if(verbose) message("   - (-) `extraction_date` column missed: FAIL")
+    ic <- ic + 1
+  }
+  
+  if("acquisition_date" %in% colnames(df)){
+    if( any(grepl(":", df$acquisition_date)) ){
+      if(verbose) message("  + (i) Assuming `acquisition_date` is in `MM/DD/YYYY HH:MM:SS AM/PM` format. Validating:")
+      icdt <- validate_dates_times(df = df, column_name = "acquisition_date", verbose = verbose)
+    }else{
+      icdate <- validate_yyyymmdd_dates(df = df, date_column = "acquisition_date", verbose = verbose)
+      ic <- ic + icdate
+    }
+  }else{
+    if(verbose) message("   - (-) `acquisition_date` column missed: FAIL")
+    ic <- ic + 1
+  }
+  
+  # check if lc_column_id is in column names
+  if ("lc_column_id" %in% colnames(df)) {
+    validate_lc_column_id(df, column_name = "lc_column_id", verbose = verbose)
+  }else{
+    if(verbose) message("   - (-) `lc_column_id` column missed: FAIL")
     ic <- ic + 1
   }
 
@@ -658,7 +691,7 @@ validate_metabolomics <- function(input_results_folder,
       if(isTRUE(all.equal(m_s_n, m_s_u))){
         if(verbose) message("  + (+) Metadata samples: named and unnamed are identical: OK")
       }else{
-        if(verbose) message("   - (-) Metadata samples: named and unnamed files differ")
+        if(verbose) message("   - (-) Metadata samples: named and unnamed files differ: FAIL")
         ic <- ic + 1
       }
     }else{
