@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MotrpacBicQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.8.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.8.7</span>
       </span>
     </div>
 
@@ -114,11 +114,16 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="op">{</span></span></span>
 <span class="r-in"><span><span class="fu">check_metadata_samples</span><span class="op">(</span>df <span class="op">=</span> <span class="va">metadata_sample_named</span>, cas <span class="op">=</span> <span class="st">"umichigan"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>    - (-) `metadata_sample`: Expected COLUMN NAMES are missed: FAIL</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 	 The following required columns are not present: `extraction_date, acquisition_date, lc_column_id`</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   + (+) `sample_id` seems OK</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   + (+) `sample_type` seems OK</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   + (+) `sample_order` is numeric</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   + (+) `sample_order` unique values OK</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   + (+) `raw_file` unique values: OK</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>    - (-) `extraction_date` column missed: FAIL</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>    - (-) `acquisition_date` column missed: FAIL</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>    - (-) `lc_column_id` column missed: FAIL</span>
 </code></pre></div>
     </div>
   </div>

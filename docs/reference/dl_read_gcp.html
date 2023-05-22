@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MotrpacBicQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.8.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.8.7</span>
       </span>
     </div>
 
@@ -73,9 +73,12 @@
 <span>  <span class="va">path</span>,</span>
 <span>  sep <span class="op">=</span> <span class="st">"\t"</span>,</span>
 <span>  header <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  tmpdir <span class="op">=</span> <span class="st">"/tmp"</span>,</span>
+<span>  <span class="va">tmpdir</span>,</span>
 <span>  gsutil_path <span class="op">=</span> <span class="st">"gsutil"</span>,</span>
 <span>  check_first <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  ignore_std_err <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  ignore_std_out <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -109,6 +112,18 @@ downloading it. Read in existing file if it exists.
 Should be set to <code>TRUE</code> if you are running this function in parallel.</p></dd>
 
 
+<dt>verbose</dt>
+<dd><p>(logical) <code>TRUE</code> shows messages (default <code>FALSE</code>)</p></dd>
+
+
+<dt>ignore_std_err</dt>
+<dd><p>(logical) corresponds to ignore.stderr in <code>cmd</code> (default <code>TRUE</code>)</p></dd>
+
+
+<dt>ignore_std_out</dt>
+<dd><p>(logical) corresponds to ignore.stdout in <code>cmd</code> (default <code>TRUE</code>)</p></dd>
+
+
 <dt>...</dt>
 <dd><p>optional arguments for <a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">data.table::fread</a></p></dd>
 
@@ -118,6 +133,13 @@ Should be set to <code>TRUE</code> if you are running this function in parallel.
     
 
 <p>a data table</p>
+    </div>
+    <div id="details">
+    <h2>Details</h2>
+    <p>There is a known issue for Windows users that can occur when
+<code>dl_read_gcp</code> is run in a local R session where <code>gsutils</code>
+can not find files in the data hub. Setting either <code>ignore_std_err</code>
+to <code>FALSE</code> of <code>ignore_std_out</code> to <code>FALSE</code> should fix this.</p>
     </div>
 
     <div id="ref-examples">
