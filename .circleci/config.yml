@@ -9,6 +9,7 @@ jobs:
           name: Install LaTeX packages
           command: |
             apt-get update
+            apt-get install -y texlive
             apt-get install -y texlive-fonts-recommended
       - run:
           name: Install package dependencies
