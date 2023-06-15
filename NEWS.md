@@ -1,3 +1,7 @@
+# MotrpacBicQC 0.8.8 (2023-06-15)
+
+* Add 24 hours time support for the `acquisition_date` (`MM/DD/YYYY HH:MM:SS`)
+
 # MotrpacBicQC 0.8.7 (2023-05-22)
 
 * Add QC for the new required batching variables
