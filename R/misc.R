@@ -136,7 +136,7 @@ dl_read_gcp <- function(path,
     dt <- data.table::fread(new_path, sep=sep, header=header,...)
     return(dt)
   }else{
-    stop("- Problems loading the file")
+    stop("- Problems loading the file. Possible reason: the file does not exist in the bucket anymore. Please, validate the address. Re-run this command again with `verbose = TRUE`)")
   }
 }
 

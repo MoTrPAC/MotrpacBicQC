@@ -311,8 +311,10 @@ validate_dates_times <- function(df, column_name, verbose = TRUE) {
   parsed_datetimes <- lubridate::parse_date_time(datetime_values, 
                                                  orders = c("mdy HM", 
                                                             "mdy HMp", 
+                                                            "mdy H:M:S",
                                                             "m/d/y h:M:s a", 
-                                                            "m/d/y h:M a"), 
+                                                            "m/d/y h:M a",
+                                                            "mdY h:M:S p"), 
                                                  quiet = TRUE)
   
   # Detect incorrect format
