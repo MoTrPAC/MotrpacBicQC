@@ -1330,7 +1330,7 @@ validate_proteomics <- function(input_results_folder,
 
 
   # PRINT OUT RESULTS-----
-  batchversion <- stringr::str_extract(string = input_results_folder, pattern = "BATCH.*_[0-9]+/RESULTS_[0-9]+")
+  batchversion <- stringr::str_extract(string = input_results_folder, pattern = "BATCH.*_([0-9]+/(RESULTS|BICRESULTS)_[0-9]+)")
 
   qc_date <- Sys.time()
   qc_date <- gsub("-", "", qc_date)
