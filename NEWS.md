@@ -1,3 +1,10 @@
+
+# MotrpacBicQC 0.8.9 (2023-07-07)
+
+* Fix bug preventing the processing of BICRESULTS folders (proteomics)
+* Make clear that the metadata_phase.txt file is required
+* Other enhancements
+
 # MotrpacBicQC 0.8.8 (2023-06-15)
 
 * Add 24 hours time support for the `acquisition_date` (`MM/DD/YYYY HH:MM:SS`)
