@@ -420,7 +420,7 @@ set_phase <- function(input_results_folder,
   if ( !(purrr::is_empty(file_phase)) ){
     phase_details <- readr::read_lines(file_phase, n_max = 1)
     if ( !(is.na(phase_details) || phase_details == '') ){
-      if(verbose) message("+ Motrpac phase reported: ", phase_details, " (info from metadata_phase.txt available)")
+      if(verbose) message("+ Motrpac phase reported: ", phase_details, " (info from metadata_phase.txt available): OK")
 
       if( grepl("\\|", phase_details) ){
         validate_two_phases(phase_details = phase_details, verbose = FALSE)
@@ -431,13 +431,13 @@ set_phase <- function(input_results_folder,
         dmaqc_phase2validate <- phase_details
       }
     }else{
-      if(verbose) message("+ Motrpac phase: ", phase, " (metadata_phase.txt available but EMPTY)")
+      if(verbose) message("+ Motrpac phase: ", phase, " (metadata_phase.txt available but EMPTY): FAIL")
       if( isFALSE(dmaqc_phase2validate) ){
         dmaqc_phase2validate <- phase
       }
     }
   }else{
-    if(verbose) message("+ Motrpac phase: ", phase, " (metadata_phase.txt file NOT available)")
+    if(verbose) message("+ Motrpac phase: ", phase, " (metadata_phase.txt file NOT available): FAIL")
     if( isFALSE(dmaqc_phase2validate) ){
       dmaqc_phase2validate <- phase
     }
