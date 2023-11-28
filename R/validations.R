@@ -593,7 +593,7 @@ validate_yyyymmdd_dates <- function(df, date_column, verbose = TRUE) {
     if(verbose) message("   - (-) `", date_column, "`: Invalid dates detected: ", paste(date_vector[incorrect_dates], collapse = ", "))
     ic <- ic + 1
   } else {
-    if(verbose) message("  + (+) All dates are valid.")
+    if(verbose) message("  + (+) `", date_column, "`: All dates are valid.")
   }
   
   return(ic)

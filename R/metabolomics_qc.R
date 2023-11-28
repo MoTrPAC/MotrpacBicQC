@@ -410,6 +410,18 @@ check_results <- function(r_m,
     }else{
       if(verbose) message("  + (+) `sample_id` columns are numeric: OK")
     }
+    
+    # Check for negative values in all columns except 'metabolite_name'
+    negative_values_exist <- r_m %>% 
+      select(-metabolite_name) %>% 
+      summarise(across(everything(), ~any(. < 0, na.rm = TRUE))) %>%
+      any()
+
+    if(negative_values_exist){
+      message("   - (-) NEGATIVE VALUES FOUND!!!: FAIL")
+      ic <- ic + 1
+    }
+    
   }else{
     ic <- ic + 1
   }
@@ -1645,7 +1657,7 @@ write_metabolomics_releases <- function(input_results_folder,
     stop("ASSAY code ", assay, " not available in `assay_codes`")
   }
 
-  if(verbose) message("+ Writing out ", cas, " ", phase, " ", tissue_code, " ", assay, " files", appendLF = FALSE)
+  if(verbose) message("+ Writing out ", cas, " ", phase_details, " ", tissue_code, " ", assay, " files", appendLF = FALSE)
 
   # Load all datasets----
   metab_dfs <- load_metabolomics_batch(input_results_folder = input_results_folder,
@@ -1658,11 +1670,18 @@ write_metabolomics_releases <- function(input_results_folder,
   }else{
     folder_root <- normalizePath(folder_root)
   }
+  
+  # Exception for PASS1C-06: the main folder is pass1a
+  if(phase_details == "pass1c-06"){
+    phase_folder_release <- "pass1a-06"
+  }else{
+    phase_folder_release <- phase_details
+  }
 
   if(cas %in% c("umichigan", "broad_met", "gtech")){
-    output_folder <- file.path(folder_root, folder_name, folder_phase, "metabolomics-untargeted", folder_tissue, folder_assay)
+    output_folder <- file.path(folder_root, folder_name, phase_folder_release, "metabolomics-untargeted", folder_tissue, folder_assay)
   }else{
-    output_folder <- file.path(folder_root, folder_name, folder_phase, "metabolomics-targeted", folder_tissue, folder_assay)
+    output_folder <- file.path(folder_root, folder_name, phase_folder_release, "metabolomics-targeted", folder_tissue, folder_assay)
   }
 
   if(!dir.exists(file.path(output_folder))){
