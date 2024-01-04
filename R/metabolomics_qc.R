@@ -36,7 +36,6 @@ check_metadata_metabolites <- function(df,
 
 
   # Evaluate every column
-  flag_mm <- FALSE
   if("metabolite_name" %in% colnames(df)){
     if(length(unique(df$metabolite_name)) != dim(df)[1]){
       duplis_details <- df$metabolite_name[duplicated(df$metabolite_name)]
@@ -45,7 +44,6 @@ check_metadata_metabolites <- function(df,
       if(verbose) message("\n\t\t - ", paste(duplis_details, collapse = "\n\t\t - "))
       ic <- ic + 1
     }else{
-      flag_mm <- TRUE
       if(verbose) message("  + (+) `metabolite_name` OK")
     }
 
@@ -197,7 +195,7 @@ check_metadata_samples <- function(df,
       if(verbose) message("  + (+) `sample_id` seems OK")
     }
   }else{
-    if(verbose) message("   - (-) `metabolite_name` is missed: FAIL")
+    if(verbose) message("   - (-) `sample_id` is missed: FAIL")
     ic <- ic + 1
   }
 
@@ -215,7 +213,7 @@ check_metadata_samples <- function(df,
       if(verbose) message("  + (+) `sample_type` seems OK")
     }
   }else{
-    if(verbose) message("   - (-) `refmet_name` column missed: FAIL")
+    if(verbose) message("   - (-) `sample_type` column missed: FAIL")
     ic <- ic + 1
   }
 
@@ -324,6 +322,8 @@ check_results <- function(r_m,
                           return_n_issues = FALSE,
                           verbose = TRUE){
 
+  metabolite_name = NULL
+  
   # issue_count
   ic = 0
 
@@ -333,13 +333,13 @@ check_results <- function(r_m,
   flag_out <- TRUE
   if(!setequal(colnames(r_m), eresults_coln)){
     extra_in_results <- setdiff(colnames(r_m), eresults_coln)
-    if(length(extra_in_results > 0)){
+    if(length(extra_in_results) > 0){
       if(verbose) message("\n   - (-) Column(s) NOT expected in `results_metabolite` file which are missed in `metadata_samples`: \n\t\t - ",
                           paste(extra_in_results, collapse = "\n\t\t - "))
     }
 
     extra_in_msr <- setdiff(eresults_coln, colnames(r_m))
-    if(length(extra_in_msr)){
+    if(length(extra_in_msr) > 0){
       if(verbose) message("\n   - (-) Column(s) available in `metadata_samples` missed in `results_metabolite`: \n\t\t - ",
                           paste(extra_in_msr, collapse = "\n\t\t - "))
     }
@@ -535,7 +535,7 @@ check_manifest_rawdata <- function(input_results_folder,
 #' is not required since it should be extracted from the input folder or from the 
 #' new required file `metadata_phase.txt`. Please, ignore. 
 #' However, if this argument is provided,
-#' it will take priority (and the phase from the input folder and the 
+#' it will take priority and this will be the phase.
 #' `metadata_phase.txt` will be ignored). Examples
 #' - Folder with `PASS1A-06`: type either `PASS1A-06` or leave it `NULL`
 #' - Both `PASS1A-06` and `PASS1C-06`: type `PASS1A-06|PASS1C-06`
@@ -853,15 +853,6 @@ validate_metabolomics <- function(input_results_folder,
     }else{
       if(verbose) message("\n- (-) QC plots are not possible: critical datasets are missed")
     }
-    
-    if(f_rmn & f_mmn){
-      m_m_n <- filter_required_columns(df = m_m_n,
-                                       type = "m_m",
-                                       name_id = "named",
-                                       verbose = FALSE)
-                                    
-      r_m_merge <- merge(r_m_n, m_m_n, by = "metabolite_name")
-    }
   }
 
   # MANIFEST all files-----
@@ -1125,6 +1116,7 @@ validate_metabolomics <- function(input_results_folder,
     }
   }
 
+  # RETURN report----
   if(ic > 4){
     message("\nTOTAL NUMBER OF CRITICAL ERROR: ", ic,"\n")
     message("WARNING: Too many errors. Revise input folder")
@@ -1194,9 +1186,6 @@ load_metabolomics_batch <- function(input_results_folder,
   assay <- validate_assay(input_results_folder)
   tissue_code <- validate_tissue(input_results_folder)
 
-  # Output name----
-  output_name <- paste0(cas, ".", tissue_code, ".", tolower(phase), ".",tolower(assay), ".", tolower(processfolder))
-
   total_issues <- validate_metabolomics(input_results_folder = input_results_folder, 
                                         cas = cas, 
                                         return_n_issues = TRUE, 
@@ -1207,9 +1196,6 @@ load_metabolomics_batch <- function(input_results_folder,
   if(total_issues > 0){
     message("\n\tWARNING!!! Too many issues identified (", total_issues,"). This batch should not be processed until the issues are solved")
   }
-
-  vial_label <- NA
-  qc_samples <- NA
 
   # Load Metabolomics----
   if(verbose) message("# LOAD METABOLOMICS BATCH")
@@ -1290,7 +1276,7 @@ load_metabolomics_batch <- function(input_results_folder,
   }
 
 
-  # results --------------------------------------------------------------------
+  # results ---------
   if(verbose) message("\n\n## Results\n")
   if(verbose) message("\n*NAMED `results_metabolites`*\n")
 
@@ -1336,6 +1322,7 @@ load_metabolomics_batch <- function(input_results_folder,
     }
   }
 
+  # RETURN list of dfs----
   if(untargeted){
     list_df <- list ("m_m_n" = m_m_n,
                      "m_m_u" = m_m_u,
@@ -1617,17 +1604,22 @@ merge_all_metabolomics <- function(m_m_n,
 #' @param input_results_folder (char) Path to the PROCESSED_YYYYMMDD folder
 #' @param cas (char) Chemical Analytical Site code (e.g "umichigan")
 #' @param folder_name (char) output files name. Must have a `.yaml` extension.
-#' @param folder_root (char) absolute path to write the output files. Default: current directory
-#' @param version_file (char) file version number (v#.#)
+#' @param folder_root (char) absolute path to write the output files. 
+#' Default: current directory
+#' @param version_file (char) file version number (`v#.#`)
 #' @param verbose (logical) `TRUE` (default) shows messages
-#' @return bic release folder/file structure `PHASE/OMICS/TCODE_NAME/ASSAY/` and file names, including:
-#' `motrpac_YYYYMMDD_phasecode_tissuecode_omics_assay_file-details.txt` where files-details can be:
-#' `named-experimentalDetails.txt`, `named-metadata-metabolites.txt`, `metadata-samples.txt`,
-#' `named-results.txt`
+#' @return bic release folder/file structure 
+#' `PHASE/OMICS/TCODE_NAME/ASSAY/` and file names, including:
+#' - `motrpac_YYYYMMDD_phasecode_tissuecode_omics_assay_file-details.txt`
+#'  where files-details can be:
+#' - `named-experimentalDetails.txt`
+#' - `named-metadata-metabolites.txt`
+#' - `metadata-samples.txt`
+#' - `named-results.txt`
 #' @examples
 #' \dontrun{
-#' write_metabolomics_releases(
-#'    input_results_folder = "/full/path/to/PROCESSED_YYYYMMDD/")
+#' write_metabolomics_releases(input_results_folder = "/path/to/PROCESSED_YYYYMMDD/", 
+#' cas = "umichigan")
 #' }
 #' @export
 write_metabolomics_releases <- function(input_results_folder,
@@ -1651,6 +1643,17 @@ write_metabolomics_releases <- function(input_results_folder,
   tissue_code <- validate_tissue(input_results_folder)
   
   folder_tissue <- bic_animal_tissue_code$tissue_name_release[which(bic_animal_tissue_code$bic_tissue_code == tissue_code)]
+  
+  # # or make a function:
+  # get_folder_tissue <- function(tissue_code) {
+  #   folder_tissue <- MotrpacBicQC::bic_animal_tissue_code$tissue_name_release[
+  #     which(MotrpacBicQC::bic_animal_tissue_code$bic_tissue_code == tissue_code)
+  #   ]
+  #   return(folder_tissue)
+  # }
+  # 
+  # folder_tissue2 <- get_folder_tissue(tissue_code)
+  
   if(  length(assay_codes$assay_code[which(assay_codes$submission_code == assay)]) == 1 ){
     folder_assay <- assay_codes$assay_code[which(assay_codes$submission_code == assay)]
   }else{
