@@ -6,6 +6,7 @@
 #' @import ggplot2
 #' @importFrom grDevices dev.off pdf
 #' @importFrom gridExtra grid.arrange arrangeGrob
+#' @importFrom httr status_code GET
 #' @importFrom inspectdf inspect_na
 #' @importFrom jsonlite fromJSON
 #' @import knitr
@@ -197,6 +198,8 @@ get_full_path2batch <- function(input_results_folder){
 #' - `m_m`: metadata metabolites
 #' - `m_s`: metadata samples
 #' - `v_m`: proteomics vial_metadata
+#' - `olproteins`: olink metadata proteins
+#' - `olsamples`: olink metadata samples
 #' @param name_id (char) specify whether `named` or `unnamed` files
 #' @param verbose (logical) `TRUE` (default) shows messages
 #' @return (data.frame) filtered data frame with only the required columns
@@ -205,7 +208,11 @@ get_full_path2batch <- function(input_results_folder){
 #' }
 #' @export
 filter_required_columns <- function(df,
-                                    type = c("m_m", "m_s", "v_m"),
+                                    type = c("m_m", 
+                                             "m_s", 
+                                             "v_m", 
+                                             "olproteins", 
+                                             "olsamples"),
                                     name_id = NULL,
                                     verbose = TRUE){
 
@@ -267,6 +274,30 @@ filter_required_columns <- function(df,
       }
     }else{
       if(verbose) message("   - (-) Expected COLUMN NAMES are missed: FAIL")
+    }
+    return(df)
+  } else if (type == "olproteins"){
+    emeta_sample_coln <- c("olink_id", "uniprot_entry", "assay", "missing_freq", "panel_name", "panel_lot_nr", "normalization")
+    missing_cols <- setdiff(emeta_sample_coln, colnames(df))
+    
+    if (length(missing_cols) > 0) {
+      if(verbose) message("   - (-) `metadata_proteins`: Expected COLUMN NAMES are missed: FAIL")
+      message(paste0("\t The following required columns are not present: `", paste(missing_cols, collapse = ", "), "`"))
+    } else {
+      if(verbose) message("  + (+) All required columns present")
+      df <- subset(df, select = emeta_sample_coln)
+    }
+    return(df)
+  }else if (type == "olsamples"){
+    emeta_sample_coln <- c("sample_id", "sample_type", "sample_order", "plate_id")
+    missing_cols <- setdiff(emeta_sample_coln, colnames(df))
+    
+    if (length(missing_cols) > 0) {
+      if(verbose) message("   - (-) `metadata_samples`: Expected COLUMN NAMES are missed: FAIL")
+      message(paste0("\t The following required columns are not present: `", paste(missing_cols, collapse = ", "), "`"))
+    } else {
+      if(verbose) message("  + (+) All required columns present")
+      df <- subset(df, select = emeta_sample_coln)
     }
     return(df)
   }
