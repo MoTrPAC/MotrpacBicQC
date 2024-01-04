@@ -1,6 +1,6 @@
 ---
 title: "MotrpacBicQC: Metabolomics QC"
-date: "2023-02-08"
+date: "2024-01-04"
 output:
   rmdformats::downcute:
     code_folding: show
@@ -117,7 +117,7 @@ check_metadata_metabolites(df = metadata_metabolites_named, name_id = "named")
 ```
 
 ```
-##   + Validating `refmet_name`
+##   + Validating `refmet_name` (it might take some time)
 ```
 
 ```
@@ -145,6 +145,14 @@ check_metadata_samples(df = metadata_sample_named, cas = "umichigan")
 ```
 
 ```
+##    - (-) `metadata_sample`: Expected COLUMN NAMES are missed: FAIL
+```
+
+```
+## 	 The following required columns are not present: `extraction_date, acquisition_date, lc_column_id`
+```
+
+```
 ##   + (+) `sample_id` seems OK
 ```
 
@@ -162,6 +170,18 @@ check_metadata_samples(df = metadata_sample_named, cas = "umichigan")
 
 ```
 ##   + (+) `raw_file` unique values: OK
+```
+
+```
+##    - (-) `extraction_date` column missed: FAIL
+```
+
+```
+##    - (-) `acquisition_date` column missed: FAIL
+```
+
+```
+##    - (-) `lc_column_id` column missed: FAIL
 ```
 
 ```r
