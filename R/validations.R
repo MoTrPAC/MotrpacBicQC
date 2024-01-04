@@ -83,6 +83,36 @@ check_metadata_phase_file <- function(input_results_folder,
   
 }
 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Check for Missing Values in a Data Frame Column
+#'
+#' This function checks for missing values in a specified column of a data frame.
+#' It returns TRUE if there are no missing values in the column, and FALSE otherwise.
+#'
+#' @param df A data frame in which the column to be checked is located.
+#' @param column The name of the column to check for missing values, as a string.
+#'
+#' @return A boolean value; TRUE if the specified column has no missing values, FALSE if it does.
+#'
+#' @examples
+#' data <- data.frame(a = c(1, 2, NA, 4), b = c("A", "B", "C", "D"))
+#' check_missing_values(data, "a") # returns TRUE
+#' check_missing_values(data, "b") # returns FALSE
+#'
+#' @export
+check_missing_values <- function(df, column) {
+  if (!is.data.frame(df)) {
+    stop("The first argument must be a data frame.")
+  }
+  
+  if (!column %in% names(df)) {
+    stop("The specified column does not exist in the data frame.")
+  }
+  
+  # Check for missing values
+  return(any(is.na(df[[column]])))
+}
+
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' @title Validate vial labels from DMAQC
@@ -116,6 +146,12 @@ check_viallabel_dmaqc <- function(vl_submitted,
   
   # Remove redundant samples
   vl_submitted <- unique(vl_submitted[!grepl("\\.", vl_submitted)])
+  
+  # Adjustment for Rober Gerstein lab
+  
+  if(tolower(cas) == "broad_rg"){
+    cas <- "broad"
+  }
   
   # There might be multiple phases to check: load both
   ph <- unlist(strsplit(phase, split = "\\|"))
@@ -218,7 +254,7 @@ check_viallabel_dmaqc <- function(vl_submitted,
 validate_assay <- function(input_results_folder){
   
   assay <- stringr::str_extract(string = input_results_folder,
-                                pattern = "(?<=T\\d{2}/)(IONPNEG|RPNEG|RPPOS|HILICPOS|LRPPOS|LRPNEG|3HIB|AA|AC_DUKE|ACOA|BAIBA|CER_DUKE|CONV|KA|NUC|OA|SPHM|OXYLIPNEG|ETAMIDPOS|AC_MAYO|AMINES|CER_MAYO|TCA|IMM_CRT|IMM_GLC|IMM_INS|PROT_PH|PROT_PR|PROT_AC|PROT_UB)")
+                                pattern = "(?<=T\\d{2}/)(IONPNEG|RPNEG|RPPOS|HILICPOS|LRPPOS|LRPNEG|3HIB|AA|AC_DUKE|ACOA|BAIBA|CER_DUKE|CONV|KA|NUC|OA|SPHM|OXYLIPNEG|ETAMIDPOS|AC_MAYO|AMINES|CER_MAYO|TCA|IMM_CRT|IMM_GLC|IMM_INS|PROT_PH|PROT_PR|PROT_AC|PROT_UB|PROT_OL)")
   if(is.na(assay)){
     stop("ASSAY not found in the folder structure")
   }else{
@@ -261,7 +297,8 @@ validate_cas <- function(cas){
                        "gtech",
                        "duke",
                        "pnnl",
-                       "broad_prot")
+                       "broad_prot",
+                       "broad_rg")
   if(!(cas %in% valid_cas_sites)){
     stop("cas: <", cas, "> is not valid. Must be one of the following:\n - ", paste(valid_cas_sites, collapse = "\n - "))
   }
@@ -519,6 +556,57 @@ validate_two_phases <- function(phase_details,
   if(verbose) return("Two phases reported and they are ok")
 }
 
+#' Validate UniProt IDs
+#'
+#' This function checks if a given vector of IDs are valid UniProt IDs.
+#' It removes NA values, empty strings, and white spaces before validation.
+#' Each remaining ID is then checked against the UniProt database.
+#' The function outputs a boolean value indicating whether all IDs are valid.
+#' It also prints messages for any ID that fails the validation.
+#'
+#' @param ids A character vector of potential UniProt IDs.
+#'
+#' @return A boolean value. TRUE if all non-NA, non-empty, and non-whitespace
+#'         IDs in the input vector are valid UniProt IDs; FALSE otherwise.
+#'
+#' @examples
+#' # VALID
+#' ids1 <- c("P12345", "Q67890", NA, "", " ")
+#' if(validate_uniprot_ids_with_uniprot(ids1)) print("Valid UNIPROT IDs")
+#' ids2 <- c("P12345", "Q67890", NA, "", " ", "iamwrong")
+#' if(!validate_uniprot_ids_with_uniprot(ids1)) print("Invalid UNIPROT IDs")
+#'
+#' @note
+#' This function requires an internet connection to access the UniProt database.
+#' It uses the 'httr' package for HTTP requests.
+#' The function can be slow for large datasets due to multiple web requests.
+#' Also, be aware of potential rate limits or access restrictions on the UniProt API.
+#'
+#' @export
+validate_uniprot_ids_with_uniprot <- function(ids) {
+  base_url <- "https://www.uniprot.org/uniprot/"
+  
+  # Remove NAs, empty strings, and strings with only white spaces
+  ids <- ids[!is.na(ids) & ids != "" & ids != " "]
+  
+  # Split concatenated IDs and create a unique list of IDs
+  split_ids <- unlist(strsplit(ids, "_"))
+  unique_ids <- unique(split_ids)
+  
+  # Function to check a single ID
+  check_id <- function(id) {
+    response <- httr::GET(paste0(base_url, id, ".txt"))
+    is_uniprot <- httr::status_code(response) == 200
+    if(!is_uniprot) message(paste0("\t- (-) UNIPROT ENTRY `",  id, "` NOT VALID: FAIL"))
+    return(is_uniprot)
+  }
+  
+  # Apply check_id function to all unique IDs
+  all_true <- all(sapply(unique_ids, check_id))
+  return(all_true)
+}
+
+
 
 #' Validate Dates in a Specified Column of a Data Frame
 #'
@@ -593,7 +681,7 @@ validate_yyyymmdd_dates <- function(df, date_column, verbose = TRUE) {
     if(verbose) message("   - (-) `", date_column, "`: Invalid dates detected: ", paste(date_vector[incorrect_dates], collapse = ", "))
     ic <- ic + 1
   } else {
-    if(verbose) message("  + (+) All dates are valid.")
+    if(verbose) message("  + (+) `", date_column, "`: All dates are valid.")
   }
   
   return(ic)

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>MotrpacBicQC: Proteomics QC</title>
+<title>MotrpacBicQC: OLINK QC</title>
 <style type="text/css">
 /**
  * Prism.s theme ported from highlight.js's xcode style
@@ -142,7 +142,7 @@ section.footnotes::before {
 <div class="include-before">
 </div>
 <div class="frontmatter">
-<div class="title"><h1>MotrpacBicQC: Proteomics QC</h1></div>
+<div class="title"><h1>MotrpacBicQC: OLINK QC</h1></div>
 <div class="author"><h2></h2></div>
 <div class="date"><h3>2024-01-04</h3></div>
 </div>
@@ -166,96 +166,129 @@ devtools::install_github(&quot;MoTrPAC/MotrpacBicQC&quot;, build_vignettes = TRU
 </code></pre>
 <p>And run any of the following tests to check that the package
 is correctly installed and it works. For example:</p>
-<pre><code class="language-r"># Just copy and paste in the RStudio terminal
-test &lt;- check_ratio_proteomics(df_ratio = metadata_metabolites_named, 
-                               isPTM =  TRUE)
-test &lt;- check_rii_proteomics(df_rri = metadata_metabolites_named, 
-                             isPTM =  TRUE)
-test &lt;- check_vial_metadata_proteomics(df_vm = metadata_metabolites_named)
+<pre><code class="language-r"># Just copy and paste in the RStudio terminal. 
+check_metadata_samples_olink(df = metadata_metabolites_named)
+check_metadata_proteins(df = metadata_metabolites_named)
+check_results_olink(df = results_named)
 </code></pre>
 <p>which should generate the following outputs:</p>
-<pre><code>- (-) The following required columns are missed: ptm_id, protein_id, gene_symbol, entrez_id
-- (-) The following required columns are missed: protein_id, sequence, ptm_id, ptm_peptide, gene_symbol, entrez_id, confident_score, confident_site
-- (-) The following required columns are missed: vial_label, tmt_plex, tmt11_channel
+<pre><code>   - (-) `metadata_samples`: Expected COLUMN NAMES are missed: FAIL
+	 The following required columns are not present: `sample_id, sample_type, sample_order, plate_id`
+   - (-) `sample_id` is missed: FAIL
+   - (-) `sample_type` column missed: FAIL
+   - (-) `plate_id` column missed: FAIL
+   - (-) `metadata_proteins`: Expected COLUMN NAMES are missed: FAIL
+	 The following required columns are not present: `olink_id, uniprot_entry, assay, missing_freq, panel_name, panel_lot_nr, normalization`
+   - (-) `olink_id`: is missed: FAIL
+   - (-) `uniprot_entry` column missed: FAIL
+   - (-) `assay` column missed: FAIL
+   - (-) {missing_freq} column missed: FAIL
+   - (-) `panel_name` column missed: FAIL
+   - (-) `panel_lot_nr` column missed: FAIL
+   - (-) `normalization` column missed: FAIL
+   - (-) `olink_id` is missed: FAIL
+   - (-) `results.txt` contains non numeric columns: FAIL
+		 - metabolite_name
+  + ( ) Number of zeros in dataset: NA (out of 5194 values)
+  + ( ) Number of NAs in dataset: 95 (out of 5194 values)
 </code></pre>
 <h2 id="how-to-test-your-datasets">How to test your datasets</h2>
-<p>Two approaches available:</p>
-<h3 id="check-full-results-yyyymmdd-folder-recommended">Check full <code>RESULTS_YYYYMMDD</code> folder (recommended)</h3>
-<pre><code>|-- PASS1B-06
-|   |-- T55
-|   |   |-- PROT_PH
-|   |   |   `-- BATCH1_20200312
-|   |   |       |-- RAW_20200312
-|   |   |       |   |-- 01MOTRPAC_PASS1B-06_T55_PH_PN_20191231
-|   |   |       |   |   |-- 01MOTRPAC_PASS1B-06_T55_PH_PN_201912319_MANIFEST.txt
-|   |   |       |   |   `-- 01MOTRPAC_PASS1B-06_T55_PH_PN_201912319_TMTdetails.txt
-|   |   |       |   |-- 02MOTRPAC_PASS1B-06_T55_PH_PN_20191231
-|   |   |       |   |   |-- 02MOTRPAC_PASS1B-06_T55_PH_PN_201912319_MANIFEST.txt
-|   |   |       |   |   `-- 02MOTRPAC_PASS1B-06_T55_PH_PN_201912319_TMTdetails.txt
-|   |   |       |   |-- 03MOTRPAC_PASS1B-06_T55_PH_PN_20191231
-|   |   |       |   |   |-- 03MOTRPAC_PASS1B-06_T55_PH_PN_201912319_MANIFEST.txt
-|   |   |       |   |   `-- 03MOTRPAC_PASS1B-06_T55_PH_PN_201912319_TMTdetails.txt
-|   |   |       |   |-- 04MOTRPAC_PASS1B-06_T55_PH_PN_20191231
-|   |   |       |   |   |-- 04MOTRPAC_PASS1B-06_T55_PH_PN_201912319_MANIFEST.txt
-|   |   |       |   |   `-- 04MOTRPAC_PASS1B-06_T55_PH_PN_201912319_TMTdetails.txt
-|   |   |       |   |-- 05MOTRPAC_PASS1B-06_T55_PH_PN_20191231
-|   |   |       |   |   |-- 05MOTRPAC_PASS1B-06_T55_PH_PN_201912319_MANIFEST.txt
-|   |   |       |   |   `-- 05MOTRPAC_PASS1B-06_T55_PH_PN_201912319_TMTdetails.txt
-|   |   |       |   `-- 06MOTRPAC_PASS1B-06_T55_PH_PN_20191231
-|   |   |       |       |-- 06MOTRPAC_PASS1B-06_T55_PH_PN_201912319_MANIFEST.txt
-|   |   |       |       `-- 06MOTRPAC_PASS1B-06_T55_PH_PN_201912319_TMTdetails.txt
-|   |   |       |-- RESULTS_20200909
-|   |   |       |   |-- MOTRPAC_PASS1B-06_T55_PH_PN_20200909_results_RII-peptide.txt
-|   |   |       |   |-- MOTRPAC_PASS1B-06_T55_PH_PN_20200909_results_ratio.txt
-|   |   |       |   `-- MOTRPAC_PASS1B-06_T55_PH_PN_20200909_vial_metadata.txt
-|   |   |       `-- file_manifest_20200910.csv
+<p>Check full <code>RESULTS_YYYYMMDD</code> folder (recommended). The typical folder and
+file structure should look like this:</p>
+<pre><code>HUMAN/
+`-- T02
+    `-- PROT_OL
+        `-- BATCH1_20210825
+            |-- RESULTS_20221102
+            |   |-- MOTRPAC_HUMAN_T02_PROT_OL_GER_20210825_metadata-proteins.txt
+            |   |-- MOTRPAC_HUMAN_T02_PROT_OL_GER_20210825_metadata-samples.txt
+            |   `-- MOTRPAC_HUMAN_T02_PROT_OL_GER_20210825_results.txt
+            |-- file_manifest_20240103.csv
+            `-- metadata_phase.txt
 </code></pre>
 <p>Run test on the full submission. For that, run the following command:</p>
-<pre><code class="language-r">validate_proteomics(input_results_folder = &quot;/full/path/to/RESULTS_YYYYMMDD&quot;, 
-                    cas = &quot;your_site_code&quot;)
-
-# in the example above...
-validate_proteomics(input_results_folder = &quot;/full/path/to/PASS1B-06/T55/PROT_PH/BATCH1_20200312/RESULTS_20200909&quot;, 
-                    cas = &quot;pnnl&quot;,
-                    isPTM = TRUE,
-                    return_n_issues = FALSE)
+<pre><code class="language-r">n_issues &lt;- validate_olink(input_results_folder = &quot;/full/path/to/HUMAN/T02/PROT_OL/BATCH1_20210825/RESULTS_20221102&quot;, 
+                           cas = &quot;broad_rg&quot;,
+                           return_n_issues = TRUE,
+                           verbose = TRUE)
 </code></pre>
-<p><strong>cas</strong> is one of the followings:</p>
-<ul>
-<li>“broad_prot” = Broad Proteomics</li>
-<li>“pnnl”       = PNNL</li>
-</ul>
-<h3 id="check-individual-files">Check individual files</h3>
-<ul>
-<li>Check ratio resuls file</li>
-</ul>
-<pre><code class="language-r"># Open the ratio results file
+<p>A typical output would look like this:</p>
+<pre><code># OLINK QC report
 
-proteomics_ratio_results &lt;- read.delim(file = &quot;/path/to/your/file&quot;, stringsAsFactors = FALSE)
 
-check_ratio_proteomics(df_ratio = proteomics_ratio_results, 
-                       isPTM = TRUE, 
-                       printPDF = FALSE)
-</code></pre>
-<ul>
-<li>Check proteomics reporter ion intensity file:</li>
-</ul>
-<pre><code class="language-r"># Open your files
-proteomics_ratio_results &lt;- read.delim(file = &quot;/path/to/your/file&quot;, stringsAsFactors = FALSE)
++ Site: broad_rg
++ Folder: `HUMAN/T02/PROT_OL/BATCH1_20210825/RESULTS_20221102`
++ Motrpac phase reported: HUMAN-PRECOVID (info from metadata_phase.txt available): OK                                                                  
 
-check_rii_proteomics(df_rri = proteomics_ratio_results, cas = &quot;your_side_id&quot;)
-</code></pre>
-<ul>
-<li>Check proteomics vial metadata file</li>
-</ul>
-<pre><code class="language-r"># Open your files
-vial_metadata &lt;- read.delim(file = &quot;/path/to/your/file&quot;, stringsAsFactors = FALSE)
+## QC `metadata_proteins`
 
-check_vial_metadata_proteomics(df_vm = vial_metadata)
+  + (+) File successfully opened
+  + (+) All required columns present
+  + (+) `olink_id`: unique values: OK
+   - ( ) `uniprot_entry` non-unique values detected (n duplications = 3). This is OK
+		 - P01375
+		 - P05231
+		 - P10145
+   - ( ) `assay` non-unique values detected (n duplications = 3). This is OK
+	 - TNF
+	 - IL6
+	 - CXCL8
+  + (+) {missing_freq} all numeric: OK
+  + (+) {panel_name} checking available panels:
+	 - Cardiometabolic
+	 - Neurology
+	 - Inflammation
+	 - Oncology
+  + (+) {panel_lot_nr} checking available panels:
+	 - B04409
+	 - B04410
+	 - B04407
+	 - B04408
+  + (+) {normalization} checking available panels:
+	 - Intensity
+
+## QC `metadata-samples.txt`
+
+  + (+) File successfully opened
+  + (+) All required columns present
+  + (+) `sample_id` seems OK
+  + (+) `sample_type` seems OK
+  + (+) `plate_id` is available: OK
+  + (+) `sample_order` is numeric: OK
+  + (+) All `plate_id` values have unique `sample_order` values: OK
+
+
+## QC `results.txt`
+
+  + (+) File successfully opened
+  + (+) `olink_id` seems OK
+  + (+) All columns (except `olink_id`) are  numeric: OK
+  + ( ) Number of zeros in dataset: 55 (out of 1105472 values)
+  + ( ) Number of NAs in dataset: 0 (out of 1105472 values)
+
+## Cross File Validation
+
+  + (+) All samples in `results.txt` are available in `metadata-samples.txt`
+  + (+) All `olink_id` from `results.txt` are available in `metadata-proteins.txt`
+
+## QC `file_manifest_YYYYMMDD.csv` (required)
+
+  + (+) `file_name, md5` columns available in manifest file
+  + (+) `metadata-proteins` file included in manifest: OK
+  + (+) `metadata-samples` file included in manifest: OK
+  + (+) `results` file included in manifest: OK
+
+
+## DMAQC validation
+
+   + ( ) File [`metadata_failedsamples.*.txt`] not found
+   + ( ) NO FAILED SAMPLES reported
+
+TOTAL NUMBER OF ISSUES: 0
 </code></pre>
 <h2 id="help">Help</h2>
 <p>Additional details for each function can be found by typing, for example:</p>
-<pre><code class="language-r">?check_vial_metadata_proteomics
+<pre><code class="language-r">?validate_olink
 </code></pre>
 <p>Need extra help? Please, <a href="https://github.com/MoTrPAC/MotrpacBicQC/issues">submit an issue here</a>
 providing as many details as possible.</p>

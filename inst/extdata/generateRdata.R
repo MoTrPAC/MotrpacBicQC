@@ -5,6 +5,25 @@ library(devtools)
 
 # FILES IN PACKAGE--------------------------------------------------------------
 
+## update assay codes (2024-01-03)-----
+
+### Update the "proteomics" ome by proteomics-untargeted
+
+assay_codes <- assay_codes %>%
+  mutate(omics_code = ifelse(omics_code == "proteomics", "proteomics-untargeted", omics_code))
+
+OLINK <- data.frame(omics_code = "proteomics-targeted",
+                      submission_code = "PROT_OL",
+                      assay_code = "prot-ol",
+                      assay_name = "Proximity extension assay-based technology for multiplexed protein analysis",
+                      cas_code = "broad_rg",
+                      assay_abbreviation = "OLINK",
+                      assay_hex_colour = "#4DAF4A")
+
+assay_codes <- rbind(assay_codes, OLINK)
+
+use_data(assay_codes, overwrite = TRUE)
+
 ## update assay codes (2023-01-12)-----
 
 IMM_GLC <- data.frame(omics_code = "metabolomics-targeted",
@@ -32,6 +51,7 @@ IMM_CRT <- data.frame(omics_code = "metabolomics-targeted",
                       assay_hex_colour = "#E41A1C")
                      
 assay_codes <- rbind(assay_codes, IMM_CRT, IMM_GLC, IMM_INS)
+
 
 assay_codes$assay_name[which(assay_codes$submission_code == "CONV")] <- "Clinical chemistry assays for conventional metabolites"
 
