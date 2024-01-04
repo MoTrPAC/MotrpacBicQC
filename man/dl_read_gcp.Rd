@@ -35,10 +35,6 @@ Should be set to \code{TRUE} if you are running this function in parallel.}
 
 \item{verbose}{(logical) \code{TRUE} shows messages (default \code{FALSE})}
 
-\item{ignore_std_err}{(logical) corresponds to ignore.stderr in \code{cmd} (default \code{TRUE})}
-
-\item{ignore_std_out}{(logical) corresponds to ignore.stdout in \code{cmd} (default \code{TRUE})}
-
 \item{...}{optional arguments for \link[data.table:fread]{data.table::fread}}
 }
 \value{
