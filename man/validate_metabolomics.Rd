@@ -48,7 +48,7 @@ the files will be written to the working directory}
 is not required since it should be extracted from the input folder or from the
 new required file \code{metadata_phase.txt}. Please, ignore.
 However, if this argument is provided,
-it will take priority (and the phase from the input folder and the
+it will take priority and this will be the phase.
 \code{metadata_phase.txt} will be ignored). Examples
 \itemize{
 \item Folder with \code{PASS1A-06}: type either \code{PASS1A-06} or leave it \code{NULL}
