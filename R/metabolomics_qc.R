@@ -370,11 +370,13 @@ check_results <- function(r_m,
       }
       # No duplications allowed
       if( any(duplicated(r_m$metabolite_name)) ){
-        if(verbose) message("   - (-) DUPLICATIONS in `metabolite_name` in [results]:\n\t\t- ",
-                            paste(r_m$metabolite_name[duplicated(r_m$metabolite_name)], collapse = ", "))
-        dupli_meta <- r_m$metabolite_name[duplicated(r_m$metabolite_name)]
-        ic <- ic + 1
-
+        if(verbose){
+          message("   - (-) DUPLICATIONS in `metabolite_name` in [results]:\n\t\t- ",
+                  paste(r_m$metabolite_name[duplicated(r_m$metabolite_name)], collapse = ", "))
+          dupli_meta <- r_m$metabolite_name[duplicated(r_m$metabolite_name)]
+          ic <- ic + 1
+          
+        }
         # remove duplications: uncommented for 20200630 internal release
         # bef <- dim(r_m)[1]
         # r_m <- unique(r_m)
@@ -389,8 +391,20 @@ check_results <- function(r_m,
         if(verbose) message("   - (-) `metabolite_name` NA values detected: FAIL")
         ic <- ic + 1
       }
+      
+      # Identify values with trailing whitespace in the "metabolite_name" column
+      values_with_whitespace <- r_m$metabolite_name[grep("\\s+$", r_m$metabolite_name)]
+      
+      # Print the result
+      if(length(values_with_whitespace) > 0) {
+        if(verbose){
+          message("   - (-) Extra space detected at the end of the following `metabolite_name` ids:\n\t\t- ", 
+                  paste(values_with_whitespace, collapse = ", "))
+        }
+        ic <- ic + 1
+      }
     }else{
-      if(verbose) message("   - (-) `metabolite_name` column is not available in both [results] and `metadata_metabolites`")
+      if(verbose) message("   - (-) `metabolite_name` column is not available in both `results` and `metadata_metabolites`: FAIL")
       ic <- ic + 1
     }
   }else{
