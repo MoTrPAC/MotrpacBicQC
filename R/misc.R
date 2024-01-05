@@ -71,13 +71,6 @@ create_folder <- function(folder_name = NULL,
 #'
 #' @return a data table
 #'
-#' @details
-#' There is a known issue for Windows users that can occur when
-#'   `dl_read_gcp` is run in a local R session where `gsutils`
-#'   can not find files in the data hub. Setting either `ignore_std_err`
-#'   to `FALSE` of `ignore_std_out` to `FALSE` should fix this.
-#'
-#'
 #' @importFrom data.table fread
 #'
 #' @examples
@@ -92,8 +85,6 @@ dl_read_gcp <- function(path,
                         gsutil_path = "gsutil",
                         check_first = TRUE,
                         verbose = FALSE,
-                        ignore_std_err = TRUE,
-                        ignore_std_out = TRUE,
                         ...){
 
   if(!dir.exists(tmpdir)){

@@ -12,8 +12,6 @@ dl_read_gcp(
   gsutil_path = "gsutil",
   check_first = TRUE,
   verbose = FALSE,
-  ignore_std_err = TRUE,
-  ignore_std_out = TRUE,
   ...
 )
 }
@@ -42,12 +40,6 @@ a data table
 }
 \description{
 Read a single file from Google Cloud Storage (GSC) into a data table
-}
-\details{
-There is a known issue for Windows users that can occur when
-\code{dl_read_gcp} is run in a local R session where \code{gsutils}
-can not find files in the data hub. Setting either \code{ignore_std_err}
-to \code{FALSE} of \code{ignore_std_out} to \code{FALSE} should fix this.
 }
 \examples{
 \dontrun{
