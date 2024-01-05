@@ -67,18 +67,9 @@ create_folder <- function(folder_name = NULL,
 #' Should be set to \code{TRUE} if you are running this function in parallel.
 #' @param header (bool) whether input file has a header line
 #' @param verbose (logical) `TRUE` shows messages (default `FALSE`)
-#' @param ignore_std_err (logical) corresponds to ignore.stderr in `cmd` (default `TRUE`)
-#' @param ignore_std_out (logical) corresponds to ignore.stdout in `cmd` (default `TRUE`)
 #' @param ... optional arguments for [data.table::fread]
 #'
 #' @return a data table
-#'
-#' @details
-#' There is a known issue for Windows users that can occur when
-#'   `dl_read_gcp` is run in a local R session where `gsutils`
-#'   can not find files in the data hub. Setting either `ignore_std_err`
-#'   to `FALSE` of `ignore_std_out` to `FALSE` should fix this.
-#'
 #'
 #' @importFrom data.table fread
 #'
@@ -94,8 +85,6 @@ dl_read_gcp <- function(path,
                         gsutil_path = "gsutil",
                         check_first = TRUE,
                         verbose = FALSE,
-                        ignore_std_err = TRUE,
-                        ignore_std_out = TRUE,
                         ...){
 
   if(!dir.exists(tmpdir)){
@@ -110,6 +99,19 @@ dl_read_gcp <- function(path,
     stop("The path to the bucket is wrong. Valid example: gs://bucket-name/file-name.csv")
   }else{
     new_path <- file.path(tmpdir, basename(path))
+  }
+  
+  # Detect the operating system
+  os_name <- Sys.info()["sysname"]
+  
+  # Default arguments for Mac
+  ignore_std_err <- TRUE
+  ignore_std_out <- TRUE
+  
+  # Change default arguments if the OS is Windows
+  if (os_name == "Windows") {
+    ignore_std_err <- FALSE
+    ignore_std_out <- FALSE
   }
 
   # only download if it doesn't exist to avoid conflicts when running this script in parallel; clear scratch space when you're done
