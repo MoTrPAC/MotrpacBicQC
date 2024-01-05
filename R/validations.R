@@ -474,13 +474,9 @@ validate_na_empty <- function(df, col_name, verbose = TRUE) {
 #' @export
 validate_phase <- function(input_results_folder, return_phase = TRUE){
   phase <- stringr::str_extract(string = input_results_folder,
-                                pattern = "(PASS1A-06|PASS1A-18|PASS1B-06|PASS1B-18|PASS1C-06|PASS1C-18|PASS1AC-06|HUMAN-PRECOVID|HUMAN-MAIN)")
+                                pattern = "(PASS1A-06|PASS1A-18|PASS1B-06|PASS1B-18|PASS1C-06|PASS1C-18|PASS1AC-06|HUMAN|HUMAN-PRECOVID|HUMAN-MAIN)")
   if( is.na(phase) | phase == "NA" ){
-    if(phase == "HUMAN"){
-      if(return_phase) return(phase)
-    }else{
-      stop("- (-) Project phase is not found in the folder structure. Please, check the MoTrPAC control vocabulary guidelines") 
-    }
+    stop("- (-) Project phase is not found in the folder structure. Please, check the MoTrPAC control vocabulary guidelines")
   }else{
     if(return_phase) return(phase)
   }
