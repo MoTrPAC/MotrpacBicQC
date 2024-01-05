@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MotrpacBicQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.8.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.0</span>
       </span>
     </div>
 
@@ -36,6 +36,9 @@
     </li>
     <li>
       <a href="../articles/qc_metabolomics.html">MotrpacBicQC: Metabolomics QC</a>
+    </li>
+    <li>
+      <a href="../articles/qc_olink.html">MotrpacBicQC: OLINK QC</a>
     </li>
     <li>
       <a href="../articles/qc_proteomics.html">MotrpacBicQC: Proteomics QC</a>
@@ -71,7 +74,7 @@
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">filter_required_columns</span><span class="op">(</span></span>
 <span>  <span class="va">df</span>,</span>
-<span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"m_m"</span>, <span class="st">"m_s"</span>, <span class="st">"v_m"</span><span class="op">)</span>,</span>
+<span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"m_m"</span>, <span class="st">"m_s"</span>, <span class="st">"v_m"</span>, <span class="st">"olproteins"</span>, <span class="st">"olsamples"</span><span class="op">)</span>,</span>
 <span>  name_id <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -87,6 +90,8 @@
 <dd><p>(char) Type of file to filter columns:</p><ul><li><p><code>m_m</code>: metadata metabolites</p></li>
 <li><p><code>m_s</code>: metadata samples</p></li>
 <li><p><code>v_m</code>: proteomics vial_metadata</p></li>
+<li><p><code>olproteins</code>: olink metadata proteins</p></li>
+<li><p><code>olsamples</code>: olink metadata samples</p></li>
 </ul></dd>
 
 

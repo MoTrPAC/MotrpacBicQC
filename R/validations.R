@@ -147,7 +147,7 @@ check_viallabel_dmaqc <- function(vl_submitted,
   # Remove redundant samples
   vl_submitted <- unique(vl_submitted[!grepl("\\.", vl_submitted)])
   
-  # Adjustment for Rober Gerstein lab
+  # Adjustment for Gerszten lab
   
   if(tolower(cas) == "broad_rg"){
     cas <- "broad"

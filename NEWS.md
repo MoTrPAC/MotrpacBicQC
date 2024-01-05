@@ -1,3 +1,11 @@
+# MotrpacBicQC 0.9.0 (2024-01-04)
+
+* Add support for OLINK datasets (check `olink_qc` vignette to find out more)
+* Adjust function to download data from GCP (`dl_read_gcp`): 
+it automatically detects the operating system (arguments `ignore_std_err` and
+`ignore_std_out` deprecated)
+* Multiple fixes and enhancements
+
 
 # MotrpacBicQC 0.8.9 (2023-07-07)
 

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MotrpacBicQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.8.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.0</span>
       </span>
     </div>
 
@@ -36,6 +36,9 @@
     </li>
     <li>
       <a href="../articles/qc_metabolomics.html">MotrpacBicQC: Metabolomics QC</a>
+    </li>
+    <li>
+      <a href="../articles/qc_olink.html">MotrpacBicQC: OLINK QC</a>
     </li>
     <li>
       <a href="../articles/qc_proteomics.html">MotrpacBicQC: Proteomics QC</a>
@@ -83,6 +86,10 @@
         </td>
         <td><p>BIC Tissue Code and Name</p></td>
       </tr><tr><td>
+          <p><code><a href="check_crossfile_olink_validation.html">check_crossfile_olink_validation()</a></code> </p>
+        </td>
+        <td><p>Cross-validate OLINK files</p></td>
+      </tr><tr><td>
           <p><code><a href="check_failedsamples.html">check_failedsamples()</a></code> </p>
         </td>
         <td><p>check failed samples file for reported missing vial label ids</p></td>
@@ -99,9 +106,21 @@
         </td>
         <td><p>check metadata phase file</p></td>
       </tr><tr><td>
+          <p><code><a href="check_metadata_proteins.html">check_metadata_proteins()</a></code> </p>
+        </td>
+        <td><p>Check olink metadata proteins file</p></td>
+      </tr><tr><td>
           <p><code><a href="check_metadata_samples.html">check_metadata_samples()</a></code> </p>
         </td>
         <td><p>check metadata samples</p></td>
+      </tr><tr><td>
+          <p><code><a href="check_metadata_samples_olink.html">check_metadata_samples_olink()</a></code> </p>
+        </td>
+        <td><p>check olink metadata samples file</p></td>
+      </tr><tr><td>
+          <p><code><a href="check_missing_values.html">check_missing_values()</a></code> </p>
+        </td>
+        <td><p>Check for Missing Values in a Data Frame Column</p></td>
       </tr><tr><td>
           <p><code><a href="check_ratio_proteomics.html">check_ratio_proteomics()</a></code> </p>
         </td>
@@ -110,6 +129,10 @@
           <p><code><a href="check_results.html">check_results()</a></code> </p>
         </td>
         <td><p>check results</p></td>
+      </tr><tr><td>
+          <p><code><a href="check_results_olink.html">check_results_olink()</a></code> </p>
+        </td>
+        <td><p>Check olink results</p></td>
       </tr><tr><td>
           <p><code><a href="check_rii_proteomics.html">check_rii_proteomics()</a></code> </p>
         </td>
@@ -163,6 +186,10 @@
         </td>
         <td><p>Load metabolomics batch</p></td>
       </tr><tr><td>
+          <p><code><a href="load_olink_batch.html">load_olink_batch()</a></code> </p>
+        </td>
+        <td><p>Load and Process Olink Batch Data</p></td>
+      </tr><tr><td>
           <p><code><a href="load_proteomics.html">load_proteomics()</a></code> </p>
         </td>
         <td><p>Load Proteomics batch</p></td>
@@ -210,6 +237,10 @@
           <p><code><a href="plot_basic_metabolomics_qc.html">plot_basic_metabolomics_qc()</a></code> </p>
         </td>
         <td><p>Plot Basic Metabolomics QC charts</p></td>
+      </tr><tr><td>
+          <p><code><a href="plot_basic_olink_qc.html">plot_basic_olink_qc()</a></code> </p>
+        </td>
+        <td><p>Plot Basic OLINK QC charts</p></td>
       </tr><tr><td>
           <p><code><a href="proteomics_plots_rii.html">proteomics_plots_rii()</a></code> </p>
         </td>
@@ -283,6 +314,10 @@
         </td>
         <td><p>Validate Column for NA and Empty Values</p></td>
       </tr><tr><td>
+          <p><code><a href="validate_olink.html">validate_olink()</a></code> </p>
+        </td>
+        <td><p>Validate Olink Data</p></td>
+      </tr><tr><td>
           <p><code><a href="validate_phase.html">validate_phase()</a></code> </p>
         </td>
         <td><p>Extract PHASE from input folder path</p></td>
@@ -307,6 +342,10 @@
         </td>
         <td><p>validate a phase with two phases (pass1a and 1c)</p></td>
       </tr><tr><td>
+          <p><code><a href="validate_uniprot_ids_with_uniprot.html">validate_uniprot_ids_with_uniprot()</a></code> </p>
+        </td>
+        <td><p>Validate UniProt IDs</p></td>
+      </tr><tr><td>
           <p><code><a href="validate_yyyymmdd_dates.html">validate_yyyymmdd_dates()</a></code> </p>
         </td>
         <td><p>Validate YYYY-MM-DD Dates in a Data Frame</p></td>
@@ -314,6 +353,10 @@
           <p><code><a href="write_metabolomics_releases.html">write_metabolomics_releases()</a></code> </p>
         </td>
         <td><p>Write metabolomics data release</p></td>
+      </tr><tr><td>
+          <p><code><a href="write_olink_releases.html">write_olink_releases()</a></code> </p>
+        </td>
+        <td><p>Write olink data release</p></td>
       </tr><tr><td>
           <p><code><a href="write_proteomics_releases.html">write_proteomics_releases()</a></code> </p>
         </td>

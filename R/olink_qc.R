@@ -480,7 +480,7 @@ load_olink_batch <- function(input_results_folder,
   
   # Load olink----
   if(verbose) message("# LOAD OLINK BATCH")
-  if(verbose) message("+ Site: Broad, Gerzstein Lab")
+  if(verbose) message("+ Site: Broad, Gerszten Lab")
   if(verbose) message("+ Folder: `", paste0(input_results_folder),"`")
   
 # qc metadata-proteins----
