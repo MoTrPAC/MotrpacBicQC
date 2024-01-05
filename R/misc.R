@@ -6,6 +6,7 @@
 #' @import ggplot2
 #' @importFrom grDevices dev.off pdf
 #' @importFrom gridExtra grid.arrange arrangeGrob
+#' @importFrom httr status_code GET
 #' @importFrom inspectdf inspect_na
 #' @importFrom jsonlite fromJSON
 #' @import knitr
@@ -66,18 +67,9 @@ create_folder <- function(folder_name = NULL,
 #' Should be set to \code{TRUE} if you are running this function in parallel.
 #' @param header (bool) whether input file has a header line
 #' @param verbose (logical) `TRUE` shows messages (default `FALSE`)
-#' @param ignore_std_err (logical) corresponds to ignore.stderr in `cmd` (default `TRUE`)
-#' @param ignore_std_out (logical) corresponds to ignore.stdout in `cmd` (default `TRUE`)
 #' @param ... optional arguments for [data.table::fread]
 #'
 #' @return a data table
-#'
-#' @details
-#' There is a known issue for Windows users that can occur when
-#'   `dl_read_gcp` is run in a local R session where `gsutils`
-#'   can not find files in the data hub. Setting either `ignore_std_err`
-#'   to `FALSE` of `ignore_std_out` to `FALSE` should fix this.
-#'
 #'
 #' @importFrom data.table fread
 #'
@@ -93,8 +85,6 @@ dl_read_gcp <- function(path,
                         gsutil_path = "gsutil",
                         check_first = TRUE,
                         verbose = FALSE,
-                        ignore_std_err = TRUE,
-                        ignore_std_out = TRUE,
                         ...){
 
   if(!dir.exists(tmpdir)){
@@ -109,6 +99,19 @@ dl_read_gcp <- function(path,
     stop("The path to the bucket is wrong. Valid example: gs://bucket-name/file-name.csv")
   }else{
     new_path <- file.path(tmpdir, basename(path))
+  }
+  
+  # Detect the operating system
+  os_name <- Sys.info()["sysname"]
+  
+  # Default arguments for Mac
+  ignore_std_err <- TRUE
+  ignore_std_out <- TRUE
+  
+  # Change default arguments if the OS is Windows
+  if (os_name == "Windows") {
+    ignore_std_err <- FALSE
+    ignore_std_out <- FALSE
   }
 
   # only download if it doesn't exist to avoid conflicts when running this script in parallel; clear scratch space when you're done
@@ -197,6 +200,8 @@ get_full_path2batch <- function(input_results_folder){
 #' - `m_m`: metadata metabolites
 #' - `m_s`: metadata samples
 #' - `v_m`: proteomics vial_metadata
+#' - `olproteins`: olink metadata proteins
+#' - `olsamples`: olink metadata samples
 #' @param name_id (char) specify whether `named` or `unnamed` files
 #' @param verbose (logical) `TRUE` (default) shows messages
 #' @return (data.frame) filtered data frame with only the required columns
@@ -205,7 +210,11 @@ get_full_path2batch <- function(input_results_folder){
 #' }
 #' @export
 filter_required_columns <- function(df,
-                                    type = c("m_m", "m_s", "v_m"),
+                                    type = c("m_m", 
+                                             "m_s", 
+                                             "v_m", 
+                                             "olproteins", 
+                                             "olsamples"),
                                     name_id = NULL,
                                     verbose = TRUE){
 
@@ -267,6 +276,30 @@ filter_required_columns <- function(df,
       }
     }else{
       if(verbose) message("   - (-) Expected COLUMN NAMES are missed: FAIL")
+    }
+    return(df)
+  } else if (type == "olproteins"){
+    emeta_sample_coln <- c("olink_id", "uniprot_entry", "assay", "missing_freq", "panel_name", "panel_lot_nr", "normalization")
+    missing_cols <- setdiff(emeta_sample_coln, colnames(df))
+    
+    if (length(missing_cols) > 0) {
+      if(verbose) message("   - (-) `metadata_proteins`: Expected COLUMN NAMES are missed: FAIL")
+      message(paste0("\t The following required columns are not present: `", paste(missing_cols, collapse = ", "), "`"))
+    } else {
+      if(verbose) message("  + (+) All required columns present")
+      df <- subset(df, select = emeta_sample_coln)
+    }
+    return(df)
+  }else if (type == "olsamples"){
+    emeta_sample_coln <- c("sample_id", "sample_type", "sample_order", "plate_id")
+    missing_cols <- setdiff(emeta_sample_coln, colnames(df))
+    
+    if (length(missing_cols) > 0) {
+      if(verbose) message("   - (-) `metadata_samples`: Expected COLUMN NAMES are missed: FAIL")
+      message(paste0("\t The following required columns are not present: `", paste(missing_cols, collapse = ", "), "`"))
+    } else {
+      if(verbose) message("  + (+) All required columns present")
+      df <- subset(df, select = emeta_sample_coln)
     }
     return(df)
   }

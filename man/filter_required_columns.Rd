@@ -6,7 +6,7 @@
 \usage{
 filter_required_columns(
   df,
-  type = c("m_m", "m_s", "v_m"),
+  type = c("m_m", "m_s", "v_m", "olproteins", "olsamples"),
   name_id = NULL,
   verbose = TRUE
 )
@@ -19,6 +19,8 @@ filter_required_columns(
 \item \code{m_m}: metadata metabolites
 \item \code{m_s}: metadata samples
 \item \code{v_m}: proteomics vial_metadata
+\item \code{olproteins}: olink metadata proteins
+\item \code{olsamples}: olink metadata samples
 }}
 
 \item{name_id}{(char) specify whether \code{named} or \code{unnamed} files}

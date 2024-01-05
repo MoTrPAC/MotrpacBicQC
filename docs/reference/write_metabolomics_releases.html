@@ -18,7 +18,7 @@ data has been submited according to guidelines"><!-- mathjax --><script src="htt
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MotrpacBicQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.8.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.0</span>
       </span>
     </div>
 
@@ -37,6 +37,9 @@ data has been submited according to guidelines"><!-- mathjax --><script src="htt
     </li>
     <li>
       <a href="../articles/qc_metabolomics.html">MotrpacBicQC: Metabolomics QC</a>
+    </li>
+    <li>
+      <a href="../articles/qc_olink.html">MotrpacBicQC: OLINK QC</a>
     </li>
     <li>
       <a href="../articles/qc_proteomics.html">MotrpacBicQC: Proteomics QC</a>
@@ -96,11 +99,12 @@ data has been submited according to guidelines</p>
 
 
 <dt>folder_root</dt>
-<dd><p>(char) absolute path to write the output files. Default: current directory</p></dd>
+<dd><p>(char) absolute path to write the output files.
+Default: current directory</p></dd>
 
 
 <dt>version_file</dt>
-<dd><p>(char) file version number (v#.#)</p></dd>
+<dd><p>(char) file version number (<code>v#.#</code>)</p></dd>
 
 
 <dt>verbose</dt>
@@ -111,19 +115,20 @@ data has been submited according to guidelines</p>
     <h2>Value</h2>
     
 
-<p>bic release folder/file structure <code>PHASE/OMICS/TCODE_NAME/ASSAY/</code> and file names, including:
-<code>motrpac_YYYYMMDD_phasecode_tissuecode_omics_assay_file-details.txt</code> where files-details can be:
-<code>named-experimentalDetails.txt</code>, <code>named-metadata-metabolites.txt</code>, <code>metadata-samples.txt</code>,
-<code>named-results.txt</code></p>
-
-
-    </div>
+<p>bic release folder/file structure
+<code>PHASE/OMICS/TCODE_NAME/ASSAY/</code> and file names, including:</p><ul><li><p><code>motrpac_YYYYMMDD_phasecode_tissuecode_omics_assay_file-details.txt</code>
+where files-details can be:</p></li>
+<li><p><code>named-experimentalDetails.txt</code></p></li>
+<li><p><code>named-metadata-metabolites.txt</code></p></li>
+<li><p><code>metadata-samples.txt</code></p></li>
+<li><p><code>named-results.txt</code></p></li>
+</ul></div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span><span class="fu">write_metabolomics_releases</span><span class="op">(</span></span></span>
-<span class="r-in"><span>   input_results_folder <span class="op">=</span> <span class="st">"/full/path/to/PROCESSED_YYYYMMDD/"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">write_metabolomics_releases</span><span class="op">(</span>input_results_folder <span class="op">=</span> <span class="st">"/path/to/PROCESSED_YYYYMMDD/"</span>, </span></span>
+<span class="r-in"><span>cas <span class="op">=</span> <span class="st">"umichigan"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>

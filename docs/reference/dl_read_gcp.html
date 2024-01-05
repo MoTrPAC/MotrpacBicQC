@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MotrpacBicQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.8.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.0</span>
       </span>
     </div>
 
@@ -36,6 +36,9 @@
     </li>
     <li>
       <a href="../articles/qc_metabolomics.html">MotrpacBicQC: Metabolomics QC</a>
+    </li>
+    <li>
+      <a href="../articles/qc_olink.html">MotrpacBicQC: OLINK QC</a>
     </li>
     <li>
       <a href="../articles/qc_proteomics.html">MotrpacBicQC: Proteomics QC</a>
@@ -77,8 +80,6 @@
 <span>  gsutil_path <span class="op">=</span> <span class="st">"gsutil"</span>,</span>
 <span>  check_first <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  ignore_std_err <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  ignore_std_out <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -90,7 +91,7 @@
 
 
 <dt>sep</dt>
-<dd><p>(char) column separator to use with <a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">data.table::fread</a></p></dd>
+<dd><p>(char) column separator to use with <a href="https://rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">data.table::fread</a></p></dd>
 
 
 <dt>header</dt>
@@ -116,16 +117,8 @@ Should be set to <code>TRUE</code> if you are running this function in parallel.
 <dd><p>(logical) <code>TRUE</code> shows messages (default <code>FALSE</code>)</p></dd>
 
 
-<dt>ignore_std_err</dt>
-<dd><p>(logical) corresponds to ignore.stderr in <code>cmd</code> (default <code>TRUE</code>)</p></dd>
-
-
-<dt>ignore_std_out</dt>
-<dd><p>(logical) corresponds to ignore.stdout in <code>cmd</code> (default <code>TRUE</code>)</p></dd>
-
-
 <dt>...</dt>
-<dd><p>optional arguments for <a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">data.table::fread</a></p></dd>
+<dd><p>optional arguments for <a href="https://rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">data.table::fread</a></p></dd>
 
 </dl></div>
     <div id="value">
@@ -133,13 +126,6 @@ Should be set to <code>TRUE</code> if you are running this function in parallel.
     
 
 <p>a data table</p>
-    </div>
-    <div id="details">
-    <h2>Details</h2>
-    <p>There is a known issue for Windows users that can occur when
-<code>dl_read_gcp</code> is run in a local R session where <code>gsutils</code>
-can not find files in the data hub. Setting either <code>ignore_std_err</code>
-to <code>FALSE</code> of <code>ignore_std_out</code> to <code>FALSE</code> should fix this.</p>
     </div>
 
     <div id="ref-examples">

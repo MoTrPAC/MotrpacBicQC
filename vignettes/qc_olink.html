@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>MotrpacBicQC: OLINK QC</title>
+<style type="text/css">
+/**
+ * Prism.s theme ported from highlight.js's xcode style
+ */
+pre code {
+  padding: 1em;
+}
+.token.comment {
+  color: #007400;
+}
+.token.punctuation {
+  color: #999;
+}
+.token.tag,
+.token.selector {
+  color: #aa0d91;
+}
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol {
+  color: #1c00cf;
+}
+.token.property,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin {
+  color: #c41a16;
+}
+.token.inserted {
+  background-color: #ccffd8;
+}
+.token.deleted {
+  background-color: #ffebe9;
+}
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: #9a6e3a;
+}
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #836c28;
+}
+.token.function,
+.token.class-name {
+  color: #DD4A68;
+}
+.token.regex,
+.token.important,
+.token.variable {
+  color: #5c2699;
+}
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+.token.italic {
+  font-style: italic;
+}
+</style>
+<style type="text/css">
+body {
+  font-family: sans-serif;
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+body, .footnotes, code { font-size: .9em; }
+li li { font-size: .95em; }
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+pre, img { max-width: 100%; }
+pre, pre:hover {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+pre code {
+  display: block;
+  overflow-x: auto;
+}
+code { font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace; }
+:not(pre) > code, code[class] { background-color: #F8F8F8; }
+code.language-undefined, pre > code:not([class]) {
+  background-color: inherit;
+  border: 1px solid #eee;
+}
+table {
+  margin: auto;
+  border-top: 1px solid #666;
+}
+table thead th { border-bottom: 1px solid #ddd; }
+th, td { padding: 5px; }
+thead, tfoot, tr:nth-child(even) { background: #eee; }
+blockquote {
+  color: #666;
+  margin: 0;
+  padding-left: 1em;
+  border-left: 0.5em solid #eee;
+}
+hr, .footnotes::before { border: 1px dashed #ddd; }
+.frontmatter { text-align: center; }
+#TOC .numbered li { list-style: none; }
+#TOC .numbered { padding-left: 0; }
+#TOC .numbered ul { padding-left: 1em; }
+table, .body h2 { border-bottom: 1px solid #666; }
+.body .appendix, .appendix ~ h2 { border-bottom-style: dashed; }
+.footnote-ref a::before { content: "["; }
+.footnote-ref a::after { content: "]"; }
+section.footnotes::before {
+  content: "";
+  display: block;
+  max-width: 20em;
+}
+
+@media print {
+  body {
+    font-size: 12pt;
+    max-width: 100%;
+  }
+  tr, img { page-break-inside: avoid; }
+}
+@media only screen and (min-width: 992px) {
+  pre { white-space: pre; }
+}
+</style>
+</head>
+<body>
+<div class="include-before">
+</div>
+<div class="frontmatter">
+<div class="title"><h1>MotrpacBicQC: OLINK QC</h1></div>
+<div class="author"><h2></h2></div>
+<div class="date"><h3>2024-01-04</h3></div>
+</div>
+<div class="body">
+<h2 id="installation">Installation</h2>
+<p>First, download and install R and RStudio:</p>
+<ul>
+<li><a href="https://mirror.las.iastate.edu/CRAN/">R</a></li>
+<li><a href="https://rstudio.com/products/rstudio/download/">RStudio</a> (free version)</li>
+</ul>
+<p>Then, open RStudio and install the <code>devtools</code> package</p>
+<pre><code class="language-r">install.packages(&quot;devtools&quot;)
+</code></pre>
+<p>Finally, install the <code>MotrpacBicQC</code> package</p>
+<pre><code class="language-r">library(devtools)
+devtools::install_github(&quot;MoTrPAC/MotrpacBicQC&quot;, build_vignettes = TRUE)
+</code></pre>
+<h2 id="usage">Usage</h2>
+<p>Load the library</p>
+<pre><code class="language-r">library(MotrpacBicQC)
+</code></pre>
+<p>And run any of the following tests to check that the package
+is correctly installed and it works. For example:</p>
+<pre><code class="language-r"># Just copy and paste in the RStudio terminal. 
+check_metadata_samples_olink(df = metadata_metabolites_named)
+check_metadata_proteins(df = metadata_metabolites_named)
+check_results_olink(df = results_named)
+</code></pre>
+<p>which should generate the following outputs:</p>
+<pre><code>   - (-) `metadata_samples`: Expected COLUMN NAMES are missed: FAIL
+	 The following required columns are not present: `sample_id, sample_type, sample_order, plate_id`
+   - (-) `sample_id` is missed: FAIL
+   - (-) `sample_type` column missed: FAIL
+   - (-) `plate_id` column missed: FAIL
+   - (-) `metadata_proteins`: Expected COLUMN NAMES are missed: FAIL
+	 The following required columns are not present: `olink_id, uniprot_entry, assay, missing_freq, panel_name, panel_lot_nr, normalization`
+   - (-) `olink_id`: is missed: FAIL
+   - (-) `uniprot_entry` column missed: FAIL
+   - (-) `assay` column missed: FAIL
+   - (-) {missing_freq} column missed: FAIL
+   - (-) `panel_name` column missed: FAIL
+   - (-) `panel_lot_nr` column missed: FAIL
+   - (-) `normalization` column missed: FAIL
+   - (-) `olink_id` is missed: FAIL
+   - (-) `results.txt` contains non numeric columns: FAIL
+		 - metabolite_name
+  + ( ) Number of zeros in dataset: NA (out of 5194 values)
+  + ( ) Number of NAs in dataset: 95 (out of 5194 values)
+</code></pre>
+<h2 id="how-to-test-your-datasets">How to test your datasets</h2>
+<p>Check full <code>RESULTS_YYYYMMDD</code> folder (recommended). The typical folder and
+file structure should look like this:</p>
+<pre><code>HUMAN/
+`-- T02
+    `-- PROT_OL
+        `-- BATCH1_20210825
+            |-- RESULTS_20221102
+            |   |-- MOTRPAC_HUMAN_T02_PROT_OL_GER_20210825_metadata-proteins.txt
+            |   |-- MOTRPAC_HUMAN_T02_PROT_OL_GER_20210825_metadata-samples.txt
+            |   `-- MOTRPAC_HUMAN_T02_PROT_OL_GER_20210825_results.txt
+            |-- file_manifest_20240103.csv
+            `-- metadata_phase.txt
+</code></pre>
+<p>Run test on the full submission. For that, run the following command:</p>
+<pre><code class="language-r">n_issues &lt;- validate_olink(input_results_folder = &quot;/full/path/to/HUMAN/T02/PROT_OL/BATCH1_20210825/RESULTS_20221102&quot;, 
+                           cas = &quot;broad_rg&quot;,
+                           return_n_issues = TRUE,
+                           verbose = TRUE)
+</code></pre>
+<p>A typical output would look like this:</p>
+<pre><code># OLINK QC report
+
+
++ Site: broad_rg
++ Folder: `HUMAN/T02/PROT_OL/BATCH1_20210825/RESULTS_20221102`
++ Motrpac phase reported: HUMAN-PRECOVID (info from metadata_phase.txt available): OK                                                                  
+
+## QC `metadata_proteins`
+
+  + (+) File successfully opened
+  + (+) All required columns present
+  + (+) `olink_id`: unique values: OK
+   - ( ) `uniprot_entry` non-unique values detected (n duplications = 3). This is OK
+		 - P01375
+		 - P05231
+		 - P10145
+   - ( ) `assay` non-unique values detected (n duplications = 3). This is OK
+	 - TNF
+	 - IL6
+	 - CXCL8
+  + (+) {missing_freq} all numeric: OK
+  + (+) {panel_name} checking available panels:
+	 - Cardiometabolic
+	 - Neurology
+	 - Inflammation
+	 - Oncology
+  + (+) {panel_lot_nr} checking available panels:
+	 - B04409
+	 - B04410
+	 - B04407
+	 - B04408
+  + (+) {normalization} checking available panels:
+	 - Intensity
+
+## QC `metadata-samples.txt`
+
+  + (+) File successfully opened
+  + (+) All required columns present
+  + (+) `sample_id` seems OK
+  + (+) `sample_type` seems OK
+  + (+) `plate_id` is available: OK
+  + (+) `sample_order` is numeric: OK
+  + (+) All `plate_id` values have unique `sample_order` values: OK
+
+
+## QC `results.txt`
+
+  + (+) File successfully opened
+  + (+) `olink_id` seems OK
+  + (+) All columns (except `olink_id`) are  numeric: OK
+  + ( ) Number of zeros in dataset: 55 (out of 1105472 values)
+  + ( ) Number of NAs in dataset: 0 (out of 1105472 values)
+
+## Cross File Validation
+
+  + (+) All samples in `results.txt` are available in `metadata-samples.txt`
+  + (+) All `olink_id` from `results.txt` are available in `metadata-proteins.txt`
+
+## QC `file_manifest_YYYYMMDD.csv` (required)
+
+  + (+) `file_name, md5` columns available in manifest file
+  + (+) `metadata-proteins` file included in manifest: OK
+  + (+) `metadata-samples` file included in manifest: OK
+  + (+) `results` file included in manifest: OK
+
+
+## DMAQC validation
+
+   + ( ) File [`metadata_failedsamples.*.txt`] not found
+   + ( ) NO FAILED SAMPLES reported
+
+TOTAL NUMBER OF ISSUES: 0
+</code></pre>
+<h2 id="help">Help</h2>
+<p>Additional details for each function can be found by typing, for example:</p>
+<pre><code class="language-r">?validate_olink
+</code></pre>
+<p>Need extra help? Please, <a href="https://github.com/MoTrPAC/MotrpacBicQC/issues">submit an issue here</a>
+providing as many details as possible.</p>
+</div>
+<div class="include-after">
+</div>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js" defer></script>
+</body>
+</html>

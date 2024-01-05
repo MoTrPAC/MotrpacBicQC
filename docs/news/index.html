@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">MotrpacBicQC</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.8.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.0</span>
       </span>
     </div>
 
@@ -36,6 +36,9 @@
     </li>
     <li>
       <a href="../articles/qc_metabolomics.html">MotrpacBicQC: Metabolomics QC</a>
+    </li>
+    <li>
+      <a href="../articles/qc_olink.html">MotrpacBicQC: OLINK QC</a>
     </li>
     <li>
       <a href="../articles/qc_proteomics.html">MotrpacBicQC: Proteomics QC</a>
@@ -63,6 +66,12 @@
       <small>Source: <a href="https://github.com/MoTrPAC/MotrpacBicQC/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.9.0" id="motrpacbicqc-090-2024-01-04">MotrpacBicQC 0.9.0 (2024-01-04)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-090-2024-01-04"></a></h2>
+<ul><li>Add support for OLINK datasets (check <code>olink_qc</code> vignette to find out more)</li>
+<li>Adjust function to download data from GCP (<code>dl_read_gcp</code>): it automatically detects the operating system (arguments <code>ignore_std_err</code> and <code>ignore_std_out</code> deprecated)</li>
+<li>Multiple fixes and enhancements</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.8.9" id="motrpacbicqc-089-2023-07-07">MotrpacBicQC 0.8.9 (2023-07-07)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-089-2023-07-07"></a></h2>
 <ul><li>Fix bug preventing the processing of BICRESULTS folders (proteomics)</li>

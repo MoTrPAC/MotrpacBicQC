@@ -13,11 +13,12 @@ write_proteomics_releases(
 )
 }
 \arguments{
-\item{input_results_folder}{(char) Path to the PROCESSED_YYYYMMDD folder}
+\item{input_results_folder}{(char) Path to the RESULTS_YYYYMMDD folder}
 
 \item{folder_name}{(char) output folder name.}
 
-\item{folder_root}{(char) absolute path to write the output folder. Default: current directory}
+\item{folder_root}{(char) absolute path to write the output folder.
+Default: current directory}
 
 \item{version_file}{(char) file version number (v#.#)}
 

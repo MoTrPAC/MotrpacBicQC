@@ -25,6 +25,9 @@
     <loc>/articles/qc_metabolomics_files/jqueryui-1.11.4/index.html</loc>
   </url>
   <url>
+    <loc>/articles/qc_olink.html</loc>
+  </url>
+  <url>
     <loc>/articles/qc_proteomics.html</loc>
   </url>
   <url>
@@ -55,6 +58,9 @@
     <loc>/reference/bic_animal_tissue_code.html</loc>
   </url>
   <url>
+    <loc>/reference/check_crossfile_olink_validation.html</loc>
+  </url>
+  <url>
     <loc>/reference/check_failedsamples.html</loc>
   </url>
   <url>
@@ -67,13 +73,25 @@
     <loc>/reference/check_metadata_phase_file.html</loc>
   </url>
   <url>
+    <loc>/reference/check_metadata_proteins.html</loc>
+  </url>
+  <url>
     <loc>/reference/check_metadata_samples.html</loc>
+  </url>
+  <url>
+    <loc>/reference/check_metadata_samples_olink.html</loc>
+  </url>
+  <url>
+    <loc>/reference/check_missing_values.html</loc>
   </url>
   <url>
     <loc>/reference/check_ratio_proteomics.html</loc>
   </url>
   <url>
     <loc>/reference/check_results.html</loc>
+  </url>
+  <url>
+    <loc>/reference/check_results_olink.html</loc>
   </url>
   <url>
     <loc>/reference/check_rii_proteomics.html</loc>
@@ -118,6 +136,9 @@
     <loc>/reference/load_metabolomics_batch.html</loc>
   </url>
   <url>
+    <loc>/reference/load_olink_batch.html</loc>
+  </url>
+  <url>
     <loc>/reference/load_proteomics.html</loc>
   </url>
   <url>
@@ -152,6 +173,9 @@
   </url>
   <url>
     <loc>/reference/plot_basic_metabolomics_qc.html</loc>
+  </url>
+  <url>
+    <loc>/reference/plot_basic_olink_qc.html</loc>
   </url>
   <url>
     <loc>/reference/proteomics_plots_rii.html</loc>
@@ -208,6 +232,9 @@
     <loc>/reference/validate_na_empty.html</loc>
   </url>
   <url>
+    <loc>/reference/validate_olink.html</loc>
+  </url>
+  <url>
     <loc>/reference/validate_phase.html</loc>
   </url>
   <url>
@@ -226,10 +253,16 @@
     <loc>/reference/validate_two_phases.html</loc>
   </url>
   <url>
+    <loc>/reference/validate_uniprot_ids_with_uniprot.html</loc>
+  </url>
+  <url>
     <loc>/reference/validate_yyyymmdd_dates.html</loc>
   </url>
   <url>
     <loc>/reference/write_metabolomics_releases.html</loc>
+  </url>
+  <url>
+    <loc>/reference/write_olink_releases.html</loc>
   </url>
   <url>
     <loc>/reference/write_proteomics_releases.html</loc>

@@ -1369,9 +1369,10 @@ validate_proteomics <- function(input_results_folder,
 #'
 #' @description Write out proteomics data releases. Doesn't check whether
 #' data has been submited according to guidelines
-#' @param input_results_folder (char) Path to the PROCESSED_YYYYMMDD folder
+#' @param input_results_folder (char) Path to the RESULTS_YYYYMMDD folder
 #' @param folder_name (char) output folder name.
-#' @param folder_root (char) absolute path to write the output folder. Default: current directory
+#' @param folder_root (char) absolute path to write the output folder. 
+#' Default: current directory
 #' @param version_file (char) file version number (v#.#)
 #' @param verbose (logical) `TRUE` (default) shows messages
 #' @return bic release folder/file structure `PHASE/OMICS/TCODE_NAME/ASSAY/` and file names, including:

@@ -1,8 +1,8 @@
 Package: MotrpacBicQC
 Type: Package
 Title: QC/QA functions for the MoTrPAC community
-Version: 0.8.9
-Date: 2023-07-07
+Version: 0.9.0
+Date: 2024-01-04
 Author: MoTrPAC Bioinformatics Center
 Maintainer: David Jimenez-Morales <davidjm@stanford.edu>
 Description: R Package for the analysis of MoTrPAC datasets. 
@@ -27,6 +27,7 @@ Imports:
     ggplot2,
     grDevices,
     gridExtra,
+    httr,
     inspectdf,
     jsonlite,
     knitr,

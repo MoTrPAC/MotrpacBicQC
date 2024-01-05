@@ -20,17 +20,24 @@ write_metabolomics_releases(
 
 \item{folder_name}{(char) output files name. Must have a \code{.yaml} extension.}
 
-\item{folder_root}{(char) absolute path to write the output files. Default: current directory}
+\item{folder_root}{(char) absolute path to write the output files.
+Default: current directory}
 
-\item{version_file}{(char) file version number (v#.#)}
+\item{version_file}{(char) file version number (\code{v#.#})}
 
 \item{verbose}{(logical) \code{TRUE} (default) shows messages}
 }
 \value{
-bic release folder/file structure \verb{PHASE/OMICS/TCODE_NAME/ASSAY/} and file names, including:
-\code{motrpac_YYYYMMDD_phasecode_tissuecode_omics_assay_file-details.txt} where files-details can be:
-\code{named-experimentalDetails.txt}, \code{named-metadata-metabolites.txt}, \code{metadata-samples.txt},
-\code{named-results.txt}
+bic release folder/file structure
+\verb{PHASE/OMICS/TCODE_NAME/ASSAY/} and file names, including:
+\itemize{
+\item \code{motrpac_YYYYMMDD_phasecode_tissuecode_omics_assay_file-details.txt}
+where files-details can be:
+\item \code{named-experimentalDetails.txt}
+\item \code{named-metadata-metabolites.txt}
+\item \code{metadata-samples.txt}
+\item \code{named-results.txt}
+}
 }
 \description{
 Write out metabolomics data releases. Doesn't check whether
@@ -38,7 +45,7 @@ data has been submited according to guidelines
 }
 \examples{
 \dontrun{
-write_metabolomics_releases(
-   input_results_folder = "/full/path/to/PROCESSED_YYYYMMDD/")
+write_metabolomics_releases(input_results_folder = "/path/to/PROCESSED_YYYYMMDD/", 
+cas = "umichigan")
 }
 }
