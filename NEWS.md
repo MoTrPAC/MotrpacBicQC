@@ -1,3 +1,9 @@
+# MotrpacBicQC 0.9.1 (2024-02-02)
+
+* New assays: `PROT_OX`
+* Fix package conflicts
+* OLINK: write release adjustments
+
 # MotrpacBicQC 0.9.0 (2024-01-04)
 
 * Add support for OLINK datasets (check `olink_qc` vignette to find out more)

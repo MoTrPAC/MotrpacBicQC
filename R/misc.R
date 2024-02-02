@@ -19,7 +19,7 @@
 #' @importFrom stats median reorder
 #' @import stringr
 #' @import tidyr
-#' @import utils
+#' @importFrom utils URLencode read.csv read.delim write.table
 #' @import viridis
 #____________________________________________________________________________
 

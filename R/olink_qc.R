@@ -1010,7 +1010,7 @@ write_olink_releases <- function(input_results_folder,
     phase_folder_release <- phase_details
   }
   
-  output_folder <- file.path(folder_root, folder_name, phase_folder_release, "prot-ol", folder_tissue, folder_assay)
+  output_folder <- file.path(folder_root, folder_name, phase_folder_release, "proteomics-targeted", folder_tissue, folder_assay)
   
   if(!dir.exists(file.path(output_folder))){
     dir.create(file.path(output_folder), recursive = TRUE)
