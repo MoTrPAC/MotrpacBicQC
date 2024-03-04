@@ -1,3 +1,11 @@
+# MotrpacBicQC 0.9.2 (2024-03-04)
+
+* Critical Update: Resolved an issue where the validation of refmet names was 
+compromised due to updates to the Metabolomics Workbench REST service. 
+This version introduces adjustments to ensure accurate validation of 
+refmet names.
+
+
 # MotrpacBicQC 0.9.1 (2024-02-02)
 
 * New assays: `PROT_OX`
