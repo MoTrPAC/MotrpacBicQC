@@ -97,7 +97,7 @@ validate_refmetname <- function(dataf, verbose){
     
     search_api <- paste0("https://www.metabolomicsworkbench.org/rest/refmet/match/",URLencode(rn),"/name/")
     here <- jsonlite::fromJSON(search_api)
-    if(length(here) == 0){
+    if(here$refmet_name == "-"){
       if(verbose) message(paste0("      (-) `refmet_name` [`", rn, "`] not available in RefMet. Please, contact MW/BIC (Error RN1)"))
       irm <- irm + 1
       idna <- idna + 1
