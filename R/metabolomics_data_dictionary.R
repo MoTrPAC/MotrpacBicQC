@@ -77,7 +77,6 @@ get_and_validate_mdd <- function(remove_duplications = FALSE){
 validate_refmetname <- function(dataf, verbose){
 
   irm <- 0
-  idna <- 0
   for(i in 1:dim(dataf)[1]){
     rn <- dataf$refmet_name[i]
     
@@ -100,11 +99,15 @@ validate_refmetname <- function(dataf, verbose){
     if(here$refmet_name == "-"){
       if(verbose) message(paste0("      (-) `refmet_name` [`", rn, "`] not available in RefMet. Please, contact MW/BIC (Error RN1)"))
       irm <- irm + 1
-      idna <- idna + 1
+    }else{
+      if(here$refmet_name != rn){
+        if(verbose) message(paste0("      (-) `refmet_name` [`", rn, "`] must be modified to the RefMet Standarized name: \"", here$refmet_name, "\" (Error RN2)"))
+        irm <- irm + 1
+      }
     }
   }
-  if(idna > 0){
-    if(verbose) message("      (-) Total number of missed ids on MW: ", idna)
+  if(irm > 0){
+    if(verbose) message("      (-) Total number of missed ids on MW: ", irm)
   }
   return(irm)
 }
