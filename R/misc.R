@@ -346,12 +346,18 @@ open_file <- function(input_results_folder,
     ofile <- NULL
     filename <- NULL
   }else{
-    flag <- TRUE
+    
     filename <- file_metametabolites[1]
-    ofile <- read.delim(filename, stringsAsFactors = FALSE, check.names = FALSE)
-    ofile <- remove_empty_columns(ofile, verbose = verbose)
-    ofile <- remove_empty_rows(ofile, verbose = verbose)
-    if(verbose) message("  + (+) File successfully opened")
+    file_ext <- sub(".*\\.(.*)$", "\\1", filename)
+    if (!file_ext %in% c("txt", "tsv")) {
+      if(verbose) message("   - (-)  File extension must be .txt or .tsv (only tab delimited files accepted): FAIL")
+    }else{
+      ofile <- read.delim(filename, stringsAsFactors = FALSE, check.names = FALSE)
+      ofile <- remove_empty_columns(ofile, verbose = verbose)
+      ofile <- remove_empty_rows(ofile, verbose = verbose)
+      if(verbose) message("  + (+) File successfully opened")
+      flag <- TRUE
+    }
   }
 
   if(flag){
