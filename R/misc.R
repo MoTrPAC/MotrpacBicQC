@@ -14,7 +14,7 @@
 #' @import naniar
 #' @import progress
 #' @import purrr
-#' @importFrom readr read_lines
+#' @importFrom readr read_lines read_delim
 #' @importFrom scales percent
 #' @importFrom stats median reorder
 #' @import stringr
@@ -136,8 +136,9 @@ dl_read_gcp <- function(path,
   }
   # read in the data as a data.table
   if(file.exists(new_path)){
-    dt <- data.table::fread(new_path, sep=sep, header=header,...)
-    return(dt)
+    df <- readr::read_delim(new_path, delim = sep, col_names = header, skip_empty_rows = TRUE, show_col_types = FALSE, ...)
+    df <- as.data.frame(df)
+    return(df)
   }else{
     stop("- Problems loading the file. Possible reason: the file does not exist in the bucket anymore. Please, validate the address. Re-run this command again with `verbose = TRUE`)")
   }
