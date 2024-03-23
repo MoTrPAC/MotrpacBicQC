@@ -455,10 +455,14 @@ set_phase <- function(input_results_folder,
                            ignore.case = TRUE,
                            full.names=TRUE,
                            recursive = TRUE)
+  
+  if(length(file_phase) > 1){
+    if(verbose) message("- (-) `More than one `metadata_phase.txt` file available. Only one is valid (place the valid one in the BATCH folder): FAIL")
+  }
 
   # To be adjusted if two different batches are provided:
   if ( !(purrr::is_empty(file_phase)) ){
-    phase_details <- readr::read_lines(file_phase, n_max = 1)
+    phase_details <- readr::read_lines(file_phase[1], n_max = 1)
     if ( !(is.na(phase_details) || phase_details == '') ){
       if(verbose) message("+ Motrpac phase reported: ", phase_details, " (info from metadata_phase.txt available): OK")
 
