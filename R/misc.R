@@ -14,7 +14,7 @@
 #' @import naniar
 #' @import progress
 #' @import purrr
-#' @importFrom readr read_lines
+#' @importFrom readr read_lines read_delim
 #' @importFrom scales percent
 #' @importFrom stats median reorder
 #' @import stringr
@@ -136,8 +136,9 @@ dl_read_gcp <- function(path,
   }
   # read in the data as a data.table
   if(file.exists(new_path)){
-    dt <- data.table::fread(new_path, sep=sep, header=header,...)
-    return(dt)
+    df <- readr::read_delim(new_path, delim = sep, col_names = header, skip_empty_rows = TRUE, show_col_types = FALSE, ...)
+    df <- as.data.frame(df)
+    return(df)
   }else{
     stop("- Problems loading the file. Possible reason: the file does not exist in the bucket anymore. Please, validate the address. Re-run this command again with `verbose = TRUE`)")
   }
@@ -346,12 +347,18 @@ open_file <- function(input_results_folder,
     ofile <- NULL
     filename <- NULL
   }else{
-    flag <- TRUE
+    
     filename <- file_metametabolites[1]
-    ofile <- read.delim(filename, stringsAsFactors = FALSE, check.names = FALSE)
-    ofile <- remove_empty_columns(ofile, verbose = verbose)
-    ofile <- remove_empty_rows(ofile, verbose = verbose)
-    if(verbose) message("  + (+) File successfully opened")
+    file_ext <- sub(".*\\.(.*)$", "\\1", filename)
+    if (!file_ext %in% c("txt", "tsv")) {
+      if(verbose) message("   - (-)  File extension must be .txt or .tsv (only tab delimited files accepted): FAIL")
+    }else{
+      ofile <- read.delim(filename, stringsAsFactors = FALSE, check.names = FALSE)
+      ofile <- remove_empty_columns(ofile, verbose = verbose)
+      ofile <- remove_empty_rows(ofile, verbose = verbose)
+      if(verbose) message("  + (+) File successfully opened")
+      flag <- TRUE
+    }
   }
 
   if(flag){
@@ -448,10 +455,14 @@ set_phase <- function(input_results_folder,
                            ignore.case = TRUE,
                            full.names=TRUE,
                            recursive = TRUE)
+  
+  if(length(file_phase) > 1){
+    if(verbose) message("- (-) `More than one `metadata_phase.txt` file available. Only one is valid (place the valid one in the BATCH folder): FAIL")
+  }
 
   # To be adjusted if two different batches are provided:
   if ( !(purrr::is_empty(file_phase)) ){
-    phase_details <- readr::read_lines(file_phase, n_max = 1)
+    phase_details <- readr::read_lines(file_phase[1], n_max = 1)
     if ( !(is.na(phase_details) || phase_details == '') ){
       if(verbose) message("+ Motrpac phase reported: ", phase_details, " (info from metadata_phase.txt available): OK")
 
