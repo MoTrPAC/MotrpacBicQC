@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="generator" content="pandoc">
-<meta name="date" content="2024-03-04">
+<meta name="date" content="2024-03-25">
 <title>MotrpacBicQC: Metabolomics QC</title>
 <script src="qc_metabolomics_files/header-attrs-2.25/header-attrs.js"></script><script src="qc_metabolomics_files/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="qc_metabolomics_files/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
@@ -126,7 +126,7 @@
       
       <p class="authors">
          </p>
-<p class="date"><span class="glyphicon glyphicon-calendar"></span> 2024-03-04</p>
+<p class="date"><span class="glyphicon glyphicon-calendar"></span> 2024-03-25</p>
            
 
    
@@ -203,7 +203,11 @@ correctly installed and it works. For example:</p>
 <pre><code><span><span class="co">##   + (+) `metabolite_name` OK</span></span></code></pre>
 <pre><code><span><span class="co">##   + (+) `refmet_name` unique values: OK</span></span></code></pre>
 <pre><code><span><span class="co">##   + Validating `refmet_name` (it might take some time)</span></span></code></pre>
-<pre><code><span><span class="co">##   + (+) `refmet_name` ids found in refmet: OK</span></span></code></pre>
+<pre><code><span><span class="co">##       (-) `refmet_name` [`Leucine/Isoleucine`] must be modified to the RefMet Standarized name: "Leucine" (Error RN2)</span></span></code></pre>
+<pre><code><span><span class="co">##       (-) `refmet_name` [`Oxoglutaric acid`] must be modified to the RefMet Standarized name: "2-Oxoglutaric acid" (Error RN2)</span></span></code></pre>
+<pre><code><span><span class="co">##       (-) `refmet_name` [`Citric acid/Isocitric acid`] must be modified to the RefMet Standarized name: "Citric acid" (Error RN2)</span></span></code></pre>
+<pre><code><span><span class="co">##       (-) Total number of missed ids on MW: 3</span></span></code></pre>
+<pre><code><span><span class="co">##    - (-) SUMMARY: 3 `refmet_name` not found in RefMet Metabolomics Data Dictionary: FAIL</span></span></code></pre>
 <pre><code><span><span class="co">##   + (+) {rt} all numeric: OK</span></span></code></pre>
 <pre><code><span><span class="co">##   + (+) {mz} all numeric: OK</span></span></code></pre>
 <pre><code><span><span class="co">##   + (+) {`neutral_mass`} all numeric values OK</span></span></code></pre>

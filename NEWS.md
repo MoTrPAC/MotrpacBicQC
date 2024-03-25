@@ -1,3 +1,15 @@
+# MotrpacBicQC 0.9.3 (2024-03-25)
+
+* Critical update `validate_refmetname`: ensure checking the refmet standarized name. Update refmet tests
+* Update `get_and_validate_mdd()`
+  + Update REST service url
+  + Update Documentation
+  + Remove dependency on data.table
+* Enhance: only one `metadata_phase` file allowed
+* Enhance `dl_read_gcp`: replace data table by read_delim
+* Enhance `open_file`: accept only tab delimited files
+
+
 # MotrpacBicQC 0.9.2 (2024-03-04)
 
 * Critical Update: Resolved an issue where the validation of refmet names was 

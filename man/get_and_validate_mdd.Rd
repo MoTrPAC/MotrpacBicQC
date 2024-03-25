@@ -2,17 +2,53 @@
 % Please edit documentation in R/metabolomics_data_dictionary.R
 \name{get_and_validate_mdd}
 \alias{get_and_validate_mdd}
-\title{Get and validate the entire RefMet database from Metabolomics Workbench}
+\title{Get and Validate the Entire RefMet Database from Metabolomics Workbench}
 \usage{
-get_and_validate_mdd(remove_duplications = FALSE)
+get_and_validate_mdd(remove_duplications = FALSE, verbose = TRUE)
 }
 \arguments{
-\item{remove_duplications}{(logical) if `TRUE``, removes duplications.}
+\item{remove_duplications}{Logical; if \code{TRUE}, removes duplicate entries based on
+the \code{refmet_name} column.}
+
+\item{verbose}{Logical; if \code{TRUE} (default), displays progress messages and warnings
+during the function execution.}
 }
 \value{
-(vector) PHASE code
+Returns a data frame with the following columns:
+\describe{
+\item{\code{refmet_name}}{Character; the name standarized refmet name}
+\item{\code{pubchem_cid}}{Character; the PubChem compound ID.}
+\item{\code{lm_id}}{Character; the LIPID MAPS ID.}
+\item{\code{inchi_key}}{Character; the International Chemical Identifier Key.}
+\item{\code{exactmass}}{Numeric; the exact mass of the metabolite.}
+\item{\code{formula}}{Character; the chemical formula of the metabolite.}
+\item{\code{super_class}}{Character; the superclass category of the metabolite.}
+\item{\code{main_class}}{Character; the main class category of the metabolite.}
+\item{\code{sub_class}}{Character; the subclass category of the metabolite.}
+\item{\code{hmdb_id}}{Character; the Human Metabolome Database ID.}
+\item{\code{kegg_id}}{Character; the Kyoto Encyclopedia of Genes and Genomes ID.}
+}
+Each row of the data frame represents a unique metabolite entry from the
+Metabolomics Workbench Data Dictionary.
 }
 \description{
-Get and validate Metabolomics Data Dictionary from
-Metabolomics Workbench
+This function fetches and validates the Metabolomics Data Dictionary
+from the Metabolomics Workbench. It provides options to remove duplicates.
+}
+\details{
+This function downloads the entire RefMet database from the Metabolomics
+Workbench using their REST API. The data is initially fetched in JSON format and
+then converted to a data frame. The function checks for the presence of a 'name'
+column in the data frame, renaming it to 'refmet_name' for consistency. It also
+provides an option to remove duplicate entries based on the 'refmet_name' column.
+If duplicates are found and \code{remove_duplications} is \code{FALSE}, the function will
+list the duplicated IDs but will not remove them. This can be helpful for reviewing
+the data quality and consistency.
+}
+\examples{
+\dontrun{
+  refmet <- get_and_validate_mdd(remove_duplications = TRUE, verbose = TRUE)
+  head(refmet)
+}
+
 }

@@ -1,44 +1,61 @@
 
 # All about the RefMet data dictionary
 
-
-#' @title Get and validate the entire RefMet database from Metabolomics Workbench
+#' @title Get and Validate the Entire RefMet Database from Metabolomics Workbench
 #'
-#' @description Get and validate Metabolomics Data Dictionary from
-#' Metabolomics Workbench
-#' @param remove_duplications (logical) if `TRUE``, removes duplications.
-#' @return (vector) PHASE code
+#' @description This function fetches and validates the Metabolomics Data Dictionary 
+#' from the Metabolomics Workbench. It provides options to remove duplicates.
+#'
+#' @param remove_duplications Logical; if `TRUE`, removes duplicate entries based on 
+#' the `refmet_name` column.
+#' @param verbose Logical; if `TRUE` (default), displays progress messages and warnings 
+#' during the function execution.
+#'
+#' @return Returns a data frame with the following columns:
+#' \describe{
+#'   \item{\code{refmet_name}}{Character; the name standarized refmet name}
+#'   \item{\code{pubchem_cid}}{Character; the PubChem compound ID.}
+#'   \item{\code{lm_id}}{Character; the LIPID MAPS ID.}
+#'   \item{\code{inchi_key}}{Character; the International Chemical Identifier Key.}
+#'   \item{\code{exactmass}}{Numeric; the exact mass of the metabolite.}
+#'   \item{\code{formula}}{Character; the chemical formula of the metabolite.}
+#'   \item{\code{super_class}}{Character; the superclass category of the metabolite.}
+#'   \item{\code{main_class}}{Character; the main class category of the metabolite.}
+#'   \item{\code{sub_class}}{Character; the subclass category of the metabolite.}
+#'   \item{\code{hmdb_id}}{Character; the Human Metabolome Database ID.}
+#'   \item{\code{kegg_id}}{Character; the Kyoto Encyclopedia of Genes and Genomes ID.}
+#' }
+#' Each row of the data frame represents a unique metabolite entry from the 
+#' Metabolomics Workbench Data Dictionary. 
+#'
+#' @details This function downloads the entire RefMet database from the Metabolomics 
+#' Workbench using their REST API. The data is initially fetched in JSON format and 
+#' then converted to a data frame. The function checks for the presence of a 'name' 
+#' column in the data frame, renaming it to 'refmet_name' for consistency. It also 
+#' provides an option to remove duplicate entries based on the 'refmet_name' column.
+#' If duplicates are found and \code{remove_duplications} is `FALSE`, the function will
+#' list the duplicated IDs but will not remove them. This can be helpful for reviewing 
+#' the data quality and consistency.
+#'
+#' @examples
+#' \dontrun{
+#'   refmet <- get_and_validate_mdd(remove_duplications = TRUE, verbose = TRUE)
+#'   head(refmet)
+#' }
+#'
 #' @export
+get_and_validate_mdd <- function(remove_duplications = FALSE, verbose = TRUE){
 
-# get_and_validate_mdd <- function(remove_duplications = FALSE){
-#   
-#   refmet <- MotrpacBicQC::metabolomics_data_dictionary
-# 
-#   if(remove_duplications){
-#     # REMOVE DUPLICATIONS
-#     if( any(duplicated(refmet$refmet_name)) ){
-#       duplirefmets <- length(refmet$refmet_name[(duplicated(refmet$refmet_name))])
-#       # message("WARNING: [ ",duplirefmets, " ] DUPLICATION(s) found in data dictionary!")
-#       refmet <- refmet[!(duplicated(refmet$refmet_name)),]
-#     }
-#   }
-#   return(refmet)
-# }
+  name = NULL
 
-get_and_validate_mdd <- function(remove_duplications = FALSE){
-
-  .id = name = NULL
-
+  if(verbose) message("- Warning: Downloading data from Metabolomics Workbench. This might take a few minutes.")
   # REST metabolomics workbench data dictionary
-  # Previous REST version (motrpac only)
+  # Previous REST versions
   # refmetjson <- jsonlite::fromJSON("https://www.metabolomicsworkbench.org/rest/refmet/motrpac")
-  refmetjson <- jsonlite::fromJSON("https://www.metabolomicsworkbench.org/rest/refmet/all/")
-
-  dt_list <- purrr::map(refmetjson, as.data.table)
-  dt <- data.table::rbindlist(dt_list, fill = TRUE, idcol = T)
-  df <- as.data.frame(dt)
-
-  colnames(df) <- tolower(colnames(df))
+  # refmetjson <- jsonlite::fromJSON("https://www.metabolomicsworkbench.org/rest/refmet/all/")
+  refmetjson <- jsonlite::fromJSON("https://www.metabolomicsworkbench.org/rest/refmet/all_ids/")
+  
+  df <- purrr::map_dfr(refmetjson, ~ as.data.frame(.x), .id = "id")
 
   if( !("name" %in% colnames(df)) ){
     stop("`refmet_name` column not found in the Metabolomics Workbench data dictionary")
@@ -49,12 +66,11 @@ get_and_validate_mdd <- function(remove_duplications = FALSE){
   # CHECK DUPLICATIONS
   if(any(duplicated(df$refmet_name))){
     duplications <- df[duplicated(df$refmet_name),]
-    message("Duplicated ids: ", length(duplications$refmet_name))
-    message("IDS: ", paste(duplications$refmet_name, collapse = ", "))
-    message("DUPLICATIONS IN REFMET ONLINE (REST VERSION)")
+    if(verbose) message("Duplicated ids: ", length(duplications$refmet_name))
+    if(verbose) message("IDS: ", paste(duplications$refmet_name, collapse = ", "))
   }
 
-  refmet <- subset(df, select = -c(.id))
+  refmet <- subset(df, select = -c(id))
 
   if(remove_duplications){
     # REMOVE DUPLICATIONS
@@ -77,7 +93,6 @@ get_and_validate_mdd <- function(remove_duplications = FALSE){
 validate_refmetname <- function(dataf, verbose){
 
   irm <- 0
-  idna <- 0
   for(i in 1:dim(dataf)[1]){
     rn <- dataf$refmet_name[i]
     
@@ -100,11 +115,15 @@ validate_refmetname <- function(dataf, verbose){
     if(here$refmet_name == "-"){
       if(verbose) message(paste0("      (-) `refmet_name` [`", rn, "`] not available in RefMet. Please, contact MW/BIC (Error RN1)"))
       irm <- irm + 1
-      idna <- idna + 1
+    }else{
+      if(here$refmet_name != rn){
+        if(verbose) message(paste0("      (-) `refmet_name` [`", rn, "`] must be modified to the RefMet Standarized name: \"", here$refmet_name, "\" (Error RN2)"))
+        irm <- irm + 1
+      }
     }
   }
-  if(idna > 0){
-    if(verbose) message("      (-) Total number of missed ids on MW: ", idna)
+  if(irm > 0){
+    if(verbose) message("      (-) Total number of missed ids on MW: ", irm)
   }
   return(irm)
 }

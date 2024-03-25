@@ -14,6 +14,22 @@ test_that("validate_refmetname handles known refmet_name correctly", {
   expect_equal(actual_missed_ids, 3)
 })
 
+test_that("validate_refmetname to very similar refmet_names", {
+  # Example test data
+  # https://www.metabolomicsworkbench.org/rest/refmet/match/2-Amino-6-hydroxyhexanoic acid/name/
+  # https://www.metabolomicsworkbench.org/rest/refmet/match/2-amino-6-hydroxyhexanoic acid/name/
+  test_data <- data.frame(
+    refmet_name = c("2-Amino-6-hydroxyhexanoic acid",  "2-amino-6-hydroxyhexanoic acid", "2-Aamino-6-hydroxyhexanoic acid", "-"),
+    stringsAsFactors = FALSE
+  )
+  
+  # Call the function with verbose = FALSE to suppress messages during test
+  actual_missed_ids <- validate_refmetname(test_data, verbose = TRUE)
+  
+  # Check if the actual missed IDs match the expected outcome
+  expect_equal(actual_missed_ids, 3)
+})
+
 
 test_that("Successful API call returns correctly structured list with no additional elements", {
   # Known good refmet_name that will return a successful response
