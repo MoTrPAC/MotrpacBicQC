@@ -91,14 +91,24 @@ dl_read_gcp <- function(path,
     dir.create(tmpdir)
     if(verbose) message(paste0("- New folder ", tmpdir, " created successfully"))
   }
-
-  tmpdir <- normalizePath(tmpdir)
+  
+  #create the normalized version of the destination path
+  tmpdir_norm <- normalizePath(tmpdir)
+  
+  #if the normalized path name contains spaces, add shell quotes before it is saved to tmpdir, which ultimately goes to system()
+  if(grepl("\\s",tmpdir_norm)){
+    tmpdir<-shQuote(tmpdir_norm)
+  } else{
+    
+  #Otherwise, tmpdir_norm and tmpdir can remain the same  
+    tmpdir<-tmpdir_norm
+  }
 
   # Check path
   if(!grepl("gs:\\/\\/", path)){
     stop("The path to the bucket is wrong. Valid example: gs://bucket-name/file-name.csv")
   }else{
-    new_path <- file.path(tmpdir, basename(path))
+    new_path <- file.path(tmpdir_norm, basename(path))
   }
   
   # Detect the operating system
