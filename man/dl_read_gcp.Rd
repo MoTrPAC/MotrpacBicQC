@@ -2,7 +2,7 @@
 % Please edit documentation in R/misc.R
 \name{dl_read_gcp}
 \alias{dl_read_gcp}
-\title{dl_read_gcp: Data Load, Read file from Google Cloud}
+\title{Download and Read File from Google Cloud Storage}
 \usage{
 dl_read_gcp(
   path,
@@ -16,33 +16,57 @@ dl_read_gcp(
 )
 }
 \arguments{
-\item{path}{(char) GCS path, i.e., starts with "gs://"}
+\item{path}{Character. The path to the file in GCS, e.g., \verb{gs://bucket-name/file-name.csv}.}
 
-\item{sep}{(char) column separator to use with \link[data.table:fread]{data.table::fread}}
+\item{sep}{Character. The field separator character. Default is \verb{\\t}.}
 
-\item{header}{(bool) whether input file has a header line}
+\item{header}{Logical. Whether the file contains the names of the variables
+as its first line. Default is TRUE.}
 
-\item{tmpdir}{(char) scratch directory to download files from GCS}
+\item{tmpdir}{Character. The local directory to which the file will be
+downloaded.}
 
-\item{gsutil_path}{(char) path to \code{gsutil} on your computer.
-Can be "gsutil" if \code{gsutil} is in your \code{$PATH}.}
+\item{gsutil_path}{Character. The path to the \code{gsutil} command-line tool.
+Default is "gsutil".}
 
-\item{check_first}{(char) check if file exists in \code{tmpdir} before
-downloading it. Read in existing file if it exists.
-Should be set to \code{TRUE} if you are running this function in parallel.}
+\item{check_first}{Logical. Whether to check if the file already exists
+locally before downloading. Default is TRUE.}
 
-\item{verbose}{(logical) \code{TRUE} shows messages (default \code{FALSE})}
+\item{verbose}{Logical. If TRUE, prints messages about the download process.
+Default is FALSE.}
 
-\item{...}{optional arguments for \link[data.table:fread]{data.table::fread}}
+\item{...}{Additional arguments passed to \code{readr::read_delim}.}
 }
 \value{
-a data table
+A data frame containing the contents of the downloaded file.
 }
 \description{
-Read a single file from Google Cloud Storage (GSC) into a data table
+This function downloads a file from Google Cloud Storage (GCS) to a local
+directory and reads it into R as a data frame. It uses the \code{gsutil}
+command-line tool to handle the file download.
+}
+\details{
+This function first checks if the specified file exists in GCS. If the file
+exists, it downloads the file to the specified local directory (\code{tmpdir}). If
+the local directory does not exist, it will be created. The function handles
+spaces in directory paths by quoting them appropriately. If the file is
+successfully downloaded, it is read into R using \code{readr::read_delim}.
+
+If the \code{check_first} argument is set to TRUE, the function will first check
+if the file already exists locally to avoid redundant downloads. If the file
+is already present locally, it will not be downloaded again.
 }
 \examples{
 \dontrun{
-pheno = dl_read_gcp(path = "gs://your-bucket/file.txt")
+df <- dl_read_gcp(
+  path = "gs://bucket-name/file-name.csv",
+  sep = ",",
+  header = TRUE,
+  tmpdir = "/local/path",
+  gsutil_path = "gsutil",
+  check_first = TRUE,
+  verbose = TRUE
+)
 }
+
 }
