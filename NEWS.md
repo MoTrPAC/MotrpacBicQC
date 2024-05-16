@@ -1,3 +1,12 @@
+# MotrpacBicQC 0.9.4 (2024-05-16)
+
+* Enhance and improve `dl_read_gcp`: 
+  + Check if `gsutil` path is correct and report back to the user if it is not
+  + Handle spaces in folder names (although it is not recommended)
+  + Improve detecting the source of errors
+  + Improve verbosity and feedback to the user
+  
+
 # MotrpacBicQC 0.9.3 (2024-03-25)
 
 * Critical update `validate_refmetname`: ensure checking the refmet standarized name. Update refmet tests
