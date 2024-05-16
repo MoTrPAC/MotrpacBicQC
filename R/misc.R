@@ -121,6 +121,21 @@ dl_read_gcp <- function(path,
     ignore_std_out <- FALSE
   }
   
+  # Validate gsutil path first
+  validate_cmd <- sprintf('%s version', gsutil_path)
+  if(verbose) message(paste0("- Validating `gsutil_path` on your system: ", gsutil_path))
+  gsutil_valid <- tryCatch({
+    system(validate_cmd, ignore.stdout = ignore_std_err, ignore.stderr = ignore_std_out) == 0
+  }, warning = function(w) {
+    FALSE
+  }, error = function(e) {
+    FALSE
+  })
+  
+  if(!gsutil_valid){
+    stop("The gsutil path is incorrect or gsutil is not installed. Please ensure that gsutil is installed and the `gsutil_path` is correct.")
+  }
+  
   # Check if the file exists in GCP
   check_cmd <- sprintf('%s ls %s', gsutil_path, path)
   file_exists <- system(check_cmd, 
@@ -193,9 +208,10 @@ dl_read_gcp <- function(path,
     df <- as.data.frame(df)
     return(df)
   }else{
-    stop("Problems loading the file. 
-         Something might have gone wrong with the download. 
-         Re-run this command again with `verbose = TRUE`)")
+    stop("Problems loading the file. Two possible reasons:
+         - Something might have gone wrong with the download. 
+         - This is not a tab-delimited file (default): if you are trying to download a csv file instead, then use `sep = \",\"` instead.
+    Re-run the command again with `verbose = TRUE`)")
   }
 }
 
