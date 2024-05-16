@@ -52,31 +52,52 @@ create_folder <- function(folder_name = NULL,
 }
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' @title dl_read_gcp: Data Load, Read file from Google Cloud
+#' Download and Read File from Google Cloud Storage
 #'
-#' @description
-#' Read a single file from Google Cloud Storage (GSC) into a data table
+#' This function downloads a file from Google Cloud Storage (GCS) to a local 
+#' directory and reads it into R as a data frame. It uses the `gsutil` 
+#' command-line tool to handle the file download.
 #'
-#' @param path (char) GCS path, i.e., starts with "gs://"
-#' @param sep (char) column separator to use with [data.table::fread]
-#' @param tmpdir (char) scratch directory to download files from GCS
-#' @param gsutil_path (char) path to \code{gsutil} on your computer.
-#' Can be "gsutil" if \code{gsutil} is in your \code{$PATH}.
-#' @param check_first (char) check if file exists in \code{tmpdir} before
-#' downloading it. Read in existing file if it exists.
-#' Should be set to \code{TRUE} if you are running this function in parallel.
-#' @param header (bool) whether input file has a header line
-#' @param verbose (logical) `TRUE` shows messages (default `FALSE`)
-#' @param ... optional arguments for [data.table::fread]
+#' @param path Character. The path to the file in GCS, e.g., `gs://bucket-name/file-name.csv`.
+#' @param sep Character. The field separator character. Default is `\t`.
+#' @param header Logical. Whether the file contains the names of the variables 
+#'   as its first line. Default is TRUE.
+#' @param tmpdir Character. The local directory to which the file will be 
+#'   downloaded.
+#' @param gsutil_path Character. The path to the `gsutil` command-line tool. 
+#'   Default is "gsutil".
+#' @param check_first Logical. Whether to check if the file already exists 
+#'   locally before downloading. Default is TRUE.
+#' @param verbose Logical. If TRUE, prints messages about the download process. 
+#'   Default is FALSE.
+#' @param ... Additional arguments passed to `readr::read_delim`.
 #'
-#' @return a data table
+#' @details
+#' This function first checks if the specified file exists in GCS. If the file 
+#' exists, it downloads the file to the specified local directory (`tmpdir`). If 
+#' the local directory does not exist, it will be created. The function handles 
+#' spaces in directory paths by quoting them appropriately. If the file is 
+#' successfully downloaded, it is read into R using `readr::read_delim`.
 #'
-#' @importFrom data.table fread
+#' If the `check_first` argument is set to TRUE, the function will first check 
+#' if the file already exists locally to avoid redundant downloads. If the file 
+#' is already present locally, it will not be downloaded again.
+#'
+#' @return A data frame containing the contents of the downloaded file.
 #'
 #' @examples
 #' \dontrun{
-#' pheno = dl_read_gcp(path = "gs://your-bucket/file.txt")
+#' df <- dl_read_gcp(
+#'   path = "gs://bucket-name/file-name.csv",
+#'   sep = ",",
+#'   header = TRUE,
+#'   tmpdir = "/local/path",
+#'   gsutil_path = "gsutil",
+#'   check_first = TRUE,
+#'   verbose = TRUE
+#' )
 #' }
+#' 
 #' @export
 dl_read_gcp <- function(path,
                         sep = "\t",
@@ -86,20 +107,6 @@ dl_read_gcp <- function(path,
                         check_first = TRUE,
                         verbose = FALSE,
                         ...){
-
-  if(!dir.exists(tmpdir)){
-    dir.create(tmpdir)
-    if(verbose) message(paste0("- New folder ", tmpdir, " created successfully"))
-  }
-
-  tmpdir <- normalizePath(tmpdir)
-
-  # Check path
-  if(!grepl("gs:\\/\\/", path)){
-    stop("The path to the bucket is wrong. Valid example: gs://bucket-name/file-name.csv")
-  }else{
-    new_path <- file.path(tmpdir, basename(path))
-  }
   
   # Detect the operating system
   os_name <- Sys.info()["sysname"]
@@ -113,34 +120,98 @@ dl_read_gcp <- function(path,
     ignore_std_err <- FALSE
     ignore_std_out <- FALSE
   }
+  
+  # Validate gsutil path first
+  validate_cmd <- sprintf('%s version', gsutil_path)
+  if(verbose) message(paste0("- Validating `gsutil_path` on your system: ", gsutil_path))
+  gsutil_valid <- tryCatch({
+    system(validate_cmd, ignore.stdout = ignore_std_err, ignore.stderr = ignore_std_out) == 0
+  }, warning = function(w) {
+    FALSE
+  }, error = function(e) {
+    FALSE
+  })
+  
+  if(!gsutil_valid){
+    stop("The gsutil path is incorrect or gsutil is not installed. Please ensure that gsutil is installed and the `gsutil_path` is correct.")
+  }
+  
+  # Check if the file exists in GCP
+  check_cmd <- sprintf('%s ls %s', gsutil_path, path)
+  file_exists <- system(check_cmd, 
+                        ignore.stdout = ignore_std_out, 
+                        ignore.stderr = ignore_std_err) == 0
+  
+  if(!file_exists){
+    stop(paste0("\nThe file `", path, "` does not exist in GCP"))
+  }
+  
+  # Create directory
+  if(!dir.exists(tmpdir)){
+    dir.create(tmpdir)
+    if(verbose) message(paste0("- New folder `", tmpdir, "` created successfully"))
+  }else{
+    if(verbose) message(paste0("- Folder `", tmpdir, "` already exists"))
+  }
+  
+  # create the normalized version of the destination path
+  tmpdir_norm <- normalizePath(tmpdir)
+  
+  # if the normalized path name contains spaces, 
+  # add shell quotes before it is saved to tmpdir, 
+  # which ultimately goes to system()
+  if(grepl("\\s", tmpdir_norm)){
+    tmpdir <- shQuote(tmpdir_norm)
+    if(verbose) message("- The temp folder has spaces")
+  } else{
+  # Otherwise, tmpdir_norm and tmpdir can remain the same  
+    tmpdir <- tmpdir_norm
+  }
 
-  # only download if it doesn't exist to avoid conflicts when running this script in parallel; clear scratch space when you're done
+  # Check path
+  if(!grepl("gs:\\/\\/", path)){
+    stop("The path to the bucket is wrong. Valid example: gs://bucket-name/file-name.csv")
+  }else{
+    new_path <- file.path(tmpdir_norm, basename(path))
+  }
+
+  # only download if it doesn't exist to avoid conflicts when running this 
+  # script in parallel; clear scratch space when you're done
   if(check_first){
     if( !file.exists(new_path) ){
+      # cp file from GCP
       cmd <- sprintf('%s cp %s %s', gsutil_path, path, tmpdir)
       if(verbose) message(paste0("- Running command ", cmd))
       system(cmd,
              ignore.stdout = ignore_std_out,
              ignore.stderr = ignore_std_err)
-      message("- Downloaded file: ", new_path)
+      if(verbose) message("- Downloaded file: ", new_path)
     }else{
-      if(verbose) message(paste0("- The file <", new_path, "> already exists"))
+      if(verbose) message(paste0("- The file `", new_path, "` already exists. LOADING EXISTING VERSION"))
     }
   }else{
-    if(verbose) message(paste("- Downloading file (from GCP) <", basename(path), ">"))
+    if(verbose) message(paste0("- Downloading file (from GCP): `", basename(path), "`"))
     cmd <- sprintf('%s cp %s %s', gsutil_path, path, tmpdir)
     system(cmd,
            ignore.stdout = ignore_std_out,
            ignore.stderr = ignore_std_err)
-    message("- Downloaded file: ", new_path)
+    if(verbose) message("- Downloaded file: ", new_path)
   }
-  # read in the data as a data.table
+
+  # read in the data using readr instead of data.table
   if(file.exists(new_path)){
-    df <- readr::read_delim(new_path, delim = sep, col_names = header, skip_empty_rows = TRUE, show_col_types = FALSE, ...)
+    df <- readr::read_delim(new_path, 
+                            delim = sep, 
+                            col_names = header, 
+                            skip_empty_rows = TRUE, 
+                            show_col_types = FALSE, ...)
     df <- as.data.frame(df)
     return(df)
   }else{
-    stop("- Problems loading the file. Possible reason: the file does not exist in the bucket anymore. Please, validate the address. Re-run this command again with `verbose = TRUE`)")
+    stop("Problems loading the file. Two possible reasons:
+         - Something might have gone wrong with the download. 
+         - This is not a tab-delimited file (default): if you are trying to download a csv file instead, then use `sep = \",\"` instead.
+    Re-run the command again with `verbose = TRUE`)")
   }
 }
 
