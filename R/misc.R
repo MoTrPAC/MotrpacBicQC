@@ -343,6 +343,10 @@ filter_required_columns <- function(df,
         emeta_sample_coln <- append(emeta_sample_coln, "tmt16_channel")
         if(verbose) message("  + (+) All required columns present (tmt16 experiment)")
         df <- subset(df, select = emeta_sample_coln)
+      }else if("tmt18_channel" %in% colnames(df)){
+        emeta_sample_coln <- append(emeta_sample_coln, "tmt18_channel")
+        if(verbose) message("  + (+) All required columns present (tmt18 experiment)")
+        df <- subset(df, select = emeta_sample_coln)
       }else{
         if(verbose) message("   - (-) Expected COLUMN NAMES are missed: FAIL")
       }

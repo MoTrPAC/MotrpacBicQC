@@ -1,3 +1,7 @@
+# MotrpacBicQC 0.9.5 (2024-05-22)
+
+* Proteomics: provide QC support for TMT-18
+  
 # MotrpacBicQC 0.9.4 (2024-05-16)
 
 * Enhance and improve `dl_read_gcp`: 

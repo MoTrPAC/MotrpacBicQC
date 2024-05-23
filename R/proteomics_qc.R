@@ -523,8 +523,11 @@ check_vial_metadata_proteomics <- function(df_vm,
   }else if("tmt16_channel" %in% colnames(df_vm)){
     required_columns <- c("vial_label", "tmt_plex", "tmt16_channel") 
     tmt_channel <- "tmt16_channel"
+  }else if("tmt18_channel" %in% colnames(df_vm)){
+    required_columns <- c("vial_label", "tmt_plex", "tmt18_channel") 
+    tmt_channel <- "tmt18_channel"
   }else{
-    if(verbose) message("      - (-) `tmt[11|16]_channel` column not found")
+    if(verbose) message("      - (-) `tmt[11|16|18]_channel` column not found")
     ic_vm <- 3
     return(ic_vm)
   }
@@ -542,6 +545,9 @@ check_vial_metadata_proteomics <- function(df_vm,
   }else if("tmt16_channel" %in% colnames(df_vm)){
     df_vm$vial_label <- gsub(" ", "", df_vm$vial_label)
     valid_channels <- c("126C", "127N", "127C", "128N", "128C", "129N", "129C", "130N", "130C", "131N", "131C", "132N", "132C", "133N", "133C", "134N")
+  }else if("tmt18_channel" %in% colnames(df_vm)){
+    df_vm$vial_label <- gsub(" ", "", df_vm$vial_label)
+    valid_channels <- c("126C", "127N", "127C", "128N", "128C", "129N", "129C", "130N", "130C", "131N", "131C", "132N", "132C", "133N", "133C", "134N")
   }
 
   ic_vm <- 0
@@ -550,7 +556,7 @@ check_vial_metadata_proteomics <- function(df_vm,
 
   for(p in plexes){
     temp_plex <- df_vm[which(df_vm$tmt_plex == p),]
-    if(all(valid_channels %in% temp_plex[[tmt_channel]])){
+    if( all(valid_channels %in% temp_plex[[tmt_channel]]) ){
       if(verbose) message("   + (+) All ", tmt_channel," channels are valid in plex ", paste(p))
     }else{
       if(tmt_channel == "tmt11_channel"){
@@ -566,15 +572,22 @@ check_vial_metadata_proteomics <- function(df_vm,
       }
     }
   }
-
-  all_samples <- df_vm$vial_label
-  all_vial_labels <- NA
-
-  if( any( grepl("Ref", df_vm$vial_label) ) ){
-    all_vial_labels <- all_samples[!grepl('^Ref', all_samples)]
-  }else{
-    if(verbose) message("      - (-) Ref channels not found in vial_metadata")
-    ic_vm <- ic_vm + 1
+  
+  # Check that all plexes have one channel
+  for(p in plexes){
+    temp_plex <- df_vm[which(df_vm$tmt_plex == p),]
+    if( sum(grepl("Ref", temp_plex$vial_label)) == 1 ){
+      if(verbose) message("   + (+) Ref channel found in plex ", paste(p))
+    }else if(sum(grepl("Ref", temp_plex$vial_label)) == 0) {
+      if(verbose) message("      - (-) Ref channel missed in plex ", paste(p))
+      ic_vm <- ic_vm + 1
+    }else if(sum(grepl("Ref", temp_plex$vial_label)) > 1) {
+      if(verbose) message("      - (-) Too many reference channels in plex ", paste(p))
+      if(verbose){
+        print(temp_plex[grepl("Ref", temp_plex$vial_label), ])
+      }
+      ic_vm <- ic_vm + 1
+    }
   }
 
   if( any(duplicated(df_vm$vial_label)) ){
