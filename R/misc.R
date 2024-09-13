@@ -54,33 +54,33 @@ create_folder <- function(folder_name = NULL,
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Download and Read File from Google Cloud Storage
 #'
-#' This function downloads a file from Google Cloud Storage (GCS) to a local 
-#' directory and reads it into R as a data frame. It uses the `gsutil` 
+#' This function downloads a file from Google Cloud Storage (GCS) to a local
+#' directory and reads it into R as a data frame. It uses the `gsutil`
 #' command-line tool to handle the file download.
 #'
 #' @param path Character. The path to the file in GCS, e.g., `gs://bucket-name/file-name.csv`.
 #' @param sep Character. The field separator character. Default is `\t`.
-#' @param header Logical. Whether the file contains the names of the variables 
+#' @param header Logical. Whether the file contains the names of the variables
 #'   as its first line. Default is TRUE.
-#' @param tmpdir Character. The local directory to which the file will be 
+#' @param tmpdir Character. The local directory to which the file will be
 #'   downloaded.
-#' @param gsutil_path Character. The path to the `gsutil` command-line tool. 
+#' @param gsutil_path Character. The path to the `gsutil` command-line tool.
 #'   Default is "gsutil".
-#' @param check_first Logical. Whether to check if the file already exists 
+#' @param check_first Logical. Whether to check if the file already exists
 #'   locally before downloading. Default is TRUE.
-#' @param verbose Logical. If TRUE, prints messages about the download process. 
+#' @param verbose Logical. If TRUE, prints messages about the download process.
 #'   Default is FALSE.
 #' @param ... Additional arguments passed to `readr::read_delim`.
 #'
 #' @details
-#' This function first checks if the specified file exists in GCS. If the file 
-#' exists, it downloads the file to the specified local directory (`tmpdir`). If 
-#' the local directory does not exist, it will be created. The function handles 
-#' spaces in directory paths by quoting them appropriately. If the file is 
+#' This function first checks if the specified file exists in GCS. If the file
+#' exists, it downloads the file to the specified local directory (`tmpdir`). If
+#' the local directory does not exist, it will be created. The function handles
+#' spaces in directory paths by quoting them appropriately. If the file is
 #' successfully downloaded, it is read into R using `readr::read_delim`.
 #'
-#' If the `check_first` argument is set to TRUE, the function will first check 
-#' if the file already exists locally to avoid redundant downloads. If the file 
+#' If the `check_first` argument is set to TRUE, the function will first check
+#' if the file already exists locally to avoid redundant downloads. If the file
 #' is already present locally, it will not be downloaded again.
 #'
 #' @return A data frame containing the contents of the downloaded file.
@@ -97,7 +97,7 @@ create_folder <- function(folder_name = NULL,
 #'   verbose = TRUE
 #' )
 #' }
-#' 
+#'
 #' @export
 dl_read_gcp <- function(path,
                         sep = "\t",
@@ -107,20 +107,20 @@ dl_read_gcp <- function(path,
                         check_first = TRUE,
                         verbose = FALSE,
                         ...){
-  
+
   # Detect the operating system
   os_name <- Sys.info()["sysname"]
-  
+
   # Default arguments for Mac
   ignore_std_err <- TRUE
   ignore_std_out <- TRUE
-  
+
   # Change default arguments if the OS is Windows
   if (os_name == "Windows") {
     ignore_std_err <- FALSE
     ignore_std_out <- FALSE
   }
-  
+
   # Validate gsutil path first
   validate_cmd <- sprintf('%s version', gsutil_path)
   if(verbose) message(paste0("- Validating `gsutil_path` on your system: ", gsutil_path))
@@ -131,40 +131,40 @@ dl_read_gcp <- function(path,
   }, error = function(e) {
     FALSE
   })
-  
+
   if(!gsutil_valid){
     stop("The gsutil path is incorrect or gsutil is not installed. Please ensure that gsutil is installed and the `gsutil_path` is correct.")
   }
-  
+
   # Check if the file exists in GCP
   check_cmd <- sprintf('%s ls %s', gsutil_path, path)
-  file_exists <- system(check_cmd, 
-                        ignore.stdout = ignore_std_out, 
+  file_exists <- system(check_cmd,
+                        ignore.stdout = ignore_std_out,
                         ignore.stderr = ignore_std_err) == 0
-  
+
   if(!file_exists){
     stop(paste0("\nThe file `", path, "` does not exist in GCP"))
   }
-  
+
   # Create directory
   if(!dir.exists(tmpdir)){
-    dir.create(tmpdir)
+    dir.create(tmpdir, recursive = TRUE)
     if(verbose) message(paste0("- New folder `", tmpdir, "` created successfully"))
   }else{
     if(verbose) message(paste0("- Folder `", tmpdir, "` already exists"))
   }
-  
+
   # create the normalized version of the destination path
   tmpdir_norm <- normalizePath(tmpdir)
-  
-  # if the normalized path name contains spaces, 
-  # add shell quotes before it is saved to tmpdir, 
+
+  # if the normalized path name contains spaces,
+  # add shell quotes before it is saved to tmpdir,
   # which ultimately goes to system()
   if(grepl("\\s", tmpdir_norm)){
     tmpdir <- shQuote(tmpdir_norm)
     if(verbose) message("- The temp folder has spaces")
   } else{
-  # Otherwise, tmpdir_norm and tmpdir can remain the same  
+  # Otherwise, tmpdir_norm and tmpdir can remain the same
     tmpdir <- tmpdir_norm
   }
 
@@ -175,7 +175,7 @@ dl_read_gcp <- function(path,
     new_path <- file.path(tmpdir_norm, basename(path))
   }
 
-  # only download if it doesn't exist to avoid conflicts when running this 
+  # only download if it doesn't exist to avoid conflicts when running this
   # script in parallel; clear scratch space when you're done
   if(check_first){
     if( !file.exists(new_path) ){
@@ -200,16 +200,16 @@ dl_read_gcp <- function(path,
 
   # read in the data using readr instead of data.table
   if(file.exists(new_path)){
-    df <- readr::read_delim(new_path, 
-                            delim = sep, 
-                            col_names = header, 
-                            skip_empty_rows = TRUE, 
+    df <- readr::read_delim(new_path,
+                            delim = sep,
+                            col_names = header,
+                            skip_empty_rows = TRUE,
                             show_col_types = FALSE, ...)
     df <- as.data.frame(df)
     return(df)
   }else{
     stop("Problems loading the file. Two possible reasons:
-         - Something might have gone wrong with the download. 
+         - Something might have gone wrong with the download.
          - This is not a tab-delimited file (default): if you are trying to download a csv file instead, then use `sep = \",\"` instead.
     Re-run the command again with `verbose = TRUE`)")
   }
@@ -282,10 +282,10 @@ get_full_path2batch <- function(input_results_folder){
 #' }
 #' @export
 filter_required_columns <- function(df,
-                                    type = c("m_m", 
-                                             "m_s", 
-                                             "v_m", 
-                                             "olproteins", 
+                                    type = c("m_m",
+                                             "m_s",
+                                             "v_m",
+                                             "olproteins",
                                              "olsamples"),
                                     name_id = NULL,
                                     verbose = TRUE){
@@ -357,7 +357,7 @@ filter_required_columns <- function(df,
   } else if (type == "olproteins"){
     emeta_sample_coln <- c("olink_id", "uniprot_entry", "assay", "missing_freq", "panel_name", "panel_lot_nr", "normalization")
     missing_cols <- setdiff(emeta_sample_coln, colnames(df))
-    
+
     if (length(missing_cols) > 0) {
       if(verbose) message("   - (-) `metadata_proteins`: Expected COLUMN NAMES are missed: FAIL")
       message(paste0("\t The following required columns are not present: `", paste(missing_cols, collapse = ", "), "`"))
@@ -369,7 +369,7 @@ filter_required_columns <- function(df,
   }else if (type == "olsamples"){
     emeta_sample_coln <- c("sample_id", "sample_type", "sample_order", "plate_id")
     missing_cols <- setdiff(emeta_sample_coln, colnames(df))
-    
+
     if (length(missing_cols) > 0) {
       if(verbose) message("   - (-) `metadata_samples`: Expected COLUMN NAMES are missed: FAIL")
       message(paste0("\t The following required columns are not present: `", paste(missing_cols, collapse = ", "), "`"))
@@ -422,7 +422,7 @@ open_file <- function(input_results_folder,
     ofile <- NULL
     filename <- NULL
   }else{
-    
+
     filename <- file_metametabolites[1]
     file_ext <- sub(".*\\.(.*)$", "\\1", filename)
     if (!file_ext %in% c("txt", "tsv")) {
@@ -530,7 +530,7 @@ set_phase <- function(input_results_folder,
                            ignore.case = TRUE,
                            full.names=TRUE,
                            recursive = TRUE)
-  
+
   if(length(file_phase) > 1){
     if(verbose) message("- (-) `More than one `metadata_phase.txt` file available. Only one is valid (place the valid one in the BATCH folder): FAIL")
   }
