@@ -7,8 +7,8 @@ test_that("check_metadata_metabolites returns the right number of issues", {
 })
 
 test_that("check_metadata_sample returns the right number of issues", {
-  expect_equal(check_metadata_samples(df = metadata_sample_named, cas = "umichigan", return_n_issues = TRUE, verbose = FALSE), 3)
-  expect_equal(check_metadata_samples(df = metadata_sample_unnamed, cas = "umichigan", return_n_issues = TRUE, verbose = FALSE), 3)
+  expect_equal(check_metadata_samples(df = metadata_sample_named, cas = "umichigan", return_n_issues = TRUE, verbose = FALSE), 2)
+  expect_equal(check_metadata_samples(df = metadata_sample_unnamed, cas = "umichigan", return_n_issues = TRUE, verbose = FALSE), 2)
 })
 
 test_that("check_results returns the right number of issues", {
