@@ -1,3 +1,9 @@
+# MotrpacBicQC 0.9.6 (2024-09-23)
+
+* Download and read file from GCP function can create recursive folders (@christopherjin)
+* Adjustments in metabolomics metadata sample files QC to enable processing 
+of old submissions (before batch related variables were required)
+
 # MotrpacBicQC 0.9.5 (2024-05-22)
 
 * Proteomics: provide QC support for TMT-18
@@ -10,7 +16,6 @@
   + Improve detecting the source of errors
   + Improve verbosity and feedback to the user
   
-
 # MotrpacBicQC 0.9.3 (2024-03-25)
 
 * Critical update `validate_refmetname`: ensure checking the refmet standarized name. Update refmet tests
