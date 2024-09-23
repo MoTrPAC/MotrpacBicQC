@@ -396,7 +396,9 @@ validate_dates_times <- function(df, column_name, verbose = TRUE) {
 #' validate_lc_column_id(df, column_name = "lc_column_id")
 #' 
 #' @export
-validate_lc_column_id <- function(df, column_name, verbose = TRUE) {
+validate_lc_column_id <- function(df, 
+                                  column_name, 
+                                  verbose = TRUE) {
   
   # issue counter
   ic <- 0

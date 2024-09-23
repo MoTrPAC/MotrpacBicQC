@@ -181,7 +181,7 @@ check_metadata_samples <- function(df,
   # filter only expected columns
   df <- filter_required_columns(df = df,
                                 type = "m_s",
-                                verbose = TRUE)
+                                verbose = verbose)
 
   # Check every column
   # sample_id: si
@@ -276,12 +276,17 @@ check_metadata_samples <- function(df,
   }
   
   if("acquisition_date" %in% colnames(df)){
-    if( any(grepl(":", df$acquisition_date)) ){
-      if(verbose) message("  + (i) Assuming `acquisition_date` is in `MM/DD/YYYY HH:MM:SS AM/PM` format. Validating:")
-      icdt <- validate_dates_times(df = df, column_name = "acquisition_date", verbose = verbose)
+    if(any(is.na(df$acquisition_date))){
+      if(verbose) message("   - (-) `acquisition_date` has NA values: FAIL")
+      ic <- ic + 1
     }else{
-      icdate <- validate_yyyymmdd_dates(df = df, date_column = "acquisition_date", verbose = verbose)
-      ic <- ic + icdate
+      if( any(grepl(":", df$acquisition_date)) ){
+        if(verbose) message("  + (i) Assuming `acquisition_date` is in `MM/DD/YYYY HH:MM:SS AM/PM` format. Validating:")
+        icdt <- validate_dates_times(df = df, column_name = "acquisition_date", verbose = verbose)
+      }else{
+        icdate <- validate_yyyymmdd_dates(df = df, date_column = "acquisition_date", verbose = verbose)
+        ic <- ic + icdate
+      }
     }
   }else{
     if(verbose) message("   - (-) `acquisition_date` column missed: FAIL")
@@ -1200,15 +1205,17 @@ load_metabolomics_batch <- function(input_results_folder,
   assay <- validate_assay(input_results_folder)
   tissue_code <- validate_tissue(input_results_folder)
 
-  total_issues <- validate_metabolomics(input_results_folder = input_results_folder, 
-                                        cas = cas, 
-                                        return_n_issues = TRUE, 
-                                        full_report = FALSE, 
-                                        f_proof = FALSE, 
-                                        verbose = FALSE)
+  total_issues <- 
+    validate_metabolomics(
+      input_results_folder = input_results_folder, 
+      cas = cas, 
+      return_n_issues = TRUE, 
+      full_report = FALSE, 
+      f_proof = FALSE, 
+      verbose = FALSE)
 
   if(total_issues > 0){
-    message("\n\tWARNING!!! Too many issues identified (", total_issues,"). This batch should not be processed until the issues are solved")
+    message("\tWARNING!!! Too many issues identified (", total_issues,"). This batch should not be processed until the issues are solved")
   }
 
   # Load Metabolomics----
@@ -1376,8 +1383,10 @@ combine_metabolomics_batch <- function(input_results_folder,
                                        verbose = TRUE){
 
   # Load all datasets
-  metab_dfs <- load_metabolomics_batch(input_results_folder = input_results_folder,
-                                       cas = cas)
+  metab_dfs <- 
+    load_metabolomics_batch(
+      input_results_folder = input_results_folder,
+      cas = cas, verbose = verbose)
 
   if(verbose) message("\n## MERGE")
   if(verbose) message("\nAll metabolomics datasets + basic phenotypic information")
@@ -1677,9 +1686,11 @@ write_metabolomics_releases <- function(input_results_folder,
   if(verbose) message("+ Writing out ", cas, " ", phase_details, " ", tissue_code, " ", assay, " files", appendLF = FALSE)
 
   # Load all datasets----
-  metab_dfs <- load_metabolomics_batch(input_results_folder = input_results_folder,
-                                       cas = cas,
-                                       verbose = FALSE)
+  metab_dfs <- 
+    load_metabolomics_batch(
+      input_results_folder = input_results_folder,
+      cas = cas,
+      verbose = FALSE)
 
   # Create output folder-------
   if (is.null(folder_root)){
