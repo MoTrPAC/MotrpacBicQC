@@ -310,27 +310,37 @@ filter_required_columns <- function(df,
     colnames(df) <- tolower(colnames(df))
     missing_cols <- setdiff(emeta_metabo_coln_named, colnames(df))
     if (length(missing_cols) > 0) {
-      if(verbose) message("   - (-) `metadata_metabolite`: Expected COLUMN NAMES are missed: FAIL")
-      message(paste0("\t The following required columns are not present: `", paste(missing_cols, collapse = ", "), "`"))
+      if (verbose) message("   - (-) `metadata_metabolite`: Expected COLUMN NAMES are missed: FAIL")
+      message(paste0("\t The following required columns are not present: `", 
+                     paste(missing_cols, collapse = ", "), "`"))
     } else {
-      if(verbose) message("  + (+) All required columns present")
+      if (verbose) message("  + (+) All required columns present")
       df <- subset(df, select = emeta_metabo_coln_named)
     }
     return(df)
-
-  } else if (type == "m_s"){
+  } else if (type == "m_s") {
     emeta_sample_coln <- c("sample_id", "sample_type", "sample_order", "raw_file", "extraction_date", "acquisition_date", "lc_column_id")
+    required_cols <- setdiff(emeta_sample_coln, c("extraction_date", "acquisition_date", "lc_column_id"))
     missing_cols <- setdiff(emeta_sample_coln, colnames(df))
-
-    if (length(missing_cols) > 0) {
-      if(verbose) message("   - (-) `metadata_sample`: Expected COLUMN NAMES are missed: FAIL")
-      message(paste0("\t The following required columns are not present: `", paste(missing_cols, collapse = ", "), "`"))
+    missing_required_cols <- setdiff(required_cols, colnames(df))
+    
+    if (length(missing_required_cols) > 0) {
+      if (verbose) message("   - (-) `metadata_sample`: Expected COLUMN NAMES are missed: FAIL")
+      message(paste0("\t The following required columns are not present: `", 
+                     paste(missing_required_cols, collapse = ", "), "`"))
     } else {
-      if(verbose) message("  + (+) All required columns present")
+      if (length(missing_cols) > 0) {
+        message("   - (-) `metadata_sample`: recently required COLUMN NAMES are missed: Adding with NA values: FAIL")
+        for (col in c("extraction_date", "acquisition_date", "lc_column_id")) {
+          if (!(col %in% colnames(df))) {
+            df[[col]] <- NA
+          }
+        }
+      }
+      if (verbose) message("  + (+) All required columns present")
       df <- subset(df, select = emeta_sample_coln)
     }
     return(df)
-
   } else if (type == "v_m"){
     emeta_sample_coln <- c("vial_label", "tmt_plex")
     if( all(emeta_sample_coln %in% colnames(df)) ){
@@ -348,10 +358,10 @@ filter_required_columns <- function(df,
         if(verbose) message("  + (+) All required columns present (tmt18 experiment)")
         df <- subset(df, select = emeta_sample_coln)
       }else{
-        if(verbose) message("   - (-) Expected COLUMN NAMES are missed: FAIL")
+        message("   - (-) Expected COLUMN NAMES are missed: FAIL")
       }
     }else{
-      if(verbose) message("   - (-) Expected COLUMN NAMES are missed: FAIL")
+      message("   - (-) Expected COLUMN NAMES are missed: FAIL")
     }
     return(df)
   } else if (type == "olproteins"){
