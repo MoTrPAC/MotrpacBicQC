@@ -36,7 +36,7 @@ test_that("Successful API call returns correctly structured list with no additio
   test_refmet_name <- "11-Deoxycortisol"
   
   # Expected elements in the response
-  expected_elements <- c("refmet_name", "formula", "exactmass", "super_class", "main_class", "sub_class")
+  expected_elements <- c("refmet_name", "formula", "exactmass", "super_class", "main_class", "sub_class", "refmet_id")
   
   search_api <- paste0("https://www.metabolomicsworkbench.org/rest/refmet/match/",URLencode(test_refmet_name),"/name/")
   response <- jsonlite::fromJSON(search_api)
