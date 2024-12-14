@@ -106,8 +106,6 @@ dl_read_gcp <- function(path,
                         gsutil_path = "gsutil",
                         check_first = TRUE,
                         verbose = FALSE,
-                        only_download = FALSE,
-                        is_rdata = FALSE,
                         ...){
 
   # Detect the operating system
