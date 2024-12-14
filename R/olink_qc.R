@@ -271,164 +271,94 @@ check_metadata_samples_olink <- function(df,
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' @title Check olink results
+#' @title Check results file for assays
 #'
-#' @description check whether olink results file follows guidelines
-#' @param df (data.frame) olink results data frame
-#' @param return_n_issues (logical) if `TRUE` returns the number of issues.
-#' @param verbose (logical) `TRUE` (default) shows messages
-#' @return (int) number of issues identified
-#' @examples {
+#' @description Checks whether the results file follows guidelines for Olink and IMM assays.
+#' @param df (data.frame) The results data frame to check.
+#' @param assay_type (character) The type of assay, either `"olink"` or `"imm"`.
+#' @param return_n_issues (logical) If `TRUE`, returns the number of issues identified.
+#' @param verbose (logical) If `TRUE` (default), displays messages during the checking process.
+#' @return (int) Number of issues identified if `return_n_issues` is `TRUE`.
+#' @examples
 #' \dontrun{
-#' check_metadata_samples(df = olink_results)
-#' }
+#' check_results_assays(df = results_df, assay_type = "olink")
+#' check_results_assays(df = results_df, assay_type = "imm")
 #' }
 #' @export
-check_results_olink <- function(df,
-                                return_n_issues = FALSE,
-                                verbose = TRUE){
+check_results_assays <- function(df,
+                          assay_type = c("olink", "imm"),
+                          return_n_issues = FALSE,
+                          verbose = TRUE) {
   
-  # issue_count
+  # Match the assay_type argument
+  assay_type <- match.arg(assay_type)
+  
+  # Initialize issue count
   ic <- 0
   
   is_empty_df <- ncol(df) == 0 && nrow(df) == 0
   
-  if(is_empty_df){
-    if(verbose) message("   - (-) `results` df is empty: FAIL")
-    if(return_n_issues){
+  if (is_empty_df) {
+    if (verbose) message("   - (-) `results` data frame is empty: FAIL")
+    if (return_n_issues) {
       ic <- 10
       return(ic)
-    }else{
+    } else {
       return("Data frame is empty")
     }
   }
   
+  # Determine the identifier column based on assay type
+  id_column <- if (assay_type == "olink") {
+    "olink_id"
+  } else if (assay_type == "imm") {
+    "analyte_name"
+  }
   
-
-  if( "olink_id" %in% colnames(df) ){
-    if( length(unique(df$olink_id)) != dim(df)[1] ){
-      if(verbose) message("   - (-) `olink_id`: Non-unique values detected: FAIL")
+  # Check for identifier column
+  if (id_column %in% colnames(df)) {
+    if (length(unique(df[[id_column]])) != nrow(df)) {
+      if (verbose) message("   - (-) `", id_column, "`: Non-unique values detected: FAIL")
       ic <- ic + 1
-    }else{
-      if(verbose) message("  + (+) `olink_id` seems OK")
+    } else {
+      if (verbose) message("  + (+) `", id_column, "` unique values: OK")
     }
-  }else{
-    if(verbose) message("   - (-) `olink_id` is missed: FAIL")
+  } else {
+    if (verbose) message("   - (-) `", id_column, "` column missing: FAIL")
     ic <- ic + 1
   }
   
-  
-  # Get the names of all columns except "olink_id"
-  columns_to_check <- setdiff(names(df), "olink_id")
+  # Get the names of all columns except the identifier column
+  columns_to_check <- setdiff(names(df), id_column)
   
   # Check if each of these columns is numeric
   are_numeric <- sapply(df[columns_to_check], is.numeric)
   
   # Print results
-  if( all(are_numeric) ) {
-    if(verbose) message("  + (+) All columns (except `olink_id`) are  numeric: OK")
+  if (all(are_numeric)) {
+    if (verbose) message("  + (+) All measurement columns are numeric: OK")
   } else {
-    if(verbose) message("   - (-) `results.txt` contains non numeric columns: FAIL")
-    if(verbose) message("\t\t - ", paste(names(df[columns_to_check])[!are_numeric], collapse = "\n\t\t - "))
+    if (verbose) message("   - (-) `results` contains non-numeric columns: FAIL")
+    non_numeric_columns <- names(df[columns_to_check])[!are_numeric]
+    if (verbose) message("\t\t - ", paste(non_numeric_columns, collapse = "\n\t\t - "))
     ic <- ic + 1
   }
   
-  
+  # Calculate counts
   na_counts <- sapply(df[columns_to_check], function(column) sum(is.na(column)))
-  zero_counts <- sapply(df[columns_to_check], function(column) sum(column == 0))
-  # negative_counts <- sapply(df[columns_to_check], function(column) sum(column < 0))
-  
+  zero_counts <- sapply(df[columns_to_check], function(column) sum(column == 0, na.rm = TRUE))
   total_na_count <- sum(na_counts)
   total_zero_count <- sum(zero_counts)
-  # total_negative_count <- sum(negative_counts)
-  total_values_count <- sum(sapply(df[columns_to_check], length))
-
+  total_values_count <- sum(sapply(df[columns_to_check], function(column) length(column))) - total_na_count
+  
   # Print the result
-  if(verbose){
+  if (verbose) {
     message(paste0("  + ( ) Number of zeros in dataset: ", total_zero_count, " (out of ", total_values_count, " values)"))
-    message(paste0("  + ( ) Number of NAs in dataset: ", total_na_count, " (out of ", total_values_count, " values)"))
-    # if(total_negative_count > 0){
-    #   message(paste0("  + (-) ", total_negative_count, " NEGATIVE VALUES IDENTIFIED: FAIL"))
-    # }
-  }
-
-  if(return_n_issues) return(ic)
-} #end check_olink_results
-
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' @title Cross-validate OLINK files
-#'
-#' @description Check values from results are vailable in both metdata proteins
-#' and metadata samples files
-#' @param r_o (data.frame) results df
-#' @param m_s (char) metadata_sample df
-#' @param m_p (char) metadata_proteins df
-#' @param return_n_issues (logical) if `TRUE` returns the number of issues
-#' @param verbose (logical) `TRUE` (default) shows messages
-#' @return (int) number of issues identified
-#' @examples {
-#' \dontrun{
-#' check_crossfile_olink_validation(r_o = results, m_s = metadata_samples, m_p = metadata_proteins)
-#' }
-#' }
-#' @export
-check_crossfile_olink_validation <- function(r_o,
-                                             m_s,
-                                             m_p,
-                                             return_n_issues = FALSE,
-                                             verbose = TRUE){
-  
-  # issue_count
-  ic <- 0
-  
-  # validate sample ids----
-  results_sampleids <- setdiff(names(r_o), "olink_id")
-  samples_sampleids <- unique(m_s$sample_id)
-  
-  if( !setequal( results_sampleids, samples_sampleids ) ){
-    extra_in_results <- setdiff( results_sampleids, samples_sampleids )
-    if(length(extra_in_results) > 0){
-      if(verbose) message("   - (-) Samples in `results.txt` missed in `metadata-samples.txt`: FAIL")
-      if(verbose) message("\t\t - ", paste(extra_in_results, collapse = "\n\t\t - "))
-    }
-    
-    extra_in_samples <- setdiff(results_sampleids, results_sampleids)
-    if(length(extra_in_samples)){
-      if(verbose) message("   - (-) Samples in `metadata-samples.txt` missed in `results.txt`: FAIL")
-      if(verbose) message("\t\t - ", paste(extra_in_samples, collapse = "\n\t\t - "))
-    }
-    ic <- ic + 1
-  }else{
-    if(verbose) message("  + (+) All samples in `results.txt` are available in `metadata-samples.txt`")
+    message(paste0("  + ( ) Number of NAs in dataset: ", total_na_count, " (out of ", total_values_count + total_na_count, " values)"))
   }
   
-  # validate olink_id----
-  results_olinkids <- r_o$olink_id
-  metaprt_olinkids <- m_p$olink_id
-  
-  if( !setequal( results_olinkids, metaprt_olinkids ) ){
-    extra_in_results <- setdiff( results_sampleids, samples_sampleids )
-    if(length(extra_in_results > 0)){
-      if(verbose) message("   - (-) Column(s) NOT expected in `results.txt` file which are missed in `metadata-samples.txt`: \n\t\t - ",
-                          paste(extra_in_results, collapse = "\n\t\t - "))
-    }
-    
-    extra_in_msr <- setdiff(samples_sampleids, results_sampleids)
-    if(length(extra_in_msr)){
-      if(verbose) message("   - (-) Column(s) available in `metadata-samples.txt` missed in `results.txt`: \n\t\t - ",
-                          paste(extra_in_msr, collapse = "\n\t\t - "))
-    }
-    ic <- ic + 1
-  }else{
-    if(verbose) message("  + (+) All `olink_id` from `results.txt` are available in `metadata-proteins.txt`")
-  }
-  
-  
-  if(return_n_issues) return(ic)
-} # crossreference_olink_files
-
-
+  if (return_n_issues) return(ic)
+} # End of check_results_assays
 
 
 #' @title Load and Process Olink Batch Data
@@ -700,8 +630,9 @@ validate_olink <- function(input_results_folder,
   if( f_r ){
     r_o_f <-lista$filename
     r_o <- lista$df
-    ic_r <- check_results_olink(df = r_o,
+    ic_r <- check_results_assays(df = r_o,
                                 return_n_issues = TRUE,
+                                assay_type = "olink",
                                 verbose = verbose)
     
   }else{
@@ -712,11 +643,12 @@ validate_olink <- function(input_results_folder,
   # qc cross validation-----
   if(verbose) message("\n## Cross File Validation\n")
   if(ic_m_p == 0 && ic_m_s == 0 && ic_r == 0) {
-    ic_c_f_v <- check_crossfile_olink_validation(r_o = r_o, 
-                                                 m_s = m_s, 
-                                                 m_p = m_p, 
-                                                 return_n_issues = TRUE, 
-                                                 verbose = verbose)
+    ic_c_f_v <- check_crossfile_validation(r_o = r_o, 
+                                           m_s = m_s, 
+                                           m_p = m_p, 
+                                           assay_type = "olink",
+                                           return_n_issues = TRUE, 
+                                           verbose = verbose)
   }else{
     if(verbose) message("   - (-) File cross validation is not possible. PLease, fix issues affecting any of the files and run the validation again.")
   }
