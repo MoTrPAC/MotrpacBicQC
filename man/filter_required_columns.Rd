@@ -6,7 +6,7 @@
 \usage{
 filter_required_columns(
   df,
-  type = c("m_m", "m_s", "v_m", "olproteins", "olsamples"),
+  type = c("m_m", "m_s", "v_m", "olproteins", "olsamples", "immanalytes", "immsamples"),
   name_id = NULL,
   verbose = TRUE
 )
