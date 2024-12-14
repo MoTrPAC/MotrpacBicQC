@@ -106,6 +106,8 @@ dl_read_gcp <- function(path,
                         gsutil_path = "gsutil",
                         check_first = TRUE,
                         verbose = FALSE,
+                        only_download = FALSE,
+                        is_rdata = FALSE,
                         ...){
 
   # Detect the operating system
@@ -286,7 +288,9 @@ filter_required_columns <- function(df,
                                              "m_s",
                                              "v_m",
                                              "olproteins",
-                                             "olsamples"),
+                                             "olsamples",
+                                             "immanalytes",
+                                             "immsamples"),
                                     name_id = NULL,
                                     verbose = TRUE){
 
@@ -378,6 +382,35 @@ filter_required_columns <- function(df,
     return(df)
   }else if (type == "olsamples"){
     emeta_sample_coln <- c("sample_id", "sample_type", "sample_order", "plate_id")
+    missing_cols <- setdiff(emeta_sample_coln, colnames(df))
+
+    if (length(missing_cols) > 0) {
+      if(verbose) message("   - (-) `metadata_samples`: Expected COLUMN NAMES are missed: FAIL")
+      message(paste0("\t The following required columns are not present: `", paste(missing_cols, collapse = ", "), "`"))
+    } else {
+      if(verbose) message("  + (+) All required columns present")
+      df <- subset(df, select = emeta_sample_coln)
+    }
+    return(df)
+  }else if (type == "immanalytes"){
+    emeta_sample_coln <- c("analyte_name", "uniprot_entry", "assay_name")
+    missing_cols <- setdiff(emeta_sample_coln, colnames(df))
+
+    if (length(missing_cols) > 0) {
+      if(verbose) message("   - (-) `metadata_analytes`: Expected COLUMN NAMES are missed: FAIL")
+      message(paste0("\t The following required columns are not present: `", paste(missing_cols, collapse = ", "), "`"))
+    } else {
+      if(verbose) message("  + (+) All required columns present")
+      df <- subset(df, select = emeta_sample_coln)
+    }
+    return(df)
+  }else if (type == "immsamples"){
+    emeta_sample_coln <- c("sample_id", 
+                           "sample_type", 
+                           "sample_order",
+                           "raw_file",
+                           "extraction_date",
+                           "acquisition_date")
     missing_cols <- setdiff(emeta_sample_coln, colnames(df))
 
     if (length(missing_cols) > 0) {
