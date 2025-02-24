@@ -23,6 +23,39 @@
 #' @import viridis
 #____________________________________________________________________________
 
+
+#' @title Clean character columns
+#'
+#' @description
+#' Removes leading and trailing whitespace from all character columns
+#' in a data frame using \code{trimws}.
+#'
+#' @param df A data frame or tibble containing character columns to be cleaned
+#'
+#' @return A data frame of the same structure as the input, but with whitespace removed from all character columns
+#' 
+#' @details
+#' The function uses \code{dplyr::across} to apply \code{trimws} to all columns
+#' that are of type character. The original data frame structure is preserved,
+#' only the content of character columns is modified.
+#'
+#' @examples
+#' df <- data.frame(
+#'   name = c(" John ", "Jane  ", "  Bob"),
+#'   age = c(25, 30, 35),
+#'   city = c("New York ", " London", " Paris ")
+#' )
+#' clean_df <- clean_character_columns(df)
+#'
+#' @export
+#'
+#' @importFrom dplyr mutate across where
+clean_character_columns <- function(df) {
+  df <- dplyr::mutate(df, dplyr::across(where(is.character), ~ trimws(.)))
+  return(df)
+}
+
+
 #' @title Create folder
 #'
 #' @description Create a directory if it doesn't exist. If no argument is provided,
