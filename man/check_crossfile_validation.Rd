@@ -2,13 +2,13 @@
 % Please edit documentation in R/validations.R
 \name{check_crossfile_validation}
 \alias{check_crossfile_validation}
-\title{Cross-validate assay files (Olink and IMM)}
+\title{Cross-validate assay files (Olink and LAB)}
 \usage{
 check_crossfile_validation(
   r_o,
   m_s,
   m_p,
-  assay_type = c("olink", "imm"),
+  assay_type = c("olink", "lab"),
   return_n_issues = FALSE,
   verbose = TRUE
 )
@@ -20,7 +20,7 @@ check_crossfile_validation(
 
 \item{m_p}{(data.frame) Metadata analyte/protein data frame.}
 
-\item{assay_type}{(character) The type of assay, either \code{"olink"} or \code{"imm"}.}
+\item{assay_type}{(character) The type of assay, either \code{"olink"} or \code{"lab"}.}
 
 \item{return_n_issues}{(logical) If \code{TRUE}, returns the number of issues.}
 
@@ -42,11 +42,11 @@ check_crossfile_validation(r_o = results_olink,
                            m_p = metadata_proteins_olink,
                            assay_type = "olink")
 
-# For IMM data
-check_crossfile_validation(r_o = results_imm,
-                           m_s = metadata_samples_imm,
-                           m_p = metadata_analyte_imm,
-                           assay_type = "imm")
+# For LAB data
+check_crossfile_validation(r_o = results_lab,
+                           m_s = metadata_samples_lab,
+                           m_p = metadata_analyte_lab,
+                           assay_type = "lab")
 }
 }
 }

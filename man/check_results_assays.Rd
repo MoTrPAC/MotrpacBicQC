@@ -6,7 +6,7 @@
 \usage{
 check_results_assays(
   df,
-  assay_type = c("olink", "imm"),
+  assay_type = c("olink", "lab"),
   return_n_issues = FALSE,
   verbose = TRUE
 )
