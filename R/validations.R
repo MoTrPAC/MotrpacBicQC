@@ -2,14 +2,14 @@
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' @title Cross-validate assay files (Olink and IMM)
+#' @title Cross-validate assay files (Olink and LAB)
 #'
 #' @description Checks that values from the results file are available in both the
 #' metadata analyte/protein and metadata sample files.
 #' @param r_o (data.frame) Results data frame.
 #' @param m_s (data.frame) Metadata sample data frame.
 #' @param m_p (data.frame) Metadata analyte/protein data frame.
-#' @param assay_type (character) The type of assay, either `"olink"` or `"imm"`.
+#' @param assay_type (character) The type of assay, either `"olink"` or `"lab"`.
 #' @param return_n_issues (logical) If `TRUE`, returns the number of issues.
 #' @param verbose (logical) If `TRUE` (default), displays messages during the checking process.
 #' @return (int) Number of issues identified if `return_n_issues` is `TRUE`.
@@ -21,18 +21,18 @@
 #'                            m_p = metadata_proteins_olink,
 #'                            assay_type = "olink")
 #'
-#' # For IMM data
-#' check_crossfile_validation(r_o = results_imm,
-#'                            m_s = metadata_samples_imm,
-#'                            m_p = metadata_analyte_imm,
-#'                            assay_type = "imm")
+#' # For LAB data
+#' check_crossfile_validation(r_o = results_lab,
+#'                            m_s = metadata_samples_lab,
+#'                            m_p = metadata_analyte_lab,
+#'                            assay_type = "lab")
 #' }
 #' }
 #' @export
 check_crossfile_validation <- function(r_o,
                                        m_s,
                                        m_p,
-                                       assay_type = c("olink", "imm"),
+                                       assay_type = c("olink", "lab"),
                                        return_n_issues = FALSE,
                                        verbose = TRUE) {
   
@@ -46,7 +46,7 @@ check_crossfile_validation <- function(r_o,
   if (assay_type == "olink") {
     analyte_id_col <- "olink_id"
     sample_id_col <- "sample_id"
-  } else if (assay_type == "imm") {
+  } else if (assay_type == "lab") {
     analyte_id_col <- "analyte_name"
     sample_id_col <- "sample_id"
   }
@@ -383,7 +383,7 @@ check_viallabel_dmaqc <- function(vl_submitted,
 validate_assay <- function(input_results_folder){
   
   assay <- stringr::str_extract(string = input_results_folder,
-                                pattern = "(?<=T\\d{2}/)(IONPNEG|RPNEG|RPPOS|HILICPOS|LRPPOS|LRPNEG|3HIB|AA|AC_DUKE|ACOA|BAIBA|CER_DUKE|CONV|KA|NUC|OA|SPHM|OXYLIPNEG|ETAMIDPOS|AC_MAYO|AMINES|CER_MAYO|TCA|IMM_CRT|IMM_GLC|IMM_INS|PROT_PH|PROT_PR|PROT_AC|PROT_UB|PROT_OL|PROT_OX|IMM_CK)")
+                                pattern = "(?<=T\\d{2}/)(IONPNEG|RPNEG|RPPOS|HILICPOS|LRPPOS|LRPNEG|3HIB|AA|AC_DUKE|ACOA|BAIBA|CER_DUKE|CONV|KA|NUC|OA|SPHM|OXYLIPNEG|ETAMIDPOS|AC_MAYO|AMINES|CER_MAYO|TCA|LAB_GLC|LAB_INS|PROT_PH|PROT_PR|PROT_AC|PROT_UB|PROT_OL|PROT_OX|LAB_CK)")
   if(is.na(assay)){
     stop("ASSAY not found in the folder structure")
   }else{
