@@ -286,7 +286,7 @@ check_metadata_samples_olink <- function(df,
 #' }
 #' @export
 check_results_assays <- function(df,
-                          assay_type = c("olink", "imm"),
+                          assay_type = c("olink", "lab"),
                           return_n_issues = FALSE,
                           verbose = TRUE) {
   
@@ -311,7 +311,7 @@ check_results_assays <- function(df,
   # Determine the identifier column based on assay type
   id_column <- if (assay_type == "olink") {
     "olink_id"
-  } else if (assay_type == "imm") {
+  } else if (assay_type == "lab") {
     "analyte_name"
   }
   
@@ -916,7 +916,7 @@ write_olink_releases <- function(input_results_folder,
   # 
   # folder_tissue2 <- get_folder_tissue(tissue_code)
   
-  if(  length(assay_codes$assay_code[which(assay_codes$submission_code == assay)]) == 1 ){
+  if(length(assay_codes$assay_code[which(assay_codes$submission_code == assay)]) == 1 ){
     folder_assay <- assay_codes$assay_code[which(assay_codes$submission_code == assay)]
   }else{
     stop("ASSAY code ", assay, " not available in `assay_codes`")
