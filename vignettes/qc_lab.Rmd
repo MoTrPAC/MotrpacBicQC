@@ -12,7 +12,7 @@ pkgdown:
   
 vignette: >
   %\VignetteEngine{knitr::knitr}
-  %\VignetteIndexEntry{MotrpacBicQC: OLINK QC}
+  %\VignetteIndexEntry{MotrpacBicQC: LAB QC}
   %\VignetteEncoding{UTF-8}
 ---
 
