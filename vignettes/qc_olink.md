@@ -1,6 +1,6 @@
 ---
 title: "MotrpacBicQC: OLINK QC"
-date: "2024-01-04"
+date: "2024-11-17"
 output:
   rmdformats::downcute:
     code_folding: show
@@ -27,14 +27,14 @@ First, download and install R and RStudio:
 Then, open RStudio and install the `devtools` package
 
 
-```r
+``` r
 install.packages("devtools")
 ```
 
 Finally, install the `MotrpacBicQC` package
 
 
-```r
+``` r
 library(devtools)
 devtools::install_github("MoTrPAC/MotrpacBicQC", build_vignettes = TRUE)
 ```
@@ -45,7 +45,7 @@ devtools::install_github("MoTrPAC/MotrpacBicQC", build_vignettes = TRUE)
 Load the library
 
 
-```r
+``` r
 library(MotrpacBicQC)
 ```
 
@@ -53,11 +53,11 @@ And run any of the following tests to check that the package
 is correctly installed and it works. For example:
 
 
-```r
+``` r
 # Just copy and paste in the RStudio terminal. 
 check_metadata_samples_olink(df = metadata_metabolites_named)
 check_metadata_proteins(df = metadata_metabolites_named)
-check_results_olink(df = results_named)
+check_results_assays(df = results_named, assay_type = "olink")
 ```
 
 which should generate the following outputs:
@@ -106,7 +106,7 @@ HUMAN/
 Run test on the full submission. For that, run the following command:
 
 
-```r
+``` r
 n_issues <- validate_olink(input_results_folder = "/full/path/to/HUMAN/T02/PROT_OL/BATCH1_20210825/RESULTS_20221102", 
                            cas = "broad_rg",
                            return_n_issues = TRUE,
@@ -195,7 +195,7 @@ TOTAL NUMBER OF ISSUES: 0
 Additional details for each function can be found by typing, for example:
 
 
-```r
+``` r
 ?validate_olink
 ```
 
