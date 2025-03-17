@@ -25,7 +25,7 @@
 #'
 #' @importFrom dplyr mutate across where
 clean_character_columns <- function(df) {
-  df <- dplyr::mutate(df, dplyr::across(where(is.character), ~ trimws(.)))
+  df <- dplyr::mutate_if(df, is.character, trimws)
   return(df)
 }
 
