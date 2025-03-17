@@ -35,7 +35,8 @@ metabolomics-untargeted,RPPOS,metab-u-rppos,Untargeted Reversed-Phase Positive,u
 metabolomics-untargeted,RPNEG,metab-u-rpneg,Untargeted Reversed-Phase Negative,umichigan,METAB,#E41A1C
 metabolomics-untargeted,IONPNEG,metab-u-ionpneg,Untargeted Ion-Pair Negative,umichigan,METAB,#E41A1C
 proteomics-targeted,,immunoassay,Multiplexed immunoassays,stanford,IMMUNO,#999999
-proteomics-targeted,LAB_CK,lab-ck,"Targeted Proteomics, Activity Assay Creatine Kinase (CK)",duke,LAB,#777777
-proteomics-targeted,LAB_GLC,lab-glc,"Targeted Proteomics, Immunoassay Glucagon (GLC",duke,LAB,#777777
-proteomics-targeted,LAB_INS,lab-ins,"Targeted Proteomics, Immunoassay Insulin (INS)",duke,LAB,#777777
+clinical-chemistry,LAB_CK,lab-ck,"Clinical Chemistry, Activity Assay Creatine Kinase (CK)",duke,LAB,#777777
+clinical-chemistry,LAB_GLC,lab-glc,"Clinical Chemistry, Immunoassay Glucagon (GLC",duke,LAB,#777777
+clinical-chemistry,LAB_INS,lab-ins,"Clinical Chemistry, Immunoassay Insulin (INS)",duke,LAB,#777777
 proteomics-targeted,PROT_OL,prot-ol,Proximity extension assay-based technology for multiplexed protein analysis,broad_rg,OLINK,#4DAF4A
+clinical-chemistry,LAB_CRT,lab-crt,"Clinical Chemistry, Immunoassay Cortisol (CRT)",duke,LAB,#777777
