@@ -1727,6 +1727,8 @@ write_metabolomics_releases <- function(input_results_folder,
   named_metadata_samples <- file.path(output_folder, paste0(file_name_shared,"_named-metadata-samples_", version_file, ".txt"))
   named_results <- file.path(output_folder, paste0(file_name_shared,"_named-results_", version_file, ".txt"))
 
+  metab_dfs$m_m_n <- clean_character_columns(metab_dfs$m_m_n)
+  metab_dfs$m_s_n <- clean_character_columns(metab_dfs$m_s_n)
   write.table(metab_dfs$m_m_n, named_metadata_metabolites, row.names = FALSE, sep = "\t", quote = FALSE)
   write.table(metab_dfs$m_s_n, named_metadata_samples, row.names = FALSE, sep = "\t", quote = FALSE)
   write.table(metab_dfs$r_m_n, named_results, row.names = FALSE, sep = "\t", quote = FALSE)
@@ -1748,6 +1750,8 @@ write_metabolomics_releases <- function(input_results_folder,
     unnamed_metadata_samples <- file.path(output_folder, paste0(file_name_shared,"_unnamed-metadata-samples_", version_file, ".txt"))
     unnamed_results <- file.path(output_folder, paste0(file_name_shared,"_unnamed-results_", version_file, ".txt"))
 
+    metab_dfs$m_m_u <- clean_character_columns(metab_dfs$m_m_u)
+    metab_dfs$m_s_u <- clean_character_columns(metab_dfs$m_s_u)
     write.table(metab_dfs$m_m_u, unnamed_metadata_metabolites, row.names = FALSE, sep = "\t", quote = FALSE)
     write.table(metab_dfs$m_s_n, unnamed_metadata_samples, row.names = FALSE, sep = "\t", quote = FALSE)
     write.table(metab_dfs$r_m_u, unnamed_results, row.names = FALSE, sep = "\t", quote = FALSE)

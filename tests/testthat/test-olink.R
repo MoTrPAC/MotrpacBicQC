@@ -148,20 +148,20 @@ non_numeric_df$measurement1[1] <- "non-numeric"
 
 # Test for handling valid data
 test_that("Valid data is processed correctly", {
-  expect_silent(result <- check_results_olink(df = valid_df3, return_n_issues = TRUE, verbose = FALSE))
+  expect_silent(result <- check_results_assays(df = valid_df3, return_n_issues = TRUE, assay_type = "olink", verbose = FALSE))
   expect_equal(result, 0)
 })
 
 
 # Test for detecting duplicate olink_id
 test_that("Duplicate olink_id values are detected", {
-  result <- check_results_olink(df = duplicate_olink_id_df, return_n_issues = TRUE, verbose = FALSE)
+  result <- check_results_assays(df = duplicate_olink_id_df, return_n_issues = TRUE, assay_type = "olink", verbose = FALSE)
   expect_gt(result, 0)
 })
 
 # Test for detecting non-numeric columns
 test_that("Non-numeric columns are detected", {
-  result <- check_results_olink(df = non_numeric_df, return_n_issues = TRUE, verbose = FALSE)
+  result <- check_results_assays(df = non_numeric_df, return_n_issues = TRUE, assay_type = "olink", verbose = FALSE)
   expect_gt(result, 0)
 })
 
@@ -169,7 +169,7 @@ test_that("Non-numeric columns are detected", {
 test_that("NA values are detected", {
   df_with_na <- valid_df3
   df_with_na$measurement1[1] <- NA
-  result <- check_results_olink(df = df_with_na, return_n_issues = TRUE, verbose = FALSE)
+  result <- check_results_assays(df = df_with_na, return_n_issues = TRUE, assay_type = "olink", verbose = FALSE)
   # Not expecting an increase in issue count as NA detection might not be an issue
   expect_true(result >= 0)
 })
@@ -178,20 +178,20 @@ test_that("NA values are detected", {
 test_that("Zero values are detected", {
   df_with_zeros <- valid_df3
   df_with_zeros$measurement1 <- rep(0, 10)
-  result <- check_results_olink(df = df_with_zeros, return_n_issues = TRUE, verbose = FALSE)
+  result <- check_results_assays(df = df_with_zeros, return_n_issues = TRUE, assay_type = "olink", verbose = FALSE)
   # Not expecting an increase in issue count as zero detection might not be an issue
   expect_true(result >= 0)
 })
 
 test_that("Empty data frame is handled", {
   empty_df <- data.frame()
-  result <- check_results_olink(df = empty_df, return_n_issues = TRUE, verbose = FALSE)
+  result <- check_results_assays(df = empty_df, return_n_issues = TRUE, assay_type = "olink", verbose = FALSE)
   expect_gt(result, 0)  # Expect issues since the data frame is empty
 })
 
 test_that("Missing olink_id column is detected", {
   df_missing_olink_id <- valid_df3[, -which(names(valid_df3) == "olink_id")]
-  result <- check_results_olink(df = df_missing_olink_id, return_n_issues = TRUE, verbose = FALSE)
+  result <- check_results_assays(df = df_missing_olink_id, return_n_issues = TRUE, assay_type = "olink", verbose = FALSE)
   expect_gt(result, 0)
 })
 
@@ -199,7 +199,7 @@ test_that("Missing olink_id column is detected", {
 test_that("Data with all zeros is processed", {
   df_all_zeros <- valid_df3
   df_all_zeros[,-which(names(df_all_zeros) == "olink_id")] <- 0
-  result <- check_results_olink(df = df_all_zeros, return_n_issues = TRUE, verbose = FALSE)
+  result <- check_results_assays(df = df_all_zeros, return_n_issues = TRUE, assay_type = "olink", verbose = FALSE)
   expect_true(result >= 0)
 })
 
@@ -207,7 +207,7 @@ test_that("Data with all zeros is processed", {
 test_that("Data with all NAs is processed", {
   df_all_na <- valid_df3
   df_all_na[,-which(names(df_all_na) == "olink_id")] <- NA
-  result <- check_results_olink(df = df_all_na, return_n_issues = TRUE, verbose = FALSE)
+  result <- check_results_assays(df = df_all_na, return_n_issues = TRUE, assay_type = "olink", verbose = FALSE)
   expect_true(result >= 0)
 })
 
@@ -215,13 +215,13 @@ test_that("Data with all NAs is processed", {
 test_that("Non-numeric columns other than olink_id are detected", {
   df_with_char_column <- valid_df3
   df_with_char_column$measurement1 <- as.character(df_with_char_column$measurement1)
-  result <- check_results_olink(df = df_with_char_column, return_n_issues = TRUE, verbose = FALSE)
+  result <- check_results_assays(df = df_with_char_column, assay_type = "olink", return_n_issues = TRUE, verbose = FALSE)
   expect_gt(result, 0)
 })
 
 
 
-context("Test check_crossfile_olink_validation")
+context("Test check_crossfile_validation")
 
 # Mock data frames for testing
 valid_results_df <- data.frame(
@@ -246,31 +246,34 @@ mismatched_olink_df$olink_id <- paste0("OLINK", 6:10)
 
 # Test for handling valid data
 test_that("Valid data is processed correctly", {
-  expect_silent(result <- check_crossfile_olink_validation(r_o = valid_results_df, 
-                                                           m_s = valid_metadata_samples_df, 
-                                                           m_p = valid_metadata_proteins_df, 
-                                                           return_n_issues = TRUE, 
-                                                           verbose = FALSE))
+  expect_silent(result <- check_crossfile_validation(r_o = valid_results_df, 
+                                                     m_s = valid_metadata_samples_df, 
+                                                     m_p = valid_metadata_proteins_df, 
+                                                     assay_type = "olink",
+                                                     return_n_issues = TRUE, 
+                                                     verbose = FALSE))
   expect_equal(result, 0)
 })
 
 # Test for detecting mismatched sample IDs
 test_that("Mismatched sample IDs are detected", {
-  result <- check_crossfile_olink_validation(r_o = valid_results_df, 
-                                             m_s = mismatched_samples_df, 
-                                             m_p = valid_metadata_proteins_df, 
-                                             return_n_issues = TRUE, 
-                                             verbose = TRUE)
+  result <- check_crossfile_validation(r_o = valid_results_df, 
+                                       m_s = mismatched_samples_df, 
+                                       m_p = valid_metadata_proteins_df, 
+                                       assay_type = "olink",
+                                       return_n_issues = TRUE, 
+                                       verbose = TRUE)
   expect_gt(result, 0)
 })
 
 # Test for detecting mismatched olink IDs
 test_that("Mismatched olink IDs are detected", {
-  result <- check_crossfile_olink_validation(r_o = valid_results_df, 
-                                             m_s = valid_metadata_samples_df, 
-                                             m_p = mismatched_olink_df, 
-                                             return_n_issues = TRUE, 
-                                             verbose = TRUE)
+  result <- check_crossfile_validation(r_o = valid_results_df, 
+                                       m_s = valid_metadata_samples_df, 
+                                       m_p = mismatched_olink_df, 
+                                       assay_type = "olink",
+                                       return_n_issues = TRUE, 
+                                       verbose = TRUE)
   expect_gt(result, 0)
 })
 

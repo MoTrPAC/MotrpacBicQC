@@ -1,5 +1,51 @@
 version: 2.1
 jobs:
+  build_4_4_2:
+    docker:
+      - image: rocker/verse:4.4.2
+    steps:
+      - checkout
+      - run:
+          name: Install LaTeX packages
+          command: |
+            apt-get update
+            apt-get install -y texlive texlive-fonts-recommended
+      - run:
+          name: Update dplyr (if needed)
+          command: R -e "install.packages('dplyr')"
+      - run:
+          name: Install package dependencies
+          command: R -e "devtools::install_deps(dep = TRUE)"
+      - run:
+          name: Build package
+          command: R CMD build .
+      - run:
+          name: Check package
+          command: R CMD check *tar.gz
+
+  build_4_3_3:
+    docker:
+      - image: rocker/verse:4.3.3
+    steps:
+      - checkout
+      - run:
+          name: Install LaTeX packages
+          command: |
+            apt-get update
+            apt-get install -y texlive texlive-fonts-recommended
+      - run:
+          name: Update dplyr (if needed)
+          command: R -e "install.packages('dplyr')"
+      - run:
+          name: Install package dependencies
+          command: R -e "devtools::install_deps(dep = TRUE)"
+      - run:
+          name: Build package
+          command: R CMD build .
+      - run:
+          name: Check package
+          command: R CMD check *tar.gz
+
   build_4_2_2:
     docker:
       - image: rocker/verse:4.2.2
@@ -20,7 +66,7 @@ jobs:
       - run:
           name: Check package
           command: R CMD check *tar.gz
-  
+
   build_4_1_0:
     docker:
       - image: rocker/verse:4.1.0
@@ -31,6 +77,16 @@ jobs:
           command: |
             apt-get update
             apt-get install -y texlive-fonts-recommended
+      - run:
+          name: Force update dplyr
+          command: |
+            R -e "remove.packages('dplyr')"
+            R -e "install.packages('dplyr', repos='https://cloud.r-project.org')"
+      - run:
+          name: Force update testthat
+          command: |
+            R -e "remove.packages('testthat')"
+            R -e "install.packages('testthat', repos='https://cloud.r-project.org')"
       - run:
           name: Install package dependencies
           command: R -e "devtools::install_deps(dep = TRUE)"
@@ -45,5 +101,7 @@ workflows:
   version: 2
   build_and_test:
     jobs:
+      - build_4_4_2
+      - build_4_3_3
       - build_4_2_2
       - build_4_1_0

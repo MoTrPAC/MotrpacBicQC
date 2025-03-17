@@ -53,8 +53,7 @@ is correctly installed and it works. For example:
 # Just copy and paste in the RStudio terminal. 
 check_metadata_samples_olink(df = metadata_metabolites_named)
 check_metadata_proteins(df = metadata_metabolites_named)
-check_results_olink(df = results_named)
-
+check_results_assays(df = results_named, assay_type = "olink")
 ```
 
 which should generate the following outputs:
