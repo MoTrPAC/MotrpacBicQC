@@ -48,34 +48,47 @@ check_metadata_analyte <- function(df,
   }
   
   # Check 'uniprot_entry' column
-  if ("uniprot_entry" %in% colnames(df)) {
+  if ("analyte_id" %in% colnames(df)) {
     # Check for uniqueness (duplicates may be acceptable)
-    if (length(unique(df$uniprot_entry)) != nrow(df)) {
-      duplis_details <- df$uniprot_entry[duplicated(df$uniprot_entry)]
+    if (length(unique(df$analyte_id)) != nrow(df)) {
+      duplis_details <- df$analyte_id[duplicated(df$analyte_id)]
       duplis <- length(unique(duplis_details))
-      if (verbose) message("   - ( ) `uniprot_entry` non-unique values detected (n duplications = ", duplis, "). This is acceptable.")
+      if (verbose) message("   - (-) `analyte_id` non-unique values detected (n duplications = ", duplis, "). FAIL")
       if (verbose) message("\t\t - ", paste(unique(duplis_details), collapse = "\n\t\t - "))
     } else {
-      if (verbose) message("  + (+) `uniprot_entry` unique values: OK")
+      if (verbose) message("  + (+) `analyte_id` unique values: OK")
     }
     # Validate Uniprot IDs if requested
-    if (validate_uniprot) {
-      if (verbose) message("  + Validating `uniprot_entry` IDs with the Uniprot database. Please wait...")
-      all_valid <- validate_uniprot_ids_with_uniprot(ids = unique(df$uniprot_entry))
-      if (all_valid) {
-        if (verbose) message("  + (+) All `uniprot_entry` IDs are valid: OK")
-      } else {
-        if (verbose) message("  + (-) Some `uniprot_entry` IDs are invalid: FAIL")
-        ic <- ic + 1
-      }
-    }
-    # Check for missing values
-    if (check_missing_values(df, "uniprot_entry")) {
-      if (verbose) message("   - (-) `uniprot_entry`: NA values detected: FAIL")
+    # if (validate_uniprot) {
+    #   if (verbose) message("  + Validating `uniprot_entry` IDs with the Uniprot database. Please wait...")
+    #   all_valid <- validate_uniprot_ids_with_uniprot(ids = unique(df$uniprot_entry))
+    #   if (all_valid) {
+    #     if (verbose) message("  + (+) All `uniprot_entry` IDs are valid: OK")
+    #   } else {
+    #     if (verbose) message("  + (-) Some `uniprot_entry` IDs are invalid: FAIL")
+    #     ic <- ic + 1
+    #   }
+    # }
+    # # Check for missing values
+    # if (check_missing_values(df, "uniprot_entry")) {
+    #   if (verbose) message("   - (-) `uniprot_entry`: NA values detected: FAIL")
+    #   ic <- ic + 1
+    # }
+  } else {
+    if (verbose) message("   - (-) `analyte_id` column missing: FAIL")
+    ic <- ic + 1
+  }
+  
+  # Check 'database_id' column
+  if ("database_id" %in% colnames(df)) {
+    if (check_missing_values(df, "database_id")) {
+      if (verbose) message("   - (-) `database_id`: NA values detected: FAIL")
       ic <- ic + 1
+    }else{
+      if (verbose) message("  + (+) `database_id` values are valid: OK")
     }
   } else {
-    if (verbose) message("   - (-) `uniprot_entry` column missing: FAIL")
+    if (verbose) message("   - (-) `assay_name` column missing: FAIL")
     ic <- ic + 1
   }
   

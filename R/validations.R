@@ -383,7 +383,7 @@ check_viallabel_dmaqc <- function(vl_submitted,
 validate_assay <- function(input_results_folder){
   
   assay <- stringr::str_extract(string = input_results_folder,
-                                pattern = "(?<=T\\d{2}/)(IONPNEG|RPNEG|RPPOS|HILICPOS|LRPPOS|LRPNEG|3HIB|AA|AC_DUKE|ACOA|BAIBA|CER_DUKE|CONV|KA|NUC|OA|SPHM|OXYLIPNEG|ETAMIDPOS|AC_MAYO|AMINES|CER_MAYO|TCA|LAB_GLC|LAB_INS|PROT_PH|PROT_PR|PROT_AC|PROT_UB|PROT_OL|PROT_OX|LAB_CK)")
+                                pattern = "(?<=T\\d{2}/)(IONPNEG|RPNEG|RPPOS|HILICPOS|LRPPOS|LRPNEG|3HIB|AA|AC_DUKE|ACOA|BAIBA|CER_DUKE|CONV|KA|NUC|OA|SPHM|OXYLIPNEG|ETAMIDPOS|AC_MAYO|AMINES|CER_MAYO|TCA|LAB_GLC|LAB_INS|PROT_PH|PROT_PR|PROT_AC|PROT_UB|PROT_OL|PROT_OX|LAB_CK|LAB_CRT)")
   if(is.na(assay)){
     stop("ASSAY not found in the folder structure")
   }else{

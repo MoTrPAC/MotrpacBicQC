@@ -398,7 +398,7 @@ filter_required_columns <- function(df,
     }
     return(df)
   }else if (type == "labanalytes"){
-    emeta_sample_coln <- c("analyte_name", "uniprot_entry", "assay_name")
+    emeta_sample_coln <- c("analyte_name", "analyte_id", "database_id", "assay_name")
     missing_cols <- setdiff(emeta_sample_coln, colnames(df))
 
     if (length(missing_cols) > 0) {
