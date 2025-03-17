@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="generator" content="pandoc">
-<meta name="date" content="2024-09-23">
+<meta name="date" content="2025-03-17">
 <title>MotrpacBicQC: OLINK QC</title>
-<script src="qc_olink_files/header-attrs-2.27/header-attrs.js"></script><script src="qc_olink_files/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="qc_olink_files/header-attrs-2.29/header-attrs.js"></script><script src="qc_olink_files/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="qc_olink_files/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
 <script src="qc_olink_files/bootstrap-3.3.7/js/bootstrap.min.js"></script><script src="qc_olink_files/navigation-1.1/tabsets.js"></script><script src="qc_olink_files/navigation-1.1/codefolding.js"></script><link href="qc_olink_files/magnific-popup-1.1.0/magnific-popup.css" rel="stylesheet">
 <script src="qc_olink_files/magnific-popup-1.1.0/jquery.magnific-popup.min.js"></script><link href="qc_olink_files/downcute-0.1/downcute.css" rel="stylesheet">
@@ -125,7 +125,7 @@
       
       <p class="authors">
          </p>
-<p class="date"><span class="glyphicon glyphicon-calendar"></span> 2024-09-23</p>
+<p class="date"><span class="glyphicon glyphicon-calendar"></span> 2025-03-17</p>
            
 
    
@@ -159,7 +159,7 @@ correctly installed and it works. For example:</p>
 <pre class="r"><code><span><span class="co"># Just copy and paste in the RStudio terminal. </span></span>
 <span><span class="fu"><a href="../reference/check_metadata_samples_olink.html">check_metadata_samples_olink</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">metadata_metabolites_named</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/check_metadata_proteins.html">check_metadata_proteins</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">metadata_metabolites_named</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/check_results_olink.html">check_results_olink</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">results_named</span><span class="op">)</span></span></code></pre>
+<span><span class="fu"><a href="../reference/check_results_assays.html">check_results_assays</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">results_named</span>, assay_type <span class="op">=</span> <span class="st">"olink"</span><span class="op">)</span></span></code></pre>
 <p>which should generate the following outputs:</p>
 <pre><code>   - (-) `metadata_samples`: Expected COLUMN NAMES are missed: FAIL
      The following required columns are not present: `sample_id, sample_type, sample_order, plate_id`
