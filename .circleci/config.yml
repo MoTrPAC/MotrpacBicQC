@@ -22,7 +22,7 @@ jobs:
       - run:
           name: Check package
           command: R CMD check *tar.gz
-          
+
   build_4_2_2:
     docker:
       - image: rocker/verse:4.2.2
@@ -73,3 +73,4 @@ workflows:
     jobs:
       - build_4_2_2
       - build_4_1_0
+      - build_4_3_3
