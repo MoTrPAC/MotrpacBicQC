@@ -78,10 +78,10 @@ jobs:
             apt-get update
             apt-get install -y texlive-fonts-recommended
       - run:
-        name: Force update dplyr
-        command: |
-          R -e "remove.packages('dplyr')"
-          R -e "install.packages('dplyr', repos='https://cloud.r-project.org')"
+          name: Force update dplyr
+          command: |
+            R -e "remove.packages('dplyr')"
+            R -e "install.packages('dplyr', repos='https://cloud.r-project.org')"
       - run:
           name: Install package dependencies
           command: R -e "devtools::install_deps(dep = TRUE)"
