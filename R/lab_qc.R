@@ -113,6 +113,27 @@ check_metadata_analyte <- function(df,
     ic <- ic + 1
   }
   
+  # Check 'unit' column
+  if ("unit" %in% colnames(df)) {
+    # Check for uniqueness (duplicates may be acceptable)
+    if (length(unique(df$unit)) != nrow(df)) {
+      duplis_details <- df$unit[duplicated(df$unit)]
+      duplis <- length(unique(duplis_details))
+      if (verbose) message("   - ( ) `unit` non-unique values detected (n duplications = ", duplis, "). This is acceptable.")
+      if (verbose) message("\t\t - ", paste(unique(duplis_details), collapse = "\n\t\t - "))
+    } else {
+      if (verbose) message("  + (+) `unit` unique values: OK")
+    }
+    # Check for missing values
+    if (check_missing_values(df, "unit")) {
+      if (verbose) message("   - (-) `unit`: NA values detected: FAIL")
+      ic <- ic + 1
+    }
+  } else {
+    if (verbose) message("   - (-) `unit` column missing: FAIL")
+    ic <- ic + 1
+  }
+  
   # Return the number of issues if requested
   if (return_n_issues) return(ic)
   
