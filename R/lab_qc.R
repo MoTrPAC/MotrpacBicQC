@@ -428,9 +428,9 @@ validate_lab <- function(input_results_folder,
   input_results_folder <- normalizePath(input_results_folder)
   
   # Extract short folder path for reporting
-  input_folder_short <- regmatches(input_results_folder, regexpr("(HUMAN|PASS).*PROCESSED_[0-9]{8}", input_results_folder))
+  input_folder_short <- regmatches(input_results_folder, regexpr("(HUMAN|PASS).*RESULTS_[0-9]{8}", input_results_folder))
   if (purrr::is_empty(input_folder_short)) {
-    if (verbose) message("\nThe PROCESSED_YYYYMMDD folder full path is not correct. Example:")
+    if (verbose) message("\nThe RESULTS_YYYYMMDD folder full path is not correct. Example:")
     if (verbose) message("/full/path/to/folder/HUMAN/T02/LAB_CK/BATCH1_20230620/PROCESSED_20230620")
     stop("Input folder not according to guidelines")
   }
@@ -576,9 +576,7 @@ validate_lab <- function(input_results_folder,
   # Manifest file check
   if (verbose) message("\n## QC `file_manifest_YYYYMMDD.csv` (required)\n")
   
-  batch <- gsub("(.*)(PROCESSED.*)", "\\1", input_results_folder)
-  
-  file_manifest <- list.files(normalizePath(batch),
+  file_manifest <- list.files(normalizePath(batch_folder),
                               pattern = "file_manifest.*csv",
                               ignore.case = TRUE,
                               full.names = TRUE,
@@ -655,7 +653,7 @@ validate_lab <- function(input_results_folder,
   # DMAQC validation
   if (verbose) message("\n## DMAQC Validation\n")
   
-  failed_samples <- check_failedsamples(input_results_folder = input_results_folder, verbose = verbose)
+  failed_samples <- check_failedsamples(input_results_folder = batch_folder, verbose = verbose)
   
   # Validate vial labels from DMAQC
   if (is.na(ic_vl)) {
@@ -682,7 +680,7 @@ validate_lab <- function(input_results_folder,
     message("WARNING: Too many errors. Please revise the input folder.")
   }
   
-  batchversion <- stringr::str_extract(string = input_results_folder, pattern = "BATCH.*_[0-9]+/PROCESSED_[0-9]+")
+  batchversion <- stringr::str_extract(string = input_results_folder, pattern = "BATCH.*_[0-9]+/RESULTS_[0-9]+")
   
   qc_date <- format(Sys.time(), "%Y%m%d_%H%M%S")
   t_name <- bic_animal_tissue_code$bic_tissue_name[bic_animal_tissue_code$bic_tissue_code == tissue_code]
