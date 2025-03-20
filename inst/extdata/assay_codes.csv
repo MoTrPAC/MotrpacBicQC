@@ -17,7 +17,7 @@ metabolomics-targeted,AC_DUKE,metab-t-ac-duke,Targeted Acylcarnitines (Duke),duk
 metabolomics-targeted,ACOA,metab-t-acoa,Targeted Acyl-CoA,duke,METAB,#E41A1C
 metabolomics-targeted,BAIBA,metab-t-baiba,Targeted Beta-Aminoisobutyric acid,duke,METAB,#E41A1C
 metabolomics-targeted,CER_DUKE,metab-t-cer-duke,Targeted Ceramide (Duke),duke,METAB,#E41A1C
-metabolomics-targeted,CONV,metab-t-conv,Clinical chemistry assays for conventional metabolites,duke,METAB,#E41A1C
+clinical-chemistry,LAB_CONV,lab-conv,Clinical chemistry assays for conventional metabolites,duke,LAB,#777777
 metabolomics-targeted,KA,metab-t-ka,Targeted Keto Acids,duke,METAB,#E41A1C
 metabolomics-targeted,NUC,metab-t-nuc,Targeted Nucleotides,duke,METAB,#E41A1C
 metabolomics-targeted,OA,metab-t-oa,Targeted Organic Acids,duke,METAB,#E41A1C

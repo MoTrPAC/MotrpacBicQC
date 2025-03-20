@@ -10,6 +10,7 @@ dummy_analyte <- data.frame(
   analyte_id  = c("P12345", "Q67890", "A11111", "P12345"),
   database_id = c("uniprot", "uniprot", "uniprot", "uniprot"),
   assay_name     = rep("assay1", 4),
+  unit = c("ng/mL", "ng/mL", "ng/mL", "ng/mL"),
   stringsAsFactors = FALSE
 )
 
@@ -18,6 +19,7 @@ dummy_analyte_unique <- data.frame(
   analyte_id  = c("P12345", "Q67890", "A11111"),
   database_id = c("uniprot", "uniprot", "uniprot"),
   assay_name     = rep("assay1", 3),
+  unit = c("ng/mL", "ng/mL", "ng/mL"),
   stringsAsFactors = FALSE
 )
 
@@ -57,6 +59,7 @@ test_that("check_metadata_analyte validates analyte metadata correctly", {
     analyte_id = c("P12345", "P23456", "P34567"),
     database_id = c("uniprot", "uniprot", "uniprot"),
     assay_name = c("Assay1", "Assay2", "Assay3"),
+    unit = c("ng/mL", "ng/mL", "ng/mL"),
     stringsAsFactors = FALSE
   )
 
@@ -65,7 +68,7 @@ test_that("check_metadata_analyte validates analyte metadata correctly", {
 
   # Test with missing analyte_name column
   invalid_df <- valid_df[, c("analyte_id", "assay_name")]
-  expect_equal(check_metadata_analyte(invalid_df, return_n_issues = TRUE, verbose = FALSE), 2)
+  expect_equal(check_metadata_analyte(invalid_df, return_n_issues = TRUE, verbose = FALSE), 3)
 
   # Test with duplicate analyte_name
   duplicate_df <- rbind(valid_df, valid_df[1,])

@@ -113,6 +113,27 @@ check_metadata_analyte <- function(df,
     ic <- ic + 1
   }
   
+  # Check 'unit' column
+  if ("unit" %in% colnames(df)) {
+    # Check for uniqueness (duplicates may be acceptable)
+    if (length(unique(df$unit)) != nrow(df)) {
+      duplis_details <- df$unit[duplicated(df$unit)]
+      duplis <- length(unique(duplis_details))
+      if (verbose) message("   - ( ) `unit` non-unique values detected (n duplications = ", duplis, "). This is acceptable.")
+      if (verbose) message("\t\t - ", paste(unique(duplis_details), collapse = "\n\t\t - "))
+    } else {
+      if (verbose) message("  + (+) `unit` unique values: OK")
+    }
+    # Check for missing values
+    if (check_missing_values(df, "unit")) {
+      if (verbose) message("   - (-) `unit`: NA values detected: FAIL")
+      ic <- ic + 1
+    }
+  } else {
+    if (verbose) message("   - (-) `unit` column missing: FAIL")
+    ic <- ic + 1
+  }
+  
   # Return the number of issues if requested
   if (return_n_issues) return(ic)
   
@@ -304,7 +325,9 @@ load_lab_batch <- function(input_results_folder,
   f_ma <- lista$flag
   if (f_ma) {
     m_a_f <- lista$filename
-    m_a <- lista$df
+    m_a <- filter_required_columns(df = lista$df,
+                                  type = "labanalytes",
+                                  verbose = verbose)
   } else {
     if (verbose) message("   - (-) `metadata_analyte` file not available")
   }
@@ -318,7 +341,9 @@ load_lab_batch <- function(input_results_folder,
   f_ms <- lista$flag
   if (f_ms) {
     m_s_f <- lista$filename
-    m_s <- lista$df
+    m_s <- filter_required_columns(df = lista$df,
+                                   type = "labsamples",
+                                   verbose = verbose)
   } else {
     if (verbose) message("   - (-) `metadata_sample` file not available")
   }
@@ -428,9 +453,9 @@ validate_lab <- function(input_results_folder,
   input_results_folder <- normalizePath(input_results_folder)
   
   # Extract short folder path for reporting
-  input_folder_short <- regmatches(input_results_folder, regexpr("(HUMAN|PASS).*PROCESSED_[0-9]{8}", input_results_folder))
+  input_folder_short <- regmatches(input_results_folder, regexpr("(HUMAN|PASS).*RESULTS_[0-9]{8}", input_results_folder))
   if (purrr::is_empty(input_folder_short)) {
-    if (verbose) message("\nThe PROCESSED_YYYYMMDD folder full path is not correct. Example:")
+    if (verbose) message("\nThe RESULTS_YYYYMMDD folder full path is not correct. Example:")
     if (verbose) message("/full/path/to/folder/HUMAN/T02/LAB_CK/BATCH1_20230620/PROCESSED_20230620")
     stop("Input folder not according to guidelines")
   }
@@ -576,9 +601,7 @@ validate_lab <- function(input_results_folder,
   # Manifest file check
   if (verbose) message("\n## QC `file_manifest_YYYYMMDD.csv` (required)\n")
   
-  batch <- gsub("(.*)(PROCESSED.*)", "\\1", input_results_folder)
-  
-  file_manifest <- list.files(normalizePath(batch),
+  file_manifest <- list.files(normalizePath(batch_folder),
                               pattern = "file_manifest.*csv",
                               ignore.case = TRUE,
                               full.names = TRUE,
@@ -655,7 +678,7 @@ validate_lab <- function(input_results_folder,
   # DMAQC validation
   if (verbose) message("\n## DMAQC Validation\n")
   
-  failed_samples <- check_failedsamples(input_results_folder = input_results_folder, verbose = verbose)
+  failed_samples <- check_failedsamples(input_results_folder = batch_folder, verbose = verbose)
   
   # Validate vial labels from DMAQC
   if (is.na(ic_vl)) {
@@ -682,7 +705,7 @@ validate_lab <- function(input_results_folder,
     message("WARNING: Too many errors. Please revise the input folder.")
   }
   
-  batchversion <- stringr::str_extract(string = input_results_folder, pattern = "BATCH.*_[0-9]+/PROCESSED_[0-9]+")
+  batchversion <- stringr::str_extract(string = input_results_folder, pattern = "BATCH.*_[0-9]+/RESULTS_[0-9]+")
   
   qc_date <- format(Sys.time(), "%Y%m%d_%H%M%S")
   t_name <- bic_animal_tissue_code$bic_tissue_name[bic_animal_tissue_code$bic_tissue_code == tissue_code]
