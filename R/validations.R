@@ -333,7 +333,7 @@ check_viallabel_dmaqc <- function(vl_submitted,
           missed_out <- data.frame(vial_label = samplesmissedonly)
           missed_out$cas <- cas
           
-          # Create output folder-------
+          # Create output folder
           if (is.null(out_qc_folder)){
             out_qc_folder <- getwd()
           }else{

@@ -325,7 +325,9 @@ load_lab_batch <- function(input_results_folder,
   f_ma <- lista$flag
   if (f_ma) {
     m_a_f <- lista$filename
-    m_a <- lista$df
+    m_a <- filter_required_columns(df = lista$df,
+                                  type = "labanalytes",
+                                  verbose = verbose)
   } else {
     if (verbose) message("   - (-) `metadata_analyte` file not available")
   }
@@ -339,7 +341,9 @@ load_lab_batch <- function(input_results_folder,
   f_ms <- lista$flag
   if (f_ms) {
     m_s_f <- lista$filename
-    m_s <- lista$df
+    m_s <- filter_required_columns(df = lista$df,
+                                   type = "labsamples",
+                                   verbose = verbose)
   } else {
     if (verbose) message("   - (-) `metadata_sample` file not available")
   }
