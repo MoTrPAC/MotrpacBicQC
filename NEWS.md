@@ -1,6 +1,8 @@
 # MotrpacBicQC 0.9.7 (2025-03-16)
 
-* QC Support for clinical chemistry assays: glucagon, insulin, cortisol, and creatine kinase
+* QC Support for clinical chemistry assays: glucagon, insulin, cortisol, and creatine kinase. 
+It also expects conventional metabolites, previously `metab-t-conv`, as a new assay withing this 
+category (`lab-conv`)
 * Numerous bug fixes and enhancements
 
 # MotrpacBicQC 0.9.6 (2024-09-23)
