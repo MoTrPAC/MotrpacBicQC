@@ -12,8 +12,7 @@ library(MotrpacBicQC)
 #  # Just copy and paste in the RStudio terminal.
 #  check_metadata_samples_olink(df = metadata_metabolites_named)
 #  check_metadata_proteins(df = metadata_metabolites_named)
-#  check_results_olink(df = results_named)
-#  
+#  check_results_assays(df = results_named, assay_type = "olink")
 
 ## ----eval = FALSE-------------------------------------------------------------
 #  n_issues <- validate_olink(input_results_folder = "/full/path/to/HUMAN/T02/PROT_OL/BATCH1_20210825/RESULTS_20221102",

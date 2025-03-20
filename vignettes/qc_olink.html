@@ -139,12 +139,10 @@ section.footnotes::before {
 </style>
 </head>
 <body>
-<div class="include-before">
-</div>
 <div class="frontmatter">
 <div class="title"><h1>MotrpacBicQC: OLINK QC</h1></div>
 <div class="author"><h2></h2></div>
-<div class="date"><h3>2024-01-04</h3></div>
+<div class="date"><h3>2024-11-17</h3></div>
 </div>
 <div class="body">
 <h2 id="installation">Installation</h2>
@@ -169,7 +167,7 @@ is correctly installed and it works. For example:</p>
 <pre><code class="language-r"># Just copy and paste in the RStudio terminal. 
 check_metadata_samples_olink(df = metadata_metabolites_named)
 check_metadata_proteins(df = metadata_metabolites_named)
-check_results_olink(df = results_named)
+check_results_assays(df = results_named, assay_type = &quot;olink&quot;)
 </code></pre>
 <p>which should generate the following outputs:</p>
 <pre><code>   - (-) `metadata_samples`: Expected COLUMN NAMES are missed: FAIL
@@ -292,8 +290,6 @@ TOTAL NUMBER OF ISSUES: 0
 </code></pre>
 <p>Need extra help? Please, <a href="https://github.com/MoTrPAC/MotrpacBicQC/issues">submit an issue here</a>
 providing as many details as possible.</p>
-</div>
-<div class="include-after">
 </div>
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js" defer></script>

@@ -1,27 +1,34 @@
-# Add package by alphabetical order
+#' @title Clean character columns
+#'
+#' @description
+#' Removes leading and trailing whitespace from all character columns
+#' in a data frame using \code{trimws}.
+#'
+#' @param df A data frame or tibble containing character columns to be cleaned
+#'
+#' @return A data frame of the same structure as the input, but with whitespace removed from all character columns
+#' 
+#' @details
+#' The function uses \code{dplyr::across} to apply \code{trimws} to all columns
+#' that are of type character. The original data frame structure is preserved,
+#' only the content of character columns is modified.
+#'
+#' @examples
+#' df <- data.frame(
+#'   name = c(" John ", "Jane  ", "  Bob"),
+#'   age = c(25, 30, 35),
+#'   city = c("New York ", " London", " Paris ")
+#' )
+#' clean_df <- clean_character_columns(df)
+#'
+#' @export
+#'
+#' @importFrom dplyr mutate across where
+clean_character_columns <- function(df) {
+  df <- dplyr::mutate_if(df, is.character, trimws)
+  return(df)
+}
 
-#' @importFrom data.table rbindlist as.data.table fread
-#' @import dplyr
-#' @import forcats
-#' @import ggplot2
-#' @importFrom grDevices dev.off pdf
-#' @importFrom gridExtra grid.arrange arrangeGrob
-#' @importFrom httr status_code GET
-#' @importFrom inspectdf inspect_na
-#' @importFrom jsonlite fromJSON
-#' @import knitr
-#' @importFrom lubridate parse_date_time
-#' @import naniar
-#' @import progress
-#' @import purrr
-#' @importFrom readr read_lines read_delim
-#' @importFrom scales percent
-#' @importFrom stats median reorder
-#' @import stringr
-#' @import tidyr
-#' @importFrom utils URLencode read.csv read.delim write.table
-#' @import viridis
-#____________________________________________________________________________
 
 #' @title Create folder
 #'
@@ -286,7 +293,9 @@ filter_required_columns <- function(df,
                                              "m_s",
                                              "v_m",
                                              "olproteins",
-                                             "olsamples"),
+                                             "olsamples",
+                                             "labanalytes",
+                                             "labsamples"),
                                     name_id = NULL,
                                     verbose = TRUE){
 
@@ -378,6 +387,35 @@ filter_required_columns <- function(df,
     return(df)
   }else if (type == "olsamples"){
     emeta_sample_coln <- c("sample_id", "sample_type", "sample_order", "plate_id")
+    missing_cols <- setdiff(emeta_sample_coln, colnames(df))
+
+    if (length(missing_cols) > 0) {
+      if(verbose) message("   - (-) `metadata_samples`: Expected COLUMN NAMES are missed: FAIL")
+      message(paste0("\t The following required columns are not present: `", paste(missing_cols, collapse = ", "), "`"))
+    } else {
+      if(verbose) message("  + (+) All required columns present")
+      df <- subset(df, select = emeta_sample_coln)
+    }
+    return(df)
+  }else if (type == "labanalytes"){
+    emeta_sample_coln <- c("analyte_name", "analyte_id", "database_id", "assay_name", "unit")
+    missing_cols <- setdiff(emeta_sample_coln, colnames(df))
+
+    if (length(missing_cols) > 0) {
+      if(verbose) message("   - (-) `metadata_analytes`: Expected COLUMN NAMES are missed: FAIL")
+      message(paste0("\t The following required columns are not present: `", paste(missing_cols, collapse = ", "), "`"))
+    } else {
+      if(verbose) message("  + (+) All required columns present")
+      df <- subset(df, select = emeta_sample_coln)
+    }
+    return(df)
+  }else if (type == "labsamples"){
+    emeta_sample_coln <- c("sample_id", 
+                           "sample_type", 
+                           "sample_order",
+                           "raw_file",
+                           "extraction_date",
+                           "acquisition_date")
     missing_cols <- setdiff(emeta_sample_coln, colnames(df))
 
     if (length(missing_cols) > 0) {

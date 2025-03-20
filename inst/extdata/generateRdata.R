@@ -5,6 +5,24 @@ library(devtools)
 
 # FILES IN PACKAGE--------------------------------------------------------------
 
+## Update `assay_codes`: add/edit
+
+### Currently (last edit: 2025-03-13)
+
+#' 1. Open the `assay_codes.csv` file from the inst folder of this package 
+#' with your favorite editor and modify, edit, the content.
+#' 
+#' 2. Open the assay_codes.csv file from the inst folder of this package:
+filename <- "inst/extdata/assay_codes.csv"
+assay_codes <- read.csv(filename, stringsAsFactors = FALSE)
+
+#' 3. Overwrite the data in the package with the new one:
+usethis::use_data(assay_codes, overwrite = TRUE)
+
+
+
+### Previous updates of the assay_codes (deprecated)
+
 ## update assay codes (2024-01-03)-----
 
 ### Update the "proteomics" ome by proteomics-untargeted

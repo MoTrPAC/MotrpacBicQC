@@ -1,5 +1,121 @@
 # VALIDATIONS
 
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' @title Cross-validate assay files (Olink and LAB)
+#'
+#' @description Checks that values from the results file are available in both the
+#' metadata analyte/protein and metadata sample files.
+#' @param r_o (data.frame) Results data frame.
+#' @param m_s (data.frame) Metadata sample data frame.
+#' @param m_p (data.frame) Metadata analyte/protein data frame.
+#' @param assay_type (character) The type of assay, either `"olink"` or `"lab"`.
+#' @param return_n_issues (logical) If `TRUE`, returns the number of issues.
+#' @param verbose (logical) If `TRUE` (default), displays messages during the checking process.
+#' @return (int) Number of issues identified if `return_n_issues` is `TRUE`.
+#' @examples {
+#' \dontrun{
+#' # For Olink data
+#' check_crossfile_validation(r_o = results_olink,
+#'                            m_s = metadata_samples_olink,
+#'                            m_p = metadata_proteins_olink,
+#'                            assay_type = "olink")
+#'
+#' # For LAB data
+#' check_crossfile_validation(r_o = results_lab,
+#'                            m_s = metadata_samples_lab,
+#'                            m_p = metadata_analyte_lab,
+#'                            assay_type = "lab")
+#' }
+#' }
+#' @export
+check_crossfile_validation <- function(r_o,
+                                       m_s,
+                                       m_p,
+                                       assay_type = c("olink", "lab"),
+                                       return_n_issues = FALSE,
+                                       verbose = TRUE) {
+  
+  # Match the assay_type argument
+  assay_type <- match.arg(assay_type)
+  
+  # Initialize issue count
+  ic <- 0
+  
+  # Determine identifier columns based on assay type
+  if (assay_type == "olink") {
+    analyte_id_col <- "olink_id"
+    sample_id_col <- "sample_id"
+  } else if (assay_type == "lab") {
+    analyte_id_col <- "analyte_name"
+    sample_id_col <- "sample_id"
+  }
+  
+  # Validate that required columns are present
+  if (!analyte_id_col %in% colnames(r_o)) {
+    if (verbose) message("   - (-) `", analyte_id_col, "` column missing in results data frame: FAIL")
+    ic <- ic + 1
+  }
+  if (!sample_id_col %in% colnames(m_s)) {
+    if (verbose) message("   - (-) `", sample_id_col, "` column missing in metadata sample data frame: FAIL")
+    ic <- ic + 1
+  }
+  if (!analyte_id_col %in% colnames(m_p)) {
+    if (verbose) message("   - (-) `", analyte_id_col, "` column missing in metadata analyte data frame: FAIL")
+    ic <- ic + 1
+  }
+  
+  # Proceed only if essential columns are present
+  if (ic == 0) {
+    # Validate sample IDs
+    results_sample_ids <- setdiff(names(r_o), analyte_id_col)
+    metadata_sample_ids <- unique(m_s[[sample_id_col]])
+    
+    # Check for discrepancies in sample IDs
+    samples_in_results_not_in_metadata <- setdiff(results_sample_ids, metadata_sample_ids)
+    samples_in_metadata_not_in_results <- setdiff(metadata_sample_ids, results_sample_ids)
+    
+    if (length(samples_in_results_not_in_metadata) > 0) {
+      if (verbose) message("   - (-) Samples in results missing from metadata samples: FAIL")
+      if (verbose) message("\t\t - ", paste(samples_in_results_not_in_metadata, collapse = "\n\t\t - "))
+      ic <- ic + 1
+    }
+    if (length(samples_in_metadata_not_in_results) > 0) {
+      if (verbose) message("   - (-) Samples in metadata samples missing from results: FAIL")
+      if (verbose) message("\t\t - ", paste(samples_in_metadata_not_in_results, collapse = "\n\t\t - "))
+      ic <- ic + 1
+    }
+    if (length(samples_in_results_not_in_metadata) == 0 && length(samples_in_metadata_not_in_results) == 0) {
+      if (verbose) message("  + (+) All sample IDs match between results and metadata samples: OK")
+    }
+    
+    # Validate analyte IDs
+    results_analyte_ids <- r_o[[analyte_id_col]]
+    metadata_analyte_ids <- m_p[[analyte_id_col]]
+    
+    analytes_in_results_not_in_metadata <- setdiff(results_analyte_ids, metadata_analyte_ids)
+    analytes_in_metadata_not_in_results <- setdiff(metadata_analyte_ids, results_analyte_ids)
+    
+    if (length(analytes_in_results_not_in_metadata) > 0) {
+      if (verbose) message("   - (-) Analytes in results missing from metadata analytes: FAIL")
+      if (verbose) message("\t\t - ", paste(analytes_in_results_not_in_metadata, collapse = "\n\t\t - "))
+      ic <- ic + 1
+    }
+    if (length(analytes_in_metadata_not_in_results) > 0) {
+      if (verbose) message("   - (-) Analytes in metadata analytes missing from results: FAIL")
+      if (verbose) message("\t\t - ", paste(analytes_in_metadata_not_in_results, collapse = "\n\t\t - "))
+      ic <- ic + 1
+    }
+    if (length(analytes_in_results_not_in_metadata) == 0 && length(analytes_in_metadata_not_in_results) == 0) {
+      if (verbose) message("  + (+) All analyte IDs match between results and metadata analytes: OK")
+    }
+  }
+  
+  if (return_n_issues) return(ic)
+} # End of check_crossfile_validation
+
+
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' @title check failed samples file for reported missing vial label ids
 #'
@@ -216,6 +332,14 @@ check_viallabel_dmaqc <- function(vl_submitted,
           }
           missed_out <- data.frame(vial_label = samplesmissedonly)
           missed_out$cas <- cas
+          
+          # Create output folder
+          if (is.null(out_qc_folder)){
+            out_qc_folder <- getwd()
+          }else{
+            out_qc_folder <- create_folder(out_qc_folder)
+          }
+          
           out_plot_large <- file.path(normalizePath(out_qc_folder), paste0(outfile_missed_viallabels,"-missed_viallabels-in-cas.txt"))
           write.table(missed_out, out_plot_large, row.names = FALSE, sep = "\t", quote = FALSE)
           if(verbose) message("   - ( ) File `", paste0(outfile_missed_viallabels,"-missed_viallabels-in-cas.txt"), "` available with missed vial labels")
@@ -259,7 +383,7 @@ check_viallabel_dmaqc <- function(vl_submitted,
 validate_assay <- function(input_results_folder){
   
   assay <- stringr::str_extract(string = input_results_folder,
-                                pattern = "(?<=T\\d{2}/)(IONPNEG|RPNEG|RPPOS|HILICPOS|LRPPOS|LRPNEG|3HIB|AA|AC_DUKE|ACOA|BAIBA|CER_DUKE|CONV|KA|NUC|OA|SPHM|OXYLIPNEG|ETAMIDPOS|AC_MAYO|AMINES|CER_MAYO|TCA|IMM_CRT|IMM_GLC|IMM_INS|PROT_PH|PROT_PR|PROT_AC|PROT_UB|PROT_OL|PROT_OX)")
+                                pattern = "(?<=T\\d{2}/)(IONPNEG|RPNEG|RPPOS|HILICPOS|LRPPOS|LRPNEG|3HIB|AA|AC_DUKE|ACOA|BAIBA|CER_DUKE|KA|NUC|OA|SPHM|OXYLIPNEG|ETAMIDPOS|AC_MAYO|AMINES|CER_MAYO|TCA|LAB_GLC|LAB_INS|PROT_PH|PROT_PR|PROT_AC|PROT_UB|PROT_OL|PROT_OX|LAB_CK|LAB_CRT|LAB_CONV)")
   if(is.na(assay)){
     stop("ASSAY not found in the folder structure")
   }else{

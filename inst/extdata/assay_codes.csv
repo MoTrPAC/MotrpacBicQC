@@ -1,0 +1,42 @@
+omics_code,submission_code,assay_code,assay_name,cas_code,assay_abbreviation,assay_hex_colour
+transcriptomics,,transcript-rna-seq,rna-seq,stanford,TRNSCRPT,#377EB8
+transcriptomics,,transcript-rna-seq,rna-seq,mssm,TRNSCRPT,#377EB8
+transcriptomics,,transcript-rna-seq-splicing,rna-seq,stanford,NA,NA
+transcriptomics,,transcript-rna-seq-splicing,rna-seq,mssm,NA,NA
+epigenomics,,epigen-rrbs,RRBS,mssm,METHYL,#F781BF
+epigenomics,,epigen-atac-seq,atac-seq,stanford,ATAC,#A65628
+proteomics-untargeted,PROT_PR,prot-pr,Global Proteomics,broad_prot,PROT,#4DAF4A
+proteomics-untargeted,PROT_PR,prot-pr,Global Proteomics,pnnl,PROT,#4DAF4A
+proteomics-untargeted,PROT_PH,prot-ph,Phophoproteomics,broad_prot,PHOSPHO,#FF7F00
+proteomics-untargeted,PROT_PH,prot-ph,Phophoproteomics,pnnl,PHOSPHO,#FF7F00
+proteomics-untargeted,PROT_AC,prot-ac,Acetyl proteomics,broad_prot,ACETYL,#984EA3
+proteomics-untargeted,PROT_UB,prot-ub,Protein Ubiquitination,broad_prot,UBIQ,#cfc100
+metabolomics-targeted,3HIB,metab-t-3hib,Targeted 3-Hydroxyisobutyric Acid (3-HIB),duke,METAB,#E41A1C
+metabolomics-targeted,AA,metab-t-aa,Targeted Amino Acids,duke,METAB,#E41A1C
+metabolomics-targeted,AC_DUKE,metab-t-ac-duke,Targeted Acylcarnitines (Duke),duke,METAB,#E41A1C
+metabolomics-targeted,ACOA,metab-t-acoa,Targeted Acyl-CoA,duke,METAB,#E41A1C
+metabolomics-targeted,BAIBA,metab-t-baiba,Targeted Beta-Aminoisobutyric acid,duke,METAB,#E41A1C
+metabolomics-targeted,CER_DUKE,metab-t-cer-duke,Targeted Ceramide (Duke),duke,METAB,#E41A1C
+clinical-chemistry,LAB_CONV,lab-conv,Clinical chemistry assays for conventional metabolites,duke,LAB,#777777
+metabolomics-targeted,KA,metab-t-ka,Targeted Keto Acids,duke,METAB,#E41A1C
+metabolomics-targeted,NUC,metab-t-nuc,Targeted Nucleotides,duke,METAB,#E41A1C
+metabolomics-targeted,OA,metab-t-oa,Targeted Organic Acids,duke,METAB,#E41A1C
+metabolomics-targeted,SPHM,metab-t-sphm,Targeted Sphingomyelin,duke,METAB,#E41A1C
+metabolomics-targeted,OXYLIPNEG,metab-t-oxylipneg,Targeted Oxylipins,emory,METAB,#E41A1C
+metabolomics-targeted,ETAMIDPOS,metab-t-etamidpos,Targeted Ethanolamides,emory,METAB,#E41A1C
+metabolomics-targeted,AC_MAYO,metab-t-ac-mayo,Targeted Acylcarnitines (Mayo),mayo,METAB,#E41A1C
+metabolomics-targeted,AMINES,metab-t-amines,Targeted Amines,mayo,METAB,#E41A1C
+metabolomics-targeted,CER_MAYO,metab-t-cer-mayo,Targeted Ceramides (Mayo),mayo,METAB,#E41A1C
+metabolomics-targeted,TCA,metab-t-tca,Targeted Tricarboxylic Acid Cycle ,mayo,METAB,#E41A1C
+metabolomics-untargeted,HILICPOS,metab-u-hilicpos,Untargeted HILIC-Positive,broad_met,METAB,#E41A1C
+metabolomics-untargeted,LRPNEG,metab-u-lrpneg,"Untargeted Lipidomics, Reversed-Phase Negative",gtech,METAB,#E41A1C
+metabolomics-untargeted,LRPPOS,metab-u-lrppos,"Untargeted Lipidomics, Reversed-Phase Positive",gtech,METAB,#E41A1C
+metabolomics-untargeted,RPPOS,metab-u-rppos,Untargeted Reversed-Phase Positive,umichigan,METAB,#E41A1C
+metabolomics-untargeted,RPNEG,metab-u-rpneg,Untargeted Reversed-Phase Negative,umichigan,METAB,#E41A1C
+metabolomics-untargeted,IONPNEG,metab-u-ionpneg,Untargeted Ion-Pair Negative,umichigan,METAB,#E41A1C
+proteomics-targeted,,immunoassay,Multiplexed immunoassays,stanford,IMMUNO,#999999
+clinical-chemistry,LAB_CK,lab-ck,"Clinical Chemistry, Activity Assay Creatine Kinase (CK)",duke,LAB,#777777
+clinical-chemistry,LAB_GLC,lab-glc,"Clinical Chemistry, Immunoassay Glucagon (GLC",duke,LAB,#777777
+clinical-chemistry,LAB_INS,lab-ins,"Clinical Chemistry, Immunoassay Insulin (INS)",duke,LAB,#777777
+proteomics-targeted,PROT_OL,prot-ol,Proximity extension assay-based technology for multiplexed protein analysis,broad_rg,OLINK,#4DAF4A
+clinical-chemistry,LAB_CRT,lab-crt,"Clinical Chemistry, Immunoassay Cortisol (CRT)",duke,LAB,#777777
