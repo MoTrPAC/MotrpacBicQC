@@ -223,15 +223,14 @@ dl_read_gcp <- function(path,
 
   # read in the data using readr instead of data.table
   if(file.exists(new_path)){
-    df <- readr::read_delim(new_path,
-                            delim = sep,
-                            col_names = header,
-                            skip_empty_rows = TRUE,
-                            show_col_types = FALSE, ...)
-    df <- as.data.frame(df)
+    df <- read.delim(new_path,
+                     sep = sep,
+                     header = header,
+                     stringsAsFactors = FALSE,
+                     blank.lines.skip = TRUE)
     return(df)
   }else{
-    stop("Problems loading the file. Two possible reasons:
+    stop("Problems loading the file. Three possible reasons:
          - Use 'gsutil_path = \"gcloud\" instead of 'gsutil'
          - Something might have gone wrong with the download.
          - This is not a tab-delimited file (default): if you are trying to download a csv file instead, then use `sep = \",\"` instead.
