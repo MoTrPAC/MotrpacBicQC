@@ -27,7 +27,8 @@ as its first line. Default is TRUE.}
 downloaded.}
 
 \item{gsutil_path}{Character. The path to the \code{gsutil} command-line tool.
-Default is "gsutil".}
+Default is "gsutil". Now it is also supporting \code{gcloud} command. The full
+path should be the same as for gsutil}
 
 \item{check_first}{Logical. Whether to check if the file already exists
 locally before downloading. Default is TRUE.}

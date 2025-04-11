@@ -1,3 +1,7 @@
+# MotrpacBicQC 0.9.8 (2025-04-10)
+
+* Update `dl_read_gcp`: it now supports `gcloud` in addition to `gsutil`.
+
 # MotrpacBicQC 0.9.7 (2025-03-16)
 
 * QC Support for clinical chemistry assays: glucagon, insulin, cortisol, and creatine kinase. 

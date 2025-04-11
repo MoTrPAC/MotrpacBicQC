@@ -72,7 +72,8 @@ create_folder <- function(folder_name = NULL,
 #' @param tmpdir Character. The local directory to which the file will be
 #'   downloaded.
 #' @param gsutil_path Character. The path to the `gsutil` command-line tool.
-#'   Default is "gsutil".
+#'   Default is "gsutil". Now it is also supporting `gcloud` command. The full
+#'   path should be the same as for gsutil
 #' @param check_first Logical. Whether to check if the file already exists
 #'   locally before downloading. Default is TRUE.
 #' @param verbose Logical. If TRUE, prints messages about the download process.
@@ -144,7 +145,12 @@ dl_read_gcp <- function(path,
   }
 
   # Check if the file exists in GCP
-  check_cmd <- sprintf('%s ls %s', gsutil_path, path)
+  if(grepl("gcloud", gsutil_path)){
+    check_cmd <- sprintf('%s storage ls %s', gsutil_path, path)
+  }else{
+    check_cmd <- sprintf('%s ls %s', gsutil_path, path)
+  }
+  
   file_exists <- system(check_cmd,
                         ignore.stdout = ignore_std_out,
                         ignore.stderr = ignore_std_err) == 0
@@ -187,7 +193,12 @@ dl_read_gcp <- function(path,
   if(check_first){
     if( !file.exists(new_path) ){
       # cp file from GCP
-      cmd <- sprintf('%s cp %s %s', gsutil_path, path, tmpdir)
+      if(grepl("gcloud", gsutil_path)){
+        cmd <- sprintf('%s storage cp %s %s', gsutil_path, path, tmpdir)
+      }else{
+        cmd <- sprintf('%s cp %s %s', gsutil_path, path, tmpdir)
+      }
+      
       if(verbose) message(paste0("- Running command ", cmd))
       system(cmd,
              ignore.stdout = ignore_std_out,
@@ -198,7 +209,12 @@ dl_read_gcp <- function(path,
     }
   }else{
     if(verbose) message(paste0("- Downloading file (from GCP): `", basename(path), "`"))
-    cmd <- sprintf('%s cp %s %s', gsutil_path, path, tmpdir)
+    
+    if(grepl("gcloud", gsutil_path)){
+      cmd <- sprintf('%s storage cp %s %s', gsutil_path, path, tmpdir)
+    }else{
+      cmd <- sprintf('%s cp %s %s', gsutil_path, path, tmpdir)
+    }
     system(cmd,
            ignore.stdout = ignore_std_out,
            ignore.stderr = ignore_std_err)
@@ -207,15 +223,15 @@ dl_read_gcp <- function(path,
 
   # read in the data using readr instead of data.table
   if(file.exists(new_path)){
-    df <- readr::read_delim(new_path,
-                            delim = sep,
-                            col_names = header,
-                            skip_empty_rows = TRUE,
-                            show_col_types = FALSE, ...)
-    df <- as.data.frame(df)
+    df <- read.delim(new_path,
+                     sep = sep,
+                     header = header,
+                     stringsAsFactors = FALSE,
+                     blank.lines.skip = TRUE)
     return(df)
   }else{
-    stop("Problems loading the file. Two possible reasons:
+    stop("Problems loading the file. Three possible reasons:
+         - Use 'gsutil_path = \"gcloud\" instead of 'gsutil'
          - Something might have gone wrong with the download.
          - This is not a tab-delimited file (default): if you are trying to download a csv file instead, then use `sep = \",\"` instead.
     Re-run the command again with `verbose = TRUE`)")

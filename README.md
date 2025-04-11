@@ -49,6 +49,7 @@ The following vignettes are available:
 - [Metabolomics](https://motrpac.github.io/MotrpacBicQC/articles/qc_metabolomics.html)
 - [Proteomics (untargeted)](https://motrpac.github.io/MotrpacBicQC/articles/qc_proteomics.html)
 - [Proteomics (olink)](https://motrpac.github.io/MotrpacBicQC/articles/qc_olink.html)
+- [Clinical Chemistry](https://motrpac.github.io/MotrpacBicQC/articles/qc_lab.html)
 - [Other functions](https://motrpac.github.io/MotrpacBicQC/articles/other_functions.html)
 
 Alternatively, once the package is installed, run the following command to 
