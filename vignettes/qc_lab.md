@@ -1,6 +1,6 @@
 ---
-title: "MotrpacBicQC: CHEMICAL CHEMISTRY LAB QC"
-date: "2025-03-15"
+title: "MotrpacBicQC: Clinical Chemistry Lab QC"
+date: "2025-04-10"
 output:
   rmdformats::downcute:
     code_folding: show

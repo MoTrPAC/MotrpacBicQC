@@ -1,5 +1,5 @@
 ---
-title: "MotrpacBicQC: CHEMICAL CHEMISTRY LAB QC"
+title: "MotrpacBicQC: Clinical Chemistry Lab QC"
 date: "`r Sys.Date()`"
 output:
   rmdformats::downcute:
