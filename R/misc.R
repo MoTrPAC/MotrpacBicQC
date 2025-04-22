@@ -227,6 +227,7 @@ dl_read_gcp <- function(path,
                      sep = sep,
                      header = header,
                      stringsAsFactors = FALSE,
+                     check.names = FALSE,
                      blank.lines.skip = TRUE)
     return(df)
   }else{
