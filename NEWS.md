@@ -1,3 +1,7 @@
+# MotrpacBicQC 0.9.9 (2025-04-22)
+
+* Fix minor issue with `dl_read_gcp`
+
 # MotrpacBicQC 0.9.8 (2025-04-10)
 
 * Update `dl_read_gcp`: it now supports `gcloud` in addition to `gsutil`.
