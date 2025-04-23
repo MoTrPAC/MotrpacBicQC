@@ -1,3 +1,10 @@
+# MotrpacBicQC 1.0.0 (2025-04-23)
+
+* Update the data object `assay_codes` with 2 new variables:
+  + `assay_short_text`: Abbreviated name specific to the assay that can be used in graphs and tables as needed
+  + `ome_text`: Omic class measured by the given assay
+* Update style of the vignettes
+
 # MotrpacBicQC 0.9.9 (2025-04-22)
 
 * Fix minor issue with `dl_read_gcp`

@@ -7,4 +7,7 @@ articles:
   qc_metabolomics: qc_metabolomics.html
   qc_olink: qc_olink.html
   qc_proteomics: qc_proteomics.html
-last_built: 2025-04-22T22:29Z
+last_built: 2025-04-23T22:48Z
+urls:
+  reference: https://motrpac.github.io/MotrpacBicQC/reference
+  article: https://motrpac.github.io/MotrpacBicQC/articles
