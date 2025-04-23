@@ -1,12 +1,10 @@
 ---
 title: "MotrpacBicQC: Other Functions"
-date: "2024-01-04"
+date: "2025-04-23"
 output:
-  rmdformats::downcute:
-    code_folding: show
-    self_contained: true
-    thumbnails: false
-    lightbox: true
+  html_document:
+    toc: true
+    toc_float: true
 pkgdown:
   as_is: true
   

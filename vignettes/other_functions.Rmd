@@ -2,11 +2,9 @@
 title: "MotrpacBicQC: Other Functions"
 date: "`r Sys.Date()`"
 output:
-  rmdformats::downcute:
-    code_folding: show
-    self_contained: true
-    thumbnails: false
-    lightbox: true
+  html_document:
+    toc: true
+    toc_float: true
 pkgdown:
   as_is: true
   

@@ -139,12 +139,10 @@ section.footnotes::before {
 </style>
 </head>
 <body>
-<div class="include-before">
-</div>
 <div class="frontmatter">
 <div class="title"><h1>MotrpacBicQC: Metabolomics QC</h1></div>
 <div class="author"><h2></h2></div>
-<div class="date"><h3>2024-01-04</h3></div>
+<div class="date"><h3>2025-04-23</h3></div>
 </div>
 <div class="body">
 <h2 id="expected-submission">Expected submission</h2>
@@ -214,7 +212,15 @@ check_results(r_m = results_named, m_s = metadata_sample_named, m_m = metadata_m
 </code></pre>
 <pre><code>##   + Validating `refmet_name` (it might take some time)
 </code></pre>
-<pre><code>##   + (+) `refmet_name` ids found in refmet: OK
+<pre><code>##       (-) `refmet_name` [`Leucine/Isoleucine`] must be modified to the RefMet Standarized name: &quot;Leucine&quot; (Error RN2)
+</code></pre>
+<pre><code>##       (-) `refmet_name` [`Oxoglutaric acid`] must be modified to the RefMet Standarized name: &quot;2-Oxoglutaric acid&quot; (Error RN2)
+</code></pre>
+<pre><code>##       (-) `refmet_name` [`Citric acid/Isocitric acid`] must be modified to the RefMet Standarized name: &quot;Citric acid&quot; (Error RN2)
+</code></pre>
+<pre><code>##       (-) Total number of missed ids on MW: 3
+</code></pre>
+<pre><code>##    - (-) SUMMARY: 3 `refmet_name` not found in RefMet Metabolomics Data Dictionary: FAIL
 </code></pre>
 <pre><code>##   + (+) {rt} all numeric: OK
 </code></pre>
@@ -226,9 +232,9 @@ check_results(r_m = results_named, m_s = metadata_sample_named, m_m = metadata_m
 </code></pre>
 <pre><code class="language-r">check_metadata_samples(df = metadata_sample_named, cas = &quot;umichigan&quot;)
 </code></pre>
-<pre><code>##    - (-) `metadata_sample`: Expected COLUMN NAMES are missed: FAIL
+<pre><code>##    - (-) `metadata_sample`: recently required COLUMN NAMES are missed: Adding with NA values: FAIL
 </code></pre>
-<pre><code>## 	 The following required columns are not present: `extraction_date, acquisition_date, lc_column_id`
+<pre><code>##   + (+) All required columns present
 </code></pre>
 <pre><code>##   + (+) `sample_id` seems OK
 </code></pre>
@@ -240,11 +246,13 @@ check_results(r_m = results_named, m_s = metadata_sample_named, m_m = metadata_m
 </code></pre>
 <pre><code>##   + (+) `raw_file` unique values: OK
 </code></pre>
-<pre><code>##    - (-) `extraction_date` column missed: FAIL
+<pre><code>##    - (-) `extraction_date` has NA values: FAIL
 </code></pre>
-<pre><code>##    - (-) `acquisition_date` column missed: FAIL
+<pre><code>##    - (-) `acquisition_date` has NA values: FAIL
 </code></pre>
-<pre><code>##    - (-) `lc_column_id` column missed: FAIL
+<pre><code>##    - (-) NA values detected in column ` lc_column_id `: FAIL
+</code></pre>
+<pre><code>##    - ( ) Number of unique values in column ` lc_column_id `:  1
 </code></pre>
 <pre><code class="language-r">check_results(r_m = results_named, m_s = metadata_sample_named, m_m = metadata_metabolites_named)
 </code></pre>
@@ -321,8 +329,6 @@ check_results(r_m = results_named,
 </code></pre>
 <p>Need extra help? Please, either contact the BIC at <a href="mailto:motrpac-helpdesk@lists.stanford.edu">motrpac-helpdesk@lists.stanford.edu</a> and/or <a href="https://github.com/MoTrPAC/MotrpacBicQC/issues">submit an issue here</a>
 providing as many details as possible</p>
-</div>
-<div class="include-after">
 </div>
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js" defer></script>

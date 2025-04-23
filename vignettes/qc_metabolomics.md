@@ -1,12 +1,13 @@
 ---
 title: "MotrpacBicQC: Metabolomics QC"
-date: "2024-01-04"
+date: "2025-04-23"
 output:
-  rmdformats::downcute:
+  html_document:
+    theme: cosmo
+    highlight: tango
+    toc: true
+    toc_float: true
     code_folding: show
-    self_contained: true
-    thumbnails: false
-    lightbox: true
 pkgdown:
   as_is: true
   
@@ -62,7 +63,7 @@ First, download and install R and RStudio:
 Then, open RStudio and install the `devtools` package
 
 
-```r
+``` r
 install.packages("devtools")
 ```
 
@@ -70,7 +71,7 @@ Finally, install the `MotrpacBicQC` package.
 **Important**: install it every time that you run the QCs to ensure that the latest version is used.
 
 
-```r
+``` r
 library(devtools)
 devtools::install_github("MoTrPAC/MotrpacBicQC", build_vignettes = FALSE)
 ```
@@ -81,7 +82,7 @@ devtools::install_github("MoTrPAC/MotrpacBicQC", build_vignettes = FALSE)
 Load the library
 
 
-```r
+``` r
 library(MotrpacBicQC)
 ```
 
@@ -89,7 +90,7 @@ And run any of the following tests to check that the package
 is correctly installed and it works. For example:
 
 
-```r
+``` r
 # Just copy and paste in the RStudio terminal
 
 check_metadata_metabolites(df = metadata_metabolites_named, name_id = "named")
@@ -100,7 +101,7 @@ check_results(r_m = results_named, m_s = metadata_sample_named, m_m = metadata_m
 which should generate the following output:
 
 
-```r
+``` r
 check_metadata_metabolites(df = metadata_metabolites_named, name_id = "named")
 ```
 
@@ -121,7 +122,23 @@ check_metadata_metabolites(df = metadata_metabolites_named, name_id = "named")
 ```
 
 ```
-##   + (+) `refmet_name` ids found in refmet: OK
+##       (-) `refmet_name` [`Leucine/Isoleucine`] must be modified to the RefMet Standarized name: "Leucine" (Error RN2)
+```
+
+```
+##       (-) `refmet_name` [`Oxoglutaric acid`] must be modified to the RefMet Standarized name: "2-Oxoglutaric acid" (Error RN2)
+```
+
+```
+##       (-) `refmet_name` [`Citric acid/Isocitric acid`] must be modified to the RefMet Standarized name: "Citric acid" (Error RN2)
+```
+
+```
+##       (-) Total number of missed ids on MW: 3
+```
+
+```
+##    - (-) SUMMARY: 3 `refmet_name` not found in RefMet Metabolomics Data Dictionary: FAIL
 ```
 
 ```
@@ -140,16 +157,16 @@ check_metadata_metabolites(df = metadata_metabolites_named, name_id = "named")
 ##   + (+) {formula} available: OK
 ```
 
-```r
+``` r
 check_metadata_samples(df = metadata_sample_named, cas = "umichigan")
 ```
 
 ```
-##    - (-) `metadata_sample`: Expected COLUMN NAMES are missed: FAIL
+##    - (-) `metadata_sample`: recently required COLUMN NAMES are missed: Adding with NA values: FAIL
 ```
 
 ```
-## 	 The following required columns are not present: `extraction_date, acquisition_date, lc_column_id`
+##   + (+) All required columns present
 ```
 
 ```
@@ -173,18 +190,22 @@ check_metadata_samples(df = metadata_sample_named, cas = "umichigan")
 ```
 
 ```
-##    - (-) `extraction_date` column missed: FAIL
+##    - (-) `extraction_date` has NA values: FAIL
 ```
 
 ```
-##    - (-) `acquisition_date` column missed: FAIL
+##    - (-) `acquisition_date` has NA values: FAIL
 ```
 
 ```
-##    - (-) `lc_column_id` column missed: FAIL
+##    - (-) NA values detected in column ` lc_column_id `: FAIL
 ```
 
-```r
+```
+##    - ( ) Number of unique values in column ` lc_column_id `:  1
+```
+
+``` r
 check_results(r_m = results_named, m_s = metadata_sample_named, m_m = metadata_metabolites_named)
 ```
 
@@ -209,7 +230,7 @@ Two approaches available:
 Run test on the full submission. For that, run the following command:
 
 
-```r
+``` r
 validate_metabolomics(input_results_folder = "/full/path/to/PROCESSED_YYYYMMDD", 
                       cas = "your_site_code")
 ```
@@ -234,7 +255,7 @@ This function can also print out a number of QC plots, including:
 For that, run it like this:
 
 
-```r
+``` r
 validate_metabolomics(input_results_folder = "/full/path/to/PROCESSED_YYYYMMDD", 
                       cas = "your_site_code",
                       f_proof = TRUE,
@@ -251,7 +272,7 @@ In the rare case that you need to process individual files, that also can be don
 Check metadata metabolites:
 
 
-```r
+``` r
 # Open the metadata_metabolites file(s)
 
 metadata_metabolites_named <- read.delim(file = "/path/to/your/file", stringsAsFactors = FALSE)
@@ -264,7 +285,7 @@ check_metadata_metabolites(df = metadata_metabolites_unnamed, name_id = "unnamed
 Check metadata samples:
 
 
-```r
+``` r
 # Open your files
 metadata_sample_named <- read.delim(file = "/path/to/your/file", stringsAsFactors = FALSE)
 metadata_sample_unnamed <- read.delim(file = "/path/to/your/file", stringsAsFactors = FALSE)
@@ -276,7 +297,7 @@ check_metadata_samples(df = metadata_sample_unnamed, cas = "your_side_id")
 Check results, which needs both both metadata metabolites and samples
 
 
-```r
+``` r
 # Open your files
 metadata_metabolites_named <- read.delim(file = "/path/to/your/file", stringsAsFactors = FALSE)
 metadata_sample_named <- read.delim(file = "/path/to/your/file", stringsAsFactors = FALSE)
@@ -294,7 +315,7 @@ check_results(r_m = results_named,
 Additional details for each function can be found by typing, for example:
 
 
-```r
+``` r
 ?validate_metabolomics
 ```
 
