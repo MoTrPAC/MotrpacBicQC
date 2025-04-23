@@ -35,7 +35,7 @@ metabolomics-untargeted,LRPPOS,metab-u-lrppos,"Untargeted Lipidomics, Reversed-P
 metabolomics-untargeted,RPPOS,metab-u-rppos,Untargeted Reversed-Phase Positive,umichigan,METAB,#E41A1C,RPP(U),Metabolomics
 metabolomics-untargeted,RPNEG,metab-u-rpneg,Untargeted Reversed-Phase Negative,umichigan,METAB,#E41A1C,RPN(U),Metabolomics
 metabolomics-untargeted,IONPNEG,metab-u-ionpneg,Untargeted Ion-Pair Negative,umichigan,METAB,#E41A1C,IPN(U),Metabolomics
-proteomics-targeted,,immunoassay,Multiplexed immunoassays,stanford,IMMUNO,#999999,Immuno,
+proteomics-targeted,,immunoassay,Multiplexed immunoassays,stanford,IMMUNO,#999999,Immuno,Immunoassay
 clinical-chemistry,LAB_CK,lab-ck,"Clinical Chemistry, Activity Assay Creatine Kinase (CK)",duke,LAB,#777777,CK,Clinical Chem
 clinical-chemistry,LAB_GLC,lab-glc,"Clinical Chemistry, Immunoassay Glucagon (GLC)",duke,LAB,#777777,Glucagon,Clinical Chem
 clinical-chemistry,LAB_INS,lab-ins,"Clinical Chemistry, Immunoassay Insulin (INS)",duke,LAB,#777777,Insulin,Clinical Chem
