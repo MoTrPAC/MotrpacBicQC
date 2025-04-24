@@ -1,12 +1,13 @@
 ---
 title: "MotrpacBicQC: OLINK QC"
-date: "2024-11-17"
+date: "2025-04-23"
 output:
-  rmdformats::downcute:
+  html_document:
+    theme: cosmo
+    highlight: tango
+    toc: true
+    toc_float: true
     code_folding: show
-    self_contained: true
-    thumbnails: false
-    lightbox: true
 pkgdown:
   as_is: true
   

@@ -1,12 +1,13 @@
 ---
 title: "MotrpacBicQC: Proteomics QC"
-date: "2024-01-04"
+date: "2025-04-23"
 output:
-  rmdformats::downcute:
+  html_document:
+    theme: cosmo
+    highlight: tango
+    toc: true
+    toc_float: true
     code_folding: show
-    self_contained: true
-    thumbnails: false
-    lightbox: true
 pkgdown:
   as_is: true
   
@@ -27,14 +28,14 @@ First, download and install R and RStudio:
 Then, open RStudio and install the `devtools` package
 
 
-```r
+``` r
 install.packages("devtools")
 ```
 
 Finally, install the `MotrpacBicQC` package
 
 
-```r
+``` r
 library(devtools)
 devtools::install_github("MoTrPAC/MotrpacBicQC", build_vignettes = TRUE)
 ```
@@ -45,7 +46,7 @@ devtools::install_github("MoTrPAC/MotrpacBicQC", build_vignettes = TRUE)
 Load the library
 
 
-```r
+``` r
 library(MotrpacBicQC)
 ```
 
@@ -53,7 +54,7 @@ And run any of the following tests to check that the package
 is correctly installed and it works. For example:
 
 
-```r
+``` r
 # Just copy and paste in the RStudio terminal
 test <- check_ratio_proteomics(df_ratio = metadata_metabolites_named, 
                                isPTM =  TRUE)
@@ -111,7 +112,7 @@ Two approaches available:
 Run test on the full submission. For that, run the following command:
 
 
-```r
+``` r
 validate_proteomics(input_results_folder = "/full/path/to/RESULTS_YYYYMMDD", 
                     cas = "your_site_code")
 
@@ -133,7 +134,7 @@ validate_proteomics(input_results_folder = "/full/path/to/PASS1B-06/T55/PROT_PH/
 - Check ratio resuls file
 
 
-```r
+``` r
 # Open the ratio results file
 
 proteomics_ratio_results <- read.delim(file = "/path/to/your/file", stringsAsFactors = FALSE)
@@ -146,7 +147,7 @@ check_ratio_proteomics(df_ratio = proteomics_ratio_results,
 - Check proteomics reporter ion intensity file:
 
 
-```r
+``` r
 # Open your files
 proteomics_ratio_results <- read.delim(file = "/path/to/your/file", stringsAsFactors = FALSE)
 
@@ -156,7 +157,7 @@ check_rii_proteomics(df_rri = proteomics_ratio_results, cas = "your_side_id")
 - Check proteomics vial metadata file
 
 
-```r
+``` r
 # Open your files
 vial_metadata <- read.delim(file = "/path/to/your/file", stringsAsFactors = FALSE)
 
@@ -170,7 +171,7 @@ check_vial_metadata_proteomics(df_vm = vial_metadata)
 Additional details for each function can be found by typing, for example:
 
 
-```r
+``` r
 ?check_vial_metadata_proteomics
 ```
 

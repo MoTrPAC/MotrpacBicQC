@@ -5,6 +5,7 @@ notes_developers.md
 ^docs$
 ^pkgdown$
 ^docs/pkgdown\.yml$
+^_pkgdown\.yml$
 ^\.github$
 ^doc$
 ^Meta$

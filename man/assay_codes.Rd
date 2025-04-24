@@ -14,6 +14,8 @@ A data frame with assay codes
 \item{cas_code}{MoTrPAC chemical analysis site}
 \item{assay_abbreviation}{Assay abbreviation}
 \item{assay_hex_colour}{Assay hex colour}
+\item{assay_short_text}{Abbreviated name specific to the assay that can be used in graphs and tables as needed}
+\item{ome_text}{Omic class measured by the given assay}
 }
 }
 \usage{

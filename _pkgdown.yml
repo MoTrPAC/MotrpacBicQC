@@ -1,0 +1,4 @@
+url: https://motrpac.github.io/MotrpacBicQC/
+destination: docs
+template:
+  bootstrap: 5

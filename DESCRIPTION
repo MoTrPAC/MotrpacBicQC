@@ -1,8 +1,8 @@
 Package: MotrpacBicQC
 Type: Package
 Title: QC/QA functions for the MoTrPAC community
-Version: 0.9.9
-Date: 2025-04-22
+Version: 1.0.0
+Date: 2025-04-23
 Author: MoTrPAC Bioinformatics Center
 Maintainer: David Jimenez-Morales <davidjm@stanford.edu>
 Description: R Package for the analysis of MoTrPAC datasets. 
@@ -15,7 +15,7 @@ Description: R Package for the analysis of MoTrPAC datasets.
     QC/QA analysis of datasets generated and submitted 
     by the consortium Chemical Analysis Sites.
 License: MIT + file LICENSE
-URL: https://github.com/MoTrPAC/MotrpacBicQC
+URL: https://motrpac.github.io/MotrpacBicQC
 Encoding: UTF-8
 LazyData: true
 BugReports: https://github.com/MoTrPAC/MotrpacBicQC/issues
