@@ -9,13 +9,15 @@ A data frame with assay codes
 \describe{
 \item{omics_code}{Main OMIC group}
 \item{submission_code}{Assay submission code}
-\item{assay_code}{Assay release code}
+\item{assay}{Assay release code}
+\item{assay_code}{Assay release code, same as assay}
 \item{assay_name}{Assay long name}
 \item{cas_code}{MoTrPAC chemical analysis site}
 \item{assay_abbreviation}{Assay abbreviation}
 \item{assay_hex_colour}{Assay hex colour}
 \item{assay_short_text}{Abbreviated name specific to the assay that can be used in graphs and tables as needed}
-\item{ome_text}{Omic class measured by the given assay}
+\item{omics_text}{OMIC class measured by the given assay}
+\item{ome_text}{OME category measured by the given assay}
 }
 }
 \usage{
