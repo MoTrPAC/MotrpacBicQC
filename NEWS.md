@@ -1,3 +1,10 @@
+# MotrpacBicQC 1.1.0 (2025-05-01)
+
+* Update the data object `assay_codes`:
+  + Update `omics_text` values to omics technologies
+  + Add `ome_text` for the "omes": the complete set of a given biological entity (all genes, all proteins, etc.)
+  + Add `assay` as a copy of `assay_code`
+  
 # MotrpacBicQC 1.0.0 (2025-04-23)
 
 * Update the data object `assay_codes` with 2 new variables:
