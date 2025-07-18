@@ -1,11 +1,12 @@
 omics_code,submission_code,assay,assay_code,assay_name,cas_code,assay_abbreviation,assay_hex_colour,assay_short_text,omics_text,ome_text
-transcriptomics,,transcript-rna-seq,transcript-rna-seq,rna-seq,stanford,TRNSCRPT,#377EB8,RNA-seq,Transcriptomics,Transcriptome
-transcriptomics,,transcript-rna-seq,transcript-rna-seq,rna-seq,mssm,TRNSCRPT,#377EB8,RNA-seq,Transcriptomics,Transcriptome
-transcriptomics,,transcript-rna-seq-splicing,transcript-rna-seq-splicing,rna-seq,stanford,NA,NA,RNA-seq Splice,Transcriptomics,Transcriptome
-transcriptomics,,transcript-rna-seq-splicing,transcript-rna-seq-splicing,rna-seq,mssm,NA,NA,RNA-seq Splice,Transcriptomics,Transcriptome
-epigenomics,,epigen-rrbs,epigen-rrbs,RRBS,mssm,METHYL,#F781BF,RRBS,Methylation,Methylome
-epigenomics,,epigen-methylcap-seq,epigen-methylcap-seq,Methyl Capture,mssm,METHYL,#F781BF,MethylCap-seq,Methylation,Methylome
-epigenomics,,epigen-atac-seq,epigen-atac-seq,atac-seq,stanford,ATAC,#A65628,ATAC-seq,Chromatin Accessibility,Epigenome
+transcriptomics,rna-seq,transcript-rna-seq,transcript-rna-seq,rna-seq,stanford,TRNSCRPT,#377EB8,RNA-seq,Transcriptomics,Transcriptome
+transcriptomics,rna-seq,transcript-rna-seq,transcript-rna-seq,rna-seq,mssm,TRNSCRPT,#377EB8,RNA-seq,Transcriptomics,Transcriptome
+transcriptomics,rna-seq,transcript-rna-seq-splicing,transcript-rna-seq-splicing,rna-seq,stanford,NA,NA,RNA-seq Splice,Transcriptomics,Transcriptome
+transcriptomics,rna-seq,transcript-rna-seq-splicing,transcript-rna-seq-splicing,rna-seq,mssm,NA,NA,RNA-seq Splice,Transcriptomics,Transcriptome
+epigenomics,rrbs,epigen-rrbs,epigen-rrbs,RRBS,mssm,METHYL,#F781BF,RRBS,Methylation,Methylome
+epigenomics,methylcap-seq,epigen-methylcap-seq,epigen-methylcap-seq,Methyl Capture,mssm,METHYL,#F781BF,MethylCap-seq,Methylation,Methylome
+epigenomics,atac-seq,epigen-atac-seq,epigen-atac-seq,atac-seq,stanford,ATAC,#A65628,ATAC-seq,Chromatin Accessibility,Epigenome
+genomics,wgs,genomic-wgs,genomic-wgs,wgs,mssm,WGS,NA,WGS,Whole Genome Sequencing,Genome
 proteomics-untargeted,PROT_PR,prot-pr,prot-pr,Global Proteomics,broad_prot,PROT,#4DAF4A,Prot(MS),Proteomics,Proteome
 proteomics-untargeted,PROT_PR,prot-pr,prot-pr,Global Proteomics,pnnl,PROT,#4DAF4A,Prot(MS),Proteomics,Proteome
 proteomics-untargeted,PROT_PH,prot-ph,prot-ph,Phophoproteomics,broad_prot,PHOSPHO,#FF7F00,Phospho,Phosphoproteomics,Phosphoproteome
