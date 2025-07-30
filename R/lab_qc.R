@@ -598,7 +598,7 @@ validate_lab <- function(input_results_folder,
     }
   }
   
-  # Manifest file check
+  # Manifest file check-----
   if (verbose) message("\n## QC `file_manifest_YYYYMMDD.csv` (required)\n")
   
   file_manifest <- list.files(normalizePath(batch_folder),
