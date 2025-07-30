@@ -1,3 +1,9 @@
+
+# MotrpacBicQC 1.2.0 (2025-07-30)
+
+* `assay_code` Updates: Added a new assay code for Whole Genome Sequencing (WGS) to `inst/extdata/assay_codes.csv`. Additionally, `submission_code` values were populated for several existing transcriptomics and epigenomics entries, and a typo for 'Phosphoproteomics' was corrected.
+* File Location Enforcement: Modified the `set_phase` function in `R/misc.R` to enforce that the `metadata_phase.txt` file must be located directly within the batch folder. This is achieved by changing the recursive parameter in the `list.files` call from TRUE to FALSE.
+  
 # MotrpacBicQC 1.1.0 (2025-05-01)
 
 * Update the data object `assay_codes`:

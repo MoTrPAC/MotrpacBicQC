@@ -594,7 +594,7 @@ set_phase <- function(input_results_folder,
                            pattern="metadata_phase.txt",
                            ignore.case = TRUE,
                            full.names=TRUE,
-                           recursive = TRUE)
+                           recursive = FALSE)
 
   if(length(file_phase) > 1){
     if(verbose) message("- (-) `More than one `metadata_phase.txt` file available. Only one is valid (place the valid one in the BATCH folder): FAIL")
