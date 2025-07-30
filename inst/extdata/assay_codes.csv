@@ -9,8 +9,8 @@ epigenomics,atac-seq,epigen-atac-seq,epigen-atac-seq,atac-seq,stanford,ATAC,#A65
 genomics,wgs,genomic-wgs,genomic-wgs,wgs,mssm,WGS,NA,WGS,Whole Genome Sequencing,Genome
 proteomics-untargeted,PROT_PR,prot-pr,prot-pr,Global Proteomics,broad_prot,PROT,#4DAF4A,Prot(MS),Proteomics,Proteome
 proteomics-untargeted,PROT_PR,prot-pr,prot-pr,Global Proteomics,pnnl,PROT,#4DAF4A,Prot(MS),Proteomics,Proteome
-proteomics-untargeted,PROT_PH,prot-ph,prot-ph,Phophoproteomics,broad_prot,PHOSPHO,#FF7F00,Phospho,Phosphoproteomics,Phosphoproteome
-proteomics-untargeted,PROT_PH,prot-ph,prot-ph,Phophoproteomics,pnnl,PHOSPHO,#FF7F00,Phospho,Phosphoproteomics,Phosphoproteome
+proteomics-untargeted,PROT_PH,prot-ph,prot-ph,Phosphoproteomics,broad_prot,PHOSPHO,#FF7F00,Phospho,Phosphoproteomics,Phosphoproteome
+proteomics-untargeted,PROT_PH,prot-ph,prot-ph,Phosphoproteomics,pnnl,PHOSPHO,#FF7F00,Phospho,Phosphoproteomics,Phosphoproteome
 proteomics-untargeted,PROT_AC,prot-ac,prot-ac,Acetyl proteomics,broad_prot,ACETYL,#984EA3,Acetyl,Acetyl Proteomics,Acetylproteome
 proteomics-untargeted,PROT_UB,prot-ub,prot-ub,Protein Ubiquitination,broad_prot,UBIQ,#cfc100,Ubiq,Protein Ubiquitination,Ubiquitinome
 metabolomics-targeted,3HIB,metab-t-3hib,metab-t-3hib,Targeted 3-Hydroxyisobutyric Acid (3-HIB),duke,METAB,#E41A1C,3-HIB(T),Metabolomics,Metabolome
