@@ -707,7 +707,7 @@ validate_lab <- function(input_results_folder,
   
   batchversion <- stringr::str_extract(string = input_results_folder, pattern = "BATCH.*_[0-9]+/RESULTS_[0-9]+")
   
-  qc_date <- format(Sys.time(), "%Y%m%d_%H%M%S")
+  qc_date <- format(Sys.time(), "%Y%m%d")
   t_name <- bic_animal_tissue_code$bic_tissue_name[bic_animal_tissue_code$bic_tissue_code == tissue_code]
   
   if (return_n_issues) {
