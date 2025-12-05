@@ -1751,7 +1751,7 @@ write_metabolomics_releases <- function(input_results_folder,
     unnamed_results <- file.path(output_folder, paste0(file_name_shared,"_unnamed-results_", version_file, ".txt"))
 
     metab_dfs$m_m_u <- clean_character_columns(metab_dfs$m_m_u)
-    metab_dfs$m_s_u <- clean_character_columns(metab_dfs$m_s_u)
+    metab_dfs$m_s_n <- clean_character_columns(metab_dfs$m_s_n)
     write.table(metab_dfs$m_m_u, unnamed_metadata_metabolites, row.names = FALSE, sep = "\t", quote = FALSE)
     write.table(metab_dfs$m_s_n, unnamed_metadata_samples, row.names = FALSE, sep = "\t", quote = FALSE)
     write.table(metab_dfs$r_m_u, unnamed_results, row.names = FALSE, sep = "\t", quote = FALSE)
