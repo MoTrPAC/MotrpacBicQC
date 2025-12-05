@@ -277,25 +277,46 @@ check_viallabel_dmaqc <- function(vl_submitted,
   # There might be multiple phases to check: load both
   ph <- unlist(strsplit(phase, split = "\\|"))
   dmaqc_labels <- vector()
+  month <- NULL
+  tr <- NULL
   for(i in 1:length(ph)){
     eph <- ph[i]
-    pass <- gsub("(.*)(-)(.*)", "\\1", eph)
-    if(tolower(pass) != "human"){
+    if (grepl("HUMAN", eph)) {
+      if (lengths(gregexpr("-", eph)) == 2) {
+        # this must be HUMAN-MAIN-TR02 FORMAT
+        sp <- gsub("(.*)(-)(.*)(-)(.*)", "\\1", eph)
+        tr <- gsub("(.*)(-)(.*)(-)(.*)", "\\5", eph)
+      } else if (lengths(gregexpr("-", eph)) == 1) {
+        # HUMAN PRECOVID
+        sp <- gsub("(.*)(-)(.*)", "\\1", eph)
+        tr <- "00"
+      } else{
+        warning("PROBLEM WITH THE PHASE:",
+                eph,
+                ": it doesn't contain a valid format for HUMAN phase")
+      }
+    } else if (grepl("PASS", eph)) {
+      sp <- gsub("(.*)(-)(.*)", "\\1", eph)
       month <- gsub("(.*)(-)(.*)", "\\3", eph)
       month <- as.integer(month)
     }
-    
+
     dmaqc_shipping_df <- read.delim(dmaqc_shipping_info, stringsAsFactors = FALSE)
     
-    if(tolower(pass) == "human"){
-      dmaqc_labels_temp <- dmaqc_shipping_df$vial_label[which(dmaqc_shipping_df$bic_tissue_code == tissue_code &
-                                                                dmaqc_shipping_df$site_code == tolower(cas) &
-                                                                dmaqc_shipping_df$phase == pass)]
+    if(tolower(sp) == "human"){
+      dmaqc_labels_temp <- dmaqc_shipping_df$vial_label[which(
+        dmaqc_shipping_df$bic_tissue_code == tissue_code &
+          dmaqc_shipping_df$site_code == tolower(cas) &
+          dmaqc_shipping_df$phase == sp & 
+          dmaqc_shipping_df$tranche == tr
+      )]
     }else{
-      dmaqc_labels_temp <- dmaqc_shipping_df$vial_label[which(dmaqc_shipping_df$bic_tissue_code == tissue_code &
-                                                                dmaqc_shipping_df$site_code == tolower(cas) &
-                                                                dmaqc_shipping_df$phase == pass &
-                                                                dmaqc_shipping_df$animal_age == month)]
+      dmaqc_labels_temp <- dmaqc_shipping_df$vial_label[which(
+        dmaqc_shipping_df$bic_tissue_code == tissue_code &
+          dmaqc_shipping_df$site_code == tolower(cas) &
+          dmaqc_shipping_df$phase == sp &
+          dmaqc_shipping_df$animal_age == month
+      )]
     }
 
     if(i == 1){
