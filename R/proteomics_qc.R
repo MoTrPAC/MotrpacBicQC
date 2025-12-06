@@ -905,6 +905,7 @@ validate_proteomics <- function(input_results_folder,
         all_vial_labels <- all_samples[!grepl('^Ref', all_samples)]
       }else{
         if(verbose) message("      - (-) Ref channels not found in vial_metadata")
+        all_samples <- v_m$vial_label
         ic_vm <- ic_vm + 1
       }
     }
