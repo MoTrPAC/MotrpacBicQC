@@ -291,9 +291,7 @@ check_viallabel_dmaqc <- function(vl_submitted,
         sp <- gsub("(.*)(-)(.*)", "\\1", eph)
         tr <- "00"
       } else{
-        warning("PROBLEM WITH THE PHASE:",
-                eph,
-                ": it doesn't contain a valid format for HUMAN phase")
+        warning(paste("PROBLEM WITH THE PHASE:", eph, ": it doesn't contain a valid format for HUMAN phase"))
       }
     } else if (grepl("PASS", eph)) {
       sp <- gsub("(.*)(-)(.*)", "\\1", eph)
