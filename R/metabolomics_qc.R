@@ -1147,7 +1147,14 @@ validate_metabolomics <- function(input_results_folder,
   t_name <- bic_animal_tissue_code$bic_tissue_name[which(bic_animal_tissue_code$bic_tissue_code == tissue_code)]
 
   if(return_n_issues){
+    # Calculate base total issues
     total_issues <- sum(ic, ic_man, ic_m_m_n, ic_m_m_u, ic_m_s_n, ic_m_s_u, ic_r_m_n, ic_r_m_u, na.rm = TRUE)
+    
+    # Add DMAQC issues if dmaqc_shipping_info was provided and validation failed
+    if (!is.null(dmaqc_shipping_info) && !is.na(ic_vl) && ic_vl == "FAIL") {
+      total_issues <- total_issues + 1
+    }
+    
     if(verbose) message("\nTOTAL NUMBER OF ISSUES: ", total_issues,"\n")
     if(full_report){
       reports <- data.frame(cas = cas,
