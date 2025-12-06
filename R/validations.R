@@ -279,6 +279,7 @@ check_viallabel_dmaqc <- function(vl_submitted,
   dmaqc_labels <- vector()
   month <- NULL
   tr <- NULL
+  sp <- NULL
   for(i in 1:length(ph)){
     eph <- ph[i]
     if (grepl("HUMAN", eph)) {
