@@ -829,14 +829,17 @@ validate_olink <- function(input_results_folder,
   
   batchversion <- stringr::str_extract(string = input_results_folder, pattern = "BATCH.*_[0-9]+/RESULTS_[0-9]+")
   
-  qc_date <- Sys.time()
-  qc_date <- gsub("-", "", qc_date)
-  qc_date <- gsub(" ", "_", qc_date)
-  qc_date <- gsub(":", "", qc_date)
+  qc_date <- format(Sys.time(), "%Y%m%d")
   t_name <- bic_animal_tissue_code$bic_tissue_name[which(bic_animal_tissue_code$bic_tissue_code == tissue_code)]
   
   if(return_n_issues){
+    # Calculate base total issues
     total_issues <- sum(ic, ic_man, ic_m_p, ic_m_s, ic_r, na.rm = TRUE)
+    
+    # Add DMAQC issues if dmaqc_shipping_info was provided and validation failed
+    if (!is.null(dmaqc_shipping_info) && !is.na(ic_vl) && ic_vl == "FAIL") {
+      total_issues <- total_issues + 1
+    }
 
     if(verbose) message("\nTOTAL NUMBER OF ISSUES: ", total_issues,"\n")
     if(full_report){
@@ -936,9 +939,11 @@ write_olink_releases <- function(input_results_folder,
   }
   
   # Exception for PASS1C-06: the main folder is pass1a
-  if(phase_details == "pass1c-06"){
+  if (phase_details == "pass1c-06") {
     phase_folder_release <- "pass1a-06"
-  }else{
+  } else if (grepl("human-main", phase_details)) {
+    phase_folder_release <- "human-main"
+  } else{
     phase_folder_release <- phase_details
   }
   

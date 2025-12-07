@@ -905,6 +905,7 @@ validate_proteomics <- function(input_results_folder,
         all_vial_labels <- all_samples[!grepl('^Ref', all_samples)]
       }else{
         if(verbose) message("      - (-) Ref channels not found in vial_metadata")
+        all_samples <- v_m$vial_label
         ic_vm <- ic_vm + 1
       }
     }
@@ -1345,14 +1346,18 @@ validate_proteomics <- function(input_results_folder,
   # PRINT OUT RESULTS-----
   batchversion <- stringr::str_extract(string = input_results_folder, pattern = "BATCH.*_([0-9]+/(RESULTS|BICRESULTS)_[0-9]+)")
 
-  qc_date <- Sys.time()
-  qc_date <- gsub("-", "", qc_date)
-  qc_date <- gsub(" ", "_", qc_date)
-  qc_date <- gsub(":", "", qc_date)
+  qc_date <- format(Sys.time(), "%Y%m%d")
   t_name <- bic_animal_tissue_code$bic_tissue_name[which(bic_animal_tissue_code$bic_tissue_code == tissue_code)]
 
   if(return_n_issues){
+    # Calculate base total issues
     total_issues <- sum(ic, ic_vm, ic_rr, ic_rii, ic_man, na.rm = TRUE)
+    
+    # Add DMAQC issues if dmaqc_shipping_info was provided and validation failed
+    if (!is.null(dmaqc_shipping_info) && !is.na(ic_vl) && ic_vl == "FAIL") {
+      total_issues <- total_issues + 1
+    }
+    
     if(verbose) message("\nTOTAL NUMBER OF ISSUES: ", total_issues,"\n")
     if(full_report){
       reports <- data.frame(cas = cas,
@@ -1407,7 +1412,6 @@ write_proteomics_releases <- function(input_results_folder,
   assay <- validate_assay(input_results_folder)
   phase <- validate_phase(input_results_folder)
   tissue_code <- validate_tissue(input_results_folder)
-  folder_phase <- tolower(phase)
   folder_tissue <- bic_animal_tissue_code$tissue_name_release[which(bic_animal_tissue_code$bic_tissue_code == tissue_code)]
   
   phase_metadata <- set_phase(input_results_folder = input_results_folder, 
@@ -1442,8 +1446,17 @@ write_proteomics_releases <- function(input_results_folder,
   }else{
     folder_root <- normalizePath(folder_root)
   }
-
-  output_folder <- file.path(folder_root, folder_name, folder_phase, "proteomics-untargeted", folder_tissue, folder_assay)
+  
+  # Exception for PASS1C-06: the main folder is pass1a
+  if (phase_details == "pass1c-06") {
+    phase_folder_release <- "pass1a-06"
+  } else if (grepl("human-main", phase_details)) {
+    phase_folder_release <- "human-main"
+  } else{
+    phase_folder_release <- phase_details
+  }
+  
+  output_folder <- file.path(folder_root, folder_name, phase_folder_release, "proteomics-untargeted", folder_tissue, folder_assay)
 
   if(!dir.exists(file.path(output_folder))){
     dir.create(file.path(output_folder), recursive = TRUE)

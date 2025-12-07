@@ -1143,14 +1143,18 @@ validate_metabolomics <- function(input_results_folder,
 
   batchversion <- stringr::str_extract(string = input_results_folder, pattern = "BATCH.*_[0-9]+/PROCESSED_[0-9]+")
 
-  qc_date <- Sys.time()
-  qc_date <- gsub("-", "", qc_date)
-  qc_date <- gsub(" ", "_", qc_date)
-  qc_date <- gsub(":", "", qc_date)
+  qc_date <- format(Sys.time(), "%Y%m%d")
   t_name <- bic_animal_tissue_code$bic_tissue_name[which(bic_animal_tissue_code$bic_tissue_code == tissue_code)]
 
   if(return_n_issues){
+    # Calculate base total issues
     total_issues <- sum(ic, ic_man, ic_m_m_n, ic_m_m_u, ic_m_s_n, ic_m_s_u, ic_r_m_n, ic_r_m_u, na.rm = TRUE)
+    
+    # Add DMAQC issues if dmaqc_shipping_info was provided and validation failed
+    if (!is.null(dmaqc_shipping_info) && !is.na(ic_vl) && ic_vl == "FAIL") {
+      total_issues <- total_issues + 1
+    }
+    
     if(verbose) message("\nTOTAL NUMBER OF ISSUES: ", total_issues,"\n")
     if(full_report){
       reports <- data.frame(cas = cas,
@@ -1656,7 +1660,6 @@ write_metabolomics_releases <- function(input_results_folder,
   assay <- validate_assay(input_results_folder)
   
   phase <- validate_phase(input_results_folder)
-  folder_phase <- tolower(phase)
   
   phase_metadata <- set_phase(input_results_folder = input_results_folder, 
                               dmaqc_phase2validate = FALSE, 
@@ -1700,9 +1703,11 @@ write_metabolomics_releases <- function(input_results_folder,
   }
   
   # Exception for PASS1C-06: the main folder is pass1a
-  if(phase_details == "pass1c-06"){
+  if (phase_details == "pass1c-06") {
     phase_folder_release <- "pass1a-06"
-  }else{
+  } else if (grepl("human-main", phase_details)) {
+    phase_folder_release <- "human-main"
+  } else{
     phase_folder_release <- phase_details
   }
 
@@ -1751,7 +1756,7 @@ write_metabolomics_releases <- function(input_results_folder,
     unnamed_results <- file.path(output_folder, paste0(file_name_shared,"_unnamed-results_", version_file, ".txt"))
 
     metab_dfs$m_m_u <- clean_character_columns(metab_dfs$m_m_u)
-    metab_dfs$m_s_u <- clean_character_columns(metab_dfs$m_s_u)
+    metab_dfs$m_s_n <- clean_character_columns(metab_dfs$m_s_n)
     write.table(metab_dfs$m_m_u, unnamed_metadata_metabolites, row.names = FALSE, sep = "\t", quote = FALSE)
     write.table(metab_dfs$m_s_n, unnamed_metadata_samples, row.names = FALSE, sep = "\t", quote = FALSE)
     write.table(metab_dfs$r_m_u, unnamed_results, row.names = FALSE, sep = "\t", quote = FALSE)
