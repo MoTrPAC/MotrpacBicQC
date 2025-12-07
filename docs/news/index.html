@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">MotrpacBicQC</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,391 +41,474 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.2.0" id="motrpacbicqc-120-2025-07-30">MotrpacBicQC 1.2.0 (2025-07-30)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-120-2025-07-30"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.3.0" id="motrpacbicqc-130-2025-12-06">MotrpacBicQC 1.3.0 (2025-12-06)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-130-2025-12-06"></a></h2>
+<div class="section level3">
+<h3 id="new-features-1-3-0">New Features<a class="anchor" aria-label="anchor" href="#new-features-1-3-0"></a></h3>
 <ul><li>
-<code>assay_code</code> Updates: Added a new assay code for Whole Genome Sequencing (WGS) to <code>inst/extdata/assay_codes.csv</code>. Additionally, <code>submission_code</code> values were populated for several existing transcriptomics and epigenomics entries, and a typo for ‘Phosphoproteomics’ was corrected.</li>
-<li>File Location Enforcement: Modified the <code>set_phase</code> function in <code>R/misc.R</code> to enforce that the <code>metadata_phase.txt</code> file must be located directly within the batch folder. This is achieved by changing the recursive parameter in the <code>list.files</code> call from TRUE to FALSE.</li>
+<strong>Human Study Support</strong>: Enhanced handling of HUMAN phase formats, including main and pre-COVID tranches, for more accurate validation of human study submissions</li>
 </ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-1-3-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-1-3-0"></a></h3>
+<ul><li>
+<strong>DMAQC Validation</strong>: Fixed a critical bug where DMAQC validation failures were not being counted in the total issues. The <code>check_viallabel_dmaqc</code> function returns a string status (<code>"OK"</code>, <code>"FAIL"</code>), which was incorrectly checked with <code><a href="https://rdrr.io/r/base/numeric.html" class="external-link">is.numeric()</a></code>. Now properly increments the issue count when validation fails</li>
+<li>
+<strong>Proteomics</strong>: Fixed missing sample labels when reference (Ref) channels are absent in proteomics datasets</li>
+<li>
+<strong>Metabolomics</strong>: Fixed incorrect variable assignment in <code>write_metabolomics_releases</code> where cleaned sample metadata was incorrectly assigned to <code>m_s_u</code> instead of <code>m_s_n</code>
+</li>
+<li>
+<strong>LAB QC Plots</strong>: Fixed plot layout issues in <code>plot_basic_lab_qc</code> that caused plots to print to console instead of saving to PDF. Refactored to use <code><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html" class="external-link">gridExtra::grid.arrange()</a></code> properly</li>
+</ul></div>
+<div class="section level3">
+<h3 id="improvements-1-3-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-1-3-0"></a></h3>
+<ul><li>
+<strong>QC Date Format</strong>: Standardized QC date format to <code>YYYYMMDD</code> across all validation modules (<code>validate_lab</code>, <code>validate_metabolomics</code>, <code>validate_olink</code>, <code>validate_proteomics</code>), ensuring consistency in output filenames and reports</li>
+<li>
+<strong>Phase Parsing</strong>: Improved phase parsing in <code>check_viallabel_dmaqc</code> to handle complex HUMAN phase formats (e.g., <code>HUMAN-MAIN-TR04</code>) correctly</li>
+<li>
+<strong>Release Writer</strong>: Added handling for <code>human-main</code> phase in release folder logic for proper directory structure generation</li>
+<li>
+<strong>PDF Output</strong>: Improved plot output flow—suppresses console noise when saving to PDF and logs saved file locations</li>
+</ul></div>
+<div class="section level3">
+<h3 id="internal-changes-1-3-0">Internal Changes<a class="anchor" aria-label="anchor" href="#internal-changes-1-3-0"></a></h3>
+<ul><li>Updated <code>.Rbuildignore</code> to use explicit regex patterns for more reliable build process</li>
+<li>Various code refactoring for better maintainability</li>
+</ul><hr></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.2.0" id="motrpacbicqc-120-2025-07-30">MotrpacBicQC 1.2.0 (2025-07-30)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-120-2025-07-30"></a></h2>
+<div class="section level3">
+<h3 id="new-features-1-2-0">New Features<a class="anchor" aria-label="anchor" href="#new-features-1-2-0"></a></h3>
+<ul><li>
+<strong>Assay Codes</strong>: Added new assay code for Whole Genome Sequencing (WGS) to <code>inst/extdata/assay_codes.csv</code>
+</li>
+</ul></div>
+<div class="section level3">
+<h3 id="improvements-1-2-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-1-2-0"></a></h3>
+<ul><li>
+<strong>Assay Codes Updates</strong>: Populated <code>submission_code</code> values for several existing transcriptomics and epigenomics entries; corrected typo for ‘Phosphoproteomics’</li>
+<li>
+<strong>File Location Enforcement</strong>: Modified <code>set_phase</code> function to enforce that <code>metadata_phase.txt</code> must be located directly within the batch folder (changed <code>recursive</code> parameter from <code>TRUE</code> to <code>FALSE</code>)</li>
+</ul><hr></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.1.0" id="motrpacbicqc-110-2025-05-01">MotrpacBicQC 1.1.0 (2025-05-01)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-110-2025-05-01"></a></h2>
-<ul><li>Update the data object <code>assay_codes</code>:
-<ul><li>Update <code>omics_text</code> values to omics technologies</li>
-<li>Add <code>ome_text</code> for the “omes”: the complete set of a given biological entity (all genes, all proteins, etc.)</li>
-<li>Add <code>assay</code> as a copy of <code>assay_code</code>
+<div class="section level3">
+<h3 id="improvements-1-1-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-1-1-0"></a></h3>
+<ul><li>Updated the data object <code>assay_codes</code>:
+<ul><li>Updated <code>omics_text</code> values to omics technologies</li>
+<li>Added <code>ome_text</code> for the “omes”: the complete set of a given biological entity (all genes, all proteins, etc.)</li>
+<li>Added <code>assay</code> as a copy of <code>assay_code</code>
 </li>
 </ul></li>
-</ul></div>
+</ul><hr></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.0.0" id="motrpacbicqc-100-2025-04-23">MotrpacBicQC 1.0.0 (2025-04-23)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-100-2025-04-23"></a></h2>
-<ul><li>Update the data object <code>assay_codes</code> with 2 new variables:
+<div class="section level3">
+<h3 id="new-features-1-0-0">New Features<a class="anchor" aria-label="anchor" href="#new-features-1-0-0"></a></h3>
+<ul><li>Updated the data object <code>assay_codes</code> with 2 new variables:
 <ul><li>
-<code>assay_short_text</code>: Abbreviated name specific to the assay that can be used in graphs and tables as needed</li>
+<code>assay_short_text</code>: Abbreviated name specific to the assay for use in graphs and tables</li>
 <li>
 <code>ome_text</code>: Omic class measured by the given assay</li>
 </ul></li>
-<li>Update style of the vignettes</li>
 </ul></div>
+<div class="section level3">
+<h3 id="improvements-1-0-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-1-0-0"></a></h3>
+<ul><li>Updated style of the vignettes</li>
+</ul><hr></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.9.9" id="motrpacbicqc-099-2025-04-22">MotrpacBicQC 0.9.9 (2025-04-22)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-099-2025-04-22"></a></h2>
-<ul><li>Fix minor issue with <code>dl_read_gcp</code>
+<ul><li>Fixed minor issue with <code>dl_read_gcp</code>
 </li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.9.8" id="motrpacbicqc-098-2025-04-10">MotrpacBicQC 0.9.8 (2025-04-10)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-098-2025-04-10"></a></h2>
-<ul><li>Update <code>dl_read_gcp</code>: it now supports <code>gcloud</code> in addition to <code>gsutil</code>.</li>
-</ul></div>
+<ul><li>Updated <code>dl_read_gcp</code>: now supports <code>gcloud</code> in addition to <code>gsutil</code>
+</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.9.7" id="motrpacbicqc-097-2025-03-16">MotrpacBicQC 0.9.7 (2025-03-16)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-097-2025-03-16"></a></h2>
-<ul><li>QC Support for clinical chemistry assays: glucagon, insulin, cortisol, and creatine kinase. It also expects conventional metabolites, previously <code>metab-t-conv</code>, as a new assay withing this category (<code>lab-conv</code>)</li>
-<li>Numerous bug fixes and enhancements</li>
+<div class="section level3">
+<h3 id="new-features-0-9-7">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-9-7"></a></h3>
+<ul><li>
+<strong>Clinical Chemistry Support</strong>: Added QC support for clinical chemistry assays: glucagon, insulin, cortisol, and creatine kinase</li>
+<li>Conventional metabolites (previously <code>metab-t-conv</code>) now expected as a new assay within this category (<code>lab-conv</code>)</li>
 </ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-9-7">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-9-7"></a></h3>
+<ul><li>Numerous bug fixes and enhancements</li>
+</ul><hr></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.9.6" id="motrpacbicqc-096-2024-09-23">MotrpacBicQC 0.9.6 (2024-09-23)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-096-2024-09-23"></a></h2>
 <ul><li>Download and read file from GCP function can create recursive folders (<a href="https://github.com/christopherjin" class="external-link">@christopherjin</a>)</li>
 <li>Adjustments in metabolomics metadata sample files QC to enable processing of old submissions (before batch related variables were required)</li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.9.5" id="motrpacbicqc-095-2024-05-22">MotrpacBicQC 0.9.5 (2024-05-22)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-095-2024-05-22"></a></h2>
-<ul><li>Proteomics: provide QC support for TMT-18</li>
-</ul></div>
+<ul><li>
+<strong>Proteomics</strong>: Added QC support for TMT-18</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.9.4" id="motrpacbicqc-094-2024-05-16">MotrpacBicQC 0.9.4 (2024-05-16)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-094-2024-05-16"></a></h2>
-<ul><li>Enhance and improve <code>dl_read_gcp</code>:
+<ul><li>Enhanced and improved <code>dl_read_gcp</code>:
 <ul><li>Check if <code>gsutil</code> path is correct and report back to the user if it is not</li>
-<li>Handle spaces in folder names (although it is not recommended)</li>
-<li>Improve detecting the source of errors</li>
-<li>Improve verbosity and feedback to the user</li>
+<li>Handle spaces in folder names (although not recommended)</li>
+<li>Improved error source detection</li>
+<li>Improved verbosity and feedback to the user</li>
 </ul></li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.9.3" id="motrpacbicqc-093-2024-03-25">MotrpacBicQC 0.9.3 (2024-03-25)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-093-2024-03-25"></a></h2>
-<ul><li>Critical update <code>validate_refmetname</code>: ensure checking the refmet standarized name. Update refmet tests</li>
-<li>Update <code><a href="../reference/get_and_validate_mdd.html">get_and_validate_mdd()</a></code>
-<ul><li>Update REST service url</li>
-<li>Update Documentation</li>
-<li>Remove dependency on data.table</li>
+<ul><li>
+<strong>Critical Update</strong>: Fixed <code>validate_refmetname</code> to ensure checking the refmet standardized name; updated refmet tests</li>
+<li>Updated <code><a href="../reference/get_and_validate_mdd.html">get_and_validate_mdd()</a></code>:
+<ul><li>Updated REST service URL</li>
+<li>Updated documentation</li>
+<li>Removed dependency on data.table</li>
 </ul></li>
-<li>Enhance: only one <code>metadata_phase</code> file allowed</li>
-<li>Enhance <code>dl_read_gcp</code>: replace data table by read_delim</li>
-<li>Enhance <code>open_file</code>: accept only tab delimited files</li>
-</ul></div>
+<li>Enhanced: only one <code>metadata_phase</code> file allowed</li>
+<li>Enhanced <code>dl_read_gcp</code>: replaced data.table by read_delim</li>
+<li>Enhanced <code>open_file</code>: accepts only tab-delimited files</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.9.2" id="motrpacbicqc-092-2024-03-04">MotrpacBicQC 0.9.2 (2024-03-04)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-092-2024-03-04"></a></h2>
-<ul><li>Critical Update: Resolved an issue where the validation of refmet names was compromised due to updates to the Metabolomics Workbench REST service. This version introduces adjustments to ensure accurate validation of refmet names.</li>
-</ul></div>
+<ul><li>
+<strong>Critical Update</strong>: Resolved an issue where the validation of refmet names was compromised due to updates to the Metabolomics Workbench REST service. This version introduces adjustments to ensure accurate validation of refmet names.</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.9.1" id="motrpacbicqc-091-2024-02-02">MotrpacBicQC 0.9.1 (2024-02-02)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-091-2024-02-02"></a></h2>
-<ul><li>New assays: <code>PROT_OX</code>
+<ul><li>New assay: <code>PROT_OX</code>
 </li>
-<li>Fix package conflicts</li>
+<li>Fixed package conflicts</li>
 <li>OLINK: write release adjustments</li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.9.0" id="motrpacbicqc-090-2024-01-04">MotrpacBicQC 0.9.0 (2024-01-04)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-090-2024-01-04"></a></h2>
-<ul><li>Add support for OLINK datasets (check <code>olink_qc</code> vignette to find out more)</li>
-<li>Adjust function to download data from GCP (<code>dl_read_gcp</code>): it automatically detects the operating system (arguments <code>ignore_std_err</code> and <code>ignore_std_out</code> deprecated)</li>
-<li>Multiple fixes and enhancements</li>
+<div class="section level3">
+<h3 id="new-features-0-9-0">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-9-0"></a></h3>
+<ul><li>Added support for OLINK datasets (check <code>olink_qc</code> vignette to find out more)</li>
 </ul></div>
+<div class="section level3">
+<h3 id="improvements-0-9-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-9-0"></a></h3>
+<ul><li>Adjusted function to download data from GCP (<code>dl_read_gcp</code>): automatically detects the operating system (arguments <code>ignore_std_err</code> and <code>ignore_std_out</code> deprecated)</li>
+<li>Multiple fixes and enhancements</li>
+</ul><hr></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.8.9" id="motrpacbicqc-089-2023-07-07">MotrpacBicQC 0.8.9 (2023-07-07)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-089-2023-07-07"></a></h2>
-<ul><li>Fix bug preventing the processing of BICRESULTS folders (proteomics)</li>
-<li>Make clear that the metadata_phase.txt file is required</li>
+<ul><li>Fixed bug preventing the processing of BICRESULTS folders (proteomics)</li>
+<li>Made clear that the <code>metadata_phase.txt</code> file is required</li>
 <li>Other enhancements</li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.8.8" id="motrpacbicqc-088-2023-06-15">MotrpacBicQC 0.8.8 (2023-06-15)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-088-2023-06-15"></a></h2>
-<ul><li>Add 24 hours time support for the <code>acquisition_date</code> (<code>MM/DD/YYYY HH:MM:SS</code>)</li>
-</ul></div>
+<ul><li>Added 24-hour time support for the <code>acquisition_date</code> (<code>MM/DD/YYYY HH:MM:SS</code>)</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.8.7" id="motrpacbicqc-087-2023-05-22">MotrpacBicQC 0.8.7 (2023-05-22)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-087-2023-05-22"></a></h2>
-<ul><li>Add QC for the new required batching variables</li>
-<li>Replace deprecated <code>ggplot</code> function</li>
-<li>Fix issues with <code>dl_read_gcp</code>
+<ul><li>Added QC for the new required batching variables</li>
+<li>Replaced deprecated <code>ggplot</code> function</li>
+<li>Fixed issues with <code>dl_read_gcp</code>
 </li>
 <li>Other adjustments</li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.8.6" id="motrpacbicqc-086-2023-04-21">MotrpacBicQC 0.8.6 (2023-04-21)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-086-2023-04-21"></a></h2>
 <ul><li>Minor adjustments</li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.8.5" id="motrpacbicqc-085-2023-03-18">MotrpacBicQC 0.8.5 (2023-03-18)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-085-2023-03-18"></a></h2>
 <ul><li>New tissue codes, abbreviations, and colors available for lateral Gastrocnemius and vena cava</li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.8.4" id="motrpacbicqc-084-2023-02-20">MotrpacBicQC 0.8.4 (2023-02-20)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-084-2023-02-20"></a></h2>
-<ul><li>Add new <code>dl_read_gcp</code>
+<ul><li>Added new <code>dl_read_gcp</code>
 </li>
-<li>Replace dplyr <code>summarise</code> function (deprecated) by <code>reframe</code>
+<li>Replaced dplyr <code>summarise</code> function (deprecated) by <code>reframe</code>
 </li>
-<li>Fix bug affecting <code>proteomics_plots</code>
+<li>Fixed bug affecting <code>proteomics_plots</code>
 </li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.8.3" id="motrpacbicqc-083-2023-02-08">MotrpacBicQC 0.8.3 (2023-02-08)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-083-2023-02-08"></a></h2>
-<ul><li>Fix typo</li>
-</ul></div>
+<ul><li>Fixed typo</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.8.1" id="motrpacbicqc-081-and-082-2023-02-08">MotrpacBicQC 0.8.1 and 0.8.2 (2023-02-08)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-081-and-082-2023-02-08"></a></h2>
-<ul><li>Fix bug affecting IMM assays</li>
-</ul></div>
+<ul><li>Fixed bug affecting IMM assays</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.8.0" id="motrpacbicqc-080-2023-02-05">MotrpacBicQC 0.8.0 (2023-02-05)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-080-2023-02-05"></a></h2>
+<div class="section level3">
+<h3 id="new-features-0-8-0">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-8-0"></a></h3>
 <ul><li>New metabolomics targeted assays (IMM_GLC, IMM_INS, IMM_CTR)</li>
-<li>Remove exception of non-unique raw files allowed for CONV assays, and added to IMM assays</li>
-<li>Improve metabolomics documentation</li>
 </ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-8-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-8-0"></a></h3>
+<ul><li>Removed exception of non-unique raw files allowed for CONV assays, and added to IMM assays</li>
+</ul></div>
+<div class="section level3">
+<h3 id="improvements-0-8-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-8-0"></a></h3>
+<ul><li>Improved metabolomics documentation</li>
+</ul><hr></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.7.9" id="motrpacbicqc-079-2023-01-12">MotrpacBicQC 0.7.9 (2023-01-12)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-079-2023-01-12"></a></h2>
-<ul><li>Add exception: unique raw files are now not required for metabolomics CONV assay</li>
-<li>Update <code>assay_codes</code>: immunoassay/IMMUNO added. The table now also includes assay hex colours and assay abbreviation</li>
-</ul></div>
+<ul><li>Added exception: unique raw files are now not required for metabolomics CONV assay</li>
+<li>Updated <code>assay_codes</code>: immunoassay/IMMUNO added. The table now also includes assay hex colours and assay abbreviation</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.7.8" id="motrpacbicqc-078-2022-12-13">MotrpacBicQC 0.7.8 (2022-12-13)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-078-2022-12-13"></a></h2>
 <ul><li>Bug fix</li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.7.7" id="motrpacbicqc-077-2022-12-08">MotrpacBicQC 0.7.7 (2022-12-08)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-077-2022-12-08"></a></h2>
 <ul><li>Better handling of large proteomics datasets:
 <ul><li>Proteomics RII plots are skipped if the dataset is too large</li>
-<li>Larger pdf size for proteomics ratio plots</li>
+<li>Larger PDF size for proteomics ratio plots</li>
 </ul></li>
 <li>Several improvements and enhancements</li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.7.6" id="motrpacbicqc-076-2022-10-27">MotrpacBicQC 0.7.6 (2022-10-27)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-076-2022-10-27"></a></h2>
-<ul><li>Improve DMAQC validation</li>
-</ul></div>
+<ul><li>Improved DMAQC validation</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.7.5" id="motrpacbicqc-075-2022-10-21">MotrpacBicQC 0.7.5 (2022-10-21)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-075-2022-10-21"></a></h2>
-<ul><li>Update <code>write_proteomics</code> according to latest updates on data/file structure</li>
-<li>Fix bugs affecting <code>metabolomics_qc</code> and checks on <code>file_manifest</code>
+<ul><li>Updated <code>write_proteomics</code> according to latest updates on data/file structure</li>
+<li>Fixed bugs affecting <code>metabolomics_qc</code> and checks on <code>file_manifest</code>
 </li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.7.4" id="motrpacbicqc-074-2022-10-09">MotrpacBicQC 0.7.4 (2022-10-09)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-074-2022-10-09"></a></h2>
 <ul><li>Metabolomics plots: check if enough compounds to generate plots</li>
-<li>Update <code>assay_codes</code>: conventional assays code added (CONV)</li>
-</ul></div>
+<li>Updated <code>assay_codes</code>: conventional assays code added (CONV)</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.7.3" id="motrpacbicqc-073-2022-10-02">MotrpacBicQC 0.7.3 (2022-10-02)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-073-2022-10-02"></a></h2>
 <ul><li>Adjustments to generate data releases (deal with pass1a/1c)</li>
 <li>Version number will be added to upcoming releases</li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.7.2" id="motrpacbicqc-072-2022-09-22">MotrpacBicQC 0.7.2 (2022-09-22)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-072-2022-09-22"></a></h2>
-<ul><li>Update a package’s dependency</li>
-</ul></div>
+<ul><li>Updated a package’s dependency</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.7.1" id="motrpacbicqc-071-2022-09-17">MotrpacBicQC 0.7.1 (2022-09-17)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-071-2022-09-17"></a></h2>
 <p>Updates affecting the proteomics validation:</p>
 <ul><li>
-<code>validate_proteomics</code>: rename argument <code>run_by_bic</code> to <code>check_only_results</code>. Default is still <code>FALSE</code> (it does not affect CAS)</li>
-<li>Adjust size of pdf output depending on the number of samples</li>
+<code>validate_proteomics</code>: renamed argument <code>run_by_bic</code> to <code>check_only_results</code>. Default is still <code>FALSE</code> (does not affect CAS)</li>
+<li>Adjusted size of PDF output depending on the number of samples</li>
 <li>Support <code>BICRESULTS_YYYYMMDD</code> folder validation (similar to the currently supported <code>RESULTS_YYYYMMDD</code> and <code>PROCESSED_YYYYMMDD</code> folders). This folder is the output of the proteomics pipeline run by the BIC</li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.7.0" id="motrpacbicqc-070-2022-08-25">MotrpacBicQC 0.7.0 (2022-08-25)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-070-2022-08-25"></a></h2>
-<ul><li>Update motrpac color abbreviations</li>
-</ul></div>
+<ul><li>Updated MoTrPAC color abbreviations</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6.9" id="motrpacbicqc-069-2022-07-09">MotrpacBicQC 0.6.9 (2022-07-09)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-069-2022-07-09"></a></h2>
 <ul><li>Metabolomics: new density plots</li>
 <li>Code optimizations</li>
 <li>Bug fixes affecting file manifest checks</li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6.8" id="motrpacbicqc-068-2022-04-11">MotrpacBicQC 0.6.8 (2022-04-11)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-068-2022-04-11"></a></h2>
-<ul><li>Refactor the DMAQC validation. A new file will be required when:
+<ul><li>Refactored the DMAQC validation. A new file will be required when:
 <ul><li>Two phases are combined in the same batch (e.g., <code>PASS1A-06|PASS1C-06</code>)</li>
 <li>The phase content is different from the input folder name (e.g., <code>PASS1C-06</code> might be submitted but the input folder name is <code>PASS1A-06</code>)</li>
 </ul></li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6.7" id="motrpacbicqc-067-2022-03-11">MotrpacBicQC 0.6.7 (2022-03-11)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-067-2022-03-11"></a></h2>
 <ul><li>DMAQC validation: print out missing vial labels</li>
-<li>Metabolomics QC: add mz/rt density plots</li>
-</ul></div>
+<li>Metabolomics QC: added mz/rt density plots</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6.6" id="motrpacbicqc-066-2022-03-03">MotrpacBicQC 0.6.6 (2022-03-03)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-066-2022-03-03"></a></h2>
-<ul><li>Improve reporting and handling of required files</li>
-<li>Fix minor bugs</li>
-</ul></div>
+<ul><li>Improved reporting and handling of required files</li>
+<li>Fixed minor bugs</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6.5" id="motrpacbicqc-065-2022-02-28">MotrpacBicQC 0.6.5 (2022-02-28)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-065-2022-02-28"></a></h2>
-<ul><li>Metabolomics: fix manifest checks.</li>
-</ul></div>
+<ul><li>Metabolomics: fixed manifest checks</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6.4" id="motrpacbicqc-064-2022-02-27">MotrpacBicQC 0.6.4 (2022-02-27)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-064-2022-02-27"></a></h2>
-<ul><li>Metabolomics: adjust metabolomic plots to deal with a large number of samples</li>
+<ul><li>Metabolomics: adjusted metabolomic plots to deal with a large number of samples</li>
 <li>Metabolomics new plot: sum of intensity/concentration</li>
 <li>Metabolomics: detects negative values</li>
-<li>Metabolomics: update vignette</li>
-</ul></div>
+<li>Metabolomics: updated vignette</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6.3" id="motrpacbicqc-063-2022-02-25">MotrpacBicQC 0.6.3 (2022-02-25)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-063-2022-02-25"></a></h2>
-<ul><li>Proteomics: support for tmt16</li>
-<li>Metabolomics: Improve verbosity for wrong tissue code</li>
-</ul></div>
+<ul><li>Proteomics: support for TMT-16</li>
+<li>Metabolomics: improved verbosity for wrong tissue code</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6.2" id="motrpacbicqc-062-2021-12-07">MotrpacBicQC 0.6.2 (2021-12-07)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-062-2021-12-07"></a></h2>
-<ul><li>Fix bug affecting the validation of refmet_names</li>
-<li>Update data objects (immunoassay added)</li>
-</ul></div>
+<ul><li>Fixed bug affecting the validation of refmet_names</li>
+<li>Updated data objects (immunoassay added)</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6.1" id="motrpacbicqc-061-2021-09-06">MotrpacBicQC 0.6.1 (2021-09-06)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-061-2021-09-06"></a></h2>
-<ul><li>Refactor the validation of refmet_name. It now checks on at the time using the RefMet API. It also validates multipeak isoforms</li>
-<li>The function <code><a href="../reference/get_and_validate_mdd.html">get_and_validate_mdd()</a></code> donwload the entire RefMet database (warning, &gt;15MB)</li>
-<li>The <code>metabolomics_data_dictionary</code> data object will be soon deprecated.</li>
-</ul></div>
+<ul><li>Refactored the validation of refmet_name. It now checks one at a time using the RefMet API. It also validates multipeak isoforms</li>
+<li>The function <code><a href="../reference/get_and_validate_mdd.html">get_and_validate_mdd()</a></code> downloads the entire RefMet database (warning: &gt;15MB)</li>
+<li>The <code>metabolomics_data_dictionary</code> data object will be deprecated soon</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6.0" id="motrpacbicqc-060-2021-09-06">MotrpacBicQC 0.6.0 (2021-09-06)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-060-2021-09-06"></a></h2>
 <ul><li>Support DMAQC validation of human submissions</li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.5.9" id="motrpacbicqc-059-2021-08-10">MotrpacBicQC 0.5.9 (2021-08-10)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-059-2021-08-10"></a></h2>
 <ul><li>Adjustments for PASS1C-06</li>
 <li>Bug fixes affecting HUMAN phase processing</li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.5.8" id="motrpacbicqc-058-2021-08-06">MotrpacBicQC 0.5.8 (2021-08-06)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-058-2021-08-06"></a></h2>
 <ul><li>New Metabolomics QC plots: number and proportion of named vs unnamed features identified</li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.5.7" id="motrpacbicqc-057-2021-08-05">MotrpacBicQC 0.5.7 (2021-08-05)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-057-2021-08-05"></a></h2>
 <ul><li>New proteomics QC plots for protein coverage</li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.5.6" id="motrpacbicqc-056-2021-07-22">MotrpacBicQC 0.5.6 (2021-07-22)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-056-2021-07-22"></a></h2>
 <ul><li>Bug fix</li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.5.5" id="motrpacbicqc-055-2021-07-21">MotrpacBicQC 0.5.5 (2021-07-21)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-055-2021-07-21"></a></h2>
-<ul><li>Update: add human tissue codes</li>
-</ul></div>
+<ul><li>Added human tissue codes</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.5.4" id="motrpacbicqc-054-2021-07-16">MotrpacBicQC 0.5.4 (2021-07-16)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-054-2021-07-16"></a></h2>
 <ul><li>Improved version for checking the file manifest from metabolomics submissions</li>
-<li>Enable DMAQC validation for submissions combining multiple phases (e.g. PASS1A-06 + PASS1C-06)</li>
-</ul></div>
+<li>Enabled DMAQC validation for submissions combining multiple phases (e.g. PASS1A-06 + PASS1C-06)</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.5.3" id="motrpacbicqc-053-2021-06-25">MotrpacBicQC 0.5.3 (2021-06-25)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-053-2021-06-25"></a></h2>
 <ul><li>Metabolomics QC: new metabolomics QC plots, including number of IDs per sample, intensity distribution, and percentage of NA values</li>
-<li>Markdown: Replace <code>prettydoc</code> by <code>rmdformats</code>
+<li>Markdown: replaced <code>prettydoc</code> by <code>rmdformats</code>
 </li>
 <li>New assay code: CONV (Targeted Conventional metabolites or clinical analytes, provided by Duke)</li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.5.2" id="motrpacbicqc-052-2021-06-23">MotrpacBicQC 0.5.2 (2021-06-23)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-052-2021-06-23"></a></h2>
 <ul><li>New Phase: HUMAN (name of the new project folder for the human studies)</li>
-<li>Proteomics QC: new proteomics QC plot, number of unique ids per sample</li>
+<li>Proteomics QC: new proteomics QC plot, number of unique IDs per sample</li>
 <li>Proteomics QC: improved QC plots</li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.5.1" id="motrpacbicqc-051-2021-05-03">MotrpacBicQC 0.5.1 (2021-05-03)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-051-2021-05-03"></a></h2>
-<ul><li>New metabolomics <code>sample_type</code>: <code>QC-ReCAS</code>, Global reference biological material prepared at</li>
-</ul></div>
+<ul><li>New metabolomics <code>sample_type</code>: <code>QC-ReCAS</code>, Global reference biological material prepared at CAS</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.5.0" id="motrpacbicqc-050-2021-04-29">MotrpacBicQC 0.5.0 (2021-04-29)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-050-2021-04-29"></a></h2>
-<ul><li>Update data dictionary (GTech’s kegg revision)</li>
-</ul></div>
+<ul><li>Updated data dictionary (GTech’s KEGG revision)</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.9" id="motrpacbicqc-049-2021-04-27">MotrpacBicQC 0.4.9 (2021-04-27)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-049-2021-04-27"></a></h2>
 <ul><li>Bug fixes</li>
-<li>Update readme</li>
-</ul></div>
+<li>Updated README</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.8" id="motrpacbicqc-048-2021-04-20">MotrpacBicQC 0.4.8 (2021-04-20)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-048-2021-04-20"></a></h2>
-<ul><li>Proteomics QC: enable option to check data processed at the BIC</li>
+<ul><li>Proteomics QC: enabled option to check data processed at the BIC</li>
 <li>Bug fixes (color code)</li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.7" id="motrpacbicqc-047-2021-04-02">MotrpacBicQC 0.4.7 (2021-04-02)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-047-2021-04-02"></a></h2>
-<ul><li>Proteomics QC: update warnings affecting <code>gene_symbol</code> and <code>entrez_id</code> when missing ids</li>
-<li>Fix issue affecting Windows machines (Pierre J-B)</li>
-<li>Several Color code fixes * assay (Nicole G)</li>
+<ul><li>Proteomics QC: updated warnings affecting <code>gene_symbol</code> and <code>entrez_id</code> when missing IDs</li>
+<li>Fixed issue affecting Windows machines (Pierre J-B)</li>
+<li>Several color code fixes for assay (Nicole G)</li>
 <li>Bug fixes</li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.6" id="motrpacbicqc-046-2021-03-26">MotrpacBicQC 0.4.6 (2021-03-26)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-046-2021-03-26"></a></h2>
 <ul><li>New QC checks for the new proteomics requirements</li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.5" id="motrpacbicqc-045-2021-03-25">MotrpacBicQC 0.4.5 (2021-03-25)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-045-2021-03-25"></a></h2>
-<ul><li>Update metabolomics data dictionary, including:
-<ul><li>Broad Metabolomics revision (39 new kegg ids * minor corrections)</li>
-<li>targeted refmet_name</li>
+<ul><li>Updated metabolomics data dictionary, including:
+<ul><li>Broad Metabolomics revision (39 new KEGG IDs + minor corrections)</li>
+<li>Targeted refmet_name</li>
 </ul></li>
-<li>Fix text in warning in case of missing manifest file</li>
-<li>Add and improve tests</li>
-</ul></div>
+<li>Fixed text in warning in case of missing manifest file</li>
+<li>Added and improved tests</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.4" id="motrpacbicqc-044-2021-03-22">MotrpacBicQC 0.4.4 (2021-03-22)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-044-2021-03-22"></a></h2>
-<ul><li>Fix and improve check (new required) manifest file for untargeted metabolomics datasets</li>
-</ul></div>
+<ul><li>Fixed and improved check for new required manifest file for untargeted metabolomics datasets</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.3" id="motrpacbicqc-043-2021-03-16">MotrpacBicQC 0.4.3 (2021-03-16)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-043-2021-03-16"></a></h2>
-<ul><li>Update <code>tissue_cols</code> data object (Nicole Gay)</li>
-</ul></div>
+<ul><li>Updated <code>tissue_cols</code> data object (Nicole Gay)</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.2" id="motrpacbicqc-042-2021-03-10">MotrpacBicQC 0.4.2 (2021-03-10)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-042-2021-03-10"></a></h2>
-<ul><li>Fix bug in <code>validate_metabolomics</code> affecting unnamed sample check</li>
-</ul></div>
+<ul><li>Fixed bug in <code>validate_metabolomics</code> affecting unnamed sample check</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.1" id="motrpacbicqc-041-2021-03-08">MotrpacBicQC 0.4.1 (2021-03-08)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-041-2021-03-08"></a></h2>
 <ul><li>Improved QC for the required manifest file (proteomics and metabolomics)</li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.0" id="motrpacbicqc-040-2021-03-04">MotrpacBicQC 0.4.0 (2021-03-04)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-040-2021-03-04"></a></h2>
 <ul><li>Metabolomics data dictionary available as a data object: <code>metabolomics_data_dictionary</code>
 </li>
-<li>The function <code><a href="../reference/get_and_validate_mdd.html">get_and_validate_mdd()</a></code> still works, but does not pull the data from Metabolomics Workbench. Just return metabolomics_data_dictionary</li>
-<li>Bug fix: the manifest issue count now properly displays the number of issues detected.</li>
-</ul></div>
+<li>The function <code><a href="../reference/get_and_validate_mdd.html">get_and_validate_mdd()</a></code> still works, but does not pull the data from Metabolomics Workbench. Just returns <code>metabolomics_data_dictionary</code>
+</li>
+<li>Bug fix: the manifest issue count now properly displays the number of issues detected</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.9" id="motrpacbicqc-039-2021-02-10">MotrpacBicQC 0.3.9 (2021-02-10)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-039-2021-02-10"></a></h2>
-<ul><li>Bug fix: restore previous version of <code>bic_animal_tissue_code</code>
+<ul><li>Bug fix: restored previous version of <code>bic_animal_tissue_code</code>
 </li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.8" id="motrpacbicqc-038-2021-02-03">MotrpacBicQC 0.3.8 (2021-02-03)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-038-2021-02-03"></a></h2>
-<ul><li>Add new assays</li>
-</ul></div>
+<ul><li>Added new assays</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.5" id="motrpacbicqc-035-2020-10-20">MotrpacBicQC 0.3.5 (2020-10-20)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-035-2020-10-20"></a></h2>
 <ul><li>Bug fix on DMAQC to deal with missing data in DMAQC table</li>
-<li>Proteomics: Address 130C missing channel issue affecting the Broad</li>
-<li>Proteomics: add an additional QC check point to validate that all values in vial_label column are unique</li>
+<li>Proteomics: addressed 130C missing channel issue affecting the Broad</li>
+<li>Proteomics: added additional QC check point to validate that all values in vial_label column are unique</li>
 <li>Proteomics: <code>write_proteomics</code> updated (only required columns selected)</li>
-<li>Fix bugs and typos</li>
-</ul></div>
+<li>Fixed bugs and typos</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.4" id="motrpacbicqc-034-2020-10-15">MotrpacBicQC 0.3.4 (2020-10-15)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-034-2020-10-15"></a></h2>
-<ul><li>Add a check point when expected files are not available in the manifest file</li>
-</ul></div>
+<ul><li>Added check point when expected files are not available in the manifest file</li>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.3" id="motrpacbicqc-033-2020-10-14">MotrpacBicQC 0.3.3 (2020-10-14)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-033-2020-10-14"></a></h2>
-<ul><li>Fix bugs affecting manifest files</li>
+<ul><li>Fixed bugs affecting manifest files</li>
 <li>Adjustments when files don’t meet requirements</li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.2" id="motrpacbicqc-032-2020-10-06">MotrpacBicQC 0.3.2 (2020-10-06)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-032-2020-10-06"></a></h2>
 <ul><li>Check new required manifest file in both proteomics and metabolomics submissions</li>
 <li>Raw file manifest now optional</li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.1" id="motrpacbicqc-031-2020-10-04">MotrpacBicQC 0.3.1 (2020-10-04)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-031-2020-10-04"></a></h2>
 <ul><li>Proteomics write proteomics</li>
 <li>Proteomics load metabolomics</li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.0" id="motrpacbicqc-030-2020-09-21">MotrpacBicQC 0.3.0 (2020-09-21)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-030-2020-09-21"></a></h2>
 <ul><li>Proteomics QC support</li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.2" id="motrpacbicqc-022-2020-08-09">MotrpacBicQC 0.2.2 (2020-08-09)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-022-2020-08-09"></a></h2>
 <ul><li>New assays</li>
-</ul></div>
+</ul><hr></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.1" id="motrpacbicqc-021-2020-06-03">MotrpacBicQC 0.2.1 (2020-06-03)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-021-2020-06-03"></a></h2>
 <ul><li>Bug fixes</li>

@@ -64,14 +64,14 @@ plot_basic_lab_qc <- function(results,
     results_long$sample_order_num <- as.numeric(as.character(results_long$sample_order))
     p3 <- ggplot(results_long, aes(x = sample_order_num, y = value, color = sample_type)) +
       geom_point(alpha = 0.5, na.rm = TRUE) +
-      geom_smooth(method = "loess", formula = y ~ x, se = FALSE, na.rm = TRUE)
+      geom_smooth(method = "loess", formula = y ~ x, se = FALSE, na.rm = TRUE) +
       theme_minimal() +
       labs(title = "Value Trend Over Injection Order",
                     x = "Injection Order", y = "Value")
   } else {
     p3 <- ggplot(results_long, aes(x = sample_id_ordered, y = value, color = sample_type)) +
       geom_point(alpha = 0.5, na.rm = TRUE) +
-      geom_smooth(method = "loess", formula = y ~ x, se = FALSE, na.rm = TRUE)
+      geom_smooth(method = "loess", formula = y ~ x, se = FALSE, na.rm = TRUE) +
       theme_minimal() +
       labs(title = "Value Trend Over Sample Order",
                     x = "Sample Order", y = "Value") +
@@ -93,17 +93,17 @@ plot_basic_lab_qc <- function(results,
     theme(legend.position = "none")
 
   if(verbose) message("  + (p) Plot QC plots")
-  grid_plots <- gridExtra::grid.arrange(p1, p2, p3, p4, ncol = 2)
   
-  # Save to PDF if requested
+  # Save to PDF if requested, otherwise print to screen
   if (printPDF) {
     out_qc_folder <- create_folder(out_qc_folder)
     out_file <- file.path(normalizePath(out_qc_folder), paste0(output_prefix, "-lab-qc-plots.pdf"))
     
     pdf(out_file, width = 14, height = 10)
-    gridExtra::grid.arrange(p1, p2, p3, p4, ncol = 2)
+    invisible(gridExtra::grid.arrange(p1, p2, p3, p4, ncol = 2))
     dev.off()
+    if(verbose) message("    - PDF saved to: ", out_file)
   } else {
-    print(grid_plots)
+    grid_plots <- gridExtra::grid.arrange(p1, p2, p3, p4, ncol = 2)
   }
 }
