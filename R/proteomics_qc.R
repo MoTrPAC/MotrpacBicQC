@@ -1412,7 +1412,6 @@ write_proteomics_releases <- function(input_results_folder,
   assay <- validate_assay(input_results_folder)
   phase <- validate_phase(input_results_folder)
   tissue_code <- validate_tissue(input_results_folder)
-  folder_phase <- tolower(phase)
   folder_tissue <- bic_animal_tissue_code$tissue_name_release[which(bic_animal_tissue_code$bic_tissue_code == tissue_code)]
   
   phase_metadata <- set_phase(input_results_folder = input_results_folder, 
@@ -1447,8 +1446,17 @@ write_proteomics_releases <- function(input_results_folder,
   }else{
     folder_root <- normalizePath(folder_root)
   }
-
-  output_folder <- file.path(folder_root, folder_name, folder_phase, "proteomics-untargeted", folder_tissue, folder_assay)
+  
+  # Exception for PASS1C-06: the main folder is pass1a
+  if (phase_details == "pass1c-06") {
+    phase_folder_release <- "pass1a-06"
+  } else if (grepl("human-main", phase_details)) {
+    phase_folder_release <- "human-main"
+  } else{
+    phase_folder_release <- phase_details
+  }
+  
+  output_folder <- file.path(folder_root, folder_name, phase_folder_release, "proteomics-untargeted", folder_tissue, folder_assay)
 
   if(!dir.exists(file.path(output_folder))){
     dir.create(file.path(output_folder), recursive = TRUE)
