@@ -645,6 +645,7 @@ load_proteomics <- function(input_results_folder,
                      verbose = verbose)
   f_vm <- lista$flag
 
+  all_samples <- NA
   all_vial_labels <- NA
 
   if(f_vm){
@@ -669,6 +670,8 @@ load_proteomics <- function(input_results_folder,
       }else{
         if(verbose) message("      - (-) Ref channels not found in vial_metadata")
         ic_vm <- ic_vm + 1
+        all_samples <- v_m$vial_label
+        all_vial_labels <- all_samples[grepl("^[0-9]+$", all_samples)]
       }
     }
   }else{
@@ -906,6 +909,7 @@ validate_proteomics <- function(input_results_folder,
       }else{
         if(verbose) message("      - (-) Ref channels not found in vial_metadata")
         all_samples <- v_m$vial_label
+        all_vial_labels <- all_samples[grepl("^[0-9]+$", all_samples)]
         ic_vm <- ic_vm + 1
       }
     }
@@ -1429,7 +1433,7 @@ write_proteomics_releases <- function(input_results_folder,
   
   if(verbose) message("+ Writing out ", phase, " (phase-details: ", phase_details, ") ", tissue_code, " ", assay, " files", appendLF = FALSE)
 
-  if( grepl("PH", assay) | grepl("AC", assay) | grepl("UB", assay)){
+  if( grepl("PH|AC|UB|OX", assay) ){
     isPTM = TRUE
   }else{
     isPTM = FALSE
