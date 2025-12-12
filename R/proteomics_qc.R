@@ -1433,7 +1433,7 @@ write_proteomics_releases <- function(input_results_folder,
   
   if(verbose) message("+ Writing out ", phase, " (phase-details: ", phase_details, ") ", tissue_code, " ", assay, " files", appendLF = FALSE)
 
-  if( grepl("PH", assay) | grepl("AC", assay) | grepl("UB", assay) | grepl("OX", assay) ){
+  if( grepl("PH|AC|UB|OX", assay) ){
     isPTM = TRUE
   }else{
     isPTM = FALSE
