@@ -26,6 +26,7 @@
 #'   avoiding clutter even with large numbers of samples (e.g., > 1400 samples). It calculates an
 #'   overall missing value percentage for the measured values, and provides visual summaries of the
 #'   data distribution and missing data prevalence.
+#' @importFrom grDevices dev.cur
 #' @export
 plot_basic_lab_qc <- function(results, 
                               results_long,
