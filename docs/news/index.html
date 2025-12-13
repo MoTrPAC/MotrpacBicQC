@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">MotrpacBicQC</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,6 +40,21 @@
       <small>Source: <a href="https://github.com/MoTrPAC/MotrpacBicQC/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.4.0" id="motrpacbicqc-140-2025-12-12">MotrpacBicQC 1.4.0 (2025-12-12)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-140-2025-12-12"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-1-4-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-1-4-0"></a></h3>
+<ul><li><p><strong>PDF Plot Generation</strong>: Fixed critical issue where PDF plots were not being created when running <code>validate_lab</code> from scripts. Changed from <code>invisible(gridExtra::grid.arrange())</code> to <code><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html" class="external-link">gridExtra::arrangeGrob()</a></code> + <code><a href="https://rdrr.io/r/grid/grid.draw.html" class="external-link">grid::grid.draw()</a></code> pattern, which properly renders to PDF device without printing <code>TableGrob</code> output to console</p></li>
+<li><p><strong>DMAQC Extra Samples</strong>: Fixed bug where extra samples (submitted but not expected in DMAQC) were reported but not counted as issues. Now properly sets <code>ic = "FAIL"</code> when extra samples are detected</p></li>
+<li><p><strong>Release Writer</strong>: Fixed bug in <code>write_lab_releases</code> where results data was accessed as <code>lab_df$r</code> instead of the correct <code>lab_df$r_o</code> (matching the key returned by <code>load_lab_batch</code>)</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="improvements-1-4-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-1-4-0"></a></h3>
+<ul><li><p><strong>DMAQC Validation Summary</strong>: Added informative summary message showing expected, submitted, and matched sample counts (e.g., “DMAQC summary: 761 expected, 967 submitted, 761 matched”)</p></li>
+<li><p><strong>DMAQC Extra Samples Message</strong>: Improved message to show count of extra samples (e.g., “CAS SITE IS PROVIDING 206 SAMPLE IDS THAT ARE NOT IN DMAQC”)</p></li>
+<li><p><strong>Code Optimization</strong>: Simplified multiple <code><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl()</a></code> calls with alternation pattern (e.g., <code>grepl("PH|AC|UB|OX", assay)</code> instead of chained <code>|</code> operators)</p></li>
+</ul><hr></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.3.0" id="motrpacbicqc-130-2025-12-06">MotrpacBicQC 1.3.0 (2025-12-06)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-130-2025-12-06"></a></h2>
 <div class="section level3">

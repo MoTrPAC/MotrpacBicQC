@@ -1,4 +1,24 @@
 
+# MotrpacBicQC 1.4.0 (2025-12-12)
+
+## Bug Fixes
+
+* **PDF Plot Generation**: Fixed critical issue where PDF plots were not being created when running `validate_lab` from scripts. Changed from `invisible(gridExtra::grid.arrange())` to `gridExtra::arrangeGrob()` + `grid::grid.draw()` pattern, which properly renders to PDF device without printing `TableGrob` output to console
+
+* **DMAQC Extra Samples**: Fixed bug where extra samples (submitted but not expected in DMAQC) were reported but not counted as issues. Now properly sets `ic = "FAIL"` when extra samples are detected
+
+* **Release Writer**: Fixed bug in `write_lab_releases` where results data was accessed as `lab_df$r` instead of the correct `lab_df$r_o` (matching the key returned by `load_lab_batch`)
+
+## Improvements
+
+* **DMAQC Validation Summary**: Added informative summary message showing expected, submitted, and matched sample counts (e.g., "DMAQC summary: 761 expected, 967 submitted, 761 matched")
+
+* **DMAQC Extra Samples Message**: Improved message to show count of extra samples (e.g., "CAS SITE IS PROVIDING 206 SAMPLE IDS THAT ARE NOT IN DMAQC")
+
+* **Code Optimization**: Simplified multiple `grepl()` calls with alternation pattern (e.g., `grepl("PH|AC|UB|OX", assay)` instead of chained `|` operators)
+
+---
+
 # MotrpacBicQC 1.3.0 (2025-12-06)
 
 ## New Features
