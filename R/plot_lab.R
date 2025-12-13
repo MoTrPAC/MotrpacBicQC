@@ -26,6 +26,7 @@
 #'   avoiding clutter even with large numbers of samples (e.g., > 1400 samples). It calculates an
 #'   overall missing value percentage for the measured values, and provides visual summaries of the
 #'   data distribution and missing data prevalence.
+#' @importFrom grDevices dev.cur
 #' @export
 plot_basic_lab_qc <- function(results, 
                               results_long,
@@ -94,16 +95,25 @@ plot_basic_lab_qc <- function(results,
 
   if(verbose) message("  + (p) Plot QC plots")
   
+  # Create the arranged plot object (arrangeGrob doesn't draw, grid.arrange does)
+  arranged_plot <- gridExtra::arrangeGrob(p1, p2, p3, p4, ncol = 2)
+  
   # Save to PDF if requested, otherwise print to screen
   if (printPDF) {
     out_qc_folder <- create_folder(out_qc_folder)
     out_file <- file.path(normalizePath(out_qc_folder), paste0(output_prefix, "-lab-qc-plots.pdf"))
     
-    pdf(out_file, width = 14, height = 10)
-    invisible(gridExtra::grid.arrange(p1, p2, p3, p4, ncol = 2))
-    dev.off()
-    if(verbose) message("    - PDF saved to: ", out_file)
+    tryCatch({
+      pdf(out_file, width = 14, height = 10)
+      grid::grid.draw(arranged_plot)
+      dev.off()
+      if(verbose) message("    - PDF saved to: ", out_file)
+    }, error = function(e) {
+      # Make sure to close the device if an error occurred
+      if(dev.cur() > 1) dev.off()
+      message("    - ERROR creating PDF: ", conditionMessage(e))
+    })
   } else {
-    grid_plots <- gridExtra::grid.arrange(p1, p2, p3, p4, ncol = 2)
+    grid::grid.draw(arranged_plot)
   }
 }

@@ -334,16 +334,24 @@ check_viallabel_dmaqc <- function(vl_submitted,
                         Otherwise, it needs to be revised with DMAQC")
     ic <- "NOT_AVAILABLE"
   }else{
+    # Report summary counts for clarity
+    n_expected <- length(dmaqc_labels)
+    n_submitted <- length(vl_submitted)
+    n_matched <- length(intersect(vl_submitted, dmaqc_labels))
+    if(verbose) message("   + ( ) DMAQC summary: ", n_expected, " expected, ", n_submitted, " submitted, ", n_matched, " matched")
+    
     if( setequal(vl_submitted, dmaqc_labels) ){
       if(verbose) message("  + (+) DMAQC CHECK POINT: samples sent to CAS have been processed: OK")
       ic <- "OK"
     }else{
-      # CHECK 
+      # Initialize ic as OK, will be set to FAIL if issues found
+      ic <- "OK"
+      
+      # CHECK: samples expected by DMAQC but not in submission
       samples_missed <- setdiff(dmaqc_labels, vl_submitted)
       if( !(is.null(failed_samples) & purrr::is_empty(samples_missed)) ) {
         if( all(samples_missed %in% failed_samples) ){
           if(verbose) message("  + (+) DMAQC CHECK POINT: samples sent to CAS have been processed (with known issues for some samples): OK")
-          ic <- "OK"
         }else{
           samplesmissedonly <- samples_missed[!(samples_missed %in% failed_samples)]
           if(verbose){
@@ -383,9 +391,10 @@ check_viallabel_dmaqc <- function(vl_submitted,
       samples_extra <- setdiff(vl_submitted, dmaqc_labels)
       if(!purrr::is_empty(samples_extra)){
         if(verbose){
-          message("   - (-) DMAQC CHECK POINT: CAS SITE IS PROVIDING SAMPLES IDS THAT ARE NOT IN DMAQC: REVISE!")
+          message("   - (-) DMAQC CHECK POINT: CAS SITE IS PROVIDING ", length(samples_extra), " SAMPLE IDS THAT ARE NOT IN DMAQC: REVISE!")
           message("\t - ", paste(samples_extra, collapse = "\n\t - "))
-        }        
+        }
+        ic <- "FAIL"
       }
     }
   }

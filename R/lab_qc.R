@@ -845,7 +845,7 @@ write_lab_releases <- function(input_results_folder,
   
   write.table(lab_df$m_a, metadata_analyte, row.names = FALSE, sep = "\t", quote = FALSE)
   write.table(lab_df$m_s, metadata_samples, row.names = FALSE, sep = "\t", quote = FALSE)
-  write.table(lab_df$r, results, row.names = FALSE, sep = "\t", quote = FALSE)
+  write.table(lab_df$r_o, results, row.names = FALSE, sep = "\t", quote = FALSE)
   
   if (verbose) message("...done!")
 }
