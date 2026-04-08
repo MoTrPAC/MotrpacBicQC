@@ -24,6 +24,15 @@ test_that("All validations works", {
   expect_error(validate_tissue(z))
   expect_equal(validate_batch(x), "PASS1A-06/T31/IONPNEG/BATCH1_20190909/")
   expect_error(validate_batch(b))
+  # PROT_AC legacy exception: BATCH_YYYYMMDD (no batch number) is allowed
+  prot_ac_legacy <- "broad/PASS1A-06/T58/PROT_AC/BATCH_20190828/PROCESSED_20200101"
+  expect_equal(validate_batch(prot_ac_legacy), "broad/PASS1A-06/T58/PROT_AC/BATCH_20190828/")
+  # PROT_AC with a batch number should still work
+  prot_ac_numbered <- "broad/PASS1A-06/T58/PROT_AC/BATCH1_20190828/PROCESSED_20200101"
+  expect_equal(validate_batch(prot_ac_numbered), "broad/PASS1A-06/T58/PROT_AC/BATCH1_20190828/")
+  # Non-PROT_AC without batch number must fail
+  non_prot_no_num <- "broad/PASS1A-06/T58/IONPNEG/BATCH_20190828/PROCESSED_20200101"
+  expect_error(validate_batch(non_prot_no_num))
   expect_equal(generate_phase_details(phase_metadata = m), "pass1ac-06")
   expect_error(set_phase(m))
   expect_equal(validate_two_phases(m, verbose = TRUE), "Two phases reported and they are ok")

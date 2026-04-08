@@ -1454,7 +1454,7 @@ write_proteomics_releases <- function(input_results_folder,
   # Exception for PASS1C-06: the main folder is pass1a
   if (phase_details == "pass1c-06") {
     phase_folder_release <- "pass1a-06"
-  } else if (grepl("human-main", phase_details)) {
+  } else if (grepl("^human-main-tr\\d{2}$", phase_details)) {
     phase_folder_release <- "human-main"
   } else{
     phase_folder_release <- phase_details
