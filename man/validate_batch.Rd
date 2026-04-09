@@ -13,5 +13,9 @@ validate_batch(input_results_folder)
 (vector) BATCH_YYYYMMDD folder name
 }
 \description{
-extract BATCH_YYYYMMDD folder from input folder path
+extract BATCH_YYYYMMDD folder from input folder path.
+Expects the format \code{BATCH#_YYYYMMDD} (batch number required).
+As a legacy exception, \code{PROT_AC} paths also accept
+\code{BATCH_YYYYMMDD} (no batch number) to support the historical
+folder \code{broad/PASS1A-06/T58/PROT_AC/BATCH_20190828/}.
 }

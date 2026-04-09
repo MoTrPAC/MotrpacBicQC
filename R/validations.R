@@ -283,13 +283,24 @@ check_viallabel_dmaqc <- function(vl_submitted,
   for(i in 1:length(ph)){
     eph <- ph[i]
     if (grepl("HUMAN", eph)) {
-      if (lengths(gregexpr("-", eph)) == 2) {
-        # this must be HUMAN-MAIN-TR02 FORMAT
+      n_hyphens <- stringr::str_count(eph, "-")
+      if (n_hyphens == 2) {
+        # this must be HUMAN-MAIN-TR## FORMAT
+        if (!grepl("^HUMAN-MAIN-TR\\d{2}$", eph)) {
+          stop("PROBLEM WITH THE PHASE: ", eph, ": expected format is HUMAN-MAIN-TR## (e.g., HUMAN-MAIN-TR01)")
+        }
         sp <- gsub("(.*)(-)(.*)(-)(.*)", "\\1", eph)
         tr <- gsub("(.*)(-)(.*)(-)(.*)", "\\5", eph)
-      } else if (lengths(gregexpr("-", eph)) == 1) {
-        # HUMAN PRECOVID
+      } else if (n_hyphens == 1) {
+        # HUMAN-PRECOVID only
+        if (!grepl("^HUMAN-PRECOVID$", eph)) {
+          stop("PROBLEM WITH THE PHASE: ", eph, ": not a valid HUMAN phase. Expected HUMAN-PRECOVID or HUMAN-MAIN-TR## (e.g., HUMAN-MAIN-TR01)")
+        }
         sp <- gsub("(.*)(-)(.*)", "\\1", eph)
+        tr <- "00"
+      } else if (n_hyphens == 0) {
+        # Plain HUMAN
+        sp <- eph
         tr <- "00"
       } else{
         warning(paste("PROBLEM WITH THE PHASE:", eph, ": it doesn't contain a valid format for HUMAN phase"))
@@ -422,14 +433,27 @@ validate_assay <- function(input_results_folder){
 
 #' @title extract BATCH_YYYYMMDD folder
 #'
-#' @description extract BATCH_YYYYMMDD folder from input folder path
+#' @description extract BATCH_YYYYMMDD folder from input folder path.
+#' Expects the format \code{BATCH#_YYYYMMDD} (batch number required).
+#' As a legacy exception, \code{PROT_AC} paths also accept
+#' \code{BATCH_YYYYMMDD} (no batch number) to support the historical
+#' folder \code{broad/PASS1A-06/T58/PROT_AC/BATCH_20190828/}.
 #' @param input_results_folder (char) input_results_folder path
 #' @return (vector) BATCH_YYYYMMDD folder name
 #' @export
 validate_batch <- function(input_results_folder){
   
+  # PROT_AC legacy exception: batch number is optional
+  is_prot_ac <- grepl("/PROT_AC/", input_results_folder)
+  
+  if(is_prot_ac){
+    pattern <- "(.*/BATCH\\d{0,2}\\_\\d{8})/"
+  }else{
+    pattern <- "(.*/BATCH\\d{1,2}\\_\\d{8})/"
+  }
+  
   batch_folder <- stringr::str_extract(string = input_results_folder, 
-                                       pattern = "(.*/BATCH\\d{1,2}\\_\\d{8})/")
+                                       pattern = pattern)
   
   if(is.na(batch_folder)){
     stop("`BATCH#_YYYYMMDD` folder is not recognized in the folder structure.")
@@ -634,9 +658,13 @@ validate_na_empty <- function(df, col_name, verbose = TRUE) {
 #' @export
 validate_phase <- function(input_results_folder, return_phase = TRUE){
   phase <- stringr::str_extract(string = input_results_folder,
-                                pattern = "(PASS1A-06|PASS1A-18|PASS1B-06|PASS1B-18|PASS1C-06|PASS1C-18|PASS1AC-06|HUMAN|HUMAN-PRECOVID|HUMAN-MAIN)")
+                                pattern = "(PASS1A-06|PASS1A-18|PASS1B-06|PASS1B-18|PASS1C-06|PASS1C-18|PASS1AC-06|HUMAN-PRECOVID|HUMAN)(?=/|$)")
   if( is.na(phase) | phase == "NA" ){
-    stop("- (-) Project phase is not found in the folder structure. Please, check the MoTrPAC control vocabulary guidelines")
+    msg <- "- (-) Project phase is not found in the folder structure. Expected phases: PASS1A-06, PASS1A-18, PASS1B-06, PASS1B-18, PASS1C-06, PASS1C-18, PASS1AC-06, HUMAN, HUMAN-PRECOVID."
+    if( grepl("HUMAN", input_results_folder, ignore.case = TRUE) ){
+      msg <- paste0(msg, " Note: the valid HUMAN folder is 'HUMAN' (not HUMAN-MAIN-TR##). The HUMAN-MAIN-TR## phase must be specified in metadata_phase.txt")
+    }
+    stop(msg)
   }else{
     if(return_phase) return(phase)
   }

@@ -604,6 +604,16 @@ set_phase <- function(input_results_folder,
   if ( !(purrr::is_empty(file_phase)) ){
     phase_details <- readr::read_lines(file_phase[1], n_max = 1)
     if ( !(is.na(phase_details) || phase_details == '') ){
+      # Phase must be UPPER CASE
+      if( phase_details != toupper(phase_details) ){
+        stop("The phase in metadata_phase.txt (`", phase_details, "`) must be UPPER CASE (e.g., HUMAN-MAIN-TR01, PASS1A-06)")
+      }
+      # Validate HUMAN-MAIN format: must be HUMAN-MAIN-TR## (hyphens, not underscores)
+      if( grepl("HUMAN-MAIN", phase_details) && !grepl("\\|", phase_details) ){
+        if( !grepl("^HUMAN-MAIN-TR\\d{2}$", phase_details) ){
+          stop("The phase in metadata_phase.txt (`", phase_details, "`) is not valid. Expected format: HUMAN-MAIN-TR## (e.g., HUMAN-MAIN-TR01)")
+        }
+      }
       if(verbose) message("+ Motrpac phase reported: ", phase_details, " (info from metadata_phase.txt available): OK")
 
       if( grepl("\\|", phase_details) ){

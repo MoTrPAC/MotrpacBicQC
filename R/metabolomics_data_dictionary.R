@@ -47,6 +47,7 @@
 get_and_validate_mdd <- function(remove_duplications = FALSE, verbose = TRUE){
 
   name = NULL
+  id = NULL
 
   if(verbose) message("- Warning: Downloading data from Metabolomics Workbench. This might take a few minutes.")
   # REST metabolomics workbench data dictionary
