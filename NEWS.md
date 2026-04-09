@@ -1,4 +1,38 @@
 
+# MotrpacBicQC 1.5.0 (2026-04-08)
+
+## Bug Fixes
+
+* **HUMAN Phase Validation**: Fixed critical bug where `HUMAN-MAIN_TR01` (with underscore) was incorrectly accepted as a valid phase. Enforced strict `HUMAN-MAIN-TR##` format validation across `set_phase()`, `check_viallabel_dmaqc()`, and all QC/release writer functions
+
+* **Phase Folder Parsing**: Fixed `validate_phase()` to extract only `HUMAN` from folder paths, preventing `HUMAN-MAIN-TR##` from being parsed as a folder name. Added lookahead `(?=/|$)` to match `HUMAN` only as a complete path segment
+
+* **Hyphen Counting in Phase Parsing**: Replaced buggy `lengths(gregexpr())` with `stringr::str_count()` in `check_viallabel_dmaqc()`. The previous approach returned 1 for strings with no hyphens (e.g., plain `HUMAN`), causing incorrect branch selection
+
+* **LAB_CONV Assay Classification**: Fixed `assay_codes.csv` to classify LAB_CONV as "Clinical Chem,Clinical Chemistry" instead of "Metabolomics,Metabolome"
+
+## Improvements
+
+* **Uppercase Enforcement**: `set_phase()` now requires the phase string in `metadata_phase.txt` to be UPPER CASE, stopping with a clear error if lowercase is detected
+
+* **Phase Error Messages**: Improved `validate_phase()` error messages to list all expected phase formats and append contextual guidance when a HUMAN folder is detected
+
+* **HUMAN Phase Branch Handling**: `check_viallabel_dmaqc()` now explicitly handles all HUMAN hyphen variants: 0 hyphens (plain `HUMAN`, tranche "00"), 1 hyphen (must be exactly `HUMAN-PRECOVID`), 2 hyphens (must match `HUMAN-MAIN-TR##`), and 3+ hyphens (warning)
+
+* **Release Folder Logic**: Updated all QC writers (lab, metabolomics, olink, proteomics) to set `phase_folder_release` to `human-main` only when `phase_details` matches `^human-main-tr\\d{2}$`
+
+## New Features
+
+* **PROT_AC Legacy Batch Support**: `validate_batch()` now accepts both `BATCH#_YYYYMMDD` and legacy `BATCH_YYYYMMDD` (no batch number) formats for PROT_AC paths
+
+* **Vignette Overhaul**: Revamped vignette styling with modular CSS, table of contents, Prism code highlighting, and improved print support
+
+## Tests
+
+* Added comprehensive unit tests for HUMAN phase validation covering valid formats, invalid formats (underscore, lowercase, wrong tranche, extra hyphens), folder-phase parsing, uppercase enforcement, and `set_phase()` metadata content validation
+
+---
+
 # MotrpacBicQC 1.4.0 (2025-12-12)
 
 ## Bug Fixes

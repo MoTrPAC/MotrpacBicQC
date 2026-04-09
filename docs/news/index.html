@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">MotrpacBicQC</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,6 +40,32 @@
       <small>Source: <a href="https://github.com/MoTrPAC/MotrpacBicQC/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.5.0" id="motrpacbicqc-150-2026-04-08">MotrpacBicQC 1.5.0 (2026-04-08)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-150-2026-04-08"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-1-5-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-1-5-0"></a></h3>
+<ul><li><p><strong>HUMAN Phase Validation</strong>: Fixed critical bug where <code>HUMAN-MAIN_TR01</code> (with underscore) was incorrectly accepted as a valid phase. Enforced strict <code>HUMAN-MAIN-TR##</code> format validation across <code><a href="../reference/set_phase.html">set_phase()</a></code>, <code><a href="../reference/check_viallabel_dmaqc.html">check_viallabel_dmaqc()</a></code>, and all QC/release writer functions</p></li>
+<li><p><strong>Phase Folder Parsing</strong>: Fixed <code><a href="../reference/validate_phase.html">validate_phase()</a></code> to extract only <code>HUMAN</code> from folder paths, preventing <code>HUMAN-MAIN-TR##</code> from being parsed as a folder name. Added lookahead <code>(?=/|$)</code> to match <code>HUMAN</code> only as a complete path segment</p></li>
+<li><p><strong>Hyphen Counting in Phase Parsing</strong>: Replaced buggy <code>lengths(gregexpr())</code> with <code><a href="https://stringr.tidyverse.org/reference/str_count.html" class="external-link">stringr::str_count()</a></code> in <code><a href="../reference/check_viallabel_dmaqc.html">check_viallabel_dmaqc()</a></code>. The previous approach returned 1 for strings with no hyphens (e.g., plain <code>HUMAN</code>), causing incorrect branch selection</p></li>
+<li><p><strong>LAB_CONV Assay Classification</strong>: Fixed <code>assay_codes.csv</code> to classify LAB_CONV as “Clinical Chem,Clinical Chemistry” instead of “Metabolomics,Metabolome”</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="improvements-1-5-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-1-5-0"></a></h3>
+<ul><li><p><strong>Uppercase Enforcement</strong>: <code><a href="../reference/set_phase.html">set_phase()</a></code> now requires the phase string in <code>metadata_phase.txt</code> to be UPPER CASE, stopping with a clear error if lowercase is detected</p></li>
+<li><p><strong>Phase Error Messages</strong>: Improved <code><a href="../reference/validate_phase.html">validate_phase()</a></code> error messages to list all expected phase formats and append contextual guidance when a HUMAN folder is detected</p></li>
+<li><p><strong>HUMAN Phase Branch Handling</strong>: <code><a href="../reference/check_viallabel_dmaqc.html">check_viallabel_dmaqc()</a></code> now explicitly handles all HUMAN hyphen variants: 0 hyphens (plain <code>HUMAN</code>, tranche “00”), 1 hyphen (must be exactly <code>HUMAN-PRECOVID</code>), 2 hyphens (must match <code>HUMAN-MAIN-TR##</code>), and 3+ hyphens (warning)</p></li>
+<li><p><strong>Release Folder Logic</strong>: Updated all QC writers (lab, metabolomics, olink, proteomics) to set <code>phase_folder_release</code> to <code>human-main</code> only when <code>phase_details</code> matches <code>^human-main-tr\\d{2}$</code></p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="new-features-1-5-0">New Features<a class="anchor" aria-label="anchor" href="#new-features-1-5-0"></a></h3>
+<ul><li><p><strong>PROT_AC Legacy Batch Support</strong>: <code><a href="../reference/validate_batch.html">validate_batch()</a></code> now accepts both <code>BATCH#_YYYYMMDD</code> and legacy <code>BATCH_YYYYMMDD</code> (no batch number) formats for PROT_AC paths</p></li>
+<li><p><strong>Vignette Overhaul</strong>: Revamped vignette styling with modular CSS, table of contents, Prism code highlighting, and improved print support</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="tests-1-5-0">Tests<a class="anchor" aria-label="anchor" href="#tests-1-5-0"></a></h3>
+<ul><li>Added comprehensive unit tests for HUMAN phase validation covering valid formats, invalid formats (underscore, lowercase, wrong tranche, extra hyphens), folder-phase parsing, uppercase enforcement, and <code><a href="../reference/set_phase.html">set_phase()</a></code> metadata content validation</li>
+</ul><hr></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.4.0" id="motrpacbicqc-140-2025-12-12">MotrpacBicQC 1.4.0 (2025-12-12)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-140-2025-12-12"></a></h2>
 <div class="section level3">
@@ -537,7 +563,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

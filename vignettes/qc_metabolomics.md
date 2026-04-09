@@ -1,6 +1,6 @@
 ---
 title: "MotrpacBicQC: Metabolomics QC"
-date: "2025-04-23"
+date: "2025-12-12"
 output:
   html_document:
     theme: cosmo
@@ -51,7 +51,7 @@ PASS1A-06/
 
 With the following file relations...
 
-![](BIC_Metabolomics_DataProcessing_Summary_20200303.png)
+![BIC Metabolomics Data Processing Summary - showing the relationship between metadata files, results files, and the data dictionary](BIC_Metabolomics_DataProcessing_Summary_20200303.png)
 
 ## Install MotrpacBicQC
 
