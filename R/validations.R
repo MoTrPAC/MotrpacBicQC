@@ -286,12 +286,15 @@ check_viallabel_dmaqc <- function(vl_submitted,
       if (lengths(gregexpr("-", eph)) == 2) {
         # this must be HUMAN-MAIN-TR## FORMAT
         if (!grepl("^HUMAN-MAIN-TR\\d{2}$", eph)) {
-          stop(paste("PROBLEM WITH THE PHASE:", eph, ": expected format is HUMAN-MAIN-TR## (e.g., HUMAN-MAIN-TR01)"))
+          stop("PROBLEM WITH THE PHASE: ", eph, ": expected format is HUMAN-MAIN-TR## (e.g., HUMAN-MAIN-TR01)")
         }
         sp <- gsub("(.*)(-)(.*)(-)(.*)", "\\1", eph)
         tr <- gsub("(.*)(-)(.*)(-)(.*)", "\\5", eph)
       } else if (lengths(gregexpr("-", eph)) == 1) {
-        # HUMAN PRECOVID
+        # HUMAN-PRECOVID only
+        if (!grepl("^HUMAN-PRECOVID$", eph)) {
+          stop("PROBLEM WITH THE PHASE: ", eph, ": not a valid HUMAN phase. Expected HUMAN-PRECOVID or HUMAN-MAIN-TR## (e.g., HUMAN-MAIN-TR01)")
+        }
         sp <- gsub("(.*)(-)(.*)", "\\1", eph)
         tr <- "00"
       } else{
@@ -652,7 +655,11 @@ validate_phase <- function(input_results_folder, return_phase = TRUE){
   phase <- stringr::str_extract(string = input_results_folder,
                                 pattern = "(PASS1A-06|PASS1A-18|PASS1B-06|PASS1B-18|PASS1C-06|PASS1C-18|PASS1AC-06|HUMAN-PRECOVID|HUMAN)(?=/|$)")
   if( is.na(phase) | phase == "NA" ){
-    stop("- (-) Project phase is not found in the folder structure. Valid HUMAN folder is 'HUMAN' (not HUMAN-MAIN-TR##). The HUMAN-MAIN-TR## phase must be specified in metadata_phase.txt")
+    msg <- "- (-) Project phase is not found in the folder structure. Expected phases: PASS1A-06, PASS1A-18, PASS1B-06, PASS1B-18, PASS1C-06, PASS1C-18, PASS1AC-06, HUMAN, HUMAN-PRECOVID."
+    if( grepl("HUMAN", input_results_folder, ignore.case = TRUE) ){
+      msg <- paste0(msg, " Note: the valid HUMAN folder is 'HUMAN' (not HUMAN-MAIN-TR##). The HUMAN-MAIN-TR## phase must be specified in metadata_phase.txt")
+    }
+    stop(msg)
   }else{
     if(return_phase) return(phase)
   }

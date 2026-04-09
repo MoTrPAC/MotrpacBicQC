@@ -39,4 +39,79 @@ test_that("All validations works", {
   expect_error(validate_two_phases(phase_details = "PASS1A-06"))
 })
 
+test_that("validate_phase rejects HUMAN-MAIN-TR## in folder path", {
+  # HUMAN-MAIN-TR01 as a folder should fail (must be just HUMAN)
+  expect_error(validate_phase("HUMAN-MAIN-TR01/T11/OXYLIPNEG/BATCH1_20240524/PROCESSED_20240524"))
+  # HUMAN-MAIN (without tranche) should also fail
+
+  expect_error(validate_phase("HUMAN-MAIN/T11/OXYLIPNEG/BATCH1_20240524/PROCESSED_20240524"))
+  # HUMAN_MAIN_TR01 (underscores) should fail
+  expect_error(validate_phase("HUMAN_MAIN_TR01/T11/OXYLIPNEG/BATCH1_20240524/PROCESSED_20240524"))
+})
+
+test_that("validate_phase accepts valid folder phases", {
+  expect_equal(validate_phase("HUMAN/T11/OXYLIPNEG/BATCH1_20240524/PROCESSED_20240524"), "HUMAN")
+  expect_equal(validate_phase("HUMAN-PRECOVID/T10/IONPNEG/BATCH1_20190909/PROCESSED_20200205"), "HUMAN-PRECOVID")
+  expect_equal(validate_phase("PASS1A-06/T31/IONPNEG/BATCH1_20190909/PROCESSED_20200205"), "PASS1A-06")
+  # Bare phase strings (used by validate_two_phases) should also work
+  expect_equal(validate_phase("PASS1C-06"), "PASS1C-06")
+})
+
+test_that("validate_phase error message is context-appropriate", {
+  # HUMAN-related path should mention metadata_phase.txt
+  expect_error(
+    validate_phase("HUMAN-MAIN-TR01/T11/OXYLIPNEG/BATCH1_20240524/PROCESSED_20240524"),
+    "metadata_phase.txt"
+  )
+  # Non-HUMAN path should NOT mention metadata_phase.txt
+  err <- tryCatch(
+    validate_phase("INVALID/T31/IONPNEG/BATCH1_20190909/PROCESSED_20200205"),
+    error = function(e) conditionMessage(e)
+  )
+  expect_match(err, "Expected phases")
+  expect_false(grepl("metadata_phase.txt", err))
+})
+
+test_that("check_viallabel_dmaqc rejects invalid HUMAN-MAIN formats", {
+  # Underscore instead of hyphen: HUMAN-MAIN_TR01 (1 hyphen, falls into PRECOVID branch)
+  expect_error(
+    check_viallabel_dmaqc(
+      vl_submitted = "test_vial",
+      dmaqc_shipping_info = tempfile(),
+      tissue_code = "T11",
+      cas = "emory",
+      phase = "HUMAN-MAIN_TR01",
+      failed_samples = NULL,
+      outfile_missed_viallabels = "test"
+    ),
+    "not a valid HUMAN phase"
+  )
+  # 2-hyphen but wrong format (e.g., HUMAN-MAIN-XX01)
+  expect_error(
+    check_viallabel_dmaqc(
+      vl_submitted = "test_vial",
+      dmaqc_shipping_info = tempfile(),
+      tissue_code = "T11",
+      cas = "emory",
+      phase = "HUMAN-MAIN-XX01",
+      failed_samples = NULL,
+      outfile_missed_viallabels = "test"
+    ),
+    "expected format is HUMAN-MAIN-TR##"
+  )
+})
+
+test_that("set_phase rejects lowercase phase in metadata_phase.txt", {
+  # Create a temp directory structure with a lowercase phase in metadata_phase.txt
+  tmpdir <- tempfile()
+  batch_dir <- file.path(tmpdir, "HUMAN", "T11", "OXYLIPNEG", "BATCH1_20240524")
+  proc_dir <- file.path(batch_dir, "PROCESSED_20240524")
+  dir.create(proc_dir, recursive = TRUE)
+  writeLines("human-main-tr01", file.path(batch_dir, "metadata_phase.txt"))
+  expect_error(
+    set_phase(input_results_folder = proc_dir, dmaqc_phase2validate = FALSE),
+    "must be UPPER CASE"
+  )
+  unlink(tmpdir, recursive = TRUE)
+})
 
