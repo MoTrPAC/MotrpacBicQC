@@ -1,0 +1,165 @@
+# Package index
+
+## All functions
+
+- [`assay_abbr`](https://motrpac.github.io/MotrpacBicQC/reference/assay_abbr.md)
+  : assay abbreviations
+- [`assay_codes`](https://motrpac.github.io/MotrpacBicQC/reference/assay_codes.md)
+  : Motrpac assay codes
+- [`assay_order`](https://motrpac.github.io/MotrpacBicQC/reference/assay_order.md)
+  : assay order
+- [`bic_animal_tissue_code`](https://motrpac.github.io/MotrpacBicQC/reference/bic_animal_tissue_code.md)
+  : BIC Tissue Code and Name
+- [`check_crossfile_validation()`](https://motrpac.github.io/MotrpacBicQC/reference/check_crossfile_validation.md)
+  : Cross-validate assay files (Olink and LAB)
+- [`check_failedsamples()`](https://motrpac.github.io/MotrpacBicQC/reference/check_failedsamples.md)
+  : check failed samples file for reported missing vial label ids
+- [`check_manifest_rawdata()`](https://motrpac.github.io/MotrpacBicQC/reference/check_manifest_rawdata.md)
+  : check rawfiles between manifest and metabolite_sample matches
+- [`check_metadata_analyte()`](https://motrpac.github.io/MotrpacBicQC/reference/check_metadata_analyte.md)
+  : Check analyte metadata file
+- [`check_metadata_metabolites()`](https://motrpac.github.io/MotrpacBicQC/reference/check_metadata_metabolites.md)
+  : check metadata metabolites
+- [`check_metadata_phase_file()`](https://motrpac.github.io/MotrpacBicQC/reference/check_metadata_phase_file.md)
+  : check metadata phase file
+- [`check_metadata_proteins()`](https://motrpac.github.io/MotrpacBicQC/reference/check_metadata_proteins.md)
+  : Check olink metadata proteins file
+- [`check_metadata_samples()`](https://motrpac.github.io/MotrpacBicQC/reference/check_metadata_samples.md)
+  : check metadata samples
+- [`check_metadata_samples_lab()`](https://motrpac.github.io/MotrpacBicQC/reference/check_metadata_samples_lab.md)
+  : Check LAB metadata samples file
+- [`check_metadata_samples_olink()`](https://motrpac.github.io/MotrpacBicQC/reference/check_metadata_samples_olink.md)
+  : check olink metadata samples file
+- [`check_missing_values()`](https://motrpac.github.io/MotrpacBicQC/reference/check_missing_values.md)
+  : Check for Missing Values in a Data Frame Column
+- [`check_ratio_proteomics()`](https://motrpac.github.io/MotrpacBicQC/reference/check_ratio_proteomics.md)
+  : check proteomics ratio file
+- [`check_results()`](https://motrpac.github.io/MotrpacBicQC/reference/check_results.md)
+  : check results
+- [`check_results_assays()`](https://motrpac.github.io/MotrpacBicQC/reference/check_results_assays.md)
+  : Check results file for assays
+- [`check_rii_proteomics()`](https://motrpac.github.io/MotrpacBicQC/reference/check_rii_proteomics.md)
+  : check proteomics reported ion intensity file
+- [`check_vial_metadata_proteomics()`](https://motrpac.github.io/MotrpacBicQC/reference/check_vial_metadata_proteomics.md)
+  : check proteomics vial metadata file
+- [`check_viallabel_dmaqc()`](https://motrpac.github.io/MotrpacBicQC/reference/check_viallabel_dmaqc.md)
+  : Validate vial labels from DMAQC
+- [`clean_character_columns()`](https://motrpac.github.io/MotrpacBicQC/reference/clean_character_columns.md)
+  : Clean character columns
+- [`combine_metabolomics_batch()`](https://motrpac.github.io/MotrpacBicQC/reference/combine_metabolomics_batch.md)
+  : Combines all files from a Metabolomics batch
+- [`create_folder()`](https://motrpac.github.io/MotrpacBicQC/reference/create_folder.md)
+  : Create folder
+- [`dl_read_gcp()`](https://motrpac.github.io/MotrpacBicQC/reference/dl_read_gcp.md)
+  : Download and Read File from Google Cloud Storage
+- [`filter_required_columns()`](https://motrpac.github.io/MotrpacBicQC/reference/filter_required_columns.md)
+  : filter required columns only
+- [`generate_phase_details()`](https://motrpac.github.io/MotrpacBicQC/reference/generate_phase_details.md)
+  : Generate the phase detail for submissions
+- [`get_and_validate_mdd()`](https://motrpac.github.io/MotrpacBicQC/reference/get_and_validate_mdd.md)
+  : Get and Validate the Entire RefMet Database from Metabolomics
+  Workbench
+- [`get_full_path2batch()`](https://motrpac.github.io/MotrpacBicQC/reference/get_full_path2batch.md)
+  : Get full path to the batch folder
+- [`group_abbr`](https://motrpac.github.io/MotrpacBicQC/reference/group_abbr.md)
+  : group abbreviations
+- [`group_cols`](https://motrpac.github.io/MotrpacBicQC/reference/group_cols.md)
+  : group colors
+- [`load_lab_batch()`](https://motrpac.github.io/MotrpacBicQC/reference/load_lab_batch.md)
+  : Load and Process LAB Batch Data
+- [`load_metabolomics_batch()`](https://motrpac.github.io/MotrpacBicQC/reference/load_metabolomics_batch.md)
+  : Load metabolomics batch
+- [`load_olink_batch()`](https://motrpac.github.io/MotrpacBicQC/reference/load_olink_batch.md)
+  : Load and Process Olink Batch Data
+- [`load_proteomics()`](https://motrpac.github.io/MotrpacBicQC/reference/load_proteomics.md)
+  : Load Proteomics batch
+- [`merge_all_metabolomics()`](https://motrpac.github.io/MotrpacBicQC/reference/merge_all_metabolomics.md)
+  : Merge all metabolomics files
+- [`merge_metabolomics_metadata()`](https://motrpac.github.io/MotrpacBicQC/reference/merge_metabolomics_metadata.md)
+  : Merge metabolomics metadata named and unnamed
+- [`merge_phenotype_metabolomics()`](https://motrpac.github.io/MotrpacBicQC/reference/merge_phenotype_metabolomics.md)
+  : Merge phenotypic and metabolics results
+- [`metabolomics_data_dictionary`](https://motrpac.github.io/MotrpacBicQC/reference/metabolomics_data_dictionary.md)
+  : Metabolomics data dictionary
+- [`metadata_metabolites_named`](https://motrpac.github.io/MotrpacBicQC/reference/metadata_metabolites_named.md)
+  : Metadata Metabolites test dataset for NAMED metabolites
+- [`metadata_metabolites_unnamed`](https://motrpac.github.io/MotrpacBicQC/reference/metadata_metabolites_unnamed.md)
+  : Metadata Metabolites test dataset for UNNAMED metabolites
+- [`metadata_sample_named`](https://motrpac.github.io/MotrpacBicQC/reference/metadata_sample_named.md)
+  : Metadata Sample test dataset for NAMED metabolites
+- [`metadata_sample_unnamed`](https://motrpac.github.io/MotrpacBicQC/reference/metadata_sample_unnamed.md)
+  : Metadata Sample test dataset for UNNAMED metabolites
+- [`open_file()`](https://motrpac.github.io/MotrpacBicQC/reference/open_file.md)
+  : open files
+- [`phenotypes_pass1a06_short`](https://motrpac.github.io/MotrpacBicQC/reference/phenotypes_pass1a06_short.md)
+  : Motrpac Phenotypes PASS1A 6 Months
+- [`plot_basic_lab_qc()`](https://motrpac.github.io/MotrpacBicQC/reference/plot_basic_lab_qc.md)
+  : Generate Basic LAB QC Plots
+- [`plot_basic_metabolomics_qc()`](https://motrpac.github.io/MotrpacBicQC/reference/plot_basic_metabolomics_qc.md)
+  : Plot Basic Metabolomics QC charts
+- [`plot_basic_olink_qc()`](https://motrpac.github.io/MotrpacBicQC/reference/plot_basic_olink_qc.md)
+  : Plot Basic OLINK QC charts
+- [`proteomics_plots_rii()`](https://motrpac.github.io/MotrpacBicQC/reference/proteomics_plots_rii.md)
+  : QC Plot of proteomics reporter ion intensity data
+- [`remove_empty_columns()`](https://motrpac.github.io/MotrpacBicQC/reference/remove_empty_columns.md)
+  : remove empty columns
+- [`remove_empty_rows()`](https://motrpac.github.io/MotrpacBicQC/reference/remove_empty_rows.md)
+  : remove empty rows in data frame
+- [`results_named`](https://motrpac.github.io/MotrpacBicQC/reference/results_named.md)
+  : Results test dataset for NAMED metabolites
+- [`results_unnamed`](https://motrpac.github.io/MotrpacBicQC/reference/results_unnamed.md)
+  : Results test dataset for UNNAMED metabolites
+- [`set_phase()`](https://motrpac.github.io/MotrpacBicQC/reference/set_phase.md)
+  : Set the phase to be validated.
+- [`sex_abbr`](https://motrpac.github.io/MotrpacBicQC/reference/sex_abbr.md)
+  : sex abbreviations
+- [`sex_cols`](https://motrpac.github.io/MotrpacBicQC/reference/sex_cols.md)
+  : sex colors
+- [`tissue_abbr`](https://motrpac.github.io/MotrpacBicQC/reference/tissue_abbr.md)
+  : tissue abbreviations
+- [`tissue_cols`](https://motrpac.github.io/MotrpacBicQC/reference/tissue_cols.md)
+  : tissue colors
+- [`tissue_order`](https://motrpac.github.io/MotrpacBicQC/reference/tissue_order.md)
+  : tissue order
+- [`validate_assay()`](https://motrpac.github.io/MotrpacBicQC/reference/validate_assay.md)
+  : extract ASSAY from input folder path
+- [`validate_batch()`](https://motrpac.github.io/MotrpacBicQC/reference/validate_batch.md)
+  : extract BATCH_YYYYMMDD folder
+- [`validate_cas()`](https://motrpac.github.io/MotrpacBicQC/reference/validate_cas.md)
+  : validate cas code
+- [`validate_dates_times()`](https://motrpac.github.io/MotrpacBicQC/reference/validate_dates_times.md)
+  : Validate date-time format in a data frame column
+- [`validate_lab()`](https://motrpac.github.io/MotrpacBicQC/reference/validate_lab.md)
+  : Validate LAB Assay Data
+- [`validate_lc_column_id()`](https://motrpac.github.io/MotrpacBicQC/reference/validate_lc_column_id.md)
+  : Validate 'lc_column_id' column
+- [`validate_metabolomics()`](https://motrpac.github.io/MotrpacBicQC/reference/validate_metabolomics.md)
+  : Validate a Metabolomics submission
+- [`validate_na_empty()`](https://motrpac.github.io/MotrpacBicQC/reference/validate_na_empty.md)
+  : Validate Column for NA and Empty Values
+- [`validate_olink()`](https://motrpac.github.io/MotrpacBicQC/reference/validate_olink.md)
+  : Validate Olink Data
+- [`validate_phase()`](https://motrpac.github.io/MotrpacBicQC/reference/validate_phase.md)
+  : Extract PHASE from input folder path
+- [`validate_processFolder()`](https://motrpac.github.io/MotrpacBicQC/reference/validate_processFolder.md)
+  : extract PROCESSED_YYYYMMDD folder from input folder path
+- [`validate_proteomics()`](https://motrpac.github.io/MotrpacBicQC/reference/validate_proteomics.md)
+  : Validate a Proteomics submissions
+- [`validate_refmetname()`](https://motrpac.github.io/MotrpacBicQC/reference/validate_refmetname.md)
+  : Validate refmet_name
+- [`validate_tissue()`](https://motrpac.github.io/MotrpacBicQC/reference/validate_tissue.md)
+  : extract and validate TISSUE CODE from input folder path
+- [`validate_two_phases()`](https://motrpac.github.io/MotrpacBicQC/reference/validate_two_phases.md)
+  : validate a phase with two phases (pass1a and 1c)
+- [`validate_uniprot_ids_with_uniprot()`](https://motrpac.github.io/MotrpacBicQC/reference/validate_uniprot_ids_with_uniprot.md)
+  : Validate UniProt IDs
+- [`validate_yyyymmdd_dates()`](https://motrpac.github.io/MotrpacBicQC/reference/validate_yyyymmdd_dates.md)
+  : Validate YYYY-MM-DD Dates in a Data Frame
+- [`write_lab_releases()`](https://motrpac.github.io/MotrpacBicQC/reference/write_lab_releases.md)
+  : Write LAB Data Release
+- [`write_metabolomics_releases()`](https://motrpac.github.io/MotrpacBicQC/reference/write_metabolomics_releases.md)
+  : Write metabolomics data release
+- [`write_olink_releases()`](https://motrpac.github.io/MotrpacBicQC/reference/write_olink_releases.md)
+  : Write olink data release
+- [`write_proteomics_releases()`](https://motrpac.github.io/MotrpacBicQC/reference/write_proteomics_releases.md)
+  : Write proteomics data release
