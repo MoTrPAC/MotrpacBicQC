@@ -73,45 +73,132 @@ test_that("validate_phase error message is context-appropriate", {
 })
 
 test_that("check_viallabel_dmaqc rejects invalid HUMAN-MAIN formats", {
-  # Underscore instead of hyphen: HUMAN-MAIN_TR01 (1 hyphen, falls into PRECOVID branch)
-  expect_error(
+  # Helper: call check_viallabel_dmaqc with a phase and capture the result
+  call_vl_dmaqc <- function(phase) {
     check_viallabel_dmaqc(
       vl_submitted = "test_vial",
       dmaqc_shipping_info = tempfile(),
       tissue_code = "T11",
       cas = "emory",
-      phase = "HUMAN-MAIN_TR01",
+      phase = phase,
       failed_samples = NULL,
       outfile_missed_viallabels = "test"
-    ),
-    "not a valid HUMAN phase"
+    )
+  }
+
+  # --- Invalid: underscore instead of hyphen (1 hyphen → PRECOVID branch) ---
+  expect_error(call_vl_dmaqc("HUMAN-MAIN_TR01"), "not a valid HUMAN phase")
+  expect_error(call_vl_dmaqc("HUMAN-MAIN_TR02"), "not a valid HUMAN phase")
+
+  # --- Invalid: 2-hyphen but wrong format ---
+  expect_error(call_vl_dmaqc("HUMAN-MAIN-XX01"), "expected format is HUMAN-MAIN-TR##")
+  expect_error(call_vl_dmaqc("HUMAN-MAIN-TR1"),  "expected format is HUMAN-MAIN-TR##")   # single digit
+  expect_error(call_vl_dmaqc("HUMAN-MAIN-TR001"), "expected format is HUMAN-MAIN-TR##")  # three digits
+  expect_error(call_vl_dmaqc("HUMAN-MAIN-tr01"), "expected format is HUMAN-MAIN-TR##")   # lowercase tr
+  expect_error(call_vl_dmaqc("HUMAN-FOO-TR01"),  "expected format is HUMAN-MAIN-TR##")   # wrong middle
+  expect_error(call_vl_dmaqc("HUMAN-MAIN-"),     "expected format is HUMAN-MAIN-TR##")   # trailing hyphen
+
+  # --- Invalid: 1-hyphen but not HUMAN-PRECOVID ---
+  expect_error(call_vl_dmaqc("HUMAN-MAIN"),      "not a valid HUMAN phase")
+  expect_error(call_vl_dmaqc("HUMAN-OTHER"),     "not a valid HUMAN phase")
+  expect_error(call_vl_dmaqc("HUMAN-precovid"),  "not a valid HUMAN phase")  # lowercase
+
+  # --- Invalid: 3+ hyphens → warning (then errors on file read, but we capture the warning) ---
+  expect_warning(
+    tryCatch(call_vl_dmaqc("HUMAN-MAIN-TR-01"), error = function(e) NULL),
+    "doesn't contain a valid format"
   )
-  # 2-hyphen but wrong format (e.g., HUMAN-MAIN-XX01)
-  expect_error(
-    check_viallabel_dmaqc(
-      vl_submitted = "test_vial",
-      dmaqc_shipping_info = tempfile(),
-      tissue_code = "T11",
-      cas = "emory",
-      phase = "HUMAN-MAIN-XX01",
-      failed_samples = NULL,
-      outfile_missed_viallabels = "test"
-    ),
-    "expected format is HUMAN-MAIN-TR##"
-  )
+
+  # --- Invalid: lowercase phase (won't match grepl("HUMAN", eph)) ---
+  # lowercase "human" doesn't enter the HUMAN branch at all;
+  # it also doesn't match PASS, so it falls through to read the dmaqc file
+  # which is an empty tempfile → error from read.delim
+  expect_error(suppressWarnings(call_vl_dmaqc("human-main-tr01")))
 })
 
-test_that("set_phase rejects lowercase phase in metadata_phase.txt", {
-  # Create a temp directory structure with a lowercase phase in metadata_phase.txt
-  tmpdir <- tempfile()
-  batch_dir <- file.path(tmpdir, "HUMAN", "T11", "OXYLIPNEG", "BATCH1_20240524")
-  proc_dir <- file.path(batch_dir, "PROCESSED_20240524")
-  dir.create(proc_dir, recursive = TRUE)
-  writeLines("human-main-tr01", file.path(batch_dir, "metadata_phase.txt"))
-  expect_error(
-    set_phase(input_results_folder = proc_dir, dmaqc_phase2validate = FALSE),
-    "must be UPPER CASE"
+test_that("check_viallabel_dmaqc accepts valid HUMAN phases (parsing only)", {
+  # Create a minimal mock dmaqc shipping file so parsing succeeds
+  # (will return 0 labels but not error on phase parsing)
+  mock_dmaqc <- tempfile(fileext = ".txt")
+  writeLines(
+    c("vial_label\tbic_tissue_code\tsite_code\tphase\ttranche\tanimal_age",
+      "VL001\tT11\temory\tHUMAN\t00\tNA"),
+    mock_dmaqc
   )
-  unlink(tmpdir, recursive = TRUE)
+
+  call_vl_dmaqc_valid <- function(phase) {
+    check_viallabel_dmaqc(
+      vl_submitted = "VL001",
+      dmaqc_shipping_info = mock_dmaqc,
+      tissue_code = "T11",
+      cas = "emory",
+      phase = phase,
+      failed_samples = NULL,
+      outfile_missed_viallabels = "test",
+      return_n_issues = TRUE,
+      verbose = FALSE
+    )
+  }
+
+  # Valid: plain HUMAN (0 hyphens)
+  expect_no_error(call_vl_dmaqc_valid("HUMAN"))
+
+  # Valid: HUMAN-PRECOVID (1 hyphen)
+  expect_no_error(call_vl_dmaqc_valid("HUMAN-PRECOVID"))
+
+  # Valid: HUMAN-MAIN-TR## (2 hyphens) — various tranche numbers
+  expect_no_error(call_vl_dmaqc_valid("HUMAN-MAIN-TR01"))
+  expect_no_error(call_vl_dmaqc_valid("HUMAN-MAIN-TR02"))
+  expect_no_error(call_vl_dmaqc_valid("HUMAN-MAIN-TR10"))
+  expect_no_error(call_vl_dmaqc_valid("HUMAN-MAIN-TR99"))
+
+  unlink(mock_dmaqc)
+})
+
+test_that("set_phase validates metadata_phase.txt content", {
+  # Helper: create temp folder structure and write metadata_phase.txt
+  setup_phase_dir <- function(phase_content) {
+    tmpdir <- tempfile()
+    batch_dir <- file.path(tmpdir, "HUMAN", "T11", "OXYLIPNEG", "BATCH1_20240524")
+    proc_dir <- file.path(batch_dir, "PROCESSED_20240524")
+    dir.create(proc_dir, recursive = TRUE)
+    writeLines(phase_content, file.path(batch_dir, "metadata_phase.txt"))
+    list(proc_dir = proc_dir, tmpdir = tmpdir)
+  }
+
+  call_set_phase <- function(phase_content) {
+    dirs <- setup_phase_dir(phase_content)
+    on.exit(unlink(dirs$tmpdir, recursive = TRUE))
+    set_phase(input_results_folder = dirs$proc_dir, dmaqc_phase2validate = FALSE, verbose = FALSE)
+  }
+
+  # --- Reject lowercase ---
+  expect_error(call_set_phase("human-main-tr01"), "must be UPPER CASE")
+  expect_error(call_set_phase("Human-Main-TR01"), "must be UPPER CASE")
+  expect_error(call_set_phase("pass1a-06"),       "must be UPPER CASE")
+
+  # --- Reject underscore variant ---
+  expect_error(call_set_phase("HUMAN-MAIN_TR01"), "Expected format: HUMAN-MAIN-TR##")
+
+  # --- Reject incomplete HUMAN-MAIN ---
+  expect_error(call_set_phase("HUMAN-MAIN"),      "Expected format: HUMAN-MAIN-TR##")
+  expect_error(call_set_phase("HUMAN-MAIN-TR"),   "Expected format: HUMAN-MAIN-TR##")
+  expect_error(call_set_phase("HUMAN-MAIN-TR1"),  "Expected format: HUMAN-MAIN-TR##")
+  expect_error(call_set_phase("HUMAN-MAIN-TR001"), "Expected format: HUMAN-MAIN-TR##")
+
+  # --- Accept valid HUMAN-MAIN-TR## ---
+  expect_equal(call_set_phase("HUMAN-MAIN-TR01"), "HUMAN-MAIN-TR01")
+  expect_equal(call_set_phase("HUMAN-MAIN-TR02"), "HUMAN-MAIN-TR02")
+  expect_equal(call_set_phase("HUMAN-MAIN-TR10"), "HUMAN-MAIN-TR10")
+
+  # --- Accept valid PASS phases ---
+  dirs <- setup_phase_dir("PASS1A-06")
+  # This will fail because the folder is HUMAN/ but phase says PASS — that's fine,
+  # we're testing that the uppercase and format check passes
+  expect_equal(
+    set_phase(input_results_folder = dirs$proc_dir, dmaqc_phase2validate = FALSE, verbose = FALSE),
+    "PASS1A-06"
+  )
+  unlink(dirs$tmpdir, recursive = TRUE)
 })
 

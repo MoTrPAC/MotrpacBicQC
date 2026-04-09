@@ -283,19 +283,24 @@ check_viallabel_dmaqc <- function(vl_submitted,
   for(i in 1:length(ph)){
     eph <- ph[i]
     if (grepl("HUMAN", eph)) {
-      if (lengths(gregexpr("-", eph)) == 2) {
+      n_hyphens <- stringr::str_count(eph, "-")
+      if (n_hyphens == 2) {
         # this must be HUMAN-MAIN-TR## FORMAT
         if (!grepl("^HUMAN-MAIN-TR\\d{2}$", eph)) {
           stop("PROBLEM WITH THE PHASE: ", eph, ": expected format is HUMAN-MAIN-TR## (e.g., HUMAN-MAIN-TR01)")
         }
         sp <- gsub("(.*)(-)(.*)(-)(.*)", "\\1", eph)
         tr <- gsub("(.*)(-)(.*)(-)(.*)", "\\5", eph)
-      } else if (lengths(gregexpr("-", eph)) == 1) {
+      } else if (n_hyphens == 1) {
         # HUMAN-PRECOVID only
         if (!grepl("^HUMAN-PRECOVID$", eph)) {
           stop("PROBLEM WITH THE PHASE: ", eph, ": not a valid HUMAN phase. Expected HUMAN-PRECOVID or HUMAN-MAIN-TR## (e.g., HUMAN-MAIN-TR01)")
         }
         sp <- gsub("(.*)(-)(.*)", "\\1", eph)
+        tr <- "00"
+      } else if (n_hyphens == 0) {
+        # Plain HUMAN
+        sp <- eph
         tr <- "00"
       } else{
         warning(paste("PROBLEM WITH THE PHASE:", eph, ": it doesn't contain a valid format for HUMAN phase"))
