@@ -47,12 +47,19 @@ test_that("validate_phase rejects HUMAN-MAIN-TR## in folder path", {
   expect_error(validate_phase("HUMAN-MAIN/T11/OXYLIPNEG/BATCH1_20240524/PROCESSED_20240524"))
   # HUMAN_MAIN_TR01 (underscores) should fail
   expect_error(validate_phase("HUMAN_MAIN_TR01/T11/OXYLIPNEG/BATCH1_20240524/PROCESSED_20240524"))
+  # Windows-style backslash paths should also be rejected
+  expect_error(validate_phase("D:\\Snow\\HUMAN-MAIN-TR01\\T02\\OXYLIPNEG\\BATCH2_20240808\\PROCESSED_20240808"))
+  expect_error(validate_phase("D:\\Snow\\HUMAN-MAIN\\T02\\OXYLIPNEG\\BATCH2_20240808\\PROCESSED_20240808"))
+  expect_error(validate_phase("D:\\Snow\\HUMAN_MAIN_TR01\\T02\\OXYLIPNEG\\BATCH2_20240808\\PROCESSED_20240808"))
 })
 
 test_that("validate_phase accepts valid folder phases", {
   expect_equal(validate_phase("HUMAN/T11/OXYLIPNEG/BATCH1_20240524/PROCESSED_20240524"), "HUMAN")
   expect_equal(validate_phase("HUMAN-PRECOVID/T10/IONPNEG/BATCH1_20190909/PROCESSED_20200205"), "HUMAN-PRECOVID")
   expect_equal(validate_phase("PASS1A-06/T31/IONPNEG/BATCH1_20190909/PROCESSED_20200205"), "PASS1A-06")
+  # Windows-style backslash paths
+  expect_equal(validate_phase("D:\\Snow\\HUMAN\\T02\\OXYLIPNEG\\BATCH2_20240808\\PROCESSED_20240808"), "HUMAN")
+  expect_equal(validate_phase("D:\\Data\\PASS1A-06\\T31\\IONPNEG\\BATCH1_20190909\\PROCESSED_20200205"), "PASS1A-06")
   # Bare phase strings (used by validate_two_phases) should also work
   expect_equal(validate_phase("PASS1C-06"), "PASS1C-06")
 })
@@ -200,5 +207,39 @@ test_that("set_phase validates metadata_phase.txt content", {
     "PASS1A-06"
   )
   unlink(dirs$tmpdir, recursive = TRUE)
+})
+
+test_that("validate_assay works with Windows backslash paths", {
+  expect_equal(validate_assay("D:\\Snow\\HUMAN\\T02\\OXYLIPNEG\\BATCH2_20240808\\PROCESSED_20240808"), "OXYLIPNEG")
+  expect_equal(validate_assay("D:\\Data\\PASS1A-06\\T31\\IONPNEG\\BATCH1_20190909\\PROCESSED_20200205"), "IONPNEG")
+  expect_equal(validate_assay("C:\\Users\\lab\\HUMAN\\T10\\PROT_AC\\BATCH1_20230620\\PROCESSED_20230620"), "PROT_AC")
+  expect_equal(validate_assay("D:\\PASS1B-06\\T58\\LAB_CK\\BATCH1_20230620\\RESULTS_20230620"), "LAB_CK")
+})
+
+test_that("validate_batch works with Windows backslash paths", {
+  expect_equal(
+    validate_batch("D:\\Snow\\HUMAN\\T02\\OXYLIPNEG\\BATCH2_20240808\\PROCESSED_20240808"),
+    "D:\\Snow\\HUMAN\\T02\\OXYLIPNEG\\BATCH2_20240808\\"
+  )
+  expect_equal(
+    validate_batch("D:\\Data\\PASS1A-06\\T31\\IONPNEG\\BATCH1_20190909\\PROCESSED_20200205"),
+    "D:\\Data\\PASS1A-06\\T31\\IONPNEG\\BATCH1_20190909\\"
+  )
+  # PROT_AC legacy on Windows
+  expect_equal(
+    validate_batch("C:\\broad\\PASS1A-06\\T58\\PROT_AC\\BATCH_20190828\\PROCESSED_20200101"),
+    "C:\\broad\\PASS1A-06\\T58\\PROT_AC\\BATCH_20190828\\"
+  )
+})
+
+test_that("get_full_path2batch works with Windows backslash paths", {
+  expect_equal(
+    get_full_path2batch("D:\\Snow\\HUMAN\\T02\\OXYLIPNEG\\BATCH2_20240808\\PROCESSED_20240808"),
+    "D:\\Snow\\HUMAN\\T02\\OXYLIPNEG\\BATCH2_20240808\\"
+  )
+  expect_equal(
+    get_full_path2batch("D:\\Data\\HUMAN\\T10\\LAB_CK\\BATCH1_20230620\\RESULTS_20230620"),
+    "D:\\Data\\HUMAN\\T10\\LAB_CK\\BATCH1_20230620\\"
+  )
 })
 

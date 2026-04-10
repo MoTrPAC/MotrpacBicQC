@@ -423,7 +423,7 @@ check_viallabel_dmaqc <- function(vl_submitted,
 validate_assay <- function(input_results_folder){
   
   assay <- stringr::str_extract(string = input_results_folder,
-                                pattern = "(?<=T\\d{2}/)(IONPNEG|RPNEG|RPPOS|HILICPOS|LRPPOS|LRPNEG|3HIB|AA|AC_DUKE|ACOA|BAIBA|CER_DUKE|KA|NUC|OA|SPHM|OXYLIPNEG|ETAMIDPOS|AC_MAYO|AMINES|CER_MAYO|TCA|LAB_GLC|LAB_INS|PROT_PH|PROT_PR|PROT_AC|PROT_UB|PROT_OL|PROT_OX|LAB_CK|LAB_CRT|LAB_CONV)")
+                                pattern = "(?<=T\\d{2}[/\\\\])(IONPNEG|RPNEG|RPPOS|HILICPOS|LRPPOS|LRPNEG|3HIB|AA|AC_DUKE|ACOA|BAIBA|CER_DUKE|KA|NUC|OA|SPHM|OXYLIPNEG|ETAMIDPOS|AC_MAYO|AMINES|CER_MAYO|TCA|LAB_GLC|LAB_INS|PROT_PH|PROT_PR|PROT_AC|PROT_UB|PROT_OL|PROT_OX|LAB_CK|LAB_CRT|LAB_CONV)")
   if(is.na(assay)){
     stop("ASSAY not found in the folder structure")
   }else{
@@ -444,12 +444,12 @@ validate_assay <- function(input_results_folder){
 validate_batch <- function(input_results_folder){
   
   # PROT_AC legacy exception: batch number is optional
-  is_prot_ac <- grepl("/PROT_AC/", input_results_folder)
+  is_prot_ac <- grepl("[/\\\\]PROT_AC[/\\\\]", input_results_folder)
   
   if(is_prot_ac){
-    pattern <- "(.*/BATCH\\d{0,2}\\_\\d{8})/"
+    pattern <- "(.*[/\\\\]BATCH\\d{0,2}\\_\\d{8})[/\\\\]"
   }else{
-    pattern <- "(.*/BATCH\\d{1,2}\\_\\d{8})/"
+    pattern <- "(.*[/\\\\]BATCH\\d{1,2}\\_\\d{8})[/\\\\]"
   }
   
   batch_folder <- stringr::str_extract(string = input_results_folder, 
@@ -658,7 +658,7 @@ validate_na_empty <- function(df, col_name, verbose = TRUE) {
 #' @export
 validate_phase <- function(input_results_folder, return_phase = TRUE){
   phase <- stringr::str_extract(string = input_results_folder,
-                                pattern = "(PASS1A-06|PASS1A-18|PASS1B-06|PASS1B-18|PASS1C-06|PASS1C-18|PASS1AC-06|HUMAN-PRECOVID|HUMAN)(?=/|$)")
+                                pattern = "(PASS1A-06|PASS1A-18|PASS1B-06|PASS1B-18|PASS1C-06|PASS1C-18|PASS1AC-06|HUMAN-PRECOVID|HUMAN)(?=[/\\\\]|$)")
   if( is.na(phase) | phase == "NA" ){
     msg <- "- (-) Project phase is not found in the folder structure. Expected phases: PASS1A-06, PASS1A-18, PASS1B-06, PASS1B-18, PASS1C-06, PASS1C-18, PASS1AC-06, HUMAN, HUMAN-PRECOVID."
     if( grepl("HUMAN", input_results_folder, ignore.case = TRUE) ){

@@ -450,7 +450,7 @@ validate_lab <- function(input_results_folder,
   tissue_code <- validate_tissue(input_results_folder)
   batch_folder <- validate_batch(input_results_folder)
   
-  input_results_folder <- normalizePath(input_results_folder)
+  input_results_folder <- normalizePath(input_results_folder, winslash = "/")
   
   # Extract short folder path for reporting
   input_folder_short <- regmatches(input_results_folder, regexpr("(HUMAN|PASS).*RESULTS_[0-9]{8}", input_results_folder))
@@ -705,7 +705,7 @@ validate_lab <- function(input_results_folder,
     message("WARNING: Too many errors. Please revise the input folder.")
   }
   
-  batchversion <- stringr::str_extract(string = input_results_folder, pattern = "BATCH.*_[0-9]+/RESULTS_[0-9]+")
+  batchversion <- stringr::str_extract(string = input_results_folder, pattern = "BATCH.*_[0-9]+[/\\\\]RESULTS_[0-9]+")
   
   qc_date <- format(Sys.time(), "%Y%m%d")
   t_name <- bic_animal_tissue_code$bic_tissue_name[bic_animal_tissue_code$bic_tissue_code == tissue_code]
