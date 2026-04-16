@@ -62,3 +62,18 @@ test_that("Works with empty data frame", {
   expect_equal(nrow(cleaned), 0)
 })
 
+test_that("valid_sample_types is a non-empty character vector with expected types", {
+  expect_true(is.character(valid_sample_types))
+  expect_true(length(valid_sample_types) >= 13)
+  # Core types that must always be present
+  expect_true("Sample" %in% valid_sample_types)
+  expect_true("QC-Pooled" %in% valid_sample_types)
+  expect_true("QC-Reference" %in% valid_sample_types)
+  expect_true("QC-Reference-Male" %in% valid_sample_types)
+  expect_true("QC-Reference-Female" %in% valid_sample_types)
+  expect_true("QC-Blank" %in% valid_sample_types)
+  expect_true("QC-PlateControl" %in% valid_sample_types)
+  # No duplicates
+  expect_equal(length(valid_sample_types), length(unique(valid_sample_types)))
+})
+

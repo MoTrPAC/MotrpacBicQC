@@ -104,6 +104,14 @@ test_that("Undefined sample types are detected", {
   expect_gt(result, 0)
 })
 
+# Test for QC-Reference-Male and QC-Reference-Female
+test_that("QC-Reference-Male and QC-Reference-Female are accepted", {
+  ref_sex_df <- valid_df2
+  ref_sex_df$sample_type <- rep(c("Sample", "QC-Reference-Male", "QC-Reference-Female", "QC-Reference", "QC-Pooled"), 2)
+  result <- check_metadata_samples_olink(df = ref_sex_df, return_n_issues = TRUE, verbose = FALSE)
+  expect_equal(result, 0)
+})
+
 # Test for detecting non-numeric sample_order
 test_that("Non-numeric sample_order values are detected", {
   nonnumeric_sample_order_df <- valid_df2

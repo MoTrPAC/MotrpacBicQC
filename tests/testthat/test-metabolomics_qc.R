@@ -11,6 +11,20 @@ test_that("check_metadata_sample returns the right number of issues", {
   expect_equal(check_metadata_samples(df = metadata_sample_unnamed, cas = "umichigan", return_n_issues = TRUE, verbose = FALSE), 2)
 })
 
+test_that("check_metadata_samples accepts QC-Reference-Male and QC-Reference-Female", {
+  df <- data.frame(
+    sample_id        = c("S1", "S2", "QCM1", "QCF1", "QCR1"),
+    sample_type      = c("Sample", "Sample", "QC-Reference-Male", "QC-Reference-Female", "QC-Reference"),
+    sample_order     = 1:5,
+    raw_file         = paste0("file", 1:5, ".raw"),
+    extraction_date  = rep("2024-01-01", 5),
+    acquisition_date = rep("2024-01-02", 5),
+    lc_column_id     = rep("col1", 5),
+    stringsAsFactors = FALSE
+  )
+  expect_equal(check_metadata_samples(df = df, cas = "umichigan", return_n_issues = TRUE, verbose = FALSE), 0)
+})
+
 test_that("check_results returns the right number of issues", {
   expect_equal( check_results(r_m = results_named, m_m = metadata_metabolites_named, m_s = metadata_sample_named, return_n_issues = TRUE, verbose = FALSE), 0)
   expect_equal( check_results(r_m = results_unnamed, m_m = metadata_metabolites_unnamed, m_s = metadata_sample_unnamed, return_n_issues = TRUE, verbose = FALSE), 0)
