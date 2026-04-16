@@ -200,14 +200,10 @@ check_metadata_samples <- function(df,
   }
 
   # sample_type: st
-  esample_types <- c("Sample", "QC-Pooled", "QC-Reference", "QC-Blank",
-                     "QC-Identification", "QC-InternalStandard", "QC-PreRun",
-                     "QC-ExternalStandard", "QC-DriftCorrection", "QC-ReCAS")
-
   if("sample_type" %in% colnames(df)){
-    if(!all(df$sample_type %in% esample_types)){
+    if(!all(df$sample_type %in% valid_sample_types)){
       if(verbose) message("   - (-) Error: undefined sample types: ", appendLF = FALSE)
-      if(verbose) message("\n\t\t - ", paste(setdiff(df$sample_type, esample_types), collapse = "\n\t\t - "))
+      if(verbose) message("\n\t\t - ", paste(setdiff(df$sample_type, valid_sample_types), collapse = "\n\t\t - "))
       ic <- ic + 1
     }else{
       if(verbose) message("  + (+) `sample_type` seems OK")
@@ -1522,6 +1518,8 @@ merge_phenotype_metabolomics <- function(df_long){
   df_merged$condition <- gsub("Male_Exercise - 48 hr", "M_Exe_48h", df_merged$condition)
   df_merged$condition <- gsub("Male_Exercise - 48 hr", "M_Exe_48h", df_merged$condition)
 
+  df_merged$condition <- gsub("QC_QC-Reference-Male", "QC_Reference-Male", df_merged$condition)
+  df_merged$condition <- gsub("QC_QC-Reference-Female", "QC_Reference-Female", df_merged$condition)
   df_merged$condition <- gsub("QC_QC-Reference", "QC_Reference", df_merged$condition)
   df_merged$condition <- gsub("QC_QC-DriftCorrection", "QC_DriftCorrection", df_merged$condition)
   df_merged$condition <- gsub("QC_QC-Pooled", "QC_Pooled", df_merged$condition)

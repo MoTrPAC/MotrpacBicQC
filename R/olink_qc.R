@@ -211,15 +211,10 @@ check_metadata_samples_olink <- function(df,
   }
   
   # sample_type: st
-  esample_types <- c("Sample", "QC-Pooled", "QC-Reference", "QC-Blank",
-                     "QC-Identification", "QC-InternalStandard", "QC-PreRun",
-                     "QC-ExternalStandard", "QC-DriftCorrection", "QC-ReCAS", 
-                     "QC-PlateControl")
-  
   if("sample_type" %in% colnames(df)){
-    if(!all(df$sample_type %in% esample_types)){
+    if(!all(df$sample_type %in% valid_sample_types)){
       if(verbose) message("   - (-) Error: undefined sample types: ", appendLF = FALSE)
-      if(verbose) message("\n\t\t - ", paste(setdiff(df$sample_type, esample_types), collapse = "\n\t\t - "))
+      if(verbose) message("\n\t\t - ", paste(setdiff(df$sample_type, valid_sample_types), collapse = "\n\t\t - "))
       ic <- ic + 1
     }else{
       if(verbose) message("  + (+) `sample_type` seems OK")

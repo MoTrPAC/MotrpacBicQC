@@ -179,14 +179,9 @@ check_metadata_samples_lab <- function(df,
   }
   
   # Define expected sample types
-  expected_sample_types <- c("Sample", "QC-Pooled", "QC-Reference", "QC-Blank",
-                             "QC-Identification", "QC-InternalStandard", "QC-PreRun",
-                             "QC-ExternalStandard", "QC-DriftCorrection", "QC-ReCAS", 
-                             "QC-PlateControl")
-  
   # Check 'sample_type' column
   if ("sample_type" %in% colnames(df)) {
-    undefined_types <- setdiff(df$sample_type, expected_sample_types)
+    undefined_types <- setdiff(df$sample_type, valid_sample_types)
     if (length(undefined_types) > 0) {
       if (verbose) message("   - (-) Undefined `sample_type` values detected: FAIL")
       if (verbose) message("\t\t - ", paste(undefined_types, collapse = "\n\t\t - "))
