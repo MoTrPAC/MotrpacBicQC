@@ -3,6 +3,20 @@
 #______________________________________________________________________________
 
 
+#' Valid sample types for QC validation
+#'
+#' A character vector of all accepted values for the \code{sample_type} column
+#' in metadata_sample files. Used by \code{check_metadata_samples},
+#' \code{check_metadata_samples_lab}, and \code{check_metadata_samples_olink}.
+#'
+#' @format A character vector with 13 elements
+#' @examples
+#' \dontrun{
+#'  valid_sample_types
+#' }
+"valid_sample_types"
+
+
 #' Motrpac assay codes
 #'
 #' @format A data frame with assay codes

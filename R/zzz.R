@@ -24,7 +24,8 @@
 utils::globalVariables(
   c("sample_order_num", 
     "total", 
-    "missing_pct")
+    "missing_pct",
+    "valid_sample_types")
   )
 
 .onLoad <- function(libname, pkgname) {

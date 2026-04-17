@@ -276,9 +276,9 @@ get_full_path2batch <- function(input_results_folder){
   batch <- NULL
 
   if( grepl("(BIC){0,1}RESULTS", input_results_folder) ){
-    batch <- gsub("(.*/)((BIC){0,1}RESULTS.*)", "\\1", input_results_folder)
+    batch <- gsub("(.*[/\\\\])((BIC){0,1}RESULTS.*)", "\\1", input_results_folder)
   }else if( grepl("PROCESSED", input_results_folder)){
-    batch <- gsub("(.*)(PROCESSED.*)", "\\1", input_results_folder)
+    batch <- gsub("(.*[/\\\\])(PROCESSED.*)", "\\1", input_results_folder)
   }else{
     stop("   - (-) ERROR: the input results folder missed the PROCESSED or RESULTS folder!")
   }
