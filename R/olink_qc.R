@@ -211,15 +211,10 @@ check_metadata_samples_olink <- function(df,
   }
   
   # sample_type: st
-  esample_types <- c("Sample", "QC-Pooled", "QC-Reference", "QC-Blank",
-                     "QC-Identification", "QC-InternalStandard", "QC-PreRun",
-                     "QC-ExternalStandard", "QC-DriftCorrection", "QC-ReCAS", 
-                     "QC-PlateControl")
-  
   if("sample_type" %in% colnames(df)){
-    if(!all(df$sample_type %in% esample_types)){
+    if(!all(df$sample_type %in% valid_sample_types)){
       if(verbose) message("   - (-) Error: undefined sample types: ", appendLF = FALSE)
-      if(verbose) message("\n\t\t - ", paste(setdiff(df$sample_type, esample_types), collapse = "\n\t\t - "))
+      if(verbose) message("\n\t\t - ", paste(setdiff(df$sample_type, valid_sample_types), collapse = "\n\t\t - "))
       ic <- ic + 1
     }else{
       if(verbose) message("  + (+) `sample_type` seems OK")
@@ -548,7 +543,7 @@ validate_olink <- function(input_results_folder,
   vial_label <- NA
   qc_samples <- NA
   
-  input_results_folder <- normalizePath(input_results_folder)
+  input_results_folder <- normalizePath(input_results_folder, winslash = "/")
   
   input_folder_short <- regmatches(input_results_folder, regexpr("(HUMAN|PASS).*RESULTS_[0-9]{8}", input_results_folder))
   if(purrr::is_empty(input_folder_short)){
@@ -827,7 +822,7 @@ validate_olink <- function(input_results_folder,
     message("WARNING: Too many errors. Revise input folder")
   }
   
-  batchversion <- stringr::str_extract(string = input_results_folder, pattern = "BATCH.*_[0-9]+/RESULTS_[0-9]+")
+  batchversion <- stringr::str_extract(string = input_results_folder, pattern = "BATCH.*_[0-9]+[/\\\\]RESULTS_[0-9]+")
   
   qc_date <- format(Sys.time(), "%Y%m%d")
   t_name <- bic_animal_tissue_code$bic_tissue_name[which(bic_animal_tissue_code$bic_tissue_code == tissue_code)]

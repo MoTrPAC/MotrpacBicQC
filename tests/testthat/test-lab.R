@@ -113,6 +113,11 @@ test_that("check_metadata_samples_lab validates sample metadata correctly", {
   na_raw_file_df <- valid_df
   na_raw_file_df$raw_file[1] <- NA
   expect_gt(check_metadata_samples_lab(na_raw_file_df, return_n_issues = TRUE, verbose = FALSE), 0)
+
+  # Test with QC-Reference-Male and QC-Reference-Female
+  ref_sex_df <- valid_df
+  ref_sex_df$sample_type <- c("Sample", "QC-Reference-Male", "QC-Reference-Female", "QC-Reference")
+  expect_equal(check_metadata_samples_lab(ref_sex_df, return_n_issues = TRUE, verbose = FALSE), 0)
 })
 
 test_that("load_lab_batch loads data correctly", {

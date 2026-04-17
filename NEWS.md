@@ -1,4 +1,26 @@
 
+# MotrpacBicQC 1.6.0 (2026-04-16)
+
+## Bug Fixes
+
+* **Windows Path Support**: Fixed path validation across the package to support Windows backslash (`\`) paths in `validate_phase()`, `validate_assay()`, `validate_batch()`, and `get_full_path2batch()`
+* Added `normalizePath(winslash = "/")` to metabolomics, lab, and olink QC entry points
+
+## New Features
+
+* **New Sample Types**: Added `QC-Reference-Male`, `QC-Reference-Female`, and `QC-PlateControl` sample types
+* **`valid_sample_types` Data Object**: Unified sample type definitions into a single shared data object used across metabolomics, lab, and olink QC modules
+
+## Removed
+
+* Removed deprecated metabolomics merge functions: `combine_metabolomics_batch()`, `merge_metabolomics_metadata()`, `merge_phenotype_metabolomics()`, and `merge_all_metabolomics()`
+
+## Tests
+
+* Added tests for Windows backslash paths, new sample types, and `valid_sample_types`
+
+---
+
 # MotrpacBicQC 1.5.0 (2026-04-08)
 
 ## Bug Fixes
