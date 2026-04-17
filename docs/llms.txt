@@ -115,8 +115,6 @@ details as possible.
   : Validate vial labels from DMAQC
 - [`clean_character_columns()`](https://motrpac.github.io/MotrpacBicQC/reference/clean_character_columns.md)
   : Clean character columns
-- [`combine_metabolomics_batch()`](https://motrpac.github.io/MotrpacBicQC/reference/combine_metabolomics_batch.md)
-  : Combines all files from a Metabolomics batch
 - [`create_folder()`](https://motrpac.github.io/MotrpacBicQC/reference/create_folder.md)
   : Create folder
 - [`dl_read_gcp()`](https://motrpac.github.io/MotrpacBicQC/reference/dl_read_gcp.md)
@@ -142,12 +140,6 @@ details as possible.
   : Load and Process Olink Batch Data
 - [`load_proteomics()`](https://motrpac.github.io/MotrpacBicQC/reference/load_proteomics.md)
   : Load Proteomics batch
-- [`merge_all_metabolomics()`](https://motrpac.github.io/MotrpacBicQC/reference/merge_all_metabolomics.md)
-  : Merge all metabolomics files
-- [`merge_metabolomics_metadata()`](https://motrpac.github.io/MotrpacBicQC/reference/merge_metabolomics_metadata.md)
-  : Merge metabolomics metadata named and unnamed
-- [`merge_phenotype_metabolomics()`](https://motrpac.github.io/MotrpacBicQC/reference/merge_phenotype_metabolomics.md)
-  : Merge phenotypic and metabolics results
 - [`metabolomics_data_dictionary`](https://motrpac.github.io/MotrpacBicQC/reference/metabolomics_data_dictionary.md)
   : Metabolomics data dictionary
 - [`metadata_metabolites_named`](https://motrpac.github.io/MotrpacBicQC/reference/metadata_metabolites_named.md)
@@ -190,6 +182,8 @@ details as possible.
   : tissue colors
 - [`tissue_order`](https://motrpac.github.io/MotrpacBicQC/reference/tissue_order.md)
   : tissue order
+- [`valid_sample_types`](https://motrpac.github.io/MotrpacBicQC/reference/valid_sample_types.md)
+  : Valid sample types for QC validation
 - [`validate_assay()`](https://motrpac.github.io/MotrpacBicQC/reference/validate_assay.md)
   : extract ASSAY from input folder path
 - [`validate_batch()`](https://motrpac.github.io/MotrpacBicQC/reference/validate_batch.md)

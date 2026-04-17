@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">MotrpacBicQC</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.6.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,6 +40,33 @@
       <small>Source: <a href="https://github.com/MoTrPAC/MotrpacBicQC/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.6.0" id="motrpacbicqc-160-2026-04-16">MotrpacBicQC 1.6.0 (2026-04-16)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-160-2026-04-16"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-1-6-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-1-6-0"></a></h3>
+<ul><li>
+<strong>Windows Path Support</strong>: Fixed path validation across the package to support Windows backslash (<code>\</code>) paths in <code><a href="../reference/validate_phase.html">validate_phase()</a></code>, <code><a href="../reference/validate_assay.html">validate_assay()</a></code>, <code><a href="../reference/validate_batch.html">validate_batch()</a></code>, and <code><a href="../reference/get_full_path2batch.html">get_full_path2batch()</a></code>
+</li>
+<li>Added <code>normalizePath(winslash = "/")</code> to metabolomics, lab, and olink QC entry points</li>
+</ul></div>
+<div class="section level3">
+<h3 id="new-features-1-6-0">New Features<a class="anchor" aria-label="anchor" href="#new-features-1-6-0"></a></h3>
+<ul><li>
+<strong>New Sample Types</strong>: Added <code>QC-Reference-Male</code>, <code>QC-Reference-Female</code>, and <code>QC-PlateControl</code> sample types</li>
+<li>
+<strong><code>valid_sample_types</code> Data Object</strong>: Unified sample type definitions into a single shared data object used across metabolomics, lab, and olink QC modules</li>
+</ul></div>
+<div class="section level3">
+<h3 id="removed-1-6-0">Removed<a class="anchor" aria-label="anchor" href="#removed-1-6-0"></a></h3>
+<ul><li>Removed deprecated metabolomics merge functions: <code>combine_metabolomics_batch()</code>, <code>merge_metabolomics_metadata()</code>, <code>merge_phenotype_metabolomics()</code>, and <code>merge_all_metabolomics()</code>
+</li>
+</ul></div>
+<div class="section level3">
+<h3 id="tests-1-6-0">Tests<a class="anchor" aria-label="anchor" href="#tests-1-6-0"></a></h3>
+<ul><li>Added tests for Windows backslash paths, new sample types, and <code>valid_sample_types</code>
+</li>
+</ul><hr></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.5.0" id="motrpacbicqc-150-2026-04-08">MotrpacBicQC 1.5.0 (2026-04-08)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-150-2026-04-08"></a></h2>
 <div class="section level3">

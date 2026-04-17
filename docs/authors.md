@@ -10,13 +10,13 @@ Source:
 [`DESCRIPTION`](https://github.com/MoTrPAC/MotrpacBicQC/blob/HEAD/DESCRIPTION)
 
 Center MB (2026). *MotrpacBicQC: QC/QA functions for the MoTrPAC
-community*. R package version 1.5.0,
+community*. R package version 1.6.0,
 <https://motrpac.github.io/MotrpacBicQC>.
 
     @Manual{,
       title = {MotrpacBicQC: QC/QA functions for the MoTrPAC community},
       author = {MoTrPAC Bioinformatics Center},
       year = {2026},
-      note = {R package version 1.5.0},
+      note = {R package version 1.6.0},
       url = {https://motrpac.github.io/MotrpacBicQC},
     }
