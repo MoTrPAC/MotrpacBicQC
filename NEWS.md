@@ -1,4 +1,8 @@
 
+# MotrpacBicQC 1.6.1 (2026-04-18)
+
+* **Metabolomics iSTD Validation**: Internal standards (`[iSTD]`) are now skipped during RefMet name validation instead of being stripped and validated (#272)
+
 # MotrpacBicQC 1.6.0 (2026-04-16)
 
 ## Bug Fixes
