@@ -53,3 +53,13 @@ test_that("Successful API call returns correctly structured list with no additio
                info = paste("Unexpected elements in response:", paste(unexpected_elements, collapse = ", ")))
 })
 
+test_that("validate_refmetname skips [iSTD] entries", {
+  test_data <- data.frame(
+    refmet_name = c("alanine-13C3 [iSTD]", "anthranilic acid-15N [iSTD]", "24-epi-Brassinolide [iSTD]"),
+    stringsAsFactors = FALSE
+  )
+  
+  actual_missed_ids <- validate_refmetname(test_data, verbose = FALSE)
+  expect_equal(actual_missed_ids, 0)
+})
+

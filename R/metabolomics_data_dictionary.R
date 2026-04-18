@@ -94,37 +94,38 @@ get_and_validate_mdd <- function(remove_duplications = FALSE, verbose = TRUE){
 validate_refmetname <- function(dataf, verbose){
 
   irm <- 0
+  n_istd <- 0
   for(i in 1:dim(dataf)[1]){
     rn <- dataf$refmet_name[i]
     
+    # Skip internal standards
+    if(grepl("\\[iSTD\\]", rn)){
+      n_istd <- n_istd + 1
+      next
+    }
+    
     tosearch <- "_hp_|_rp_|_rn_|_in_|_lp_|_ln_"
     if(grepl(tosearch, rn)){
-      # message("\tMulti-isotope detected: ", rn, appendLF = FALSE)
       rn <- gsub("(.*)(_\\w{2}_\\w{1})", "\\1", rn)
-      # message(" > ", rn)
-    }
-    # Remove the standard label
-    standards <- "\\[.*\\]"
-    if(grepl(standards, rn)){
-      # message("\tStandard detected: ", rn, appendLF = FALSE)
-      rn <- gsub("(.*)(\\s+\\[iSTD\\])", "\\1", rn)
-      # message(" > ", rn)
     }
     
     search_api <- paste0("https://www.metabolomicsworkbench.org/rest/refmet/match/",URLencode(rn),"/name/")
     here <- jsonlite::fromJSON(search_api)
     if(here$refmet_name == "-"){
-      if(verbose) message(paste0("      (-) `refmet_name` [`", rn, "`] not available in RefMet. Please, contact MW/BIC (Error RN1)"))
+      if(verbose) message(paste0("   - (-) `refmet_name validation`: [`", rn, "`] not available in RefMet. Please, contact MW/BIC (Error RN1)"))
       irm <- irm + 1
     }else{
       if(here$refmet_name != rn){
-        if(verbose) message(paste0("      (-) `refmet_name` [`", rn, "`] must be modified to the RefMet Standarized name: \"", here$refmet_name, "\" (Error RN2)"))
+        if(verbose) message(paste0("   - (-) `refmet_name validation`: [`", rn, "`] must be modified to the RefMet Standarized name: \"", here$refmet_name, "\" (Error RN2)"))
         irm <- irm + 1
       }
     }
   }
+  if(n_istd > 0){
+    if(verbose) message("  + (+) `refmet_name validation`: Internal standards [iSTD] skipped: ", n_istd)
+  }
   if(irm > 0){
-    if(verbose) message("      (-) Total number of missed ids on MW: ", irm)
+    if(verbose) message("   - (-) `refmet_name validation`: Total number of missed ids on MW: ", irm)
   }
   return(irm)
 }
