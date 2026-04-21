@@ -91,7 +91,7 @@ get_and_validate_mdd <- function(remove_duplications = FALSE, verbose = TRUE){
 #' @param verbose (logical) `TRUE` (default) shows messages)
 #' @return (numeric) number of refmet_name ids not available in RefMet
 #' @export
-validate_refmetname <- function(dataf, verbose){
+validate_refmetname <- function(dataf, verbose = TRUE){
 
   # Input validation: accept a data.frame (or coerce a list with a
   # `refmet_name` element). Without this check, passing a plain list makes
@@ -115,9 +115,21 @@ validate_refmetname <- function(dataf, verbose){
 
   irm <- 0
   n_istd <- 0
+  n_api_errors <- 0
+  n_missing <- 0
   for(i in seq_len(nrow(dataf))){
     rn <- dataf$refmet_name[i]
-    
+
+    # Handle NA / empty names up front. Without this, grepl() below would
+    # return NA on missing values and the surrounding `if()` would error
+    # with "missing value where TRUE/FALSE needed", aborting the QC run.
+    if(is.na(rn) || !nzchar(trimws(rn))){
+      if(verbose) message(paste0("   - (-) `refmet_name validation`: row ", i, " has a missing/empty `refmet_name` (Error RN0)"))
+      n_missing <- n_missing + 1
+      irm <- irm + 1
+      next
+    }
+
     # Skip internal standards
     if(grepl("\\[iSTD\\]", rn)){
       n_istd <- n_istd + 1
@@ -130,7 +142,18 @@ validate_refmetname <- function(dataf, verbose){
     }
     
     search_api <- paste0("https://www.metabolomicsworkbench.org/rest/refmet/match/",URLencode(rn),"/name/")
-    here <- jsonlite::fromJSON(search_api)
+    # Don't crash the whole QC run if the Metabolomics Workbench API is
+    # unreachable or returns a non-JSON payload (e.g., an HTML error page).
+    here <- tryCatch(
+      jsonlite::fromJSON(search_api),
+      error = function(e) NULL
+    )
+    if(is.null(here) || is.null(here$refmet_name)){
+      if(verbose) message(paste0("   - (-) `refmet_name validation`: [`", rn, "`] could not be validated (API/network error). Skipped (Error RN3)"))
+      n_api_errors <- n_api_errors + 1
+      irm <- irm + 1
+      next
+    }
     if(here$refmet_name == "-"){
       if(verbose) message(paste0("   - (-) `refmet_name validation`: [`", rn, "`] not available in RefMet. Please, contact MW/BIC (Error RN1)"))
       irm <- irm + 1
@@ -144,13 +167,19 @@ validate_refmetname <- function(dataf, verbose){
             next
           }
         }
-        if(verbose) message(paste0("   - (-) `refmet_name validation`: [`", rn, "`] must be modified to the RefMet Standarized name: \"", here$refmet_name, "\" (Error RN2)"))
+        if(verbose) message(paste0("   - (-) `refmet_name validation`: [`", rn, "`] must be modified to the RefMet Standardized name: \"", here$refmet_name, "\" (Error RN2)"))
         irm <- irm + 1
       }
     }
   }
   if(n_istd > 0){
     if(verbose) message("  + (+) `refmet_name validation`: Internal standards [iSTD] skipped: ", n_istd)
+  }
+  if(n_missing > 0){
+    if(verbose) message("   - (-) `refmet_name validation`: missing/empty values: ", n_missing)
+  }
+  if(n_api_errors > 0){
+    if(verbose) message("   - (-) `refmet_name validation`: API/network errors (unverified): ", n_api_errors)
   }
   if(irm > 0){
     if(verbose) message("   - (-) `refmet_name validation`: Total number of missed ids on MW: ", irm)

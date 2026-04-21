@@ -103,3 +103,45 @@ test_that("validate_refmetname returns 0 for an empty data.frame", {
   expect_equal(validate_refmetname(empty_df, verbose = FALSE), 0)
 })
 
+test_that("validate_refmetname does not crash on API/network errors", {
+  skip_if_not_installed("mockery")
+
+  # Simulate jsonlite::fromJSON failing for every call (network/API error).
+  mockery::stub(
+    validate_refmetname,
+    "jsonlite::fromJSON",
+    function(...) stop("simulated network failure")
+  )
+
+  test_data <- data.frame(
+    refmet_name = c("Leucine", "Citric acid"),
+    stringsAsFactors = FALSE
+  )
+
+  result <- validate_refmetname(test_data, verbose = FALSE)
+  # Both rows could not be verified, so they are counted as missed IDs
+  # rather than aborting the whole QC run.
+  expect_equal(result, 2)
+})
+
+test_that("validate_refmetname handles NA/empty refmet_name without crashing", {
+  # Mock the API so the test doesn't depend on the network. Only non-NA/
+  # non-empty rows should reach the API; missing rows must be counted
+  # locally as Error RN0.
+  skip_if_not_installed("mockery")
+  mockery::stub(
+    validate_refmetname,
+    "jsonlite::fromJSON",
+    function(url, ...) list(refmet_name = "Leucine")
+  )
+
+  test_data <- data.frame(
+    refmet_name = c("Leucine", NA_character_, "", "   "),
+    stringsAsFactors = FALSE
+  )
+
+  # 3 missing/empty rows => counted as missed IDs (Error RN0), but no crash.
+  result <- validate_refmetname(test_data, verbose = FALSE)
+  expect_equal(result, 3)
+})
+

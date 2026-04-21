@@ -4,7 +4,7 @@
 \alias{validate_refmetname}
 \title{Validate refmet_name}
 \usage{
-validate_refmetname(dataf, verbose)
+validate_refmetname(dataf, verbose = TRUE)
 }
 \arguments{
 \item{dataf}{(data.frame) Data frame with the refmet_name column}
