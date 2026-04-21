@@ -1,11 +1,11 @@
 # Validate refmet_name
 
-Validate the refment_name using the Metabolomics Workbench API
+Validate the refmet_name using the Metabolomics Workbench API
 
 ## Usage
 
 ``` r
-validate_refmetname(dataf, verbose)
+validate_refmetname(dataf, verbose = TRUE)
 ```
 
 ## Arguments

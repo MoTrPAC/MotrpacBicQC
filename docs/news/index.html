@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">MotrpacBicQC</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.7.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,6 +40,23 @@
       <small>Source: <a href="https://github.com/MoTrPAC/MotrpacBicQC/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.7.0" id="motrpacbicqc-170-2026-04-21">MotrpacBicQC 1.7.0 (2026-04-21)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-170-2026-04-21"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-1-7-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-1-7-0"></a></h3>
+<ul><li>
+<strong><code><a href="../reference/validate_refmetname.html">validate_refmetname()</a></code></strong>:
+<ul><li>Accept slash-delimited names (e.g. <code>Leucine/Isoleucine</code>, <code>Citric acid/Isocitric acid</code>) as valid when RefMet returns one of the components (<a href="https://github.com/MoTrPAC/MotrpacBicQC/issues/273" class="external-link">#273</a>)</li>
+<li>No longer crashes the QC run on Metabolomics Workbench API/network errors; unverified names are reported as <code>Error RN3</code>
+</li>
+<li>No longer crashes on <code>NA</code>, empty, or whitespace-only <code>refmet_name</code> values; reported as <code>Error RN0</code>
+</li>
+<li>Validate input: error loudly when called with anything other than a <code>data.frame</code> (or a list coercible to one with a <code>refmet_name</code> column), instead of silently returning 0</li>
+<li>Skip internal standards (<code>[iSTD]</code>) during validation</li>
+<li>Default <code>verbose = TRUE</code> for consistency with other <code>check_*</code>/<code>validate_*</code> functions</li>
+</ul></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.6.0" id="motrpacbicqc-160-2026-04-16">MotrpacBicQC 1.6.0 (2026-04-16)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-160-2026-04-16"></a></h2>
 <div class="section level3">

@@ -1,7 +1,15 @@
 
-# MotrpacBicQC 1.6.1 (2026-04-18)
+# MotrpacBicQC 1.7.0 (2026-04-21)
 
-* **Metabolomics iSTD Validation**: Internal standards (`[iSTD]`) are now skipped during RefMet name validation instead of being stripped and validated (#272)
+## Bug Fixes
+
+* **`validate_refmetname()`**:
+  * Accept slash-delimited names (e.g. `Leucine/Isoleucine`, `Citric acid/Isocitric acid`) as valid when RefMet returns one of the components (#273)
+  * No longer crashes the QC run on Metabolomics Workbench API/network errors; unverified names are reported as `Error RN3`
+  * No longer crashes on `NA`, empty, or whitespace-only `refmet_name` values; reported as `Error RN0`
+  * Validate input: error loudly when called with anything other than a `data.frame` (or a list coercible to one with a `refmet_name` column), instead of silently returning 0
+  * Skip internal standards (`[iSTD]`) during validation
+  * Default `verbose = TRUE` for consistency with other `check_*`/`validate_*` functions
 
 # MotrpacBicQC 1.6.0 (2026-04-16)
 
