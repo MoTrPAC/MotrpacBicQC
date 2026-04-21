@@ -86,16 +86,36 @@ get_and_validate_mdd <- function(remove_duplications = FALSE, verbose = TRUE){
 
 #' @title Validate refmet_name
 #'
-#' @description Validate the refment_name using the Metabolomics Workbench API
+#' @description Validate the refmet_name using the Metabolomics Workbench API
 #' @param dataf (data.frame) Data frame with the refmet_name column
 #' @param verbose (logical) `TRUE` (default) shows messages)
 #' @return (numeric) number of refmet_name ids not available in RefMet
 #' @export
 validate_refmetname <- function(dataf, verbose){
 
+  # Input validation: accept a data.frame (or coerce a list with a
+  # `refmet_name` element). Without this check, passing a plain list makes
+  # `nrow(dataf)` return NULL and the loop silently iterates zero times,
+  # returning 0 missed IDs as if everything had validated successfully.
+  if(!is.data.frame(dataf)){
+    if(is.list(dataf) && "refmet_name" %in% names(dataf)){
+      dataf <- as.data.frame(dataf, stringsAsFactors = FALSE)
+    }else{
+      stop("`dataf` must be a data.frame with a `refmet_name` column ",
+           "(got object of class: ", paste(class(dataf), collapse = ", "), ").")
+    }
+  }
+  if(!("refmet_name" %in% colnames(dataf))){
+    stop("`dataf` must contain a `refmet_name` column.")
+  }
+  if(nrow(dataf) == 0){
+    if(verbose) message("  + (+) `refmet_name validation`: no rows to validate.")
+    return(0)
+  }
+
   irm <- 0
   n_istd <- 0
-  for(i in 1:dim(dataf)[1]){
+  for(i in seq_len(nrow(dataf))){
     rn <- dataf$refmet_name[i]
     
     # Skip internal standards
@@ -116,6 +136,14 @@ validate_refmetname <- function(dataf, verbose){
       irm <- irm + 1
     }else{
       if(here$refmet_name != rn){
+        # Names written as "A/B" may be represented by RefMet as one accepted
+        # alternative, so accept matches to any slash-delimited component.
+        if(grepl("/", rn, fixed = TRUE)){
+          rn_alternatives <- trimws(strsplit(rn, "/", fixed = TRUE)[[1]])
+          if(here$refmet_name %in% rn_alternatives){
+            next
+          }
+        }
         if(verbose) message(paste0("   - (-) `refmet_name validation`: [`", rn, "`] must be modified to the RefMet Standarized name: \"", here$refmet_name, "\" (Error RN2)"))
         irm <- irm + 1
       }

@@ -15,5 +15,5 @@ validate_refmetname(dataf, verbose)
 (numeric) number of refmet_name ids not available in RefMet
 }
 \description{
-Validate the refment_name using the Metabolomics Workbench API
+Validate the refmet_name using the Metabolomics Workbench API
 }

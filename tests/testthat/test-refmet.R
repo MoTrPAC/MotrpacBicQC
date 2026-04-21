@@ -53,6 +53,18 @@ test_that("Successful API call returns correctly structured list with no additio
                info = paste("Unexpected elements in response:", paste(unexpected_elements, collapse = ", ")))
 })
 
+test_that("validate_refmetname accepts known slash-containing names", {
+  skip_if_offline()
+
+  test_data <- data.frame(
+    refmet_name = c("Leucine/Isoleucine", "Citric acid/Isocitric acid"),
+    stringsAsFactors = FALSE
+  )
+
+  actual_missed_ids <- validate_refmetname(test_data, verbose = FALSE)
+  expect_equal(actual_missed_ids, 0)
+})
+
 test_that("validate_refmetname skips [iSTD] entries", {
   test_data <- data.frame(
     refmet_name = c("alanine-13C3 [iSTD]", "anthranilic acid-15N [iSTD]", "24-epi-Brassinolide [iSTD]"),
@@ -61,5 +73,33 @@ test_that("validate_refmetname skips [iSTD] entries", {
   
   actual_missed_ids <- validate_refmetname(test_data, verbose = FALSE)
   expect_equal(actual_missed_ids, 0)
+})
+
+test_that("validate_refmetname rejects non-data.frame inputs instead of silently passing", {
+  # Passing a plain list used to silently return 0 because nrow(list) is NULL.
+  # A list carrying a `refmet_name` element should be coerced and validated.
+  skip_if_offline()
+  expect_equal(
+    validate_refmetname(list(refmet_name = c("Leucine", "Citric acid")), verbose = FALSE),
+    0
+  )
+  # Inputs without a usable `refmet_name` column must error loudly.
+  expect_error(
+    validate_refmetname(c("Leucine", "Citric acid"), verbose = FALSE),
+    "data.frame"
+  )
+  expect_error(
+    validate_refmetname(list(other = c("Leucine", "Citric acid")), verbose = FALSE),
+    "data.frame"
+  )
+  expect_error(
+    validate_refmetname(data.frame(other = "x", stringsAsFactors = FALSE), verbose = FALSE),
+    "refmet_name"
+  )
+})
+
+test_that("validate_refmetname returns 0 for an empty data.frame", {
+  empty_df <- data.frame(refmet_name = character(0), stringsAsFactors = FALSE)
+  expect_equal(validate_refmetname(empty_df, verbose = FALSE), 0)
 })
 
