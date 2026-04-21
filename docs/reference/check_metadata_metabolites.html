@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">MotrpacBicQC</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.7.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,13 +87,11 @@
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   + (+) All required columns present</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   + (+) `metabolite_name` OK</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   + (+) `refmet_name` unique values: OK</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   + Validating `refmet_name` (it might take some time)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>       (-) `refmet_name` [`Leucine/Isoleucine`] must be modified to the RefMet Standarized name: "Leucine" (Error RN2)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>       (-) `refmet_name` [`Oxoglutaric acid`] must be modified to the RefMet Standarized name: "2-Oxoglutaric acid" (Error RN2)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>       (-) `refmet_name` [`Citric acid/Isocitric acid`] must be modified to the RefMet Standarized name: "Citric acid" (Error RN2)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>       (-) Total number of missed ids on MW: 3</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>    - (-) SUMMARY: 3 `refmet_name` not found in RefMet Metabolomics Data Dictionary: FAIL</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   + (+) `refmet_name validation`: unique values: OK</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   + (+) `refmet_name validation`: connecting to Metabolomics Workbench for validation (slow)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>    - (-) `refmet_name validation`: [`Oxoglutaric acid`] must be modified to the RefMet Standardized name: "2-Oxoglutaric acid" (Error RN2)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>    - (-) `refmet_name validation`: Total number of missed ids on MW: 1</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>    - (-) `refmet_name validation`: 1 `refmet_name` not found in RefMet: FAIL</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   + (+) {rt} all numeric: OK</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   + (+) {mz} all numeric: OK</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   + (+) {`neutral_mass`} all numeric values OK</span>

@@ -43,13 +43,11 @@ check_metadata_metabolites(df = metadata_metabolites_named, name_id = "named")
 }
 #>   + (+) All required columns present
 #>   + (+) `metabolite_name` OK
-#>   + (+) `refmet_name` unique values: OK
-#>   + Validating `refmet_name` (it might take some time)
-#>       (-) `refmet_name` [`Leucine/Isoleucine`] must be modified to the RefMet Standarized name: "Leucine" (Error RN2)
-#>       (-) `refmet_name` [`Oxoglutaric acid`] must be modified to the RefMet Standarized name: "2-Oxoglutaric acid" (Error RN2)
-#>       (-) `refmet_name` [`Citric acid/Isocitric acid`] must be modified to the RefMet Standarized name: "Citric acid" (Error RN2)
-#>       (-) Total number of missed ids on MW: 3
-#>    - (-) SUMMARY: 3 `refmet_name` not found in RefMet Metabolomics Data Dictionary: FAIL
+#>   + (+) `refmet_name validation`: unique values: OK
+#>   + (+) `refmet_name validation`: connecting to Metabolomics Workbench for validation (slow)
+#>    - (-) `refmet_name validation`: [`Oxoglutaric acid`] must be modified to the RefMet Standardized name: "2-Oxoglutaric acid" (Error RN2)
+#>    - (-) `refmet_name validation`: Total number of missed ids on MW: 1
+#>    - (-) `refmet_name validation`: 1 `refmet_name` not found in RefMet: FAIL
 #>   + (+) {rt} all numeric: OK
 #>   + (+) {mz} all numeric: OK
 #>   + (+) {`neutral_mass`} all numeric values OK

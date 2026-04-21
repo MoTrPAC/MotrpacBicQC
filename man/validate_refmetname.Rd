@@ -4,7 +4,7 @@
 \alias{validate_refmetname}
 \title{Validate refmet_name}
 \usage{
-validate_refmetname(dataf, verbose)
+validate_refmetname(dataf, verbose = TRUE)
 }
 \arguments{
 \item{dataf}{(data.frame) Data frame with the refmet_name column}
@@ -15,5 +15,5 @@ validate_refmetname(dataf, verbose)
 (numeric) number of refmet_name ids not available in RefMet
 }
 \description{
-Validate the refment_name using the Metabolomics Workbench API
+Validate the refmet_name using the Metabolomics Workbench API
 }
