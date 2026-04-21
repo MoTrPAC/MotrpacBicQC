@@ -62,20 +62,20 @@ check_metadata_metabolites <- function(df,
       if(length(unique(df$refmet_name)) != dim(df)[1]){
         duplis_details <- df$refmet_name[duplicated(df$refmet_name)]
         duplis <- length(duplis_details)
-        if(verbose) message("   - (-) `refmet_name` non-unique values detected: ", duplis)
+        if(verbose) message("   - (-) `refmet_name validation`: non-unique values detected: ", duplis)
         if(verbose) message("\n\t\t - ", paste(duplis_details, collapse = "\n\t\t - "))
         ic <- ic + 1
       }else{
-        if(verbose) message("  + (+) `refmet_name` unique values: OK")
+        if(verbose) message("  + (+) `refmet_name validation`: unique values: OK")
       }
-      
-      if(verbose) message("  + Validating `refmet_name` (it might take some time)")
+
+      if(verbose) message("  + (+) `refmet_name validation`: connecting to Metabolomics Workbench for validation (slow)")
       nrnna <- validate_refmetname(dataf = df, verbose = verbose)
       if(nrnna > 0){
-        if(verbose) message(paste0("   - (-) SUMMARY: ", nrnna, " `refmet_name` not found in RefMet Metabolomics Data Dictionary: FAIL"))
+        if(verbose) message(paste0("   - (-) `refmet_name validation`: ", nrnna, " `refmet_name` not found in RefMet: FAIL"))
         ic <- ic + 1
       }else{
-        if(verbose) message("  + (+) `refmet_name` ids found in refmet: OK")
+        if(verbose) message("  + (+) `refmet_name validation`: `refmet_name` ids found in RefMet: OK")
       }
     }else{
       if(verbose) message("   - (-) `refmet_name` column missed: FAIL")
