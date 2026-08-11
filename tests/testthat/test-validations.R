@@ -207,6 +207,73 @@ test_that("set_phase validates metadata_phase.txt content", {
     "PASS1A-06"
   )
   unlink(dirs$tmpdir, recursive = TRUE)
+
+  # --- Combined human phases: validated as a whole, returned verbatim ---
+  expect_equal(call_set_phase("HUMAN-MAIN-TR01|HUMAN-MAIN-TR02|HUMAN-MAIN-TR03"),
+               "HUMAN-MAIN-TR01|HUMAN-MAIN-TR02|HUMAN-MAIN-TR03")
+  expect_equal(call_set_phase("HUMAN-PRECOVID|HUMAN-MAIN-TR01|HUMAN-MAIN-TR02"),
+               "HUMAN-PRECOVID|HUMAN-MAIN-TR01|HUMAN-MAIN-TR02")
+
+  # --- Combined phases: invalid tranche format and duplications ---
+  expect_error(call_set_phase("HUMAN-MAIN-TR1|HUMAN-MAIN-TR02"), "Invalid human phase")
+  expect_error(call_set_phase("HUMAN|HUMAN-MAIN-TR01"), "Invalid human phase")
+  expect_error(call_set_phase("HUMAN-MAIN-TR01|HUMAN-MAIN-TR01"), "Duplicated phase")
+
+  # --- Human and animal phases cannot be combined ---
+  expect_error(call_set_phase("PASS1A-06|HUMAN-MAIN-TR01"), "cannot be combined")
+})
+
+test_that("generate_phase_details concatenates combined human phases", {
+  # Tranche information is concatenated for the release folder and file names
+  expect_equal(generate_phase_details("HUMAN-MAIN-TR01|HUMAN-MAIN-TR02|HUMAN-MAIN-TR03"),
+               "human-main-tr01-tr02-tr03")
+  expect_equal(generate_phase_details("HUMAN-PRECOVID|HUMAN-MAIN-TR01|HUMAN-MAIN-TR02"),
+               "human-precovid-main-tr01-tr02")
+  expect_equal(generate_phase_details("HUMAN-MAIN-TR01|HUMAN-MAIN-TR02"), "human-main-tr01-tr02")
+
+  # Canonical order: the same set of phases always generates the same details,
+  # no matter the order reported in metadata_phase.txt
+  expect_equal(generate_phase_details("HUMAN-MAIN-TR03|HUMAN-MAIN-TR01|HUMAN-MAIN-TR02"),
+               "human-main-tr01-tr02-tr03")
+  expect_equal(generate_phase_details("HUMAN-MAIN-TR01|HUMAN-PRECOVID"),
+               "human-precovid-main-tr01")
+
+  # Single phases and the animal PASS1A/1C pair are not affected
+  expect_equal(generate_phase_details("HUMAN-MAIN-TR01"), "human-main-tr01")
+  expect_equal(generate_phase_details("HUMAN-PRECOVID"), "human-precovid")
+  expect_equal(generate_phase_details("PASS1A-06|PASS1C-06"), "pass1ac-06")
+  expect_equal(generate_phase_details("PASS1A-18|PASS1C-18"), "pass1ac-18")
+
+  expect_error(generate_phase_details("PASS1A-06|HUMAN-MAIN-TR01"), "cannot be combined")
+  expect_error(generate_phase_details("HUMAN-MAIN-TR01|PASS1C-06"), "cannot be combined")
+})
+
+test_that("get_phase_release_folder sends every HUMAN-MAIN release to human-main", {
+  # Any combination of tranches, with or without HUMAN-PRECOVID
+  expect_equal(get_phase_release_folder("human-main-tr01"), "human-main")
+  expect_equal(get_phase_release_folder("human-main-tr01-tr02"), "human-main")
+  expect_equal(get_phase_release_folder("human-main-tr01-tr02-tr03"), "human-main")
+  expect_equal(get_phase_release_folder("human-precovid-main-tr01"), "human-main")
+  expect_equal(get_phase_release_folder("human-precovid-main-tr01-tr02"), "human-main")
+
+  # PASS1C-06 exception and phases used as reported
+  expect_equal(get_phase_release_folder("pass1c-06"), "pass1a-06")
+  expect_equal(get_phase_release_folder("human-precovid"), "human-precovid")
+  expect_equal(get_phase_release_folder("pass1a-06"), "pass1a-06")
+  expect_equal(get_phase_release_folder("pass1ac-06"), "pass1ac-06")
+  expect_equal(get_phase_release_folder("pass1b-06"), "pass1b-06")
+})
+
+test_that("validate_multiple_phases dispatches human and animal phases", {
+  expect_equal(validate_multiple_phases("HUMAN-MAIN-TR01|HUMAN-MAIN-TR02", verbose = TRUE),
+               "Human phases reported and they are ok")
+  expect_equal(validate_multiple_phases("PASS1A-06|PASS1C-06", verbose = TRUE),
+               "Two phases reported and they are ok")
+  expect_null(validate_multiple_phases("HUMAN-MAIN-TR01|HUMAN-MAIN-TR02", verbose = FALSE))
+
+  expect_error(validate_multiple_phases("HUMAN-MAIN-TR01"), "does not contain the separator")
+  expect_error(validate_multiple_phases("HUMAN-MAIN-TR01|"), "empty phase reported")
+  expect_error(validate_multiple_phases("PASS1A-06|HUMAN-MAIN-TR01"), "cannot be combined")
 })
 
 test_that("validate_assay works with Windows backslash paths", {

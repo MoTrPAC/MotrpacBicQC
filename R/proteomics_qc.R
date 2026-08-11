@@ -1451,15 +1451,9 @@ write_proteomics_releases <- function(input_results_folder,
     folder_root <- normalizePath(folder_root)
   }
   
-  # Exception for PASS1C-06: the main folder is pass1a
-  if (phase_details == "pass1c-06") {
-    phase_folder_release <- "pass1a-06"
-  } else if (grepl("^human-main-tr\\d{2}$", phase_details)) {
-    phase_folder_release <- "human-main"
-  } else{
-    phase_folder_release <- phase_details
-  }
-  
+  # Phase folder of the release (pass1c-06 and human-main are exceptions)
+  phase_folder_release <- get_phase_release_folder(phase_details)
+
   output_folder <- file.path(folder_root, folder_name, phase_folder_release, "proteomics-untargeted", folder_tissue, folder_assay)
 
   if(!dir.exists(file.path(output_folder))){

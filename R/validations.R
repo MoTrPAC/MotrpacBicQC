@@ -744,6 +744,52 @@ validate_two_phases <- function(phase_details,
   if(verbose) return("Two phases reported and they are ok")
 }
 
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' @title validate several phases reported in `metadata_phase.txt`
+#'
+#' @description Validate a pipe separated combination of phases, dispatching to
+#' the right set of rules:
+#' - Animal: only the `PASS1A-##|PASS1C-##` pair is supported
+#' (see `validate_two_phases()`)
+#' - Human: every phase must be either `HUMAN-PRECOVID` or `HUMAN-MAIN-TR##`,
+#' and no phase can be reported twice. Any number of phases is accepted.
+#'
+#' Human and animal phases cannot be combined: it throws an error.
+#' @param phase_details (char) expected output of `set_phase`
+#' @param verbose (logical) `TRUE` (default) shows messages
+#' @return (char) validation message (only if `verbose = TRUE`)
+#' @export
+validate_multiple_phases <- function(phase_details,
+                                     verbose = TRUE){
+
+  if( !grepl("\\|", phase_details) )
+    stop("This function only validates several phases submitted (e.g PASS1A-06|PASS1C-06 or HUMAN-MAIN-TR01|HUMAN-MAIN-TR02), i.e., the variable does not contain the separator '|' required to report several phases")
+
+  phases <- trimws(unlist(strsplit(phase_details, "\\|")))
+
+  # `strsplit()` drops a trailing empty field, so leading/trailing/duplicated
+  # separators must be detected on the original string
+  if( any(!nzchar(phases)) || grepl("^\\s*\\||\\|\\s*$|\\|\\s*\\|", phase_details) ){
+    stop(paste(phase_details), ": empty phase reported in `metadata_phase.txt` (check the '|' separators): MUST BE CORRECTED")
+  }
+
+  is_human <- grepl("^HUMAN", phases, ignore.case = TRUE)
+
+  if( all(is_human) ){
+    # Validates the format of every phase and detects duplications
+    generate_human_phase_details(phases = phases)
+    if(verbose) return("Human phases reported and they are ok")
+    return(invisible(NULL))
+  }
+
+  if( any(is_human) ){
+    stop(paste(phase_details), ": human and animal phases cannot be combined in `metadata_phase.txt`: MUST BE CORRECTED")
+  }
+
+  validate_two_phases(phase_details = phase_details, verbose = verbose)
+}
+
 #' Validate UniProt IDs
 #'
 #' This function checks if a given vector of IDs are valid UniProt IDs.

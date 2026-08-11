@@ -243,10 +243,16 @@ dl_read_gcp <- function(path,
 #' @title Generate the phase detail for submissions
 #'
 #' @description The phase details is as simple as creating a lower case version
-#' of the phase. However, in case of PASS1A/1C a new version has to be generated:
-#' pass1ac-06
-#' This function detects whether there are two phases, and if so,
-#' generate the expected version: either pass1ac-06 or pass1ac-18
+#' of the phase. However, when several phases are combined in
+#' `metadata_phase.txt` (pipe separated), a new version has to be generated:
+#' - Animal: `PASS1A-06|PASS1C-06` generates either `pass1ac-06` or `pass1ac-18`
+#' - Human: the tranche information is concatenated in canonical order
+#' (`HUMAN-PRECOVID` first, tranches in ascending order), so that the same set
+#' of phases always generates the same phase details. For example:
+#'   - `HUMAN-MAIN-TR01|HUMAN-MAIN-TR02|HUMAN-MAIN-TR03`: `human-main-tr01-tr02-tr03`
+#'   - `HUMAN-PRECOVID|HUMAN-MAIN-TR01|HUMAN-MAIN-TR02`: `human-precovid-main-tr01-tr02`
+#'
+#' Human and animal phases cannot be combined: it throws an error.
 #' @param phase_metadata (char) expected output of `set_phase`
 #' @param verbose (logical) `TRUE` (default) shows messages
 #' @return (char) the expected phase_details function
@@ -255,12 +261,94 @@ generate_phase_details <- function(phase_metadata,
                                    verbose = TRUE){
 
   if( grepl("\\|", phase_metadata) ){
+    phases <- trimws(unlist(strsplit(phase_metadata, "\\|")))
+    is_human <- grepl("^HUMAN", phases, ignore.case = TRUE)
+
+    if( all(is_human) ){
+      return(generate_human_phase_details(phases = phases))
+    }
+
+    if( any(is_human) ){
+      stop(paste(phase_metadata), ": human and animal phases cannot be combined in `metadata_phase.txt`: MUST BE CORRECTED")
+    }
+
     pass1st <- gsub("(.*)(\\|.*)", "\\1", phase_metadata)
     animalage <- gsub("(PASS1A\\-)(\\d+)", "\\2", pass1st)
     phase_details <- paste0("pass1ac-", animalage)
   }else{
     phase_details <- tolower(phase_metadata)
   }
+  return(phase_details)
+}
+
+
+# Generate the phase details for a combination of human phases, concatenating
+# the tranche information, e.g.
+#   HUMAN-PRECOVID|HUMAN-MAIN-TR01|HUMAN-MAIN-TR02 -> human-precovid-main-tr01-tr02
+# Components are emitted in canonical order (`HUMAN-PRECOVID` first, tranches
+# ascending) so that the same set of phases always generates the same release
+# folder and file names, no matter the order reported in `metadata_phase.txt`.
+generate_human_phase_details <- function(phases){
+
+  phases <- toupper(trimws(phases))
+
+  invalid <- phases[!grepl("^HUMAN-PRECOVID$|^HUMAN-MAIN-TR\\d{2}$", phases)]
+  if(length(invalid) > 0){
+    stop("Invalid human phase(s) reported in `metadata_phase.txt`: `",
+         paste(invalid, collapse = "`, `"),
+         "`. Expected `HUMAN-PRECOVID` or `HUMAN-MAIN-TR##` (e.g., HUMAN-MAIN-TR01): MUST BE CORRECTED")
+  }
+
+  if(any(duplicated(phases))){
+    stop("Duplicated phase(s) reported in `metadata_phase.txt`: `",
+         paste(unique(phases[duplicated(phases)]), collapse = "`, `"),
+         "`: MUST BE CORRECTED")
+  }
+
+  # Zero padded tranches (TR##), so a plain sort is already ascending
+  tranches <- sort(tolower(gsub("^HUMAN-MAIN-", "", phases[grepl("^HUMAN-MAIN-TR", phases)])))
+
+  phase_details <- "human"
+  if( any(phases == "HUMAN-PRECOVID") ){
+    phase_details <- paste0(phase_details, "-precovid")
+  }
+  if( length(tranches) > 0 ){
+    phase_details <- paste0(phase_details, "-main-", paste(tranches, collapse = "-"))
+  }
+
+  return(phase_details)
+}
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' @title Get the phase folder of the release
+#'
+#' @description The release folder structure is
+#' `PHASE/OMICS/TCODE_NAME/ASSAY/`, where the `PHASE` folder is the phase
+#' details with two exceptions:
+#' - `pass1c-06` releases are written to the `pass1a-06` folder
+#' - Every `HUMAN-MAIN` release is written to the `human-main` folder, no matter
+#' how many tranches are combined, and whether `HUMAN-PRECOVID` is combined with
+#' them. For example, `human-main-tr01`, `human-main-tr01-tr02-tr03`, and
+#' `human-precovid-main-tr01-tr02` are all written to `human-main`
+#'
+#' The full phase details (including every tranche) is still used for the file
+#' names, so the content of the release folder identifies the combined phases.
+#' @param phase_details (char) expected output of `generate_phase_details`
+#' @return (char) name of the `PHASE` folder of the release
+#' @export
+get_phase_release_folder <- function(phase_details){
+
+  # Exception for PASS1C-06: the main folder is pass1a
+  if( phase_details == "pass1c-06" ){
+    return("pass1a-06")
+  }
+
+  # Exception for HUMAN-MAIN: the main folder is human-main
+  if( grepl("^human-(precovid-)?main-tr\\d{2}", phase_details) ){
+    return("human-main")
+  }
+
   return(phase_details)
 }
 
@@ -567,10 +655,12 @@ remove_empty_rows <- function(df,
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' @title Set the phase to be validated.
 #'
-#' @description A group might choose to combine two different phases, due to
-#' the complications associated with PASS1A/1C. If they choose to combine
-#' two phases, the CAS must provide a new file `metadata_phase.txt` with a single
-#' line, as for example: `PASS1A-06|PASS1C-06`. This function checks if the
+#' @description A group might choose to combine different phases, due to
+#' the complications associated with PASS1A/1C, or to release several human
+#' tranches together. If they choose to combine phases, the CAS must provide a
+#' new file `metadata_phase.txt` with a single line, as for example:
+#' `PASS1A-06|PASS1C-06` or `HUMAN-MAIN-TR01|HUMAN-MAIN-TR02`. Human and animal
+#' phases cannot be combined. This function checks if the
 #' file is available, and set that phase as the phases to validate. In summary,
 #' the order of preference is:
 #' 1. function's argument: dmaqc_phase2validate (if provided in the validation functions)
@@ -617,7 +707,7 @@ set_phase <- function(input_results_folder,
       if(verbose) message("+ Motrpac phase reported: ", phase_details, " (info from metadata_phase.txt available): OK")
 
       if( grepl("\\|", phase_details) ){
-        validate_two_phases(phase_details = phase_details, verbose = FALSE)
+        validate_multiple_phases(phase_details = phase_details, verbose = FALSE)
       }
 
       # And once is checked, proceed...

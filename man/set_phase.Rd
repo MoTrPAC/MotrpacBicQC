@@ -17,10 +17,12 @@ set_phase(input_results_folder, dmaqc_phase2validate, verbose = TRUE)
 (int) the phase to be validated.
 }
 \description{
-A group might choose to combine two different phases, due to
-the complications associated with PASS1A/1C. If they choose to combine
-two phases, the CAS must provide a new file \code{metadata_phase.txt} with a single
-line, as for example: \code{PASS1A-06|PASS1C-06}. This function checks if the
+A group might choose to combine different phases, due to
+the complications associated with PASS1A/1C, or to release several human
+tranches together. If they choose to combine phases, the CAS must provide a
+new file \code{metadata_phase.txt} with a single line, as for example:
+\code{PASS1A-06|PASS1C-06} or \code{HUMAN-MAIN-TR01|HUMAN-MAIN-TR02}. Human and animal
+phases cannot be combined. This function checks if the
 file is available, and set that phase as the phases to validate. In summary,
 the order of preference is:
 \enumerate{

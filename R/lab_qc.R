@@ -807,14 +807,8 @@ write_lab_releases <- function(input_results_folder,
     folder_root <- create_folder(folder_root)
   }
   
-  # Exception for PASS1C-06: the main folder is pass1a
-  if (phase_details == "pass1c-06") {
-    phase_folder_release <- "pass1a-06"
-  } else if (grepl("^human-main-tr\\d{2}$", phase_details)) {
-    phase_folder_release <- "human-main"
-  } else{
-    phase_folder_release <- phase_details
-  }
+  # Phase folder of the release (pass1c-06 and human-main are exceptions)
+  phase_folder_release <- get_phase_release_folder(phase_details)
   
   # Decide on the OMICS folder for LAB data
   # LAB assays are typically classified under "clinical-chemistry"
