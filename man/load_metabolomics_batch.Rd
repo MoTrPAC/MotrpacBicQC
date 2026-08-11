@@ -4,12 +4,23 @@
 \alias{load_metabolomics_batch}
 \title{Load metabolomics batch}
 \usage{
-load_metabolomics_batch(input_results_folder, cas, verbose = TRUE)
+load_metabolomics_batch(
+  input_results_folder,
+  cas,
+  refmet_validation = FALSE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{input_results_folder}{(char) Path to the PROCESSED_YYYYMMDD folder}
 
 \item{cas}{(char) Chemical Analytical Site code (e.g "umichigan")}
+
+\item{refmet_validation}{(logical) \code{FALSE} (default) skips the
+\code{refmet_name} validation against the Metabolomics Workbench API (one request
+per metabolite, slow) while running every other check. Set to \code{TRUE} to also
+validate the \code{refmet_name} ids. Full \code{refmet_name} validation belongs to
+\code{validate_metabolomics()}, which should be run before loading a batch.}
 
 \item{verbose}{(logical) \code{TRUE} (default) shows messages}
 }
@@ -21,7 +32,7 @@ Open, check, and return all metabolomics files
 }
 \examples{
 \dontrun{
-here <- load_metabolomics_batch(input_results_folder = "/path/to/PROCESSED_YYYYMMDD/", 
+here <- load_metabolomics_batch(input_results_folder = "/path/to/PROCESSED_YYYYMMDD/",
                                 cas = "cassite")
 }
 }
