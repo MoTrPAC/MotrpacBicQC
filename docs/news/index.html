@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">MotrpacBicQC</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.8.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,6 +40,56 @@
       <small>Source: <a href="https://github.com/MoTrPAC/MotrpacBicQC/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.8.0" id="motrpacbicqc-180-2026-08-11">MotrpacBicQC 1.8.0 (2026-08-11)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-180-2026-08-11"></a></h2>
+<div class="section level3">
+<h3 id="new-features-1-8-0">New Features<a class="anchor" aria-label="anchor" href="#new-features-1-8-0"></a></h3>
+<ul><li>
+<strong>Combined human phases</strong>: several human phases can now be reported in <code>metadata_phase.txt</code> (pipe separated) and the tranche information is concatenated for the file names:
+<ul><li>
+<code>HUMAN-MAIN-TR01|HUMAN-MAIN-TR02|HUMAN-MAIN-TR03</code>: <code>human-main-tr01-tr02-tr03</code>
+</li>
+<li>
+<code>HUMAN-PRECOVID|HUMAN-MAIN-TR01|HUMAN-MAIN-TR02</code>: <code>human-precovid-main-tr01-tr02</code>
+</li>
+</ul></li>
+<li>Phases are emitted in canonical order (<code>HUMAN-PRECOVID</code> first, tranches in ascending order), so the same set of phases always generates the same release file names, no matter the order reported in <code>metadata_phase.txt</code>.</li>
+<li>
+<strong>Every <code>HUMAN-MAIN</code> release is written to the <code>human-main</code> folder</strong>, no matter how many tranches are combined, and whether <code>HUMAN-PRECOVID</code> is combined with them (<code>human-main-tr01</code>, <code>human-main-tr01-tr02-tr03</code>, and <code>human-precovid-main-tr01-tr02</code> all go to <code>human-main</code>). The full phase details is still used for the file names, so the content of the release folder identifies the combined phases.</li>
+<li>
+<strong>New <code><a href="../reference/validate_multiple_phases.html">validate_multiple_phases()</a></code></strong>: validates any pipe separated combination of phases, dispatching to the animal (<code>PASS1A-##|PASS1C-##</code>) or human rules. <code><a href="../reference/set_phase.html">set_phase()</a></code> now calls this function instead of <code><a href="../reference/validate_two_phases.html">validate_two_phases()</a></code>.</li>
+<li>
+<strong>New <code><a href="../reference/get_phase_release_folder.html">get_phase_release_folder()</a></code></strong>: returns the <code>PHASE</code> folder of the release (including the <code>pass1c-06</code> and <code>human-main</code> exceptions). The metabolomics, olink, proteomics, and lab release writers now share this single function instead of each one repeating the same rule.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-1-8-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-1-8-0"></a></h3>
+<ul><li>
+<strong>Combined human phases are no longer treated as PASS1A/1C</strong>: any pipe separated phase was previously routed to the PASS1A/1C validation, so <code>HUMAN-MAIN-TR01|HUMAN-MAIN-TR02</code> failed with a misleading “Project phase is not found in the folder structure” error, and <code><a href="../reference/generate_phase_details.html">generate_phase_details()</a></code> silently produced invalid values such as <code>pass1ac-HUMAN-MAIN-TR01</code> (dropping the last phase). This affected <code>validate_*()</code> and <code>write_*_releases()</code> in the metabolomics, olink, proteomics, and lab modules</li>
+<li>Human and animal phases combined in <code>metadata_phase.txt</code> (e.g. <code>PASS1A-06|HUMAN-MAIN-TR01</code>) now throw an explicit error</li>
+<li>Combined phases are now format validated: every human phase must be <code>HUMAN-PRECOVID</code> or <code>HUMAN-MAIN-TR##</code>, duplicated phases are rejected, and empty phases (leading, trailing, or duplicated <code>|</code> separators) are detected</li>
+<li>
+<strong>Only the animal <code>PASS1A-##|PASS1C-##</code> pair is accepted</strong>: <code><a href="../reference/validate_two_phases.html">validate_two_phases()</a></code> only extracts the first and last <code>PASS1A</code>/<code>PASS1C</code> tokens, so a third phase went through unnoticed and generated an invalid phase details. For example, <code>PASS1A-06|PASS1B-06|PASS1C-06</code> was accepted and generated <code>pass1ac-06|PASS1B-06</code>
+</li>
+</ul></div>
+<div class="section level3">
+<h3 id="changes-1-8-0">Changes<a class="anchor" aria-label="anchor" href="#changes-1-8-0"></a></h3>
+<ul><li>
+<strong><code>refmet_name</code> validation is no longer run when writing releases</strong>: the Metabolomics Workbench API validation (one request per metabolite) now belongs to <code><a href="../reference/validate_metabolomics.html">validate_metabolomics()</a></code>, which still runs it by default. A new <code>refmet_validation</code> argument controls it across the metabolomics functions:
+<ul><li>
+<code>validate_metabolomics(refmet_validation = TRUE)</code> (default): unchanged behavior</li>
+<li>
+<code>check_metadata_metabolites(refmet_validation = TRUE)</code> (default): unchanged behavior</li>
+<li>
+<code>load_metabolomics_batch(refmet_validation = FALSE)</code> (default): skips the API calls</li>
+<li>
+<code>write_metabolomics_releases(refmet_validation = FALSE)</code> (default): skips the API calls</li>
+</ul></li>
+<li>
+<code>refmet_validation = FALSE</code> skips <strong>only</strong> the API calls. The <code>refmet_name</code> column-presence and uniqueness checks always run, and a skipped validation never adds to the issue count.</li>
+<li>Writing a release no longer requires network access by default. Run <code><a href="../reference/validate_metabolomics.html">validate_metabolomics()</a></code> on the batch before writing the release to validate the <code>refmet_name</code> ids, or use <code>write_metabolomics_releases(refmet_validation = TRUE)</code> to restore the previous behavior.</li>
+<li>The “Too many issues identified” warning now states when the <code>refmet_name</code> validation was not included in the reported count.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.7.0" id="motrpacbicqc-170-2026-04-21">MotrpacBicQC 1.7.0 (2026-04-21)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-170-2026-04-21"></a></h2>
 <div class="section level3">

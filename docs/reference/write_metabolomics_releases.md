@@ -12,6 +12,7 @@ write_metabolomics_releases(
   folder_name = "motrpac_release",
   folder_root = NULL,
   version_file = "v1.0",
+  refmet_validation = FALSE,
   verbose = TRUE
 )
 ```
@@ -38,6 +39,16 @@ write_metabolomics_releases(
 - version_file:
 
   (char) file version number (`v#.#`)
+
+- refmet_validation:
+
+  (logical) `FALSE` (default) skips the `refmet_name` validation against
+  the Metabolomics Workbench API (one request per metabolite, slow)
+  while running every other check. Set to `TRUE` to also validate the
+  `refmet_name` ids. Releases should be written from batches already
+  validated with
+  [`validate_metabolomics()`](https://motrpac.github.io/MotrpacBicQC/reference/validate_metabolomics.md),
+  which runs the full `refmet_name` validation by default.
 
 - verbose:
 

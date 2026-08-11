@@ -1,4 +1,70 @@
 
+# MotrpacBicQC 1.8.0 (2026-08-11)
+
+## New Features
+
+* **Combined human phases**: several human phases can now be reported in
+  `metadata_phase.txt` (pipe separated) and the tranche information is
+  concatenated for the file names:
+  * `HUMAN-MAIN-TR01|HUMAN-MAIN-TR02|HUMAN-MAIN-TR03`: `human-main-tr01-tr02-tr03`
+  * `HUMAN-PRECOVID|HUMAN-MAIN-TR01|HUMAN-MAIN-TR02`: `human-precovid-main-tr01-tr02`
+* Phases are emitted in canonical order (`HUMAN-PRECOVID` first, tranches in
+  ascending order), so the same set of phases always generates the same release
+  file names, no matter the order reported in `metadata_phase.txt`.
+* **Every `HUMAN-MAIN` release is written to the `human-main` folder**, no matter
+  how many tranches are combined, and whether `HUMAN-PRECOVID` is combined with
+  them (`human-main-tr01`, `human-main-tr01-tr02-tr03`, and
+  `human-precovid-main-tr01-tr02` all go to `human-main`). The full phase details
+  is still used for the file names, so the content of the release folder
+  identifies the combined phases.
+* **New `validate_multiple_phases()`**: validates any pipe separated combination
+  of phases, dispatching to the animal (`PASS1A-##|PASS1C-##`) or human rules.
+  `set_phase()` now calls this function instead of `validate_two_phases()`.
+* **New `get_phase_release_folder()`**: returns the `PHASE` folder of the release
+  (including the `pass1c-06` and `human-main` exceptions). The metabolomics,
+  olink, proteomics, and lab release writers now share this single function
+  instead of each one repeating the same rule.
+
+## Bug Fixes
+
+* **Combined human phases are no longer treated as PASS1A/1C**: any pipe
+  separated phase was previously routed to the PASS1A/1C validation, so
+  `HUMAN-MAIN-TR01|HUMAN-MAIN-TR02` failed with a misleading
+  "Project phase is not found in the folder structure" error, and
+  `generate_phase_details()` silently produced invalid values such as
+  `pass1ac-HUMAN-MAIN-TR01` (dropping the last phase). This affected
+  `validate_*()` and `write_*_releases()` in the metabolomics, olink,
+  proteomics, and lab modules
+* Human and animal phases combined in `metadata_phase.txt` (e.g.
+  `PASS1A-06|HUMAN-MAIN-TR01`) now throw an explicit error
+* Combined phases are now format validated: every human phase must be
+  `HUMAN-PRECOVID` or `HUMAN-MAIN-TR##`, duplicated phases are rejected, and
+  empty phases (leading, trailing, or duplicated `|` separators) are detected
+* **Only the animal `PASS1A-##|PASS1C-##` pair is accepted**: `validate_two_phases()`
+  only extracts the first and last `PASS1A`/`PASS1C` tokens, so a third phase went
+  through unnoticed and generated an invalid phase details. For example,
+  `PASS1A-06|PASS1B-06|PASS1C-06` was accepted and generated `pass1ac-06|PASS1B-06`
+
+## Changes
+
+* **`refmet_name` validation is no longer run when writing releases**: the
+  Metabolomics Workbench API validation (one request per metabolite) now belongs
+  to `validate_metabolomics()`, which still runs it by default. A new
+  `refmet_validation` argument controls it across the metabolomics functions:
+  * `validate_metabolomics(refmet_validation = TRUE)` (default): unchanged behavior
+  * `check_metadata_metabolites(refmet_validation = TRUE)` (default): unchanged behavior
+  * `load_metabolomics_batch(refmet_validation = FALSE)` (default): skips the API calls
+  * `write_metabolomics_releases(refmet_validation = FALSE)` (default): skips the API calls
+* `refmet_validation = FALSE` skips **only** the API calls. The `refmet_name`
+  column-presence and uniqueness checks always run, and a skipped validation
+  never adds to the issue count.
+* Writing a release no longer requires network access by default. Run
+  `validate_metabolomics()` on the batch before writing the release to validate
+  the `refmet_name` ids, or use `write_metabolomics_releases(refmet_validation = TRUE)`
+  to restore the previous behavior.
+* The "Too many issues identified" warning now states when the `refmet_name`
+  validation was not included in the reported count.
+
 # MotrpacBicQC 1.7.0 (2026-04-21)
 
 ## Bug Fixes

@@ -9,6 +9,7 @@ check_metadata_metabolites(
   df,
   name_id,
   return_n_issues = FALSE,
+  refmet_validation = TRUE,
   verbose = TRUE
 )
 ```
@@ -26,6 +27,13 @@ check_metadata_metabolites(
 - return_n_issues:
 
   (logical) if `TRUE` returns the number of issues.
+
+- refmet_validation:
+
+  (logical) `TRUE` (default) validates every `refmet_name` against the
+  Metabolomics Workbench API (one request per metabolite, slow). `FALSE`
+  skips only the API calls: the `refmet_name` column-presence and
+  uniqueness checks always run.
 
 - verbose:
 

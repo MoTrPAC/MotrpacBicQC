@@ -16,8 +16,18 @@ generate_phase_details(phase_metadata, verbose = TRUE)
 }
 \description{
 The phase details is as simple as creating a lower case version
-of the phase. However, in case of PASS1A/1C a new version has to be generated:
-pass1ac-06
-This function detects whether there are two phases, and if so,
-generate the expected version: either pass1ac-06 or pass1ac-18
+of the phase. However, when several phases are combined in
+\code{metadata_phase.txt} (pipe separated), a new version has to be generated:
+\itemize{
+\item Animal: \code{PASS1A-06|PASS1C-06} generates either \code{pass1ac-06} or \code{pass1ac-18}
+\item Human: the tranche information is concatenated in canonical order
+(\code{HUMAN-PRECOVID} first, tranches in ascending order), so that the same set
+of phases always generates the same phase details. For example:
+\itemize{
+\item \code{HUMAN-MAIN-TR01|HUMAN-MAIN-TR02|HUMAN-MAIN-TR03}: \code{human-main-tr01-tr02-tr03}
+\item \code{HUMAN-PRECOVID|HUMAN-MAIN-TR01|HUMAN-MAIN-TR02}: \code{human-precovid-main-tr01-tr02}
+}
+}
+
+Human and animal phases cannot be combined: it throws an error.
 }

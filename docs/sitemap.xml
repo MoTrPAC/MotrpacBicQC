@@ -51,6 +51,7 @@
 <url><loc>https://motrpac.github.io/MotrpacBicQC/reference/generate_phase_details.html</loc></url>
 <url><loc>https://motrpac.github.io/MotrpacBicQC/reference/get_and_validate_mdd.html</loc></url>
 <url><loc>https://motrpac.github.io/MotrpacBicQC/reference/get_full_path2batch.html</loc></url>
+<url><loc>https://motrpac.github.io/MotrpacBicQC/reference/get_phase_release_folder.html</loc></url>
 <url><loc>https://motrpac.github.io/MotrpacBicQC/reference/group_abbr.html</loc></url>
 <url><loc>https://motrpac.github.io/MotrpacBicQC/reference/group_cols.html</loc></url>
 <url><loc>https://motrpac.github.io/MotrpacBicQC/reference/index.html</loc></url>
@@ -90,6 +91,7 @@
 <url><loc>https://motrpac.github.io/MotrpacBicQC/reference/validate_lab.html</loc></url>
 <url><loc>https://motrpac.github.io/MotrpacBicQC/reference/validate_lc_column_id.html</loc></url>
 <url><loc>https://motrpac.github.io/MotrpacBicQC/reference/validate_metabolomics.html</loc></url>
+<url><loc>https://motrpac.github.io/MotrpacBicQC/reference/validate_multiple_phases.html</loc></url>
 <url><loc>https://motrpac.github.io/MotrpacBicQC/reference/validate_na_empty.html</loc></url>
 <url><loc>https://motrpac.github.io/MotrpacBicQC/reference/validate_olink.html</loc></url>
 <url><loc>https://motrpac.github.io/MotrpacBicQC/reference/validate_phase.html</loc></url>

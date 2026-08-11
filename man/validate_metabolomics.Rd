@@ -14,6 +14,7 @@ validate_metabolomics(
   out_qc_folder = NULL,
   dmaqc_shipping_info = NULL,
   dmaqc_phase2validate = FALSE,
+  refmet_validation = TRUE,
   verbose = TRUE
 )
 }
@@ -55,6 +56,12 @@ it will take priority and this will be the phase.
 \item Both \code{PASS1A-06} and \code{PASS1C-06}: type \code{PASS1A-06|PASS1C-06}
 \item Only \code{PASS1C-06}: type \code{PASS1C-06}
 }}
+
+\item{refmet_validation}{(logical) \code{TRUE} (default) validates every
+\code{refmet_name} of the named \code{metadata_metabolites} file against the
+Metabolomics Workbench API (one request per metabolite, slow). \code{FALSE} skips
+only the API calls: the \code{refmet_name} column-presence and uniqueness checks
+always run. This is the QC entry point, so validation is on by default here.}
 
 \item{verbose}{(logical) \code{TRUE} (default) shows messages}
 }

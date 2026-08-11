@@ -15,6 +15,10 @@ utils::globalVariables(
 #' @param df (data.frame) metadata_metabolites
 #' @param name_id (char) specify whether `named` or `unnamed` files
 #' @param return_n_issues (logical) if `TRUE` returns the number of issues.
+#' @param refmet_validation (logical) `TRUE` (default) validates every
+#' `refmet_name` against the Metabolomics Workbench API (one request per
+#' metabolite, slow). `FALSE` skips only the API calls: the `refmet_name`
+#' column-presence and uniqueness checks always run.
 #' @param verbose (logical) `TRUE` (default) shows messages
 #' @return (int) number of issues identified
 #' @examples {
@@ -24,6 +28,7 @@ utils::globalVariables(
 check_metadata_metabolites <- function(df,
                                        name_id,
                                        return_n_issues = FALSE,
+                                       refmet_validation = TRUE,
                                        verbose = TRUE){
 
   # issue_count
@@ -69,13 +74,19 @@ check_metadata_metabolites <- function(df,
         if(verbose) message("  + (+) `refmet_name validation`: unique values: OK")
       }
 
-      if(verbose) message("  + (+) `refmet_name validation`: connecting to Metabolomics Workbench for validation (slow)")
-      nrnna <- validate_refmetname(dataf = df, verbose = verbose)
-      if(nrnna > 0){
-        if(verbose) message(paste0("   - (-) `refmet_name validation`: ", nrnna, " `refmet_name` not found in RefMet: FAIL"))
-        ic <- ic + 1
+      # Skipping only avoids the API calls: no issue is counted either way,
+      # so a skipped check is never reported as a failure.
+      if(refmet_validation){
+        if(verbose) message("  + (+) `refmet_name validation`: connecting to Metabolomics Workbench for validation (slow)")
+        nrnna <- validate_refmetname(dataf = df, verbose = verbose)
+        if(nrnna > 0){
+          if(verbose) message(paste0("   - (-) `refmet_name validation`: ", nrnna, " `refmet_name` not found in RefMet: FAIL"))
+          ic <- ic + 1
+        }else{
+          if(verbose) message("  + (+) `refmet_name validation`: `refmet_name` ids found in RefMet: OK")
+        }
       }else{
-        if(verbose) message("  + (+) `refmet_name validation`: `refmet_name` ids found in RefMet: OK")
+        if(verbose) message("  + (+) `refmet_name validation`: Metabolomics Workbench validation skipped (`refmet_validation = FALSE`)")
       }
     }else{
       if(verbose) message("   - (-) `refmet_name` column missed: FAIL")
@@ -555,6 +566,11 @@ check_manifest_rawdata <- function(input_results_folder,
 #' - Folder with `PASS1A-06`: type either `PASS1A-06` or leave it `NULL`
 #' - Both `PASS1A-06` and `PASS1C-06`: type `PASS1A-06|PASS1C-06`
 #' - Only `PASS1C-06`: type `PASS1C-06`
+#' @param refmet_validation (logical) `TRUE` (default) validates every
+#' `refmet_name` of the named `metadata_metabolites` file against the
+#' Metabolomics Workbench API (one request per metabolite, slow). `FALSE` skips
+#' only the API calls: the `refmet_name` column-presence and uniqueness checks
+#' always run. This is the QC entry point, so validation is on by default here.
 #' @param verbose (logical) `TRUE` (default) shows messages
 #' @return (data.frame) Summary of issues
 #' @export
@@ -567,6 +583,7 @@ validate_metabolomics <- function(input_results_folder,
                                   out_qc_folder = NULL,
                                   dmaqc_shipping_info = NULL,
                                   dmaqc_phase2validate = FALSE,
+                                  refmet_validation = TRUE,
                                   verbose = TRUE){
 
   metabolite_name = id_type = NULL
@@ -645,6 +662,7 @@ validate_metabolomics <- function(input_results_folder,
     ic_m_m_n <- check_metadata_metabolites(df = m_m_n,
                                            name_id = "named",
                                            return_n_issues = TRUE,
+                                           refmet_validation = refmet_validation,
                                            verbose = verbose)
   }else{
     if(verbose) message("   - (-) `metadata_metabolites_named` not available")
@@ -1183,16 +1201,22 @@ validate_metabolomics <- function(input_results_folder,
 #' @description Open, check, and return all metabolomics files
 #' @param input_results_folder (char) Path to the PROCESSED_YYYYMMDD folder
 #' @param cas (char) Chemical Analytical Site code (e.g "umichigan")
+#' @param refmet_validation (logical) `FALSE` (default) skips the
+#' `refmet_name` validation against the Metabolomics Workbench API (one request
+#' per metabolite, slow) while running every other check. Set to `TRUE` to also
+#' validate the `refmet_name` ids. Full `refmet_name` validation belongs to
+#' `validate_metabolomics()`, which should be run before loading a batch.
 #' @param verbose (logical) `TRUE` (default) shows messages
 #' @return (list of data.frames) List of all the data frames
 #' @examples
 #' \dontrun{
-#' here <- load_metabolomics_batch(input_results_folder = "/path/to/PROCESSED_YYYYMMDD/", 
+#' here <- load_metabolomics_batch(input_results_folder = "/path/to/PROCESSED_YYYYMMDD/",
 #'                                 cas = "cassite")
 #' }
 #' @export
 load_metabolomics_batch <- function(input_results_folder,
                                     cas,
+                                    refmet_validation = FALSE,
                                     verbose = TRUE){
 
   m_m_n = m_m_u = m_s_n = r_m_n = r_m_u = NULL
@@ -1205,17 +1229,19 @@ load_metabolomics_batch <- function(input_results_folder,
   assay <- validate_assay(input_results_folder)
   tissue_code <- validate_tissue(input_results_folder)
 
-  total_issues <- 
+  total_issues <-
     validate_metabolomics(
-      input_results_folder = input_results_folder, 
-      cas = cas, 
-      return_n_issues = TRUE, 
-      full_report = FALSE, 
-      f_proof = FALSE, 
+      input_results_folder = input_results_folder,
+      cas = cas,
+      return_n_issues = TRUE,
+      full_report = FALSE,
+      f_proof = FALSE,
+      refmet_validation = refmet_validation,
       verbose = FALSE)
 
   if(total_issues > 0){
-    message("\tWARNING!!! Too many issues identified (", total_issues,"). This batch should not be processed until the issues are solved")
+    skipped_note <- if(refmet_validation) "" else " (`refmet_name` validation not included)"
+    message("\tWARNING!!! Too many issues identified (", total_issues, ")", skipped_note, ". This batch should not be processed until the issues are solved")
   }
 
   # Load Metabolomics----
@@ -1372,8 +1398,14 @@ load_metabolomics_batch <- function(input_results_folder,
 #' @param folder_root (char) absolute path to write the output files. 
 #' Default: current directory
 #' @param version_file (char) file version number (`v#.#`)
+#' @param refmet_validation (logical) `FALSE` (default) skips the
+#' `refmet_name` validation against the Metabolomics Workbench API (one request
+#' per metabolite, slow) while running every other check. Set to `TRUE` to also
+#' validate the `refmet_name` ids. Releases should be written from batches
+#' already validated with `validate_metabolomics()`, which runs the full
+#' `refmet_name` validation by default.
 #' @param verbose (logical) `TRUE` (default) shows messages
-#' @return bic release folder/file structure 
+#' @return bic release folder/file structure
 #' `PHASE/OMICS/TCODE_NAME/ASSAY/` and file names, including:
 #' - `motrpac_YYYYMMDD_phasecode_tissuecode_omics_assay_file-details.txt`
 #'  where files-details can be:
@@ -1392,6 +1424,7 @@ write_metabolomics_releases <- function(input_results_folder,
                                         folder_name = "motrpac_release",
                                         folder_root = NULL,
                                         version_file = "v1.0",
+                                        refmet_validation = FALSE,
                                         verbose = TRUE){
 
   # Get names from input_results_folder------
@@ -1427,10 +1460,11 @@ write_metabolomics_releases <- function(input_results_folder,
   if(verbose) message("+ Writing out ", cas, " ", phase_details, " ", tissue_code, " ", assay, " files", appendLF = FALSE)
 
   # Load all datasets----
-  metab_dfs <- 
+  metab_dfs <-
     load_metabolomics_batch(
       input_results_folder = input_results_folder,
       cas = cas,
+      refmet_validation = refmet_validation,
       verbose = FALSE)
 
   # Create output folder-------
@@ -1440,14 +1474,8 @@ write_metabolomics_releases <- function(input_results_folder,
     folder_root <- normalizePath(folder_root)
   }
   
-  # Exception for PASS1C-06: the main folder is pass1a
-  if (phase_details == "pass1c-06") {
-    phase_folder_release <- "pass1a-06"
-  } else if (grepl("^human-main-tr\\d{2}$", phase_details)) {
-    phase_folder_release <- "human-main"
-  } else{
-    phase_folder_release <- phase_details
-  }
+  # Phase folder of the release (pass1c-06 and human-main are exceptions)
+  phase_folder_release <- get_phase_release_folder(phase_details)
 
   if(cas %in% c("umichigan", "broad_met", "gtech")){
     output_folder <- file.path(folder_root, folder_name, phase_folder_release, "metabolomics-untargeted", folder_tissue, folder_assay)

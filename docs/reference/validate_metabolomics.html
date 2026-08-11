@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">MotrpacBicQC</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.8.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,6 +57,7 @@
 <span>  out_qc_folder <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  dmaqc_shipping_info <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  dmaqc_phase2validate <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  refmet_validation <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -115,6 +116,14 @@ it will take priority and this will be the phase.
 <li><p>Both <code>PASS1A-06</code> and <code>PASS1C-06</code>: type <code>PASS1A-06|PASS1C-06</code></p></li>
 <li><p>Only <code>PASS1C-06</code>: type <code>PASS1C-06</code></p></li>
 </ul></dd>
+
+
+<dt id="arg-refmet-validation">refmet_validation<a class="anchor" aria-label="anchor" href="#arg-refmet-validation"></a></dt>
+<dd><p>(logical) <code>TRUE</code> (default) validates every
+<code>refmet_name</code> of the named <code>metadata_metabolites</code> file against the
+Metabolomics Workbench API (one request per metabolite, slow). <code>FALSE</code> skips
+only the API calls: the <code>refmet_name</code> column-presence and uniqueness checks
+always run. This is the QC entry point, so validation is on by default here.</p></dd>
 
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>

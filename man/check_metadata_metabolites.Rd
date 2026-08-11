@@ -8,6 +8,7 @@ check_metadata_metabolites(
   df,
   name_id,
   return_n_issues = FALSE,
+  refmet_validation = TRUE,
   verbose = TRUE
 )
 }
@@ -17,6 +18,11 @@ check_metadata_metabolites(
 \item{name_id}{(char) specify whether \code{named} or \code{unnamed} files}
 
 \item{return_n_issues}{(logical) if \code{TRUE} returns the number of issues.}
+
+\item{refmet_validation}{(logical) \code{TRUE} (default) validates every
+\code{refmet_name} against the Metabolomics Workbench API (one request per
+metabolite, slow). \code{FALSE} skips only the API calls: the \code{refmet_name}
+column-presence and uniqueness checks always run.}
 
 \item{verbose}{(logical) \code{TRUE} (default) shows messages}
 }
