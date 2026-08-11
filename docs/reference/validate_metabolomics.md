@@ -15,6 +15,7 @@ validate_metabolomics(
   out_qc_folder = NULL,
   dmaqc_shipping_info = NULL,
   dmaqc_phase2validate = FALSE,
+  refmet_validation = TRUE,
   verbose = TRUE
 )
 ```
@@ -78,6 +79,14 @@ validate_metabolomics(
   - Both `PASS1A-06` and `PASS1C-06`: type `PASS1A-06|PASS1C-06`
 
   - Only `PASS1C-06`: type `PASS1C-06`
+
+- refmet_validation:
+
+  (logical) `TRUE` (default) validates every `refmet_name` of the named
+  `metadata_metabolites` file against the Metabolomics Workbench API
+  (one request per metabolite, slow). `FALSE` skips only the API calls:
+  the `refmet_name` column-presence and uniqueness checks always run.
+  This is the QC entry point, so validation is on by default here.
 
 - verbose:
 

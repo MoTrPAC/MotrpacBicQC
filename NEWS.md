@@ -1,5 +1,5 @@
 
-# MotrpacBicQC 1.7.3 (2026-08-04)
+# MotrpacBicQC 1.8.0 (2026-08-11)
 
 ## New Features
 

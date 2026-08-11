@@ -1,9 +1,24 @@
 # Generate the phase detail for submissions
 
 The phase details is as simple as creating a lower case version of the
-phase. However, in case of PASS1A/1C a new version has to be generated:
-pass1ac-06 This function detects whether there are two phases, and if
-so, generate the expected version: either pass1ac-06 or pass1ac-18
+phase. However, when several phases are combined in `metadata_phase.txt`
+(pipe separated), a new version has to be generated:
+
+- Animal: `PASS1A-06|PASS1C-06` generates either `pass1ac-06` or
+  `pass1ac-18`
+
+- Human: the tranche information is concatenated in canonical order
+  (`HUMAN-PRECOVID` first, tranches in ascending order), so that the
+  same set of phases always generates the same phase details. For
+  example:
+
+  - `HUMAN-MAIN-TR01|HUMAN-MAIN-TR02|HUMAN-MAIN-TR03`:
+    `human-main-tr01-tr02-tr03`
+
+  - `HUMAN-PRECOVID|HUMAN-MAIN-TR01|HUMAN-MAIN-TR02`:
+    `human-precovid-main-tr01-tr02`
+
+Human and animal phases cannot be combined: it throws an error.
 
 ## Usage
 

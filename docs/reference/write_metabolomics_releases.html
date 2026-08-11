@@ -9,7 +9,7 @@ data has been submited according to guidelines"></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">MotrpacBicQC</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.8.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,6 +56,7 @@ data has been submited according to guidelines</p>
 <span>  folder_name <span class="op">=</span> <span class="st">"motrpac_release"</span>,</span>
 <span>  folder_root <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  version_file <span class="op">=</span> <span class="st">"v1.0"</span>,</span>
+<span>  refmet_validation <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -83,6 +84,15 @@ Default: current directory</p></dd>
 
 <dt id="arg-version-file">version_file<a class="anchor" aria-label="anchor" href="#arg-version-file"></a></dt>
 <dd><p>(char) file version number (<code>v#.#</code>)</p></dd>
+
+
+<dt id="arg-refmet-validation">refmet_validation<a class="anchor" aria-label="anchor" href="#arg-refmet-validation"></a></dt>
+<dd><p>(logical) <code>FALSE</code> (default) skips the
+<code>refmet_name</code> validation against the Metabolomics Workbench API (one request
+per metabolite, slow) while running every other check. Set to <code>TRUE</code> to also
+validate the <code>refmet_name</code> ids. Releases should be written from batches
+already validated with <code><a href="validate_metabolomics.html">validate_metabolomics()</a></code>, which runs the full
+<code>refmet_name</code> validation by default.</p></dd>
 
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
