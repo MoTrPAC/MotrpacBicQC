@@ -787,6 +787,14 @@ validate_multiple_phases <- function(phase_details,
     stop(paste(phase_details), ": human and animal phases cannot be combined in `metadata_phase.txt`: MUST BE CORRECTED")
   }
 
+  # `validate_two_phases()` only extracts the first and last PASS1A/PASS1C
+  # tokens, so the animal pair must be checked explicitly. Otherwise a third
+  # phase goes through unnoticed and generates an invalid phase details
+  # (e.g. PASS1A-06|PASS1B-06|PASS1C-06 generates `pass1ac-06|PASS1B-06`)
+  if( length(phases) != 2 || !all(grepl("^PASS1[AC]-\\d{2}$", phases, ignore.case = TRUE)) ){
+    stop(paste(phase_details), ": only the animal PASS1A-##|PASS1C-## pair is supported in `metadata_phase.txt`: MUST BE CORRECTED")
+  }
+
   validate_two_phases(phase_details = phase_details, verbose = verbose)
 }
 

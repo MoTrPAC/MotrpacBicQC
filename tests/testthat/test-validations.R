@@ -276,6 +276,60 @@ test_that("validate_multiple_phases dispatches human and animal phases", {
   expect_error(validate_multiple_phases("PASS1A-06|HUMAN-MAIN-TR01"), "cannot be combined")
 })
 
+test_that("validate_multiple_phases only accepts the animal PASS1A-##|PASS1C-## pair", {
+  # `validate_two_phases()` only extracts the first and last PASS1A/PASS1C
+  # tokens, so a third phase used to go through unnoticed, generating an
+  # invalid phase details (`pass1ac-06|PASS1B-06`)
+  expect_error(validate_multiple_phases("PASS1A-06|PASS1B-06|PASS1C-06"), "only the animal")
+  expect_error(validate_multiple_phases("PASS1A-06|PASS1C-06|PASS1B-06"), "only the animal")
+  expect_error(validate_multiple_phases("PASS1A-06|PASS1C-06|PASS1C-18"), "only the animal")
+  expect_error(validate_multiple_phases("PASS1A-06|PASS1C-06|PASS1A-06"), "only the animal")
+
+  # Phases that are not part of the PASS1A/1C pair
+  expect_error(validate_multiple_phases("PASS1B-06|PASS1C-06"), "only the animal")
+  expect_error(validate_multiple_phases("PASS1B-06|PASS1B-18"), "only the animal")
+
+  # Malformed animal phases
+  expect_error(validate_multiple_phases("PASS1A-6|PASS1C-06"), "only the animal")
+  expect_error(validate_multiple_phases("PASS1A-06 extra|PASS1C-06"), "only the animal")
+  expect_error(validate_multiple_phases("PASS1A|PASS1C"), "only the animal")
+
+  # The supported pair is still accepted, and the checks of
+  # `validate_two_phases()` still apply to it
+  expect_equal(validate_multiple_phases("PASS1A-06|PASS1C-06", verbose = TRUE),
+               "Two phases reported and they are ok")
+  expect_equal(validate_multiple_phases("PASS1A-18|PASS1C-18", verbose = TRUE),
+               "Two phases reported and they are ok")
+  expect_equal(validate_multiple_phases("PASS1C-06|PASS1A-06", verbose = TRUE),
+               "Two phases reported and they are ok")
+  expect_error(validate_multiple_phases("PASS1A-06|PASS1C-18"), "ages reported")
+  expect_error(validate_multiple_phases("PASS1A-06|PASS1A-06"), "are the same")
+})
+
+test_that("set_phase rejects unsupported animal phase combinations", {
+  setup_phase_dir <- function(phase_content) {
+    tmpdir <- tempfile()
+    batch_dir <- file.path(tmpdir, "PASS1A-06", "T11", "OXYLIPNEG", "BATCH1_20240524")
+    proc_dir <- file.path(batch_dir, "PROCESSED_20240524")
+    dir.create(proc_dir, recursive = TRUE)
+    writeLines(phase_content, file.path(batch_dir, "metadata_phase.txt"))
+    list(proc_dir = proc_dir, tmpdir = tmpdir)
+  }
+
+  call_set_phase <- function(phase_content) {
+    dirs <- setup_phase_dir(phase_content)
+    on.exit(unlink(dirs$tmpdir, recursive = TRUE))
+    set_phase(input_results_folder = dirs$proc_dir, dmaqc_phase2validate = FALSE, verbose = FALSE)
+  }
+
+  # The invalid combination is rejected before generating the phase details,
+  # so an invalid release folder can no longer be generated
+  expect_error(call_set_phase("PASS1A-06|PASS1B-06|PASS1C-06"), "only the animal")
+  expect_error(call_set_phase("PASS1B-06|PASS1C-06"), "only the animal")
+
+  expect_equal(call_set_phase("PASS1A-06|PASS1C-06"), "PASS1A-06|PASS1C-06")
+})
+
 test_that("validate_assay works with Windows backslash paths", {
   expect_equal(validate_assay("D:\\Snow\\HUMAN\\T02\\OXYLIPNEG\\BATCH2_20240808\\PROCESSED_20240808"), "OXYLIPNEG")
   expect_equal(validate_assay("D:\\Data\\PASS1A-06\\T31\\IONPNEG\\BATCH1_20190909\\PROCESSED_20200205"), "IONPNEG")

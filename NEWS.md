@@ -40,6 +40,10 @@
 * Combined phases are now format validated: every human phase must be
   `HUMAN-PRECOVID` or `HUMAN-MAIN-TR##`, duplicated phases are rejected, and
   empty phases (leading, trailing, or duplicated `|` separators) are detected
+* **Only the animal `PASS1A-##|PASS1C-##` pair is accepted**: `validate_two_phases()`
+  only extracts the first and last `PASS1A`/`PASS1C` tokens, so a third phase went
+  through unnoticed and generated an invalid phase details. For example,
+  `PASS1A-06|PASS1B-06|PASS1C-06` was accepted and generated `pass1ac-06|PASS1B-06`
 
 ## Changes
 
