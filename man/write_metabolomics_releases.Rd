@@ -10,6 +10,7 @@ write_metabolomics_releases(
   folder_name = "motrpac_release",
   folder_root = NULL,
   version_file = "v1.0",
+  refmet_validation = FALSE,
   verbose = TRUE
 )
 }
@@ -24,6 +25,13 @@ write_metabolomics_releases(
 Default: current directory}
 
 \item{version_file}{(char) file version number (\code{v#.#})}
+
+\item{refmet_validation}{(logical) \code{FALSE} (default) skips the
+\code{refmet_name} validation against the Metabolomics Workbench API (one request
+per metabolite, slow) while running every other check. Set to \code{TRUE} to also
+validate the \code{refmet_name} ids. Releases should be written from batches
+already validated with \code{validate_metabolomics()}, which runs the full
+\code{refmet_name} validation by default.}
 
 \item{verbose}{(logical) \code{TRUE} (default) shows messages}
 }

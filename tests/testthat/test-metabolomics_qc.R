@@ -6,6 +6,22 @@ test_that("check_metadata_metabolites returns the right number of issues", {
   expect_equal(check_metadata_metabolites(df = metadata_metabolites_unnamed, name_id = "named", return_n_issues = TRUE, verbose = FALSE), 2)
 })
 
+test_that("refmet_validation = FALSE skips the API calls without counting issues", {
+  # Same input as above: the only issue reported with the default
+  # `refmet_validation = TRUE` comes from the Metabolomics Workbench API calls,
+  # so skipping them must report zero issues (never a failure).
+  expect_equal(check_metadata_metabolites(df = metadata_metabolites_named, name_id = "named", return_n_issues = TRUE, refmet_validation = FALSE, verbose = FALSE), 0)
+
+  # The local checks are unaffected: a missing `refmet_name` column is still
+  # reported when the API validation is skipped.
+  expect_equal(check_metadata_metabolites(df = metadata_metabolites_unnamed, name_id = "named", return_n_issues = TRUE, refmet_validation = FALSE, verbose = FALSE), 2)
+
+  expect_message(
+    check_metadata_metabolites(df = metadata_metabolites_named, name_id = "named", return_n_issues = TRUE, refmet_validation = FALSE, verbose = TRUE),
+    "Metabolomics Workbench validation skipped"
+  )
+})
+
 test_that("check_metadata_sample returns the right number of issues", {
   expect_equal(check_metadata_samples(df = metadata_sample_named, cas = "umichigan", return_n_issues = TRUE, verbose = FALSE), 2)
   expect_equal(check_metadata_samples(df = metadata_sample_unnamed, cas = "umichigan", return_n_issues = TRUE, verbose = FALSE), 2)
