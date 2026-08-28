@@ -32,16 +32,16 @@ metabolomics-targeted,AMINES,metab-t-amines,metab-t-amines,Targeted Amines,mayo,
 metabolomics-targeted,CER_MAYO,metab-t-cer-mayo,metab-t-cer-mayo,Targeted Ceramides (Mayo),mayo,METAB,#E41A1C,Cer(T),Metabolomics,Metabolome
 metabolomics-targeted,TCA,metab-t-tca,metab-t-tca,Targeted Tricarboxylic Acid Cycle ,mayo,METAB,#E41A1C,TCA(T),Metabolomics,Metabolome
 metabolomics-untargeted,HILICPOS,metab-u-hilicpos,metab-u-hilicpos,Untargeted HILIC-Positive,broad_met,METAB,#E41A1C,HILIC(U),Metabolomics,Metabolome
-metabolomics-untargeted,LRPNEG,metab-u-lrpneg,metab-u-lrpneg,"Untargeted Lipidomics, Reversed-Phase Negative",gtech,METAB,#E41A1C,Lipid RPN(U),Metabolomics,Metabolome
-metabolomics-untargeted,LRPPOS,metab-u-lrppos,metab-u-lrppos,"Untargeted Lipidomics, Reversed-Phase Positive",gtech,METAB,#E41A1C,Lipid RPP(U),Metabolomics,Metabolome
+metabolomics-untargeted,LRPNEG,metab-u-lrpneg,metab-u-lrpneg,Untargeted Lipidomics - Reversed-Phase Negative,gtech,METAB,#E41A1C,Lipid RPN(U),Metabolomics,Metabolome
+metabolomics-untargeted,LRPPOS,metab-u-lrppos,metab-u-lrppos,Untargeted Lipidomics - Reversed-Phase Positive,gtech,METAB,#E41A1C,Lipid RPP(U),Metabolomics,Metabolome
 metabolomics-untargeted,RPPOS,metab-u-rppos,metab-u-rppos,Untargeted Reversed-Phase Positive,umichigan,METAB,#E41A1C,RPP(U),Metabolomics,Metabolome
 metabolomics-untargeted,RPNEG,metab-u-rpneg,metab-u-rpneg,Untargeted Reversed-Phase Negative,umichigan,METAB,#E41A1C,RPN(U),Metabolomics,Metabolome
 metabolomics-untargeted,IONPNEG,metab-u-ionpneg,metab-u-ionpneg,Untargeted Ion-Pair Negative,umichigan,METAB,#E41A1C,IPN(U),Metabolomics,Metabolome
 proteomics-targeted,,immunoassay,immunoassay,Multiplexed immunoassays,stanford,IMMUNO,#999999,Immuno,Immunoassay,Immunoproteome
-clinical-chemistry,LAB_CK,lab-ck,lab-ck,"Clinical Chemistry, Activity Assay Creatine Kinase (CK)",duke,LAB,#777777,CK,Clinical Chem,Clinical Chemistry
-clinical-chemistry,LAB_GLC,lab-glc,lab-glc,"Clinical Chemistry, Immunoassay Glucagon (GLC)",duke,LAB,#777777,Glucagon,Clinical Chem,Clinical Chemistry
-clinical-chemistry,LAB_INS,lab-ins,lab-ins,"Clinical Chemistry, Immunoassay Insulin (INS)",duke,LAB,#777777,Insulin,Clinical Chem,Clinical Chemistry
+clinical-chemistry,LAB_CK,lab-ck,lab-ck,Clinical Chemistry - Activity Assay Creatine Kinase (CK),duke,LAB,#777777,CK,Clinical Chem,Clinical Chemistry
+clinical-chemistry,LAB_GLC,lab-glc,lab-glc,Clinical Chemistry - Immunoassay Glucagon (GLC),duke,LAB,#777777,Glucagon,Clinical Chem,Clinical Chemistry
+clinical-chemistry,LAB_INS,lab-ins,lab-ins,Clinical Chemistry - Immunoassay Insulin (INS),duke,LAB,#777777,Insulin,Clinical Chem,Clinical Chemistry
 proteomics-targeted,PROT_OL,prot-ol,prot-ol,Proximity extension assay-based technology for multiplexed protein analysis,broad_rg,OLINK,#4DAF4A,Olink,Proteomics,Proteome
-clinical-chemistry,LAB_CRT,lab-crt,lab-crt,"Clinical Chemistry, Immunoassay Cortisol (CRT)",duke,LAB,#777777,Cortisol,Clinical Chem,Clinical Chemistry
+clinical-chemistry,LAB_CRT,lab-crt,lab-crt,Clinical Chemistry - Immunoassay Cortisol (CRT),duke,LAB,#777777,Cortisol,Clinical Chem,Clinical Chemistry
 clinical-chemistry,,metab-t-clinical,metab-t-clinical,Clinical Chemistry - Metabolites,duke,LAB,#777777,Clin. Chem,Metabolomics,Metabolome
 clinical-chemistry,,prot-clinical,prot-clinical,Clinical Chemistry - Proteins,duke,LAB,#777777,Clin. Chem,Proteomics,Proteome
