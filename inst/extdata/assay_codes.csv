@@ -43,3 +43,5 @@ clinical-chemistry,LAB_GLC,lab-glc,lab-glc,"Clinical Chemistry, Immunoassay Gluc
 clinical-chemistry,LAB_INS,lab-ins,lab-ins,"Clinical Chemistry, Immunoassay Insulin (INS)",duke,LAB,#777777,Insulin,Clinical Chem,Clinical Chemistry
 proteomics-targeted,PROT_OL,prot-ol,prot-ol,Proximity extension assay-based technology for multiplexed protein analysis,broad_rg,OLINK,#4DAF4A,Olink,Proteomics,Proteome
 clinical-chemistry,LAB_CRT,lab-crt,lab-crt,"Clinical Chemistry, Immunoassay Cortisol (CRT)",duke,LAB,#777777,Cortisol,Clinical Chem,Clinical Chemistry
+clinical-chemistry,,metab-t-clinical,metab-t-clinical,Clinical Chemistry - Metabolites,duke,LAB,#777777,Clin. Chem,Metabolomics,Metabolome
+clinical-chemistry,,prot-clinical,prot-clinical,Clinical Chemistry - Proteins,duke,LAB,#777777,Clin. Chem,Proteomics,Proteome
