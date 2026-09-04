@@ -45,3 +45,5 @@ proteomics-targeted,PROT_OL,prot-ol,prot-ol,Proximity extension assay-based tech
 clinical-chemistry,LAB_CRT,lab-crt,lab-crt,Clinical Chemistry - Immunoassay Cortisol (CRT),duke,LAB,#777777,Cortisol,Clinical Chem,Clinical Chemistry
 clinical-chemistry,,metab-t-clinical,metab-t-clinical,Clinical Chemistry - Metabolites,duke,LAB,#777777,Clin. Chem,Metabolomics,Metabolome
 clinical-chemistry,,prot-clinical,prot-clinical,Clinical Chemistry - Proteins,duke,LAB,#777777,Clin. Chem,Proteomics,Proteome
+metabolomics-clinical-chemistry,,metab-t-conv,metab-t-conv,Conventional metabolites - Normalized,duke,LAB,#777777,Conv(T),Metabolomics,Metabolome
+metabolomics-clinical-chemistry,,metab-t-imm-crt,metab-t-imm-crt,Immunoassay Cortisol (CRT) - Normalized,duke,LAB,#777777,Cortisol,Metabolomics,Metabolome

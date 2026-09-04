@@ -7,9 +7,12 @@
   aggregate all the clinical assays by the kind of molecule measured:
   * `metab-t-clinical`: Clinical Chemistry - Metabolites
   * `prot-clinical`: Clinical Chemistry - Proteins
-* Both new entries are reported by `duke` and have an empty `submission_code`
-  (as the `immunoassay` entry already does), since they do not correspond to a
-  submission folder
+* **New `metabolomics-clinical-chemistry` omics code**, with two entries:
+  * `metab-t-conv`: Conventional metabolites - Normalized
+  * `metab-t-imm-crt`: Immunoassay Cortisol (CRT) - Normalized
+* All four new entries are reported by `duke` and have an empty
+  `submission_code` (as the `immunoassay` entry already does), since they do
+  not correspond to a submission folder
 
 ## Changes
 
