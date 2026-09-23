@@ -1,5 +1,42 @@
 # Changelog
 
+## MotrpacBicQC 2.0.0 (2026-09-23)
+
+### Changes
+
+- **`inspectdf` dependency removed**: `inspectdf` was archived from CRAN
+  on 2026-04-10, which made the package impossible to install from a
+  clean library (any dependency resolution against the CRAN source
+  index, e.g. `pak` in GitHub Actions, failed with “Can’t find package
+  called inspectdf”)
+- **New
+  [`plot_na_percentage()`](https://motrpac.github.io/MotrpacBicQC/reference/plot_na_percentage.md)**:
+  bar plot with the percentage of `NA` values per column, computed with
+  [`naniar::miss_var_summary()`](https://naniar.njtierney.com/reference/miss_var_summary.html)
+  (`naniar` was already a dependency). It replaces the
+  `inspectdf::inspect_na() %>% show_plot()` chart in the metabolomics,
+  olink, and proteomics QC plots, producing the same chart (same values,
+  column order, and text labels)
+
+### Bug Fixes
+
+- **Olink QC plots failed with ggplot2 4.0**: the id-count plots of
+  [`plot_basic_olink_qc()`](https://motrpac.github.io/MotrpacBicQC/reference/plot_basic_olink_qc.md)
+  labelled the bars with `aes(label = n)` instead of `olink_count`, so
+  ggplot2 resolved `n` to a function. ggplot2 4.0 rejects that
+  (“Aesthetics are not valid data columns”), so the olink QC plots
+  failed for any dataset with 200 samples or fewer
+
+### Tests
+
+- Unit tests for
+  [`plot_na_percentage()`](https://motrpac.github.io/MotrpacBicQC/reference/plot_na_percentage.md)
+  and end-to-end tests of
+  [`plot_basic_metabolomics_qc()`](https://motrpac.github.io/MotrpacBicQC/reference/plot_basic_metabolomics_qc.md)
+  (bundled data) and
+  [`plot_basic_olink_qc()`](https://motrpac.github.io/MotrpacBicQC/reference/plot_basic_olink_qc.md)
+  (synthetic data) writing the QC pdfs
+
 ## MotrpacBicQC 1.9.0 (2026-09-22)
 
 ### New Features

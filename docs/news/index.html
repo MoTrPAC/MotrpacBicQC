@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">MotrpacBicQC</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,6 +40,25 @@
       <small>Source: <a href="https://github.com/MoTrPAC/MotrpacBicQC/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.0.0" id="motrpacbicqc-200-2026-09-23">MotrpacBicQC 2.0.0 (2026-09-23)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-200-2026-09-23"></a></h2>
+<div class="section level3">
+<h3 id="changes-2-0-0">Changes<a class="anchor" aria-label="anchor" href="#changes-2-0-0"></a></h3>
+<ul><li>
+<strong><code>inspectdf</code> dependency removed</strong>: <code>inspectdf</code> was archived from CRAN on 2026-04-10, which made the package impossible to install from a clean library (any dependency resolution against the CRAN source index, e.g. <code>pak</code> in GitHub Actions, failed with “Can’t find package called inspectdf”)</li>
+<li>
+<strong>New <code><a href="../reference/plot_na_percentage.html">plot_na_percentage()</a></code></strong>: bar plot with the percentage of <code>NA</code> values per column, computed with <code><a href="https://naniar.njtierney.com/reference/miss_var_summary.html" class="external-link">naniar::miss_var_summary()</a></code> (<code>naniar</code> was already a dependency). It replaces the <code>inspectdf::inspect_na() %&gt;% show_plot()</code> chart in the metabolomics, olink, and proteomics QC plots, producing the same chart (same values, column order, and text labels)</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-2-0-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-2-0-0"></a></h3>
+<ul><li>
+<strong>Olink QC plots failed with ggplot2 4.0</strong>: the id-count plots of <code><a href="../reference/plot_basic_olink_qc.html">plot_basic_olink_qc()</a></code> labelled the bars with <code>aes(label = n)</code> instead of <code>olink_count</code>, so ggplot2 resolved <code>n</code> to a function. ggplot2 4.0 rejects that (“Aesthetics are not valid data columns”), so the olink QC plots failed for any dataset with 200 samples or fewer</li>
+</ul></div>
+<div class="section level3">
+<h3 id="tests-2-0-0">Tests<a class="anchor" aria-label="anchor" href="#tests-2-0-0"></a></h3>
+<ul><li>Unit tests for <code><a href="../reference/plot_na_percentage.html">plot_na_percentage()</a></code> and end-to-end tests of <code><a href="../reference/plot_basic_metabolomics_qc.html">plot_basic_metabolomics_qc()</a></code> (bundled data) and <code><a href="../reference/plot_basic_olink_qc.html">plot_basic_olink_qc()</a></code> (synthetic data) writing the QC pdfs</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.9.0" id="motrpacbicqc-190-2026-09-22">MotrpacBicQC 1.9.0 (2026-09-22)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-190-2026-09-22"></a></h2>
 <div class="section level3">

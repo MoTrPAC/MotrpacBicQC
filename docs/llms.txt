@@ -245,6 +245,9 @@ details as possible.
 - [`plot_basic_olink_qc()`](https://motrpac.github.io/MotrpacBicQC/reference/plot_basic_olink_qc.md)
   : Plot Basic OLINK QC charts
 
+- [`plot_na_percentage()`](https://motrpac.github.io/MotrpacBicQC/reference/plot_na_percentage.md)
+  : Plot the percentage of NA values per column
+
 - [`proteomics_plots_rii()`](https://motrpac.github.io/MotrpacBicQC/reference/proteomics_plots_rii.md)
   : QC Plot of proteomics reporter ion intensity data
 
