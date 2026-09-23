@@ -1050,10 +1050,8 @@ validate_proteomics <- function(input_results_folder,
 
               # Plotting NA values-----
               if(verbose) message("       - (p) Plotting NA percentage in ratio results")
-              p_na_ratior <- ratior[required_columns] %>%
-                inspectdf::inspect_na() %>%
-                dplyr::arrange(match(col_name, colnames(ratior))) %>%
-                inspectdf::show_plot() +
+              # `intersect()` keeps the original column order of `ratior`
+              p_na_ratior <- plot_na_percentage(ratior[intersect(colnames(ratior), required_columns)]) +
                 ylim(0, 100) + theme_linedraw() +
                 theme(axis.text.x = element_text(angle = 90,
                                                  hjust = 1,

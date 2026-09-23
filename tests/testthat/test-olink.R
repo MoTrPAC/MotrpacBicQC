@@ -285,3 +285,51 @@ test_that("Mismatched olink IDs are detected", {
   expect_gt(result, 0)
 })
 
+
+test_that("plot_basic_olink_qc runs end to end with the new NA plot", {
+  # Minimal synthetic dataset mirroring what validate_olink() builds
+  samples <- paste0("S", 1:6)
+  m_s <- data.frame(sample_id = samples,
+                    sample_type = rep(c("Sample", "QC-Pooled"), 3),
+                    sample_order = 1:6,
+                    plate_id = rep(c("plate1", "plate2"), each = 3),
+                    stringsAsFactors = FALSE)
+  set.seed(7)
+  r_o <- data.frame(olink_id = paste0("OID", 1:8), stringsAsFactors = FALSE)
+  for (s in samples) r_o[[s]] <- round(runif(8, 1, 10), 2)
+  r_o$S3[c(1, 2)] <- NA   # some NA values so the NA plot has something to show
+  m_p <- data.frame(olink_id = r_o$olink_id,
+                    panel_name = rep(c("Cardiometabolic", "Inflammation"), 4),
+                    stringsAsFactors = FALSE)
+
+  results_long <- r_o %>%
+    tidyr::pivot_longer(cols = -c(olink_id), names_to = "sample_id", values_to = "value")
+  results_long <- merge(m_s, results_long, by = "sample_id")
+  results_long$sample_id <- as.factor(as.character(results_long$sample_id))
+  results_long$sample_type <- as.factor(results_long$sample_type)
+  results_long <- results_long[which(results_long$value != 0), ]
+  results_long <- results_long[!is.na(results_long$value), ]
+  results_long <- results_long %>%
+    dplyr::arrange(plate_id, sample_order) %>%
+    dplyr::mutate(sample_id_ordered = factor(sample_id, levels = unique(sample_id)))
+  r_p <- merge(m_p, r_o, by = "olink_id")
+
+  out <- tempfile("qc-olink-")
+  dir.create(out)
+  on.exit(unlink(out, recursive = TRUE), add = TRUE)
+
+  expect_no_error(
+    plot_basic_olink_qc(results = r_p,
+                        results_long = results_long,
+                        out_qc_folder = out,
+                        output_prefix = "test-olink",
+                        printPDF = TRUE,
+                        verbose = FALSE)
+  )
+  pdfs <- list.files(out, pattern = "^test-olink.*\\.pdf$")
+  # Both pdfs: the summary one used to fail on `aes(label = n)` in the
+  # id-count plots (`count_data` has `olink_count`, not `n`), an error since
+  # ggplot2 4.0 rejects a function as an aesthetic
+  expect_setequal(pdfs, c("test-olink-qc-basic-large-plots.pdf", "test-olink-qc-basic-summary-plots.pdf"))
+  expect_true(all(file.size(file.path(out, pdfs)) > 0))
+})
