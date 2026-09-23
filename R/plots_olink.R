@@ -131,7 +131,7 @@ plot_basic_olink_qc <- function(results,
                                  hjust=0.95,vjust=0.2,
                                  size = 6)) +
       geom_text(
-        aes(label = n),
+        aes(label = olink_count),
         hjust = 1,
         size = 2,
         angle = 90
@@ -156,7 +156,7 @@ plot_basic_olink_qc <- function(results,
                                  hjust=0.95,vjust=0.2,
                                  size = 6)) +
       geom_text(
-        aes(label = n),
+        aes(label = olink_count),
         hjust = 1,
         size = 2,
         angle = 90
