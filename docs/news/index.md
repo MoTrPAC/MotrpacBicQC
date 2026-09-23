@@ -1,5 +1,29 @@
 # Changelog
 
+## MotrpacBicQC 1.9.0 (2026-09-22)
+
+### New Features
+
+- **New clinical chemistry assay codes**: two entries added to
+  `assay_codes` to aggregate all the clinical assays by the kind of
+  molecule measured:
+  - `metab-t-clinical`: Clinical Chemistry - Metabolites
+  - `prot-clinical`: Clinical Chemistry - Proteins
+- **New `metabolomics-clinical-chemistry` omics code**, with two
+  entries:
+  - `metab-t-conv`: Conventional metabolites - Normalized
+  - `metab-t-imm-crt`: Immunoassay Cortisol (CRT) - Normalized
+- All four new entries are reported by `duke` and have an empty
+  `submission_code` (as the `immunoassay` entry already does), since
+  they do not correspond to a submission folder
+
+### Changes
+
+- **`assay_name` values no longer contain commas**: the six names with a
+  comma (which required quoting the field in `assay_codes.csv`) now use
+  `" - "`. For example, `Clinical Chemistry, Immunoassay Insulin (INS)`
+  is now `Clinical Chemistry - Immunoassay Insulin (INS)`
+
 ## MotrpacBicQC 1.8.0 (2026-08-11)
 
 ### New Features

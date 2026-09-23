@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">MotrpacBicQC</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.8.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,6 +40,33 @@
       <small>Source: <a href="https://github.com/MoTrPAC/MotrpacBicQC/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.9.0" id="motrpacbicqc-190-2026-09-22">MotrpacBicQC 1.9.0 (2026-09-22)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-190-2026-09-22"></a></h2>
+<div class="section level3">
+<h3 id="new-features-1-9-0">New Features<a class="anchor" aria-label="anchor" href="#new-features-1-9-0"></a></h3>
+<ul><li>
+<strong>New clinical chemistry assay codes</strong>: two entries added to <code>assay_codes</code> to aggregate all the clinical assays by the kind of molecule measured:
+<ul><li>
+<code>metab-t-clinical</code>: Clinical Chemistry - Metabolites</li>
+<li>
+<code>prot-clinical</code>: Clinical Chemistry - Proteins</li>
+</ul></li>
+<li>
+<strong>New <code>metabolomics-clinical-chemistry</code> omics code</strong>, with two entries:
+<ul><li>
+<code>metab-t-conv</code>: Conventional metabolites - Normalized</li>
+<li>
+<code>metab-t-imm-crt</code>: Immunoassay Cortisol (CRT) - Normalized</li>
+</ul></li>
+<li>All four new entries are reported by <code>duke</code> and have an empty <code>submission_code</code> (as the <code>immunoassay</code> entry already does), since they do not correspond to a submission folder</li>
+</ul></div>
+<div class="section level3">
+<h3 id="changes-1-9-0">Changes<a class="anchor" aria-label="anchor" href="#changes-1-9-0"></a></h3>
+<ul><li>
+<strong><code>assay_name</code> values no longer contain commas</strong>: the six names with a comma (which required quoting the field in <code>assay_codes.csv</code>) now use <code>" - "</code>. For example, <code>Clinical Chemistry, Immunoassay Insulin (INS)</code> is now <code>Clinical Chemistry - Immunoassay Insulin (INS)</code>
+</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.8.0" id="motrpacbicqc-180-2026-08-11">MotrpacBicQC 1.8.0 (2026-08-11)<a class="anchor" aria-label="anchor" href="#motrpacbicqc-180-2026-08-11"></a></h2>
 <div class="section level3">
