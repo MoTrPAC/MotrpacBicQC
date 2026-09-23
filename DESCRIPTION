@@ -28,7 +28,6 @@ Imports:
     grDevices,
     gridExtra,
     httr,
-    inspectdf,
     jsonlite,
     knitr,
     lubridate,

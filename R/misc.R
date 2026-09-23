@@ -730,3 +730,75 @@ set_phase <- function(input_results_folder,
   return(dmaqc_phase2validate)
 }
 
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' @title Plot the percentage of NA values per column
+#'
+#' @description Bar plot with the percentage of `NA` values in every column of
+#' a data frame. The bars follow the order of the columns in the data frame.
+#' The percentages are calculated with `naniar::miss_var_summary()`.
+#'
+#' This function replaces the `inspectdf::inspect_na() %>% inspectdf::show_plot()`
+#' chart previously used in the QC plots: `inspectdf` was archived from CRAN
+#' (2026-04-10), which made the package impossible to install from a clean
+#' library.
+#' @param df (data.frame) data frame to inspect
+#' @param text_labels (logical) `TRUE` (default) prints the percentage of `NA`
+#' values on every bar
+#' @return (ggplot) bar plot with the percentage of `NA` values per column
+#' @examples
+#' plot_na_percentage(results_named)
+#' @export
+plot_na_percentage <- function(df, text_labels = TRUE){
+
+  variable = pct_miss = n_miss = NULL
+
+  if( !is.data.frame(df) ){
+    stop("`df` must be a data.frame (got object of class: ", paste(class(df), collapse = ", "), ")")
+  }
+  if( ncol(df) == 0 ){
+    stop("`df` has no columns")
+  }
+
+  # `order = FALSE` must be explicit (the default sorts by percentage), and the
+  # rows are re-arranged anyway to guarantee the original column order
+  na_summary <- naniar::miss_var_summary(df, order = FALSE) %>%
+    dplyr::mutate(variable = as.character(variable),
+                  n_miss = as.integer(n_miss),
+                  pct_miss = as.numeric(pct_miss)) %>%
+    dplyr::arrange(match(variable, colnames(df))) %>%
+    dplyr::mutate(variable = factor(variable, levels = colnames(df)))
+
+  p <- ggplot(na_summary, aes(x = variable, y = pct_miss, fill = variable)) +
+    geom_col() +
+    labs(x = "",
+         y = "% of column that is NA",
+         title = "Prevalence of NAs",
+         subtitle = paste0(ncol(df), " columns, of which ",
+                           sum(na_summary$n_miss > 0), " have missing values")) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    guides(fill = "none")
+
+  if( text_labels ){
+    # Same convention as the previous chart: labels inside the tall bars
+    # (white) and above the short ones (grey)
+    max_pct <- max(na_summary$pct_miss, na.rm = TRUE)
+    nudge <- max(max_pct, 1) / 50
+    big_bar <- 0.15 * max_pct
+    inside <- dplyr::filter(na_summary, pct_miss > big_bar)
+    above <- dplyr::filter(na_summary, pct_miss <= big_bar)
+    if( nrow(inside) > 0 ){
+      p <- p + geom_text(data = inside,
+                         aes(y = pct_miss - nudge, label = round(pct_miss, 1)),
+                         colour = "white", angle = 90, hjust = 1, size = 3.5)
+    }
+    if( nrow(above) > 0 ){
+      p <- p + geom_text(data = above,
+                         aes(y = pct_miss + nudge, label = round(pct_miss, 1)),
+                         colour = "gray50", angle = 90, hjust = 0, size = 3.5)
+    }
+  }
+
+  return(p)
+}

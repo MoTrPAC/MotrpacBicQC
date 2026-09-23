@@ -86,10 +86,8 @@ proteomics_plots_rii <- function(all_vial_labels,
       # Plot NA values------
       if(verbose) message("       - (p) Plot NA values")
       
-      p_na_peprii <- peprii[required_columns] %>%
-        inspectdf::inspect_na() %>%
-        dplyr::arrange(match(col_name, colnames(peprii))) %>%
-        inspectdf::show_plot() +
+      # `intersect()` keeps the original column order of `peprii`
+      p_na_peprii <- plot_na_percentage(peprii[intersect(colnames(peprii), required_columns)]) +
         ylim(0, 100) + theme_linedraw() +
         theme(axis.text.x = element_text(angle = 90,
                                          hjust = 1,
