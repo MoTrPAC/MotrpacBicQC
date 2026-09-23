@@ -209,3 +209,38 @@ testthat::test_that("validate_yyyymmdd_dates function handles dates with / inste
 
 
 
+
+test_that("plot_basic_metabolomics_qc runs end to end with the new NA plot", {
+  # Same inputs that validate_metabolomics() builds for a targeted site
+  # (id_type is always required by the plots)
+  results <- results_named
+  results$id_type <- "named"
+  results <- results[c("metabolite_name", "id_type", setdiff(colnames(results_named), "metabolite_name"))]
+
+  results_long <- results %>%
+    tidyr::pivot_longer(cols = -c(metabolite_name, id_type),
+                        names_to = "sample_id", values_to = "intensity")
+  results_long <- merge(metadata_sample_named, results_long, by = "sample_id")
+  results_long$sample_id <- as.factor(as.character(results_long$sample_id))
+  results_long$sample_type <- as.factor(results_long$sample_type)
+  results_long <- results_long[which(results_long$intensity != 0), ]
+  results_long <- results_long[!is.na(results_long$intensity), ]
+
+  out <- tempfile("qc-metab-")
+  dir.create(out)
+  on.exit(unlink(out, recursive = TRUE), add = TRUE)
+
+  expect_no_error(
+    plot_basic_metabolomics_qc(results = results,
+                               results_long = results_long,
+                               metametab = NULL,
+                               out_qc_folder = out,
+                               output_prefix = "test-metab",
+                               printPDF = TRUE,
+                               untargeted = FALSE,
+                               verbose = FALSE)
+  )
+  pdfs <- list.files(out, pattern = "^test-metab.*\\.pdf$")
+  expect_gt(length(pdfs), 0)
+  expect_true(all(file.size(file.path(out, pdfs)) > 0))
+})

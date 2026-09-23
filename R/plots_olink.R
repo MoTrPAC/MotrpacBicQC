@@ -131,7 +131,7 @@ plot_basic_olink_qc <- function(results,
                                  hjust=0.95,vjust=0.2,
                                  size = 6)) +
       geom_text(
-        aes(label = n),
+        aes(label = olink_count),
         hjust = 1,
         size = 2,
         angle = 90
@@ -156,7 +156,7 @@ plot_basic_olink_qc <- function(results,
                                  hjust=0.95,vjust=0.2,
                                  size = 6)) +
       geom_text(
-        aes(label = n),
+        aes(label = olink_count),
         hjust = 1,
         size = 2,
         angle = 90
@@ -216,10 +216,7 @@ plot_basic_olink_qc <- function(results,
   if(verbose) message("       - (p) Plot NA values")
   
   suppressWarnings(
-    p_na_peprii <- results %>%
-      inspectdf::inspect_na() %>% 
-      dplyr::arrange(match(col_name, colnames(results))) %>% 
-      inspectdf::show_plot(text_labels = FALSE) + ylim(0, 100) + 
+    p_na_peprii <- plot_na_percentage(results, text_labels = FALSE) + ylim(0, 100) + 
       theme_classic() +
       labs(title = "Prevalence of NAs",
            subtitle = paste(output_prefix),
